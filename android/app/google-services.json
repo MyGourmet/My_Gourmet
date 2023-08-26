@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "588802119789",
+    "project_id": "my-gourmet-160fb",
+    "storage_bucket": "my-gourmet-160fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588802119789:android:813b3a0dc8542f79b4c764",
+        "android_client_info": {
+          "package_name": "com.example.my_gourmet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "588802119789-6hda24f2u719ais2ul1o2odjauq9n29m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_gourmet",
+            "certificate_hash": "3283f1ba7187a70f562fea57b24cbe183b2d2a8d"
+          }
+        },
+        {
+          "client_id": "588802119789-opc0buf5hul6cgtuernqbfkg1kk9db0e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCH1bSY10I1tRZTeJj4s_RFhp5GEOvRK3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588802119789-096e7ducph3uk0pkmj1tueklsfb04rb1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "588802119789-7ll4rd39kas31kffptqi8b2ufbedc8gh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chat"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
