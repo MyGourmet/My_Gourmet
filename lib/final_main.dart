@@ -72,8 +72,8 @@ class _SignInPageState extends State<SignInPage> {
         },
       );
       final Map<String, dynamic> response =
-          result.data ?? {'message': 'Unknown response'};
-      final String message = response["message"];
+          jsonDecode(result.data) ?? {'message': 'Unknown response'};  // ここを修正
+      final String message = response["message"] ?? 'Unknown message';
 
       setState(() {
         _functionResult = message;
