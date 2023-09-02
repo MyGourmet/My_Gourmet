@@ -38,7 +38,6 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   Future<void> signInWithGoogle() async {
-    // GoogleSignIn をして得られた情報を Firebase と関連づけることをやっています。
     final googleUser =
         await GoogleSignIn(scopes: ['profile', 'email']).signIn();
 
@@ -50,6 +49,33 @@ class _SignInPageState extends State<SignInPage> {
     );
 
     await FirebaseAuth.instance.signInWithCredential(credential);
+
+    // 新しいドキュメントを作成して、stateを"処理中"にする
+    final user = FirebaseAuth.instance.currentUser!;
+    final userId = user.uid;
+    final newDocumentReference = classifylogsReference.doc();
+    final newClassifyLog = ClassifyLog(
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        userId: userId,
+        state: '処理中',
+        reference: newDocumentReference);
+
+    await newDocumentReference.set(newClassifyLog);
+
+    // サインインが完了したことを表示
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('サインインが完了しました。')),
+    );
+
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
+          return const ClassifyLogPage();
+        }),
+        (route) => false,
+      );
+    }
   }
 
   @override

@@ -36,10 +36,10 @@ class ClassifyLog {
     };
   }
 
-  /// 投稿日時
+  /// 作成日時
   final Timestamp createdAt;
 
-  /// 投稿者の名前
+  /// 更新日時
   final Timestamp updatedAt;
 
   /// 投稿者のユーザーID
