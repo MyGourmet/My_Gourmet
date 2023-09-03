@@ -37,12 +37,11 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  String userId = '';
   Future<void> signInWithGoogle() async {
     final googleUser =
         await GoogleSignIn(scopes: ['profile', 'email']).signIn();
-
     final googleAuth = await googleUser?.authentication;
-
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
@@ -52,22 +51,18 @@ class _SignInPageState extends State<SignInPage> {
 
     // 新しいドキュメントを作成して、stateを"処理中"にする
     final user = FirebaseAuth.instance.currentUser!;
-    final userId = user.uid;
+
+    // この部分でインスタンス変数を更新しています。
+    setState(() {
+      userId = user.uid; // インスタンス変数を更新
+    });
+
     await updateOrCreateLog(userId);
 
     // サインインが完了したことを表示
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('サインインが完了しました。')),
     );
-
-    if (mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) {
-          return const ClassifyLogPage();
-        }),
-        (route) => false,
-      );
-    }
   }
 
   @override
@@ -76,26 +71,30 @@ class _SignInPageState extends State<SignInPage> {
       appBar: AppBar(
         title: const Text('GoogleSignIn'),
       ),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text('GoogleSignIn'),
-          onPressed: () async {
-            await signInWithGoogle();
-            // ログインが成功すると FirebaseAuth.instance.currentUser にログイン中のユーザーの情報が入ります
-            print(FirebaseAuth.instance.currentUser?.displayName);
-
-            // ログインに成功したら ClassifyLogPage に遷移します。
-            // 前のページに戻らせないようにするにはpushAndRemoveUntilを使います。
-            if (mounted) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) {
-                  return const ClassifyLogPage();
-                }),
-                (route) => false,
-              );
-            }
-          },
-        ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            child: const Text('GoogleSignIn'),
+            onPressed: signInWithGoogle,
+          ),
+          StreamBuilder<QuerySnapshot<ClassifyLog>>(
+            stream: classifylogsReference
+                .where('userId', isEqualTo: userId)
+                .snapshots(),
+            builder: (context, snapshot) {
+              final docs = snapshot.data?.docs ?? [];
+              print(snapshot);
+              print(docs);
+              if (docs.isNotEmpty) {
+                final classifyLog = docs.first.data();
+                print(classifyLog.state.toString());
+                return Text('状態: ${classifyLog.state}');
+              } else {
+                return Text('状態: 未確認');
+              }
+            },
+          ),
+        ],
       ),
     );
   }
@@ -147,74 +146,5 @@ Future<void> updateOrCreateLog(String userId) async {
     // stateを"処理中"に更新
     await documentReference
         .update({'state': '処理中', 'updatedAt': Timestamp.now()});
-  }
-}
-
-class ClassifyLogPage extends StatefulWidget {
-  const ClassifyLogPage({Key? key}) : super(key: key);
-
-  @override
-  State<ClassifyLogPage> createState() => _ClassifyLogPageState();
-}
-
-class _ClassifyLogPageState extends State<ClassifyLogPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('グルメ'),
-      ),
-      body: Column(children: [
-        Expanded(
-          child: StreamBuilder<QuerySnapshot<ClassifyLog>>(
-            // stream プロパティに snapshots() を与えると、コレクションの中のドキュメントをリアルタイムで監視することができます。
-            stream: classifylogsReference.orderBy('createdAt').snapshots(),
-            // ここで受け取っている snapshot に stream で流れてきたデータが入っています。
-            builder: (context, snapshot) {
-              // docs には Collection に保存されたすべてのドキュメントが入ります。
-              // 取得までには時間がかかるのではじめは null が入っています。
-              // null の場合は空配列が代入されるようにしています。
-              final docs = snapshot.data?.docs ?? [];
-              return ListView.builder(
-                itemCount: docs.length,
-                itemBuilder: (context, index) {
-                  // data() に ClassifyLog インスタンスが入っています。
-                  // これは withConverter を使ったことにより得られる恩恵です。
-                  // 何もしなければこのデータ型は Map になります。
-                  final classifyLog = docs[index].data();
-                  return Text(classifyLog.state);
-                },
-              );
-            },
-          ),
-        ),
-        TextFormField(
-          onFieldSubmitted: (text) {
-            // まずは user という変数にログイン中のユーザーデータを格納します
-            final user = FirebaseAuth.instance.currentUser!;
-
-            final userId = user.uid; // ログイン中のユーザーのIDがとれます
-            final loggerName = user.displayName!; // Googleアカウントの名前がとれます
-            final loggerImageUrl = user.photoURL!; // Googleアカウントのアイコンデータがとれます
-
-            // 先ほど作った classifylogsReference からランダムなIDのドキュメントリファレンスを作成します
-            // doc の引数を空にするとランダムなIDが採番されます
-            final newDocumentReference = classifylogsReference.doc();
-
-            final newClassifyLog = ClassifyLog(
-                createdAt: Timestamp.now(),
-                updatedAt: Timestamp.now(),
-                userId: userId,
-                state: text,
-                reference: newDocumentReference);
-
-            // 先ほど作った newDocumentReference のset関数を実行するとそのドキュメントにデータが保存されます。
-            // 引数として ClassifyLog インスタンスを渡します。
-            // 通常は Map しか受け付けませんが、withConverter を使用したことにより ClassifyLog インスタンスを受け取れるようになります。
-            newDocumentReference.set(newClassifyLog);
-          },
-        ),
-      ]),
-    );
   }
 }
