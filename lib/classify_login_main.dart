@@ -53,15 +53,16 @@ class _SignInPageState extends State<SignInPage> {
     // 新しいドキュメントを作成して、stateを"処理中"にする
     final user = FirebaseAuth.instance.currentUser!;
     final userId = user.uid;
-    final newDocumentReference = classifylogsReference.doc();
-    final newClassifyLog = ClassifyLog(
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        userId: userId,
-        state: '処理中',
-        reference: newDocumentReference);
+    // final newDocumentReference = classifylogsReference.doc();
+    // final newClassifyLog = ClassifyLog(
+    //     createdAt: Timestamp.now(),
+    //     updatedAt: Timestamp.now(),
+    //     userId: userId,
+    //     state: '処理中',
+    //     reference: newDocumentReference);
 
-    await newDocumentReference.set(newClassifyLog);
+    // await newDocumentReference.set(newClassifyLog);
+    await updateOrCreateLog(userId);
 
     // サインインが完了したことを表示
     ScaffoldMessenger.of(context).showSnackBar(
@@ -122,6 +123,41 @@ final classifylogsReference = FirebaseFirestore.instance
     return value.toMap(); // 先ほど適宜した toMap がここで活躍します。
   }),
 );
+
+Future<void> updateOrCreateLog(String userId) async {
+  // 既存のドキュメントを検索
+  final existingDoc =
+      await classifylogsReference.where('userId', isEqualTo: userId).get();
+
+  DocumentReference documentReference;
+  Timestamp createdAtTimestamp;
+
+  if (existingDoc.docs.isEmpty) {
+    // 新しいドキュメントを作成
+    documentReference = classifylogsReference.doc();
+    createdAtTimestamp = Timestamp.now();
+
+    // stateを"処理中"にして、更新日時を更新
+    final newClassifyLog = ClassifyLog(
+        createdAt: createdAtTimestamp,
+        updatedAt: Timestamp.now(),
+        userId: userId,
+        state: '処理中',
+        reference: documentReference);
+
+    await documentReference.set(
+        newClassifyLog.toMap(), SetOptions(merge: true)); // 部分的な更新
+  } else {
+    // 既存のドキュメントを使用
+    documentReference = existingDoc.docs.first.reference;
+    // ここで createdAtTimestamp を設定します。
+    createdAtTimestamp = existingDoc.docs.first.data().createdAt;
+
+    // stateを"処理中"に更新
+    await documentReference
+        .update({'state': '処理中', 'updatedAt': Timestamp.now()});
+  }
+}
 
 class ClassifyLogPage extends StatefulWidget {
   const ClassifyLogPage({Key? key}) : super(key: key);
