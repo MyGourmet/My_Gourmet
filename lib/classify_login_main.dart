@@ -53,15 +53,6 @@ class _SignInPageState extends State<SignInPage> {
     // 新しいドキュメントを作成して、stateを"処理中"にする
     final user = FirebaseAuth.instance.currentUser!;
     final userId = user.uid;
-    // final newDocumentReference = classifylogsReference.doc();
-    // final newClassifyLog = ClassifyLog(
-    //     createdAt: Timestamp.now(),
-    //     updatedAt: Timestamp.now(),
-    //     userId: userId,
-    //     state: '処理中',
-    //     reference: newDocumentReference);
-
-    // await newDocumentReference.set(newClassifyLog);
     await updateOrCreateLog(userId);
 
     // サインインが完了したことを表示
