@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -41,28 +42,55 @@ class _SignInPageState extends State<SignInPage> {
   Future<void> signInWithGoogle() async {
     final googleUser =
         await GoogleSignIn(scopes: ['profile', 'email']).signIn();
-    final googleAuth = await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+    if (googleUser != null) {
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
 
-    // 新しいドキュメントを作成して、stateを"処理中"にする
-    final user = FirebaseAuth.instance.currentUser!;
+      // 新しいドキュメントを作成して、stateを"処理中"にする
+      final user = FirebaseAuth.instance.currentUser!;
 
-    // この部分でインスタンス変数を更新しています。
-    setState(() {
-      userId = user.uid; // インスタンス変数を更新
-    });
+      // この部分でインスタンス変数を更新しています。
+      setState(() {
+        userId = user.uid; // インスタンス変数を更新
+      });
 
-    await updateOrCreateLog(userId);
+      await updateOrCreateLog(userId);
 
-    // サインインが完了したことを表示
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('サインインが完了しました。')),
-    );
+      // サインインが完了したことを表示
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('サインインが完了しました。')),
+      );
+
+      await callFirebaseFunction(googleAuth.accessToken ?? 'defaultTokenValue');
+    }
+  }
+
+  Future<void> callFirebaseFunction(String accessToken) async {
+    try {
+      final result = await call(
+        functionName: 'function-2',
+        parameters: {
+          'name': accessToken,
+        },
+      );
+      // final Map<String, dynamic> response =
+      //     jsonDecode(result.data) ?? {'message': 'Unknown response'};
+      // final String message = response["message"];
+
+      // setState(() {
+      //   _functionResult = message;
+      // });
+    } catch (error) {
+      print(error);
+      // setState(() {
+      //   _functionResult = 'Failed to call function: $error';
+      // });
+    }
   }
 
   @override
@@ -97,6 +125,26 @@ class _SignInPageState extends State<SignInPage> {
         ],
       ),
     );
+  }
+
+  /// CloudFunctionsを呼び出す
+  Future<HttpsCallableResult> call({
+    required String functionName,
+    String? region,
+    Map<String, dynamic>? parameters,
+  }) async {
+    try {
+      final functions = FirebaseFunctions.instanceFor(
+        app: Firebase.app(),
+        region: region ?? 'asia-northeast1',
+      );
+      final callable = functions.httpsCallable(functionName);
+      print(callable);
+      return await callable.call(parameters);
+    } catch (e) {
+      logger.d(e);
+      rethrow;
+    }
   }
 }
 
