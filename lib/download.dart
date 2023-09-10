@@ -3,6 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; // この行はおそらくプロジェクト固有の設定で使用されています。
 
+// import 'firebase_options.dart'; // この行はおそらくプロジェクト固有の設定で使用されています。
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -40,8 +42,7 @@ class _DownloadImagesFromStorageState extends State<DownloadImagesFromStorage> {
       final storage = FirebaseStorage.instance;
       ListResult result = await storage
           .ref()
-          .child(
-              'photo-jp-my-gourmet-image-classification-2023-08/')
+          .child('photo-jp-my-gourmet-image-classification-2023-08/')
           .list();
       List<String> urls = [];
       for (var item in result.items) {
@@ -53,8 +54,6 @@ class _DownloadImagesFromStorageState extends State<DownloadImagesFromStorage> {
       });
     } catch (e) {
       print("An error occurred: $e");
-      // エラーが発生した場合は imageUrls を空のリストに設定します。
-      // これにより「右上のダウンロードボタンを押してください。」というテキストが表示されます。
       setState(() {
         imageUrls = [];
       });
@@ -79,10 +78,19 @@ class _DownloadImagesFromStorageState extends State<DownloadImagesFromStorage> {
       ),
       body: Center(
         child: imageUrls != null
-            ? ListView.builder(
+            ? GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3, // 一行に表示するアイテム数
+                ),
                 itemCount: imageUrls!.length,
                 itemBuilder: (context, index) {
-                  return Image.network(imageUrls![index]);
+                  return AspectRatio(
+                    aspectRatio: 1.0, // 正方形になるように
+                    child: Image.network(
+                      imageUrls![index],
+                      fit: BoxFit.cover,
+                    ),
+                  );
                 },
               )
             : Text('右上のダウンロードボタンを押してください。'),
