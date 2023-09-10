@@ -40,7 +40,8 @@ class _DownloadImagesFromStorageState extends State<DownloadImagesFromStorage> {
       final storage = FirebaseStorage.instance;
       ListResult result = await storage
           .ref()
-          .child('photo-jp-my-gourmet-image-classification-2023-08')
+          .child(
+              'photo-jp-my-gourmet-image-classification-2023-08/')
           .list();
       List<String> urls = [];
       for (var item in result.items) {
@@ -52,6 +53,11 @@ class _DownloadImagesFromStorageState extends State<DownloadImagesFromStorage> {
       });
     } catch (e) {
       print("An error occurred: $e");
+      // エラーが発生した場合は imageUrls を空のリストに設定します。
+      // これにより「右上のダウンロードボタンを押してください。」というテキストが表示されます。
+      setState(() {
+        imageUrls = [];
+      });
     }
   }
 
@@ -63,12 +69,23 @@ class _DownloadImagesFromStorageState extends State<DownloadImagesFromStorage> {
         actions: [
           IconButton(
             icon: Icon(Icons.download),
-            onPressed: _downloadImages,
+            onPressed: () {
+              _downloadImages().then((_) {
+                setState(() {});
+              });
+            },
           ),
         ],
       ),
       body: Center(
-        child: Text('ダウンロードボタンを押してください。'),
+        child: imageUrls != null
+            ? ListView.builder(
+                itemCount: imageUrls!.length,
+                itemBuilder: (context, index) {
+                  return Image.network(imageUrls![index]);
+                },
+              )
+            : Text('右上のダウンロードボタンを押してください。'),
       ),
     );
   }
