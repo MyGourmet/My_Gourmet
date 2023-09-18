@@ -25,10 +25,10 @@ class RoundedButton extends StatelessWidget {
         color: Color(0xFFD9D9D9),
         borderRadius: BorderRadius.circular(15.0), // 角を丸くする
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Text(
         label,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.black,
@@ -77,7 +77,7 @@ class MyHomePage extends StatelessWidget {
           Positioned.fill(
             top: 55,
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3, // 3列
               ),
               itemCount: imagePaths.length,
@@ -89,12 +89,12 @@ class MyHomePage extends StatelessWidget {
               },
             ),
           ),
-          Positioned(
+          const Positioned(
             top: 15, // アプリの最上部に配置
             left: 0, // 左端に配置
             right: 0, // 右端に配置
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -132,13 +132,13 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30), // テキストとボタンの間のスペース
+                  const SizedBox(height: 30), // テキストとボタンの間のスペース
                   ElevatedButton(
                     onPressed: () {
                       // ここにボタンが押された時の処理を追加
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Color(0xFFEF913A), // ボタンの背景色を設定
+                      backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0), // 角を丸くする
                       ),
