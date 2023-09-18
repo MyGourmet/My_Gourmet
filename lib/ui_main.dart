@@ -13,6 +13,31 @@ class MyApp extends StatelessWidget {
   }
 }
 
+class RoundedButton extends StatelessWidget {
+  final String label;
+
+  const RoundedButton({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xFFD9D9D9),
+        borderRadius: BorderRadius.circular(15.0), // 角を丸くする
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+}
+
 class MyHomePage extends StatelessWidget {
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -40,17 +65,46 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // 3列
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 80, // 画像と重ならないように上部を55に設定
+            child: Container(
+              color: Colors.black, // 上部の背景色を黒に設定
             ),
-            itemCount: imagePaths.length,
-            itemBuilder: (context, index) {
-              return Image.asset(
-                imagePaths[index],
-                fit: BoxFit.cover, // 画像を正方形に表示
-              );
-            },
+          ),
+          Positioned.fill(
+            top: 55,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, // 3列
+              ),
+              itemCount: imagePaths.length,
+              itemBuilder: (context, index) {
+                return Image.asset(
+                  imagePaths[index],
+                  fit: BoxFit.cover, // 画像を正方形に表示
+                );
+              },
+            ),
+          ),
+          Positioned(
+            top: 15, // アプリの最上部に配置
+            left: 0, // 左端に配置
+            right: 0, // 右端に配置
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RoundedButton(label: 'ラーメン'),
+                  RoundedButton(label: '和食'),
+                  RoundedButton(label: 'カフェ'),
+                  RoundedButton(label: 'その他'),
+                ],
+              ),
+            ),
           ),
           Positioned(
             top: (MediaQuery.of(context).size.height - 327) / 2, // 縦方向中央に配置
@@ -69,7 +123,7 @@ class MyHomePage extends StatelessWidget {
                     width: 250, // テキストの枠の幅を250に設定
                     child: const Center(
                       child: Text(
-                        'MyGoumetへようこそ！\n以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                        'MyGourmetへようこそ！\n以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 20,
@@ -90,7 +144,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                       minimumSize: Size(250, 50),
                     ),
-                    child: Text(
+                    child: const Text(
                       '画像を読み込む  1/2',
                       style: TextStyle(
                         fontSize: 20,
@@ -111,11 +165,11 @@ class MyHomePage extends StatelessWidget {
             child: Container(
               width: 60, // プラスボタンの幅
               height: 60, // プラスボタンの高さ
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.black, // プラスボタンの背景色
                 shape: BoxShape.circle, // 円形の形状
               ),
-              child: Center(
+              child: const Center(
                 child: Icon(
                   Icons.add,
                   color: Color(0xFFEF913A),
