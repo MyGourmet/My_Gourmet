@@ -34,20 +34,49 @@ class MyHomePage extends StatelessWidget {
     'assets/images/image17.jpeg',
     'assets/images/image18.jpeg',
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3, // 3列
-        ),
-        itemCount: imagePaths.length,
-        itemBuilder: (context, index) {
-          return Image.asset(
-            imagePaths[index],
-            fit: BoxFit.cover, // 画像を正方形に表示
-          );
-        },
+      body: Stack(
+        children: [
+          GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3, // 3列
+            ),
+            itemCount: imagePaths.length,
+            itemBuilder: (context, index) {
+              return Image.asset(
+                imagePaths[index],
+                fit: BoxFit.cover, // 画像を正方形に表示
+              );
+            },
+          ),
+          Positioned(
+            top: (MediaQuery.of(context).size.height - 327) / 2, // 縦方向中央に配置
+            left: (MediaQuery.of(context).size.width - 317) / 2, // 横方向中央に配置
+            child: Container(
+              width: 317, // 長方形の枠の幅を317に設定
+              height: 327, // 長方形の枠の高さを327に設定
+              color: Colors.white.withOpacity(0.88),
+              child: Center(
+                child: Container(
+                  width: 251, // テキストの枠の幅を251に設定
+                  child: Center(
+                    child: Text(
+                      'My Goumetへようこそ！\n以下のボタンを押すと、Google Photosの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
