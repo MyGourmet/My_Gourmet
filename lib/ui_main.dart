@@ -67,9 +67,9 @@ class MyHomePage extends StatelessWidget {
                 children: [
                   Container(
                     width: 250, // テキストの枠の幅を250に設定
-                    child: Center(
+                    child: const Center(
                       child: Text(
-                        'My Goumetへようこそ！\n以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                        'MyGoumetへようこそ！\n以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 20,
@@ -91,7 +91,7 @@ class MyHomePage extends StatelessWidget {
                       minimumSize: Size(250, 50),
                     ),
                     child: Text(
-                      '画像を読み込む',
+                      '画像を読み込む  1/2',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -100,6 +100,27 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          // SizedBox(height: 30),
+          Positioned(
+            top: (MediaQuery.of(context).size.height - 327) / 2 +
+                405, // プラスボタンの上辺を配置
+            left: (MediaQuery.of(context).size.width - 60) / 2, // プラスボタンの左辺を配置
+            child: Container(
+              width: 60, // プラスボタンの幅
+              height: 60, // プラスボタンの高さ
+              decoration: BoxDecoration(
+                color: Colors.black, // プラスボタンの背景色
+                shape: BoxShape.circle, // 円形の形状
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.add,
+                  color: Color(0xFFEF913A),
+                  size: 40, // プラスボタンのアイコンサイズ
+                ),
               ),
             ),
           ),
