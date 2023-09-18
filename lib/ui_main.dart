@@ -58,21 +58,48 @@ class MyHomePage extends StatelessWidget {
             child: Container(
               width: 317, // 長方形の枠の幅を317に設定
               height: 327, // 長方形の枠の高さを327に設定
-              color: Colors.white.withOpacity(0.88),
-              child: Center(
-                child: Container(
-                  width: 251, // テキストの枠の幅を251に設定
-                  child: Center(
-                    child: Text(
-                      'My Goumetへようこそ！\n以下のボタンを押すと、Google Photosの画像から\n料理の画像のみを判別して\nダウンロードできます！',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.88),
+                borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 250, // テキストの枠の幅を250に設定
+                    child: Center(
+                      child: Text(
+                        'My Goumetへようこそ！\n以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  SizedBox(height: 30), // テキストとボタンの間のスペース
+                  ElevatedButton(
+                    onPressed: () {
+                      // ここにボタンが押された時の処理を追加
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFFEF913A), // ボタンの背景色を設定
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+                      ),
+                      minimumSize: Size(250, 50),
+                    ),
+                    child: Text(
+                      '画像を読み込む',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
