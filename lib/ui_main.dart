@@ -40,16 +40,23 @@ class CategoryButton extends StatelessWidget {
 }
 
 class MyRotatingButton extends StatefulWidget {
+  final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
+
+  MyRotatingButton({required this.onVisibilityChanged});
+
   @override
   _MyRotatingButtonState createState() => _MyRotatingButtonState();
 }
 
 class _MyRotatingButtonState extends State<MyRotatingButton> {
-  bool _isRotated = false; // ボタンが回転したかどうかを管理するフラグ
+  bool _isRotated = false;
+  bool _isContainerVisible = true; // 新しく追加したフラグ
 
   void _toggleRotation() {
     setState(() {
-      _isRotated = !_isRotated; // フラグの値を切り替える
+      _isRotated = !_isRotated;
+      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
+      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
     });
   }
 
@@ -83,7 +90,13 @@ class _MyRotatingButtonState extends State<MyRotatingButton> {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  bool _isContainerVisible = true;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -145,60 +158,68 @@ class MyHomePage extends StatelessWidget {
                 ),
               ]),
             ),
-
-            Positioned(
-              top: (MediaQuery.of(context).size.height - 327) / 2, // 縦方向中央に配置
-              left: (MediaQuery.of(context).size.width - 317) / 2, // 横方向中央に配置
-              child: Container(
-                width: 317, // 長方形の枠の幅を317に設定
-                height: 327, // 長方形の枠の高さを327に設定
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.88),
-                  borderRadius: BorderRadius.circular(30.0), // 角を丸くする
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 250, // テキストの枠の幅を250に設定
-                      child: const Center(
-                        child: Text(
-                          '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+            Visibility(
+              visible: _isContainerVisible,
+              child: Positioned(
+                top: (MediaQuery.of(context).size.height - 327) / 2, // 縦方向中央に配置
+                left: (MediaQuery.of(context).size.width - 317) / 2, // 横方向中央に配置
+                child: Container(
+                  width: 317, // 長方形の枠の幅を317に設定
+                  height: 327, // 長方形の枠の高さを327に設定
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.88),
+                    borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 250, // テキストの枠の幅を250に設定
+                        child: const Center(
+                          child: Text(
+                            '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 30), // テキストとボタンの間のスペース
-                    ElevatedButton(
-                      onPressed: () {
-                        // ここにボタンが押された時の処理を追加
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+                      const SizedBox(height: 30), // テキストとボタンの間のスペース
+                      ElevatedButton(
+                        onPressed: () {
+                          // ここにボタンが押された時の処理を追加
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+                          ),
+                          minimumSize: Size(250, 50),
                         ),
-                        minimumSize: Size(250, 50),
-                      ),
-                      child: const Text(
-                        '画像を読み込む  1/2',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                        child: const Text(
+                          '画像を読み込む  1/2',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
             // SizedBox(height: 30),
-            MyRotatingButton()
+            MyRotatingButton(
+              onVisibilityChanged: (isVisible) {
+                setState(() {
+                  _isContainerVisible = isVisible; // コンテナの表示状態を更新
+                });
+              },
+            ),
           ],
         ),
       ),
