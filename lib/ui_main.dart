@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 void main() {
   runApp(MyApp());
@@ -13,10 +14,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class RoundedButton extends StatelessWidget {
+class CategoryButton extends StatelessWidget {
   final String label;
 
-  const RoundedButton({required this.label});
+  const CategoryButton({required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,50 @@ class RoundedButton extends StatelessWidget {
           fontSize: 16,
           fontWeight: FontWeight.bold,
           color: Colors.black,
+        ),
+      ),
+    );
+  }
+}
+
+class MyRotatingButton extends StatefulWidget {
+  @override
+  _MyRotatingButtonState createState() => _MyRotatingButtonState();
+}
+
+class _MyRotatingButtonState extends State<MyRotatingButton> {
+  bool _isRotated = false; // ボタンが回転したかどうかを管理するフラグ
+
+  void _toggleRotation() {
+    setState(() {
+      _isRotated = !_isRotated; // フラグの値を切り替える
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
+      left: (MediaQuery.of(context).size.width - 60) / 2,
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          onTap: _toggleRotation, // タップ時に回転を切り替える
+          child: Center(
+            child: Transform.rotate(
+              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
+              child: const Icon(
+                Icons.add,
+                color: Color(0xFFEF913A),
+                size: 40,
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -76,10 +121,10 @@ class MyHomePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      RoundedButton(label: 'ラーメン!'),
-                      RoundedButton(label: '和食'),
-                      RoundedButton(label: 'カフェ'),
-                      RoundedButton(label: 'その他'),
+                      CategoryButton(label: 'ラーメン'),
+                      CategoryButton(label: '和食'),
+                      CategoryButton(label: 'カフェ'),
+                      CategoryButton(label: 'その他'),
                     ],
                   ),
                 ),
@@ -118,7 +163,7 @@ class MyHomePage extends StatelessWidget {
                       width: 250, // テキストの枠の幅を250に設定
                       child: const Center(
                         child: Text(
-                          'MyGourmetへようこそ！\n以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                          '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 20,
@@ -153,27 +198,7 @@ class MyHomePage extends StatelessWidget {
               ),
             ),
             // SizedBox(height: 30),
-            Positioned(
-              top: (MediaQuery.of(context).size.height - 327) / 2 +
-                  405, // プラスボタンの上辺を配置
-              left:
-                  (MediaQuery.of(context).size.width - 60) / 2, // プラスボタンの左辺を配置
-              child: Container(
-                width: 60, // プラスボタンの幅
-                height: 60, // プラスボタンの高さ
-                decoration: const BoxDecoration(
-                  color: Colors.black, // プラスボタンの背景色
-                  shape: BoxShape.circle, // 円形の形状
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.add,
-                    color: Color(0xFFEF913A),
-                    size: 40, // プラスボタンのアイコンサイズ
-                  ),
-                ),
-              ),
-            ),
+            MyRotatingButton()
           ],
         ),
       ),
