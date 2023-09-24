@@ -97,6 +97,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _isContainerVisible = true;
+  bool isLoading = false; // ボタンが押されたかどうかのフラグ
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -117,6 +118,20 @@ class _MyHomePageState extends State<MyHomePage> {
     'assets/images/image17.jpeg',
     'assets/images/image18.jpeg',
   ];
+
+  void onButtonPressed() {
+    setState(() {
+      isLoading = true; // ボタンが押されたら、フラグをtrueに
+    });
+
+    // ここで何らかの処理を行います。処理が終わったら、フラグをfalseに戻す。
+    // 例:
+    // Future.delayed(const Duration(seconds: 5), () {
+    //   setState(() {
+    //     isLoading = false;
+    //   });
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,13 +188,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 250, // テキストの枠の幅を250に設定
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                            isLoading
+                                ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします。'
+                                : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
                             textAlign: TextAlign.left,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -188,9 +205,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       const SizedBox(height: 30), // テキストとボタンの間のスペース
                       ElevatedButton(
-                        onPressed: () {
-                          // ここにボタンが押された時の処理を追加
-                        },
+                        onPressed: onButtonPressed,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
                           shape: RoundedRectangleBorder(
@@ -198,9 +213,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           minimumSize: Size(250, 50),
                         ),
-                        child: const Text(
-                          '画像を読み込む  1/2',
-                          style: TextStyle(
+                        child: Text(
+                          isLoading ? 'ダウンロード 2/2' : '画像を読み込む  1/2',
+                          style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
