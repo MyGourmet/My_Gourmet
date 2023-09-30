@@ -41,6 +41,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   String userId = '';
+  bool isLoading = false; // 処理中を表すフグを追加
 
   @override
   Widget build(BuildContext context) {
@@ -53,26 +54,28 @@ class _SignInPageState extends State<SignInPage> {
           ElevatedButton(
             child: const Text('GoogleSignIn'),
             onPressed: () async {
-              onPressed();
+              setState(() {
+                isLoading = true; // ボタンが押されたら、isLoadingをtrueに設定
+              });
+              await onPressed();
             },
           ),
-          StreamBuilder<QuerySnapshot<ClassifyLog>>(
-            stream: AuthUtil.instance.classifylogsReference
-                .where('userId', isEqualTo: userId)
-                .snapshots(),
-            builder: (context, snapshot) {
-              final docs = snapshot.data?.docs ?? [];
-              print(snapshot);
-              print(docs);
-              if (docs.isNotEmpty) {
-                final classifyLog = docs.first.data();
-                print(classifyLog.state.toString());
-                return Text('状態: ${classifyLog.state}');
-              } else {
-                return Text('状態: 未確認');
-              }
-            },
-          ),
+          isLoading // 処理中なら「処理中」と表示、そうでなければStreamBuilderを表示
+              ? Text('処理中')
+              : StreamBuilder<QuerySnapshot<ClassifyLog>>(
+                  stream: AuthUtil.instance.classifylogsReference
+                      .where('userId', isEqualTo: userId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    final docs = snapshot.data?.docs ?? [];
+                    if (docs.isNotEmpty) {
+                      final classifyLog = docs.first.data();
+                      return Text('状態: ${classifyLog.state}');
+                    } else {
+                      return Text('状態: 未確認');
+                    }
+                  },
+                ),
         ],
       ),
     );
@@ -80,13 +83,10 @@ class _SignInPageState extends State<SignInPage> {
 
   Future<void> onPressed() async {
     final result = await AuthUtil.instance.signInWithGoogle();
-
-    // 非同期処理が完了したら、setStateを呼び出してUIを更新する
     setState(() {
       userId = result[1]!;
+      isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
     });
-
-    // サインインが完了したことを表示
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('サインインが完了しました。')),
     );

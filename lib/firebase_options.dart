@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,6 +43,16 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCPWny-qsrORSK7gvuk4apa2fDmr45P-yQ',
+    appId: '1:588802119789:web:22774a265d9862acb4c764',
+    messagingSenderId: '588802119789',
+    projectId: 'my-gourmet-160fb',
+    authDomain: 'my-gourmet-160fb.firebaseapp.com',
+    storageBucket: 'my-gourmet-160fb.appspot.com',
+    measurementId: 'G-K77NETTFSE',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCH1bSY10I1tRZTeJj4s_RFhp5GEOvRK3Y',
     appId: '1:588802119789:android:813b3a0dc8542f79b4c764',
@@ -63,8 +67,19 @@ class DefaultFirebaseOptions {
     messagingSenderId: '588802119789',
     projectId: 'my-gourmet-160fb',
     storageBucket: 'my-gourmet-160fb.appspot.com',
-    androidClientId: '588802119789-6hda24f2u719ais2ul1o2odjauq9n29m.apps.googleusercontent.com',
+    androidClientId: '588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com',
     iosClientId: '588802119789-oh11a15chog7l1dkq0q4ju5gh4gofcut.apps.googleusercontent.com',
     iosBundleId: 'com.example.myGourmet',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDHiEFqj1KOpzYLhCKGOWkF21pIZ6wOdhc',
+    appId: '1:588802119789:ios:c81113cee449e26db4c764',
+    messagingSenderId: '588802119789',
+    projectId: 'my-gourmet-160fb',
+    storageBucket: 'my-gourmet-160fb.appspot.com',
+    androidClientId: '588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com',
+    iosClientId: '588802119789-lr4ault031vkrdl78p5a3lhmkf54ttp2.apps.googleusercontent.com',
+    iosBundleId: 'com.example.myGourmet.RunnerTests',
   );
 }

@@ -14,11 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "588802119789-6hda24f2u719ais2ul1o2odjauq9n29m.apps.googleusercontent.com",
+          "client_id": "588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.my_gourmet",
-            "certificate_hash": "3283f1ba7187a70f562fea57b24cbe183b2d2a8d"
+            "certificate_hash": "fa07e5829257e71b6358724a5711414b45238148"
+          }
+        },
+        {
+          "client_id": "588802119789-pkaooa5ml0jh9ioulgertjdg6oiarpu5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_gourmet",
+            "certificate_hash": "5366066ad24e6c112b2fab175e0287e04be15b7f"
           }
         },
         {
@@ -39,10 +47,10 @@
               "client_type": 3
             },
             {
-              "client_id": "588802119789-7ll4rd39kas31kffptqi8b2ufbedc8gh.apps.googleusercontent.com",
+              "client_id": "588802119789-9mtf99tnnlgus7scvrb5f04q02c3758u.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.chat"
+                "bundle_id": "com.example.chat.RunnerTests"
               }
             }
           ]
