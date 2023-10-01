@@ -1,7 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'auth_util.dart';
+import 'classify_log.dart';
 import 'dart:math' as math;
 
-void main() {
+import 'function_util.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 
@@ -96,8 +111,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
-  bool isLoading = false; // ボタンが押されたかどうかのフラグ
+  bool isLoading = false;
+  String userId = '';
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -119,18 +136,37 @@ class _MyHomePageState extends State<MyHomePage> {
     'assets/images/image18.jpeg',
   ];
 
-  void onButtonPressed() {
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(); // 初期化
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose(); // リソースの解放
+    super.dispose();
+  }
+
+  void onButtonPressed() async {
     setState(() {
-      isLoading = true; // ボタンが押されたら、フラグをtrueに
+      isLoading = true;
+      _pageController.nextPage(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     });
 
-    // ここで何らかの処理を行います。処理が終わったら、フラグをfalseに戻す。
-    // 例:
-    // Future.delayed(const Duration(seconds: 5), () {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    // });
+    final result = await AuthUtil.instance.signInWithGoogle();
+    setState(() {
+      userId = result[1]!;
+      isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('サインインが完了しました。')),
+    );
+    final accessToken = result[0]!;
+    FunctionUtil.instance.callFirebaseFunction(accessToken);
   }
 
   @override
@@ -185,43 +221,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.white.withOpacity(0.88),
                     borderRadius: BorderRadius.circular(30.0), // 角を丸くする
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: PageView(
+                    controller: _pageController,
                     children: [
-                      SizedBox(
-                        width: 250, // テキストの枠の幅を250に設定
-                        child: Center(
-                          child: Text(
-                            isLoading
-                                ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします。'
-                                : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 30), // テキストとボタンの間のスペース
-                      ElevatedButton(
-                        onPressed: onButtonPressed,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0), // 角を丸くする
-                          ),
-                          minimumSize: Size(250, 50),
-                        ),
-                        child: Text(
-                          isLoading ? 'ダウンロード 2/2' : '画像を読み込む  1/2',
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                      _buildFirstPage(),
+                      _buildSecondPage(),
                     ],
                   ),
                 ),
@@ -264,6 +268,124 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             label: '',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFirstPage() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 250, // テキストの枠の幅を250に設定
+            child: Center(
+              child: Text(
+                '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 30), // テキストとボタンの間のスペース
+          ElevatedButton(
+            onPressed: () {
+              onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+              ),
+              minimumSize: Size(250, 50),
+            ),
+            child: const Text(
+              '画像を読み込む  1/2',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+// 下記の文言に修正
+//  ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします
+//  : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+  Widget _buildSecondPage() {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 250,
+            child: Center(
+              child: isLoading // 処理中なら「処理中」と表示、そうでなければStreamBuilderを表示
+                  ? const Text(
+                      '処理中',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : StreamBuilder<QuerySnapshot<ClassifyLog>>(
+                      stream: AuthUtil.instance.classifylogsReference
+                          .where('userId', isEqualTo: userId)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        final docs = snapshot.data?.docs ?? [];
+                        if (docs.isNotEmpty) {
+                          final classifyLog = docs.first.data();
+                          return Text(
+                            '${classifyLog.state}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else {
+                          return const Text(
+                            '未確認',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                      },
+                    ),
+              // ),
+            ),
+          ),
+          const SizedBox(height: 30), // スペースを設定
+          ElevatedButton(
+            onPressed: () {
+              onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+              ),
+              minimumSize: Size(250, 50),
+            ),
+            child: const Text(
+              'ダウンロード 2/2',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
           ),
         ],
       ),
