@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'auth_util.dart';
 import 'classify_log.dart';
 import 'dart:math' as math;
@@ -169,6 +166,31 @@ class _MyHomePageState extends State<MyHomePage> {
     FunctionUtil.instance.callFirebaseFunction(accessToken);
   }
 
+  List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
+
+  Future<void> _downloadImages() async {
+    try {
+      final storage = FirebaseStorage.instance;
+      ListResult result = await storage
+          .ref()
+          .child('photo-jp-my-gourmet-image-classification-2023-08/')
+          .list();
+      List<String> urls = [];
+      for (var item in result.items) {
+        final url = await item.getDownloadURL();
+        urls.add(url);
+      }
+      setState(() {
+        imageUrls = urls;
+      });
+    } catch (e) {
+      print("An error occurred: $e");
+      setState(() {
+        imageUrls = [];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,11 +220,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3, // 3列
                     ),
-                    itemCount: imagePaths.length,
+                    itemCount: imageUrls?.length ??
+                        imagePaths.length, // imageUrlsがnullならimagePathsの長さを使用
                     itemBuilder: (context, index) {
-                      return Image.asset(
-                        imagePaths[index],
-                        fit: BoxFit.cover, // 画像を正方形に表示
+                      return Image(
+                        image: imageUrls != null
+                            ? NetworkImage(imageUrls![index])
+                            : AssetImage(imagePaths[index])
+                                as ImageProvider<Object>,
+                        fit: BoxFit.cover,
                       );
                     },
                   ),
@@ -369,7 +395,7 @@ class _MyHomePageState extends State<MyHomePage> {
           const SizedBox(height: 30), // スペースを設定
           ElevatedButton(
             onPressed: () {
-              onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
+              _downloadImages(); // ボタンが押されたら画像をダウンロード
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
