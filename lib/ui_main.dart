@@ -154,16 +154,41 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     });
 
-    final result = await AuthUtil.instance.signInWithGoogle();
-    setState(() {
-      userId = result[1]!;
-      isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('サインインが完了しました。')),
-    );
-    final accessToken = result[0]!;
-    FunctionUtil.instance.callFirebaseFunction(accessToken);
+    try {
+      final result = await AuthUtil.instance.signInWithGoogle();
+      if (result != null && result.isNotEmpty) {
+        final accessToken = result[0];
+        final userId = result[1];
+
+        if (accessToken != null && userId != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('サインインが完了しました。')),
+          );
+
+          // サインインが完了した後にFirebase Functionを呼び出す
+          await FunctionUtil.instance.callFirebaseFunction(accessToken);
+        } else {
+          // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('アクセストークンまたはユーザーIDの取得に失敗しました。')),
+          );
+        }
+      } else {
+        // サインイン結果がnullまたは空の場合、エラーメッセージを表示
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('サインインの結果がnullまたは空です。')),
+        );
+      }
+    } catch (e) {
+      // 例外が発生した場合、エラーメッセージを表示
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('エラーが発生しました: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
+      });
+    }
   }
 
   List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持

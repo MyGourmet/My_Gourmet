@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_gourmet/classify_log.dart';
-import 'classify_login_main.dart';
 import 'firebase_options.dart';
 import 'package:logger/logger.dart';
 
@@ -16,7 +15,7 @@ class FunctionUtil {
   Future<void> callFirebaseFunction(String accessToken) async {
     try {
       final result = await call(
-        functionName: 'function-2',
+        functionName: 'function-3',
         parameters: {
           'name': accessToken,
         },
@@ -51,7 +50,6 @@ class FunctionUtil {
       print(callable);
       return await callable.call(parameters);
     } catch (e) {
-      logger.d(e);
       rethrow;
     }
   }
