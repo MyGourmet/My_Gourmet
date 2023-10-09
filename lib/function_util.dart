@@ -20,13 +20,6 @@ class FunctionUtil {
           'name': accessToken,
         },
       );
-      // final Map<String, dynamic> response =
-      //     jsonDecode(result.data) ?? {'message': 'Unknown response'};
-      // final String message = response["message"];
-
-      // setState(() {
-      //   _functionResult = message;
-      // });
     } catch (error) {
       print(error);
       // setState(() {
