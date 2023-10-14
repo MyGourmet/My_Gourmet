@@ -15,7 +15,7 @@ class FunctionUtil {
   Future<void> callFirebaseFunction(String accessToken) async {
     try {
       final result = await call(
-        functionName: 'function-3',
+        functionName: 'function-2',
         parameters: {
           'name': accessToken,
         },
