@@ -116,7 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
-  String userId = '';
+  // TODO(masaki): userId周りを調整
+  //  自分のユーザーIDを一旦ハードコーディング
+  String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
+  // 金さんの場合
+  // String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2';
+
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -395,8 +400,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     )
                   : StreamBuilder<QuerySnapshot<ClassifyLog>>(
                       stream: AuthUtil.instance.classifylogsReference
-                          .where('userId',
-                              isEqualTo: '1i1l3tDm0nSUrY3bLGuZGuAd08J2')
+                          .where('userId', isEqualTo: userId)
                           .snapshots(),
                       builder: (context, snapshot) {
                         final docs = snapshot.data?.docs ?? [];
