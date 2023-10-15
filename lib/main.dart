@@ -1,12 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'auth_util.dart';
-import 'classify_log.dart';
 import 'dart:math' as math;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+
+import 'auth_util.dart';
+import 'classify_log.dart';
+import 'firebase_options.dart';
 import 'function_util.dart';
 
 Future<void> main() async {
@@ -14,13 +15,15 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MyHomePage(),
     );
   }
@@ -29,13 +32,13 @@ class MyApp extends StatelessWidget {
 class CategoryButton extends StatelessWidget {
   final String label;
 
-  const CategoryButton({required this.label});
+  const CategoryButton({super.key, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFD9D9D9),
+        color: const Color(0xFFD9D9D9),
         borderRadius: BorderRadius.circular(15.0), // 角を丸くする
       ),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -54,7 +57,7 @@ class CategoryButton extends StatelessWidget {
 class MyRotatingButton extends StatefulWidget {
   final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
 
-  MyRotatingButton({required this.onVisibilityChanged});
+  const MyRotatingButton({super.key, required this.onVisibilityChanged});
 
   @override
   _MyRotatingButtonState createState() => _MyRotatingButtonState();
@@ -103,6 +106,8 @@ class _MyRotatingButtonState extends State<MyRotatingButton> {
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -111,7 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
-  String userId = '';
+  // TODO(masaki): userId周りを調整
+  //  自分のユーザーIDを一旦ハードコーディング
+  String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
+  // 金さんの場合
+  // String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2';
+
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -149,20 +159,20 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isLoading = true;
       _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     });
 
     try {
       final result = await AuthUtil.instance.signInWithGoogle();
-      if (result != null && result.isNotEmpty) {
+      if (result.isNotEmpty) {
         final accessToken = result[0];
         final userId = result[1];
 
         if (accessToken != null && userId != null) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('サインインが完了しました。')),
+            const SnackBar(content: Text('サインインが完了しました。')),
           );
 
           // サインインが完了した後にFirebase Functionを呼び出す
@@ -170,13 +180,13 @@ class _MyHomePageState extends State<MyHomePage> {
         } else {
           // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('アクセストークンまたはユーザーIDの取得に失敗しました。')),
+            const SnackBar(content: Text('アクセストークンまたはユーザーIDの取得に失敗しました。')),
           );
         }
       } else {
         // サインイン結果がnullまたは空の場合、エラーメッセージを表示
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('サインインの結果がnullまたは空です。')),
+          const SnackBar(content: Text('サインインの結果がnullまたは空です。')),
         );
       }
     } catch (e) {
@@ -349,11 +359,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
+              backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0), // 角を丸くする
               ),
-              minimumSize: Size(250, 50),
+              minimumSize: const Size(250, 50),
             ),
             child: const Text(
               '画像を読み込む  1/2',
@@ -380,9 +390,9 @@ class _MyHomePageState extends State<MyHomePage> {
           SizedBox(
             width: 250,
             child: Center(
-              child: isLoading // 処理中なら「処理中」と表示、そうでなければStreamBuilderを表示
+              child: isLoading
                   ? const Text(
-                      '処理中',
+                      '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -394,19 +404,37 @@ class _MyHomePageState extends State<MyHomePage> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         final docs = snapshot.data?.docs ?? [];
-                        if (docs.isNotEmpty) {
-                          final classifyLog = docs.first.data();
-                          return Text(
-                            '${classifyLog.state}',
-                            style: const TextStyle(
+                        if (docs.isEmpty) {
+                          return const Text(
+                            '未確認',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+
+                        final classifyLog = docs.first.data();
+                        if (classifyLog.state == 'completed') {
+                          return const Text(
+                            '処理が完了しました！\n下記から画像をダウンロードできます！',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else if (classifyLog.state == 'isProcessing') {
+                          return const Text(
+                            '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                            style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           );
                         } else {
-                          return const Text(
-                            '未確認',
-                            style: TextStyle(
+                          return Text(
+                            classifyLog.state,
+                            style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
@@ -423,11 +451,11 @@ class _MyHomePageState extends State<MyHomePage> {
               _downloadImages(); // ボタンが押されたら画像をダウンロード
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFEF913A), // ボタンの背景色を設定
+              backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30.0), // 角を丸くする
               ),
-              minimumSize: Size(250, 50),
+              minimumSize: const Size(250, 50),
             ),
             child: const Text(
               'ダウンロード 2/2',

@@ -25,7 +25,7 @@ class AuthUtil {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      // 新しいドキュメントを作成して、stateを"処理中"にする
+      // 新しいドキュメントを作成して、stateを"isProcessing"にする
       final user = FirebaseAuth.instance.currentUser!;
 
       // この部分でインスタンス変数を更新しています。
@@ -54,12 +54,12 @@ class AuthUtil {
       documentReference = classifylogsReference.doc();
       createdAtTimestamp = Timestamp.now();
 
-      // stateを"処理中"にして、更新日時を更新
+      // stateを"isProcessing"にして、更新日時を更新
       final newClassifyLog = ClassifyLog(
           createdAt: createdAtTimestamp,
           updatedAt: Timestamp.now(),
           userId: userId,
-          state: '処理中',
+          state: 'isProcessing',
           reference: documentReference);
 
       await documentReference.set(
@@ -70,9 +70,9 @@ class AuthUtil {
       // ここで createdAtTimestamp を設定します。
       createdAtTimestamp = existingDoc.docs.first.data().createdAt;
 
-      // stateを"処理中"に更新
+      // stateを"isProcessing"に更新
       await documentReference
-          .update({'state': '処理中', 'updatedAt': Timestamp.now()});
+          .update({'state': 'isProcessing', 'updatedAt': Timestamp.now()});
     }
   }
 
