@@ -8,10 +8,11 @@ import 'auth_util.dart';
 import 'classify_log.dart';
 import 'function_util.dart';
 
-class CategoryButton extends StatelessWidget {
+// TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
+class _CategoryButton extends StatelessWidget {
   final String label;
 
-  const CategoryButton({super.key, required this.label});
+  const _CategoryButton({required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +34,16 @@ class CategoryButton extends StatelessWidget {
   }
 }
 
-class MyRotatingButton extends StatefulWidget {
+class _MyRotatingButton extends StatefulWidget {
   final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
 
-  const MyRotatingButton({super.key, required this.onVisibilityChanged});
+  const _MyRotatingButton({required this.onVisibilityChanged});
 
   @override
   _MyRotatingButtonState createState() => _MyRotatingButtonState();
 }
 
-class _MyRotatingButtonState extends State<MyRotatingButton> {
+class _MyRotatingButtonState extends State<_MyRotatingButton> {
   bool _isRotated = false;
   bool _isContainerVisible = true; // 新しく追加したフラグ
 
@@ -134,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void onButtonPressed() async {
+  void _onButtonPressed() async {
     setState(() {
       isLoading = true;
       _pageController.nextPage(
@@ -221,10 +222,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      CategoryButton(label: 'ラーメン'),
-                      CategoryButton(label: '和食'),
-                      CategoryButton(label: 'カフェ'),
-                      CategoryButton(label: 'その他'),
+                      _CategoryButton(label: 'ラーメン'),
+                      _CategoryButton(label: '和食'),
+                      _CategoryButton(label: 'カフェ'),
+                      _CategoryButton(label: 'その他'),
                     ],
                   ),
                 ),
@@ -272,7 +273,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             // SizedBox(height: 30),
-            MyRotatingButton(
+            _MyRotatingButton(
               onVisibilityChanged: (isVisible) {
                 setState(() {
                   _isContainerVisible = isVisible; // コンテナの表示状態を更新
@@ -335,7 +336,7 @@ class _MyHomePageState extends State<MyHomePage> {
           const SizedBox(height: 30), // テキストとボタンの間のスペース
           ElevatedButton(
             onPressed: () {
-              onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
+              _onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
