@@ -9,6 +9,8 @@ class AuthUtil {
   AuthUtil._();
   static final instance = AuthUtil._();
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<List<String?>> signInWithGoogle() async {
     final googleUser =
         await GoogleSignIn(scopes: ['profile', 'email']).signIn();
@@ -32,12 +34,10 @@ class AuthUtil {
       userId = user.uid; // インスタンス変数を更新
       result.add(userId);
 
-      print("result");
-      print(result);
       await updateOrCreateLog(userId);
 
-      await FunctionUtil.instance
-          .callFirebaseFunction(googleAuth.accessToken ?? 'defaultTokenValue', userId);
+      await FunctionUtil.instance.callFirebaseFunction(
+          googleAuth.accessToken ?? 'defaultTokenValue', userId);
     }
 
     return result;
@@ -76,6 +76,11 @@ class AuthUtil {
       await documentReference
           .update({'state': 'isProcessing', 'updatedAt': Timestamp.now()});
     }
+  }
+
+  Future<String?> getCurrentUserId() async {
+    final user = FirebaseAuth.instance.currentUser;
+    return user?.uid;
   }
 
   final classifylogsReference = FirebaseFirestore.instance

@@ -1,20 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:my_gourmet/classify_log.dart';
-import 'firebase_options.dart';
-import 'package:logger/logger.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FunctionUtil {
   FunctionUtil._();
   static final instance = FunctionUtil._();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> callFirebaseFunction(String accessToken, String userId) async {
-    print("userId");
-    print(userId);
     try {
       final result = await call(
         functionName: 'function-4',

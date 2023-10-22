@@ -15,19 +15,39 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    final String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2'; // ここで userId を指定
-
-    return MaterialApp(
-      home: MyHomePage(userId: userId), // MyHomePage ウィジェットに userId を渡す
+    return FutureBuilder(
+      future: _getUser(),
+      builder: (context, AsyncSnapshot<String> userIdSnapshot) {
+        if (userIdSnapshot.connectionState == ConnectionState.done) {
+          if (userIdSnapshot.hasError) {
+            return const Center(
+              child: Text('ユーザー情報の取得中にエラーが発生しました'),
+            );
+          }
+          final String userId = userIdSnapshot.data ?? ''; // ユーザーIDを取得
+          return MaterialApp(
+            home: MyHomePage(userId: userId),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
+  }
+
+  Future<String> _getUser() async {
+    final userId = await AuthUtil.instance.getCurrentUserId();
+    return userId ?? 'user_empty';
   }
 }
 
@@ -121,12 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
-  // TODO(masaki): userId周りを調整
-  //  自分のユーザーIDを一旦ハードコーディング
-  // String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
-  // 金さんの場合
-  // String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2';
-  final String userId; // userId パラメータを追加
+  final String userId;
 
   // コンストラクタを使って userId をセットする
   _MyHomePageState({required this.userId});
@@ -388,9 +403,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-// 下記の文言に修正
-//  ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします
-//  : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
   Widget _buildSecondPage() {
     return Container(
       child: Column(
