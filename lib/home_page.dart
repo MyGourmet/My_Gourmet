@@ -85,14 +85,14 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
