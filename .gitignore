@@ -45,3 +45,6 @@ app.*.map.json
 
 # history
 /.history/
+
+# fvm
+.fvm/flutter_sdk
