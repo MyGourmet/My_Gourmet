@@ -15,17 +15,39 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHomePage(),
+    return FutureBuilder(
+      future: _getUser(),
+      builder: (context, AsyncSnapshot<String> userIdSnapshot) {
+        if (userIdSnapshot.connectionState == ConnectionState.done) {
+          if (userIdSnapshot.hasError) {
+            return const Center(
+              child: Text('ユーザー情報の取得中にエラーが発生しました'),
+            );
+          }
+          final String userId = userIdSnapshot.data ?? ''; // ユーザーIDを取得
+          return MaterialApp(
+            home: MyHomePage(userId: userId),
+          );
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
+  }
+
+  Future<String> _getUser() async {
+    final userId = await AuthUtil.instance.getCurrentUserId();
+    return userId ?? 'user_empty';
   }
 }
 
@@ -106,21 +128,23 @@ class _MyRotatingButtonState extends State<MyRotatingButton> {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final String userId; // userId パラメータを追加
+
+  const MyHomePage({Key? key, required this.userId}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() =>
+      _MyHomePageState(userId: userId); // userId を渡す
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
-  // TODO(masaki): userId周りを調整
-  //  自分のユーザーIDを一旦ハードコーディング
-  String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
-  // 金さんの場合
-  // String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2';
+  final String userId;
+
+  // コンストラクタを使って userId をセットする
+  _MyHomePageState({required this.userId});
 
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -155,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void onButtonPressed() async {
+  Future<void> onButtonPressed() async {
     setState(() {
       isLoading = true;
       _pageController.nextPage(
@@ -176,7 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
 
           // サインインが完了した後にFirebase Functionを呼び出す
-          await FunctionUtil.instance.callFirebaseFunction(accessToken);
+          await FunctionUtil.instance.callFirebaseFunction(accessToken, userId);
         } else {
           // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
           ScaffoldMessenger.of(context).showSnackBar(
@@ -379,9 +403,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-// 下記の文言に修正
-//  ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします
-//  : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
   Widget _buildSecondPage() {
     return Container(
       child: Column(
