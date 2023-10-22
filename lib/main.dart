@@ -23,8 +23,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyHomePage(),
+    final String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2'; // ここで userId を指定
+
+    return MaterialApp(
+      home: MyHomePage(userId: userId), // MyHomePage ウィジェットに userId を渡す
     );
   }
 }
@@ -106,10 +108,13 @@ class _MyRotatingButtonState extends State<MyRotatingButton> {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final String userId; // userId パラメータを追加
+
+  const MyHomePage({Key? key, required this.userId}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() =>
+      _MyHomePageState(userId: userId); // userId を渡す
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -118,9 +123,13 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isLoading = false;
   // TODO(masaki): userId周りを調整
   //  自分のユーザーIDを一旦ハードコーディング
-  String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
+  // String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
   // 金さんの場合
   // String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2';
+  final String userId; // userId パラメータを追加
+
+  // コンストラクタを使って userId をセットする
+  _MyHomePageState({required this.userId});
 
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -155,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void onButtonPressed() async {
+  Future<void> onButtonPressed() async {
     setState(() {
       isLoading = true;
       _pageController.nextPage(
@@ -176,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
 
           // サインインが完了した後にFirebase Functionを呼び出す
-          await FunctionUtil.instance.callFirebaseFunction(accessToken);
+          await FunctionUtil.instance.callFirebaseFunction(accessToken, userId);
         } else {
           // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
           ScaffoldMessenger.of(context).showSnackBar(

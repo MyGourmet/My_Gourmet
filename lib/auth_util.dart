@@ -32,10 +32,12 @@ class AuthUtil {
       userId = user.uid; // インスタンス変数を更新
       result.add(userId);
 
+      print("result");
+      print(result);
       await updateOrCreateLog(userId);
 
       await FunctionUtil.instance
-          .callFirebaseFunction(googleAuth.accessToken ?? 'defaultTokenValue');
+          .callFirebaseFunction(googleAuth.accessToken ?? 'defaultTokenValue', userId);
     }
 
     return result;

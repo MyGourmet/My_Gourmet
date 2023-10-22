@@ -12,12 +12,15 @@ class FunctionUtil {
   FunctionUtil._();
   static final instance = FunctionUtil._();
 
-  Future<void> callFirebaseFunction(String accessToken) async {
+  Future<void> callFirebaseFunction(String accessToken, String userId) async {
+    print("userId");
+    print(userId);
     try {
       final result = await call(
-        functionName: 'function-2',
+        functionName: 'function-4',
         parameters: {
           'name': accessToken,
+          'userId': userId,
         },
       );
     } catch (error) {
