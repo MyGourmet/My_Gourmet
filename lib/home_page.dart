@@ -86,7 +86,8 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({required this.userId, super.key});
+  final String userId;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -96,11 +97,6 @@ class _HomePageState extends State<HomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
-  // TODO(masaki): userId周りを調整
-  //  自分のユーザーIDを一旦ハードコーディング
-  String userId = '1i1l3tDm0nSUrY3bLGuZGuAd08J2';
-  // 金さんの場合
-  // String userId = 'xtyspsWTPyUSDb92km3DKs8q6Qf2';
 
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -135,7 +131,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void _onButtonPressed() async {
+  Future<void> _onButtonPressed() async {
     setState(() {
       isLoading = true;
       _pageController.nextPage(
@@ -148,6 +144,8 @@ class _HomePageState extends State<HomePage> {
       final result = await AuthUtil.instance.signInWithGoogle();
       if (result.isNotEmpty) {
         final accessToken = result[0];
+        // TODO(masaki): userId周り諸々改修
+        //  おそらくここをfinalで新しく定義していたことが原因そう
         final userId = result[1];
 
         if (accessToken != null && userId != null) {
@@ -156,7 +154,8 @@ class _HomePageState extends State<HomePage> {
           );
 
           // サインインが完了した後にFirebase Functionを呼び出す
-          await FunctionUtil.instance.callFirebaseFunction(accessToken);
+          await FunctionUtil.instance
+              .callFirebaseFunction(accessToken, widget.userId);
         } else {
           // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
           ScaffoldMessenger.of(context).showSnackBar(
@@ -380,7 +379,7 @@ class _HomePageState extends State<HomePage> {
                     )
                   : StreamBuilder<QuerySnapshot<ClassifyLog>>(
                       stream: AuthUtil.instance.classifylogsReference
-                          .where('userId', isEqualTo: userId)
+                          .where('userId', isEqualTo: widget.userId)
                           .snapshots(),
                       builder: (context, snapshot) {
                         final docs = snapshot.data?.docs ?? [];
