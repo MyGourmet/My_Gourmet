@@ -11,8 +11,11 @@ class AuthUtil {
   AuthUtil._();
 
   Future<List<String?>> signInWithGoogle() async {
-    final googleUser =
-        await GoogleSignIn(scopes: ['profile', 'email']).signIn();
+    final googleUser = await GoogleSignIn(scopes: [
+      'profile',
+      'email',
+      'https://www.googleapis.com/auth/photoslibrary'
+    ]).signIn();
     var userId = "";
     List<String?> result = [];
 
