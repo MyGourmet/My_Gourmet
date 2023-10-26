@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/home_page.dart';
 
 import 'auth_util.dart';
@@ -10,16 +11,16 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
-      future: _getUser(),
+      future: _getUser(ref),
       builder: (context, AsyncSnapshot<String> userIdSnapshot) {
         if (userIdSnapshot.connectionState == ConnectionState.done) {
           if (userIdSnapshot.hasError) {
@@ -40,8 +41,8 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  Future<String> _getUser() async {
-    final userId = await AuthUtil.instance.getCurrentUserId();
+  Future<String> _getUser(WidgetRef ref) async {
+    final userId = await ref.read(authUtilProvider).getCurrentUserId();
     return userId ?? 'user_empty';
   }
 }

@@ -1,9 +1,12 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+final functionUtilProvider = Provider((ref) => FunctionUtil._());
+
+// TODO(masaki): 命名やディレクトリ構成を改修
 class FunctionUtil {
   FunctionUtil._();
-  static final instance = FunctionUtil._();
 
   Future<void> callFirebaseFunction(String accessToken, String userId) async {
     try {

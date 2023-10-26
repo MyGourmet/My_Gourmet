@@ -3,10 +3,11 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_gourmet/home_page_controller.dart';
 
 import 'auth_util.dart';
 import 'classify_log.dart';
-import 'function_util.dart';
 
 // TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
 class _CategoryButton extends StatelessWidget {
@@ -85,7 +86,7 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({required this.userId, super.key});
   final String userId;
 
@@ -93,7 +94,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
@@ -141,7 +142,8 @@ class _HomePageState extends State<HomePage> {
     });
 
     try {
-      final result = await AuthUtil.instance.signInWithGoogle();
+      final result = await ref.read(homepageControllerProvider).uploadImages();
+
       if (result.isNotEmpty) {
         final accessToken = result[0];
         // TODO(masaki): userId周り諸々改修
@@ -152,10 +154,6 @@ class _HomePageState extends State<HomePage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('サインインが完了しました。')),
           );
-
-          // サインインが完了した後にFirebase Functionを呼び出す
-          await FunctionUtil.instance
-              .callFirebaseFunction(accessToken, widget.userId);
         } else {
           // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
           ScaffoldMessenger.of(context).showSnackBar(
@@ -378,7 +376,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     )
                   : StreamBuilder<QuerySnapshot<ClassifyLog>>(
-                      stream: AuthUtil.instance.classifylogsReference
+                      stream: ref
+                          .read(authUtilProvider)
+                          .classifylogsReference
                           .where('userId', isEqualTo: widget.userId)
                           .snapshots(),
                       builder: (context, snapshot) {
