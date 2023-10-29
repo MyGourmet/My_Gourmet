@@ -35,7 +35,7 @@ runs:
 
     # flutter pub get を実行
     - name: Cache Pub
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: pub-cache
       with:
         path: |
