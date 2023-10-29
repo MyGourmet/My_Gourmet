@@ -87,8 +87,8 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
 }
 
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({required this.userId, super.key});
-  final String userId;
+  const HomePage({this.userId, super.key});
+  final String? userId;
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -98,6 +98,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController; // PageControllerのインスタンスを生成
   bool _isContainerVisible = true;
   bool isLoading = false;
+  // TODO(masaki): controller辺りで管理するようにする
+  String? userId;
 
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -146,9 +148,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
       if (result.isNotEmpty) {
         final accessToken = result[0];
-        // TODO(masaki): userId周り諸々改修
-        //  おそらくここをfinalで新しく定義していたことが原因そう
-        final userId = result[1];
+        userId = result[1];
 
         if (accessToken != null && userId != null) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -379,7 +379,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       stream: ref
                           .read(authUtilProvider)
                           .classifylogsReference
-                          .where('userId', isEqualTo: widget.userId)
+                          .where('userId', isEqualTo: widget.userId ?? userId)
                           .snapshots(),
                       builder: (context, snapshot) {
                         final docs = snapshot.data?.docs ?? [];

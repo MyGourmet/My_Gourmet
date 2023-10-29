@@ -21,14 +21,14 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return FutureBuilder(
       future: _getUser(ref),
-      builder: (context, AsyncSnapshot<String> userIdSnapshot) {
+      builder: (context, AsyncSnapshot<String?> userIdSnapshot) {
         if (userIdSnapshot.connectionState == ConnectionState.done) {
           if (userIdSnapshot.hasError) {
             return const Center(
               child: Text('ユーザー情報の取得中にエラーが発生しました'),
             );
           }
-          final String userId = userIdSnapshot.data ?? ''; // ユーザーIDを取得
+          final userId = userIdSnapshot.data; // ユーザーIDを取得
           return MaterialApp(
             home: HomePage(userId: userId),
           );
@@ -41,8 +41,8 @@ class MyApp extends ConsumerWidget {
     );
   }
 
-  Future<String> _getUser(WidgetRef ref) async {
+  Future<String?> _getUser(WidgetRef ref) async {
     final userId = await ref.read(authUtilProvider).getCurrentUserId();
-    return userId ?? 'user_empty';
+    return userId;
   }
 }
