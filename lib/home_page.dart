@@ -92,16 +92,17 @@ class HomePage extends ConsumerStatefulWidget {
   final String? userId;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  late PageController _pageController; // PageControllerのインスタンスを生成
+  late PageController _pageController;
   bool _isContainerVisible = true;
   bool isLoading = false;
   // TODO(masaki): controller辺りで管理するようにする
   String? userId;
 
+  // TODO(masaki): デモ画像であることを明示するためのデザインへ変更
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -181,6 +182,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
 
+  // TODO(masaki): controller経由でモデル側で行うように改修
   Future<void> _downloadImages() async {
     try {
       final storage = FirebaseStorage.instance;
@@ -358,6 +360,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               minimumSize: const Size(250, 50),
             ),
             child: const Text(
+              // MEMO(masaki): ステップの1/2というのを伝わりやすいUIに改修
               '画像を読み込む  1/2',
               style: TextStyle(
                 fontSize: 20,
@@ -371,9 +374,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-// 下記の文言に修正
-//  ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします
-//  : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
   Widget _buildSecondPage() {
     return Container(
       child: Column(
@@ -442,6 +442,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           const SizedBox(height: 30), // スペースを設定
           ElevatedButton(
             onPressed: () {
+              // TODO(masaki): ダウンロード完了前に押されてしまう問題を改修
               _downloadImages(); // ボタンが押されたら画像をダウンロード
             },
             style: ElevatedButton.styleFrom(
@@ -452,6 +453,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               minimumSize: const Size(250, 50),
             ),
             child: const Text(
+              // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
               'ダウンロード 2/2',
               style: TextStyle(
                 fontSize: 20,
