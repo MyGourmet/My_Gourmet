@@ -14,11 +14,10 @@ on:
       - opened
       - synchronize
 
-  # main or develop ブランチに push された時
+  # main ブランチに push された時
   push:
     branches:
       - main
-      - develop
 
 # 複数のジョブを定義する
 # 各ジョブはそれぞれまったく別々の環境で実行される
