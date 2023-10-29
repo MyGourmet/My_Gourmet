@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -206,6 +207,20 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // TODO(masaki): ログアウト機能実装後 or 不要になったタイミングで削除
+      floatingActionButton: Visibility(
+        visible: _isContainerVisible,
+        child: FloatingActionButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: const Icon(
+            Icons.logout,
+            color: Colors.black,
+            size: 40,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
