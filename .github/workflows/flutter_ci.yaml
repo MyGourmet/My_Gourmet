@@ -1,0 +1,62 @@
+# Copyright 2023 OpenAI All rights reserved.
+# Use of this source code is governed by a MIT license that can be
+# found in the LICENSE file.
+
+# ワークフローの表示名
+name: Flutter CI
+
+# ワークフローの起動条件を定義する
+on:
+
+  # プルリクエストが作成 or 更新された時
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+  # main or develop ブランチに push された時
+  push:
+    branches:
+      - main
+      - develop
+
+# 複数のジョブを定義する
+# 各ジョブはそれぞれまったく別々の環境で実行される
+jobs:
+
+  # 静的解析ジョブの定義
+  static_analysis:
+
+    # ジョブの表示名
+    name: Static Analysis
+
+    # ジョブを実行するOS
+    runs-on: ubuntu-latest
+
+    # タイムアウト時間（分）
+    timeout-minutes: 15
+
+    # ジョブの手順
+    steps:
+
+      # ソースコードをチェックアウト
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # セットアップ
+      - name: Setup Flutter
+        uses: ./.github/actions/setup_flutter
+        with:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.ENV_GITHUB_ACCESS_TOKEN }}
+
+      # 静的解析を実行（flutter_lints）
+      - name: Run Flutter Lints
+        run: flutter pub get && flutter analyze --lints
+
+      # 静的解析を実行（custom_lint）
+      - name: Run Custom Lint
+        run: flutter pub get && flutter analyze --custom
+
+      # 静的解析を実行（riverpod_lint）
+      - name: Run Riverpod Lint
+        run: flutter pub get && flutter analyze --riverpod
