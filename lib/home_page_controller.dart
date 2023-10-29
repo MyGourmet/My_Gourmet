@@ -25,17 +25,13 @@ class HomePageController {
   /// 画像アップロード用メソッド
   ///
   /// サインインをした上でfirestore上で状態管理し、画像アップロード用のCFを起動する。
-  Future<List<String?>> uploadImages() async {
-    // TODO(masaki): null諸々改修する
-
+  Future<({String userId})> uploadImages() async {
     final result = await _authUtil.signInWithGoogle();
 
-    final userId = result[1] ?? '';
+    await updateOrCreateLog(result.userId);
 
-    await updateOrCreateLog(userId);
+    await _functionUtil.callFirebaseFunction(result.accessToken, result.userId);
 
-    await _functionUtil.callFirebaseFunction(result[0] ?? '', userId);
-
-    return result;
+    return (userId: result.userId);
   }
 }

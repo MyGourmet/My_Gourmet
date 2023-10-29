@@ -10,34 +10,34 @@ final authUtilProvider = Provider((ref) => AuthUtil._());
 class AuthUtil {
   AuthUtil._();
 
-  Future<List<String?>> signInWithGoogle() async {
+  Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(scopes: [
       'profile',
       'email',
       'https://www.googleapis.com/auth/photoslibrary'
     ]).signIn();
-    var userId = "";
-    List<String?> result = [];
 
-    if (googleUser != null) {
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      result.add(googleAuth.accessToken);
-
-      await FirebaseAuth.instance.signInWithCredential(credential);
-
-      // 新しいドキュメントを作成して、stateを"isProcessing"にする
-      final user = FirebaseAuth.instance.currentUser!;
-
-      // この部分でインスタンス変数を更新しています。
-      userId = user.uid; // インスタンス変数を更新
-      result.add(userId);
+    if (googleUser == null) {
+      throw Exception('サインインに失敗しました.');
     }
 
-    return result;
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final accessToken = googleAuth.accessToken;
+
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+
+    if (accessToken == null || userId == null) {
+      throw Exception('サインインに失敗しました.');
+    }
+
+    return (accessToken: accessToken, userId: userId);
   }
 
   Future<String?> getCurrentUserId() async {
