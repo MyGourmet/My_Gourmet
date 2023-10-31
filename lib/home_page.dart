@@ -185,7 +185,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       final storage = FirebaseStorage.instance;
       ListResult result = await storage
           .ref()
-          .child('photo-jp-my-gourmet-image-classification-2023-08/')
+          .child('photo-jp-my-gourmet-image-classification-2023-08/${widget.userId}/ramen')
           .list();
       List<String> urls = [];
       for (var item in result.items) {
