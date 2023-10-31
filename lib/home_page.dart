@@ -12,11 +12,9 @@ import 'classify_log.dart';
 // TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
 class _CategoryButton extends StatelessWidget {
   final String label;
-  final String category;
   final VoidCallback onPressed;
 
-  _CategoryButton(
-      {required this.label, required this.category, required this.onPressed});
+  _CategoryButton({required this.label, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -228,21 +226,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       _CategoryButton(
                           label: 'ラーメン',
-                          category: 'ramen',
                           onPressed: () => _downloadImages('ramen')),
                       _CategoryButton(
+                          label: 'カフェ',
+                          onPressed: () => _downloadImages('cafe')),
+                      _CategoryButton(
                           label: '和食',
-                          category: 'japanese_food',
                           onPressed: () => _downloadImages('japanese_food')),
                       _CategoryButton(
                           label: 'その他',
-                          category: 'international_cuisine',
                           onPressed: () =>
                               _downloadImages('international_cuisine')),
-                      _CategoryButton(
-                          label: 'カフェ',
-                          category: 'cafe',
-                          onPressed: () => _downloadImages('cafe')),
                     ],
                   ),
                 ),
