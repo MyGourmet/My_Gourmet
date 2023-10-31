@@ -12,23 +12,29 @@ import 'classify_log.dart';
 // TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
 class _CategoryButton extends StatelessWidget {
   final String label;
+  final String category;
+  final VoidCallback onPressed;
 
-  const _CategoryButton({required this.label});
+  _CategoryButton(
+      {required this.label, required this.category, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFD9D9D9),
-        borderRadius: BorderRadius.circular(15.0), // 角を丸くする
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+    return GestureDetector(
+      onTap: onPressed, // タップされたときに onPressed を呼び出す
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFD9D9D9),
+          borderRadius: BorderRadius.circular(15.0), // 角を丸くする
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
       ),
     );
@@ -215,15 +221,28 @@ class _HomePageState extends ConsumerState<HomePage> {
               width: MediaQuery.of(context).size.width,
               color: Colors.black,
               child: Column(children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _CategoryButton(label: 'ラーメン'),
-                      _CategoryButton(label: '和食'),
-                      _CategoryButton(label: 'カフェ'),
-                      _CategoryButton(label: 'その他'),
+                      _CategoryButton(
+                          label: 'ラーメン',
+                          category: 'ramen',
+                          onPressed: () => _downloadImages('ramen')),
+                      _CategoryButton(
+                          label: '和食',
+                          category: 'japanese_food',
+                          onPressed: () => _downloadImages('japanese_food')),
+                      _CategoryButton(
+                          label: 'その他',
+                          category: 'international_cuisine',
+                          onPressed: () =>
+                              _downloadImages('international_cuisine')),
+                      _CategoryButton(
+                          label: 'カフェ',
+                          category: 'cafe',
+                          onPressed: () => _downloadImages('cafe')),
                     ],
                   ),
                 ),
