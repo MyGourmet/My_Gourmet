@@ -180,12 +180,13 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
 
-  Future<void> _downloadImages() async {
+  Future<void> _downloadImages(String category) async {
     try {
       final storage = FirebaseStorage.instance;
       ListResult result = await storage
           .ref()
-          .child('photo-jp-my-gourmet-image-classification-2023-08/${widget.userId}/ramen')
+          .child(
+              'photo-jp-my-gourmet-image-classification-2023-08/${widget.userId}/$category')
           .list();
       List<String> urls = [];
       for (var item in result.items) {
@@ -427,7 +428,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           const SizedBox(height: 30), // スペースを設定
           ElevatedButton(
             onPressed: () {
-              _downloadImages(); // ボタンが押されたら画像をダウンロード
+              _downloadImages("ramen"); // ボタンが押されたら画像をダウンロード
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
