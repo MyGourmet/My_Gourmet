@@ -34,4 +34,9 @@ class HomePageController {
 
     return (userId: result.userId);
   }
+
+  /// 画像ダウンロード用メソッド
+  Future<List<String>> downloadImages(String category, String userId) async {
+    return _functionUtil.downloadImages(category: category, userId: userId);
+  }
 }

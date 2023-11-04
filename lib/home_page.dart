@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/home_page_controller.dart';
@@ -103,7 +102,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController;
   bool _isContainerVisible = true;
   bool isLoading = false;
-  // TODO(masaki): controller辺りで管理するようにする
   String? userId;
 
   // TODO(masaki): デモ画像であることを明示するためのデザインへ変更
@@ -168,29 +166,16 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
 
-  // TODO(masaki): controller経由でモデル側で行うように改修
-  Future<void> _downloadImages(String category) async {
-    try {
-      final storage = FirebaseStorage.instance;
-      ListResult result = await storage
-          .ref()
-          .child(
-              'photo-jp-my-gourmet-image-classification-2023-08/${widget.userId}/$category')
-          .list();
-      List<String> urls = [];
-      for (var item in result.items) {
-        final url = await item.getDownloadURL();
-        urls.add(url);
-      }
-      setState(() {
-        imageUrls = urls;
-      });
-    } catch (e) {
-      print("An error occurred: $e");
-      setState(() {
-        imageUrls = [];
-      });
-    }
+  Future<void> _downloadImages(String category, WidgetRef ref) async {
+    // TODO(masaki): userIdをcontroller側で管理
+    // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
+    final result = await ref
+        .read(homepageControllerProvider)
+        .downloadImages(category, widget.userId ?? userId ?? '');
+
+    setState(() {
+      imageUrls = result;
+    });
   }
 
   @override
@@ -225,17 +210,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       _CategoryButton(
                           label: 'ラーメン',
-                          onPressed: () => _downloadImages('ramen')),
+                          onPressed: () => _downloadImages('ramen', ref)),
                       _CategoryButton(
                           label: 'カフェ',
-                          onPressed: () => _downloadImages('cafe')),
+                          onPressed: () => _downloadImages('cafe', ref)),
                       _CategoryButton(
                           label: '和食',
-                          onPressed: () => _downloadImages('japanese_food')),
+                          onPressed: () =>
+                              _downloadImages('japanese_food', ref)),
                       _CategoryButton(
                           label: 'その他',
                           onPressed: () =>
-                              _downloadImages('international_cuisine')),
+                              _downloadImages('international_cuisine', ref)),
                     ],
                   ),
                 ),
@@ -437,8 +423,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           const SizedBox(height: 30), // スペースを設定
           ElevatedButton(
             onPressed: () {
-              // TODO(masaki): ダウンロード完了前に押されてしまう問題を改修
-              _downloadImages("ramen"); // ボタンが押されたら画像をダウンロード
+              _downloadImages("ramen", ref);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
