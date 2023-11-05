@@ -10,7 +10,9 @@ final authUtilProvider = Provider((ref) => AuthUtil._());
 class AuthUtil {
   AuthUtil._();
 
-  Future<({String accessToken, String userId})> signInWithGoogle() async {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<({String accessToken})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(scopes: [
       'profile',
       'email',
@@ -28,20 +30,20 @@ class AuthUtil {
     );
     final accessToken = googleAuth.accessToken;
 
-    await FirebaseAuth.instance.signInWithCredential(credential);
+    await auth.signInWithCredential(credential);
 
-    final user = FirebaseAuth.instance.currentUser;
+    final user = auth.currentUser;
     final userId = user?.uid;
 
     if (accessToken == null || userId == null) {
       throw Exception('サインインに失敗しました.');
     }
 
-    return (accessToken: accessToken, userId: userId);
+    return (accessToken: accessToken);
   }
 
   Future<String?> getCurrentUserId() async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = auth.currentUser;
     return user?.uid;
   }
 
