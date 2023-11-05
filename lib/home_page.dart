@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_gourmet/auth_controller.dart';
 import 'package:my_gourmet/home_page_controller.dart';
 
 import 'auth_util.dart';
@@ -102,7 +103,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController;
   bool _isContainerVisible = true;
   bool isLoading = false;
-  String? userId;
 
   // TODO(masaki): デモ画像であることを明示するためのデザインへ変更
   final List<String> imagePaths = [
@@ -148,8 +148,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     try {
-      final result = await ref.read(homepageControllerProvider).uploadImages();
-      userId = result.userId;
+      await ref.read(homepageControllerProvider).uploadImages();
     } catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
       if (context.mounted) {
@@ -167,11 +166,9 @@ class _HomePageState extends ConsumerState<HomePage> {
   List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
 
   Future<void> _downloadImages(String category, WidgetRef ref) async {
-    // TODO(masaki): userIdをcontroller側で管理
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
-    final result = await ref
-        .read(homepageControllerProvider)
-        .downloadImages(category, widget.userId ?? userId ?? '');
+    final result =
+        await ref.read(homepageControllerProvider).downloadImages(category);
 
     setState(() {
       imageUrls = result;
@@ -375,7 +372,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       stream: ref
                           .read(authUtilProvider)
                           .classifylogsReference
-                          .where('userId', isEqualTo: widget.userId ?? userId)
+                          .where('userId', isEqualTo: ref.watch(userIdProvider))
                           .snapshots(),
                       builder: (context, snapshot) {
                         final docs = snapshot.data?.docs ?? [];
