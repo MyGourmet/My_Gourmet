@@ -7,8 +7,10 @@ import 'package:my_gourmet/auth_util.dart';
 // controllerの場合→controllerクラスを一緒にした際のファイル内の可読性を考慮
 
 // TODO(masaki): オンボーディングの設計次第でuserIdの取得方法を検討
-// 画面遷移時のみuserIdの有無を把握するので良いのであれば、
-// ページに対してコンストラクタ経由でnull許容せずに渡すのが良い
+// i) 画面遷移時のみuserIdの有無を把握するので良い場合
+// ページに対してコンストラクタ経由でnull許容せずに渡すのが良さそう
+// ii) 画面遷移後にサインインする可能性がある場合
+// ログインしていることをcontroller側で担保する等して毎度のnullチェックを不要にしたい
 
 /// [FirebaseAuth]のインスタンスを提供するProvider
 final _authProvider =

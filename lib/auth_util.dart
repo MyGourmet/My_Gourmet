@@ -28,17 +28,13 @@ class AuthUtil {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final accessToken = googleAuth.accessToken;
 
     await auth.signInWithCredential(credential);
 
-    final user = auth.currentUser;
-    final userId = user?.uid;
-
-    if (accessToken == null || userId == null) {
+    final accessToken = googleAuth.accessToken;
+    if (accessToken == null) {
       throw Exception('サインインに失敗しました.');
     }
-
     return (accessToken: accessToken);
   }
 
