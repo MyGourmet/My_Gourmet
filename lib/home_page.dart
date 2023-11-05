@@ -11,89 +11,8 @@ import 'auth_util.dart';
 import 'classify_log.dart';
 
 // TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
-class _CategoryButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  _CategoryButton({required this.label, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed, // タップされたときに onPressed を呼び出す
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.circular(15.0), // 角を丸くする
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MyRotatingButton extends StatefulWidget {
-  final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
-
-  const _MyRotatingButton({required this.onVisibilityChanged});
-
-  @override
-  _MyRotatingButtonState createState() => _MyRotatingButtonState();
-}
-
-class _MyRotatingButtonState extends State<_MyRotatingButton> {
-  bool _isRotated = false;
-  bool _isContainerVisible = true; // 新しく追加したフラグ
-
-  void _toggleRotation() {
-    setState(() {
-      _isRotated = !_isRotated;
-      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
-      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
-      left: (MediaQuery.of(context).size.width - 60) / 2,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: const BoxDecoration(
-          color: Colors.black,
-          shape: BoxShape.circle,
-        ),
-        child: InkWell(
-          onTap: _toggleRotation, // タップ時に回転を切り替える
-          child: Center(
-            child: Transform.rotate(
-              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
-              child: const Icon(
-                Icons.add,
-                color: Color(0xFFEF913A),
-                size: 40,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({this.userId, super.key});
-  final String? userId;
+  const HomePage({super.key});
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -440,6 +359,86 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CategoryButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+
+  const _CategoryButton({required this.label, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed, // タップされたときに onPressed を呼び出す
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFD9D9D9),
+          borderRadius: BorderRadius.circular(15.0), // 角を丸くする
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MyRotatingButton extends StatefulWidget {
+  final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
+
+  const _MyRotatingButton({required this.onVisibilityChanged});
+
+  @override
+  _MyRotatingButtonState createState() => _MyRotatingButtonState();
+}
+
+class _MyRotatingButtonState extends State<_MyRotatingButton> {
+  bool _isRotated = false;
+  bool _isContainerVisible = true; // 新しく追加したフラグ
+
+  void _toggleRotation() {
+    setState(() {
+      _isRotated = !_isRotated;
+      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
+      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
+      left: (MediaQuery.of(context).size.width - 60) / 2,
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          onTap: _toggleRotation, // タップ時に回転を切り替える
+          child: Center(
+            child: Transform.rotate(
+              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
+              child: const Icon(
+                Icons.add,
+                color: Color(0xFFEF913A),
+                size: 40,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
