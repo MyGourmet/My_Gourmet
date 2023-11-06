@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_gourmet/auth_controller.dart';
 import 'package:my_gourmet/auth_util.dart';
 import 'package:my_gourmet/function_util.dart';
 import 'package:my_gourmet/home_page.dart';
@@ -21,21 +22,25 @@ class HomePageController {
 
   AuthUtil get _authUtil => _ref.read(authUtilProvider);
   FunctionUtil get _functionUtil => _ref.read(functionUtilProvider);
+  String? get _userId => _ref.read(userIdProvider);
 
   /// 画像アップロード用メソッド
   ///
   /// サインインをした上でfirestore上で状態管理し、画像アップロード用のCFを起動する。
-  Future<List<String?>> uploadImages() async {
-    // TODO(masaki): null諸々改修する
-
+  Future<void> uploadImages() async {
+    // // TODO(masaki): 未ログイン(_userIdがnull) or オンボーディングの時のみ画像をアップロードするようにする
+    // オンボーディング時以外はfunction-5とは別のaccessTokenな更新処理を実行
     final result = await _authUtil.signInWithGoogle();
+    await updateOrCreateLog(_userId!);
 
-    final userId = result[1] ?? '';
+    await _functionUtil.callFirebaseFunction(result.accessToken, _userId!);
+  }
 
-    await updateOrCreateLog(userId);
-
-    await _functionUtil.callFirebaseFunction(result[0] ?? '', userId);
-
-    return result;
+  /// 画像ダウンロード用メソッド
+  Future<List<String>> downloadImages(String category) async {
+    if (_userId == null) {
+      return [];
+    }
+    return _functionUtil.downloadImages(category: category, userId: _userId!);
   }
 }

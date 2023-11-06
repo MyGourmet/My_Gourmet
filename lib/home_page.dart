@@ -1,108 +1,29 @@
 import 'dart:math' as math;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_gourmet/auth_controller.dart';
 import 'package:my_gourmet/home_page_controller.dart';
 
 import 'auth_util.dart';
 import 'classify_log.dart';
 
 // TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
-class _CategoryButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  _CategoryButton({required this.label, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed, // タップされたときに onPressed を呼び出す
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.circular(15.0), // 角を丸くする
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MyRotatingButton extends StatefulWidget {
-  final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
-
-  const _MyRotatingButton({required this.onVisibilityChanged});
-
-  @override
-  _MyRotatingButtonState createState() => _MyRotatingButtonState();
-}
-
-class _MyRotatingButtonState extends State<_MyRotatingButton> {
-  bool _isRotated = false;
-  bool _isContainerVisible = true; // 新しく追加したフラグ
-
-  void _toggleRotation() {
-    setState(() {
-      _isRotated = !_isRotated;
-      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
-      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
-      left: (MediaQuery.of(context).size.width - 60) / 2,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: const BoxDecoration(
-          color: Colors.black,
-          shape: BoxShape.circle,
-        ),
-        child: InkWell(
-          onTap: _toggleRotation, // タップ時に回転を切り替える
-          child: Center(
-            child: Transform.rotate(
-              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
-              child: const Icon(
-                Icons.add,
-                color: Color(0xFFEF913A),
-                size: 40,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class HomePage extends ConsumerStatefulWidget {
-  const HomePage({required this.userId, super.key});
-  final String userId;
+  const HomePage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  late PageController _pageController; // PageControllerのインスタンスを生成
+  late PageController _pageController;
   bool _isContainerVisible = true;
   bool isLoading = false;
 
+  // TODO(masaki): デモ画像であることを明示するためのデザインへ変更
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -146,35 +67,14 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     try {
-      final result = await ref.read(homepageControllerProvider).uploadImages();
-
-      if (result.isNotEmpty) {
-        final accessToken = result[0];
-        // TODO(masaki): userId周り諸々改修
-        //  おそらくここをfinalで新しく定義していたことが原因そう
-        final userId = result[1];
-
-        if (accessToken != null && userId != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('サインインが完了しました。')),
-          );
-        } else {
-          // アクセストークンまたはユーザーIDがnullの場合、エラーメッセージを表示
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('アクセストークンまたはユーザーIDの取得に失敗しました。')),
-          );
-        }
-      } else {
-        // サインイン結果がnullまたは空の場合、エラーメッセージを表示
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('サインインの結果がnullまたは空です。')),
-        );
-      }
+      await ref.read(homepageControllerProvider).uploadImages();
     } catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('エラーが発生しました: $e')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
     } finally {
       setState(() {
         isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
@@ -184,33 +84,33 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
 
-  Future<void> _downloadImages(String category) async {
-    try {
-      final storage = FirebaseStorage.instance;
-      ListResult result = await storage
-          .ref()
-          .child(
-              'photo-jp-my-gourmet-image-classification-2023-08/${widget.userId}/$category')
-          .list();
-      List<String> urls = [];
-      for (var item in result.items) {
-        final url = await item.getDownloadURL();
-        urls.add(url);
-      }
-      setState(() {
-        imageUrls = urls;
-      });
-    } catch (e) {
-      print("An error occurred: $e");
-      setState(() {
-        imageUrls = [];
-      });
-    }
+  Future<void> _downloadImages(String category, WidgetRef ref) async {
+    // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
+    final result =
+        await ref.read(homepageControllerProvider).downloadImages(category);
+
+    setState(() {
+      imageUrls = result;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // TODO(masaki): ログアウト機能実装後 or 不要になったタイミングで削除
+      floatingActionButton: Visibility(
+        visible: _isContainerVisible,
+        child: FloatingActionButton(
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: const Icon(
+            Icons.logout,
+            color: Colors.black,
+            size: 40,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Stack(
           children: [
@@ -226,17 +126,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       _CategoryButton(
                           label: 'ラーメン',
-                          onPressed: () => _downloadImages('ramen')),
+                          onPressed: () => _downloadImages('ramen', ref)),
                       _CategoryButton(
                           label: 'カフェ',
-                          onPressed: () => _downloadImages('cafe')),
+                          onPressed: () => _downloadImages('cafe', ref)),
                       _CategoryButton(
                           label: '和食',
-                          onPressed: () => _downloadImages('japanese_food')),
+                          onPressed: () =>
+                              _downloadImages('japanese_food', ref)),
                       _CategoryButton(
                           label: 'その他',
                           onPressed: () =>
-                              _downloadImages('international_cuisine')),
+                              _downloadImages('international_cuisine', ref)),
                     ],
                   ),
                 ),
@@ -370,9 +271,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-// 下記の文言に修正
-//  ? '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします
-//  : '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
   Widget _buildSecondPage() {
     return Container(
       child: Column(
@@ -393,7 +291,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       stream: ref
                           .read(authUtilProvider)
                           .classifylogsReference
-                          .where('userId', isEqualTo: widget.userId)
+                          .where('userId', isEqualTo: ref.watch(userIdProvider))
                           .snapshots(),
                       builder: (context, snapshot) {
                         final docs = snapshot.data?.docs ?? [];
@@ -441,7 +339,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           const SizedBox(height: 30), // スペースを設定
           ElevatedButton(
             onPressed: () {
-              _downloadImages("ramen"); // ボタンが押されたら画像をダウンロード
+              _downloadImages("ramen", ref);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
@@ -451,6 +349,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               minimumSize: const Size(250, 50),
             ),
             child: const Text(
+              // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
               'ダウンロード 2/2',
               style: TextStyle(
                 fontSize: 20,
@@ -460,6 +359,86 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _CategoryButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onPressed;
+
+  const _CategoryButton({required this.label, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed, // タップされたときに onPressed を呼び出す
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFD9D9D9),
+          borderRadius: BorderRadius.circular(15.0), // 角を丸くする
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MyRotatingButton extends StatefulWidget {
+  final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
+
+  const _MyRotatingButton({required this.onVisibilityChanged});
+
+  @override
+  _MyRotatingButtonState createState() => _MyRotatingButtonState();
+}
+
+class _MyRotatingButtonState extends State<_MyRotatingButton> {
+  bool _isRotated = false;
+  bool _isContainerVisible = true; // 新しく追加したフラグ
+
+  void _toggleRotation() {
+    setState(() {
+      _isRotated = !_isRotated;
+      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
+      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
+      left: (MediaQuery.of(context).size.width - 60) / 2,
+      child: Container(
+        width: 60,
+        height: 60,
+        decoration: const BoxDecoration(
+          color: Colors.black,
+          shape: BoxShape.circle,
+        ),
+        child: InkWell(
+          onTap: _toggleRotation, // タップ時に回転を切り替える
+          child: Center(
+            child: Transform.rotate(
+              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
+              child: const Icon(
+                Icons.add,
+                color: Color(0xFFEF913A),
+                size: 40,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
