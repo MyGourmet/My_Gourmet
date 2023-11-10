@@ -10,7 +10,9 @@ final authUtilProvider = Provider((ref) => AuthUtil._());
 class AuthUtil {
   AuthUtil._();
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  /// [FirebaseAuth]のインスタンス
+  FirebaseAuth get auth => _auth;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<({String accessToken})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(scopes: [
@@ -29,7 +31,7 @@ class AuthUtil {
       idToken: googleAuth.idToken,
     );
 
-    await auth.signInWithCredential(credential);
+    await _auth.signInWithCredential(credential);
 
     final accessToken = googleAuth.accessToken;
     if (accessToken == null) {
@@ -39,7 +41,7 @@ class AuthUtil {
   }
 
   Future<String?> getCurrentUserId() async {
-    final user = auth.currentUser;
+    final user = _auth.currentUser;
     return user?.uid;
   }
 
