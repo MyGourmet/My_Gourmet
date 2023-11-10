@@ -10,7 +10,10 @@ import 'package:my_gourmet/home_page_controller.dart';
 import 'auth_util.dart';
 import 'classify_log.dart';
 
-// TODO(masaki): userId問題解消後に、_buildFirstPage周り含めて改修を検討
+// TODO(masaki): Themeやconstの管理
+
+// TODO(masaki): image用のデータモデル(storageではなくfirestoreからurlを取得したい)設計後、
+//  ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -67,7 +70,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     try {
-      await ref.read(homepageControllerProvider).uploadImages();
+      await ref
+          .read(homepageControllerProvider)
+          .uploadImages(userId: ref.watch(userIdProvider));
     } catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
       if (context.mounted) {
@@ -86,8 +91,11 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> _downloadImages(String category, WidgetRef ref) async {
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
-    final result =
-        await ref.read(homepageControllerProvider).downloadImages(category);
+    final result = await ref.read(homepageControllerProvider).downloadImages(
+        category: category,
+        userId: ref.watch(
+          userIdProvider,
+        ));
 
     setState(() {
       imageUrls = result;

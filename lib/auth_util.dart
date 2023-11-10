@@ -14,7 +14,7 @@ class AuthUtil {
   FirebaseAuth get auth => _auth;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<({String accessToken})> signInWithGoogle() async {
+  Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(scopes: [
       'profile',
       'email',
@@ -34,10 +34,11 @@ class AuthUtil {
     await _auth.signInWithCredential(credential);
 
     final accessToken = googleAuth.accessToken;
-    if (accessToken == null) {
+    final userId = _auth.currentUser?.uid;
+    if (accessToken == null || userId == null) {
       throw Exception('サインインに失敗しました.');
     }
-    return (accessToken: accessToken);
+    return (accessToken: accessToken, userId: userId);
   }
 
   Future<String?> getCurrentUserId() async {
