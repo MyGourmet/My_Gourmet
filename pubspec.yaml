@@ -1,6 +1,5 @@
 name: my_gourmet
 description: A new Flutter project.
-
 # 意図せず`flutter pub publish` によってpub.devに配信されることを防止する
 publish_to: 'none'
 
