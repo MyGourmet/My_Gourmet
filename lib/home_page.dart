@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/auth_controller.dart';
 import 'package:my_gourmet/home_page_controller.dart';
 
-import 'auth_util.dart';
 import 'classify_log.dart';
+import 'classify_log_repository.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -296,9 +296,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                     )
                   : StreamBuilder<QuerySnapshot<ClassifyLog>>(
-                      stream: ref
-                          .read(authUtilProvider)
-                          .classifylogsReference
+                      stream: classifylogsReference
                           .where('userId', isEqualTo: ref.watch(userIdProvider))
                           .snapshots(),
                       builder: (context, snapshot) {
