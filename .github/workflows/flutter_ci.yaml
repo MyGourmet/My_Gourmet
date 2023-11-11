@@ -42,11 +42,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # セットアップ
-      - name: Setup Flutter
-        uses: ./.github/actions/setup_flutter
-        with:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # # セットアップ
+      # - name: Setup Flutter
+      #   uses: ./.github/actions/setup_flutter
+      #   with:
+      #     GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # 静的解析を実行（flutter_lints）
       - name: Run Flutter Lints
