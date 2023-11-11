@@ -25,7 +25,7 @@ Future<void> updateOrCreateLog(String userId) async {
         reference: documentReference);
 
     await documentReference.set(
-        newClassifyLog.toMap(), SetOptions(merge: true)); // 部分的な更新
+        newClassifyLog, SetOptions(merge: true)); // 部分的な更新
   } else {
     // 既存のドキュメントを使用
     documentReference = existingDoc.docs.first.reference;
