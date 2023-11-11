@@ -1,51 +1,35 @@
-# アクション名
 name: Setup Flutter
 
-# アクションの説明
-description: Setup Flutter
+description: Setup Flutter environment on GitHub Actions runner.
 
-# インプット情報
 inputs:
   GITHUB_ACCESS_TOKEN:
-    description: 'GitHubアクセストークン'
+    description: 'GitHub Access Token'
     required: true
 
-# 実行する内容を定義する
 runs:
-
-  # composit action の定義
-  using: composite
-
-  # ジョブの手順
+  using: 'composite'
   steps:
+    # Flutter SDKをインストール
+    - name: Install Flutter SDK
+      run: |
+        git clone https://github.com/flutter/flutter.git -b stable ${{ runner.tool_cache }}/flutter
+        echo "${{ runner.tool_cache }}/flutter/bin" >> $GITHUB_PATH
+        echo "${{ runner.tool_cache }}/flutter/bin/cache/dart-sdk/bin" >> $GITHUB_PATH
+        echo "${{ runner.tool_cache }}/flutter/.pub-cache/bin" >> $GITHUB_PATH
+        flutter precache
+        flutter doctor
+      shell: bash
 
-    # fvm のバージョンとチャネルを環境変数に設定する
-    - name: Check fvm
-      uses: kuhnroyal/flutter-fvm-config-action@v1
+    # Flutterの依存関係を取得
+    - name: Get Flutter dependencies
+      run: flutter pub get
+      shell: bash
 
-    # Flutter SDK の設定
-    - name: Setup Flutter SDK
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-        channel: ${{ env.FLUTTER_CHANNEL }}
-        cache: true
-        cache-key: flutter
-        cache-path: ${{ runner.tool_cache }}/flutter
-
-    # flutter pub get を実行
-    - name: Cache Pub
-      uses: actions/cache@v3
-      id: pub-cache
-      with:
-        path: |
-          ${{ env.FLUTTER_HOME }}/.pub-cache
-          **/.packages
-          **/.flutter-plugins
-          **/.flutter-plugin-dependencies
-          **/.dart_tool/package_config.json
-        key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: build-pubspec-
+    # flutter_envスクリプトに実行権限を付与
+    - name: Grant execute permission to flutter_env
+      run: chmod +x bin/flutter_env
+      shell: bash
 
     # 環境変数ファイル（env.dart）を作成
     - name: Create env.dart
