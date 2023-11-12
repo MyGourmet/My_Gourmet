@@ -362,60 +362,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ],
-                      final classifyLog = docs.first.data();
-                      if (classifyLog.state == 'completed') {
-                        return const Text(
-                          '処理が完了しました！\n下記から画像をダウンロードできます！',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      } else if (classifyLog.state == 'isProcessing') {
-                        return const Text(
-                          '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      } else {
-                        return Text(
-                          classifyLog.state,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-            // ),
-          ),
-        ),
-        const SizedBox(height: 30), // スペースを設定
-        ElevatedButton(
-          onPressed: () {
-            _downloadImages("ramen", ref);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0), // 角を丸くする
-            ),
-            minimumSize: const Size(250, 50),
-          ),
-          child: const Text(
-            // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
-            'ダウンロード 2/2',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
