@@ -128,7 +128,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               color: Colors.black,
               child: Column(children: [
                 Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -236,136 +236,186 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   Widget _buildFirstPage() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            width: 250, // テキストの枠の幅を250に設定
-            child: Center(
-              child: Text(
-                '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 30), // テキストとボタンの間のスペース
-          ElevatedButton(
-            onPressed: () {
-              _onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0), // 角を丸くする
-              ),
-              minimumSize: const Size(250, 50),
-            ),
-            child: const Text(
-              '画像を読み込む  1/2',
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(
+          width: 250, // テキストの枠の幅を250に設定
+          child: Center(
+            child: Text(
+              '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
+              textAlign: TextAlign.left,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 30), // テキストとボタンの間のスペース
+        ElevatedButton(
+          onPressed: () {
+            _onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+            ),
+            minimumSize: const Size(250, 50),
+          ),
+          child: const Text(
+            '画像を読み込む  1/2',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildSecondPage() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 250,
-            child: Center(
-              child: isLoading
-                  ? const Text(
-                      '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  : StreamBuilder<QuerySnapshot<ClassifyLog>>(
-                      stream: classifylogsReference
-                          .where('userId', isEqualTo: ref.watch(userIdProvider))
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        final docs = snapshot.data?.docs ?? [];
-                        if (docs.isEmpty) {
-                          return const Text(
-                            '未確認',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        }
-
-                        final classifyLog = docs.first.data();
-                        if (classifyLog.state == 'completed') {
-                          return const Text(
-                            '処理が完了しました！\n下記から画像をダウンロードできます！',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        } else if (classifyLog.state == 'isProcessing') {
-                          return const Text(
-                            '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        } else {
-                          return Text(
-                            classifyLog.state,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        }
-                      },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 250,
+          child: Center(
+            child: isLoading
+                ? const Text(
+                    '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-              // ),
+                  )
+                : StreamBuilder<QuerySnapshot<ClassifyLog>>(
+                    stream: classifylogsReference
+                        .where('userId', isEqualTo: ref.watch(userIdProvider))
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      final docs = snapshot.data?.docs ?? [];
+                      if (docs.isEmpty) {
+                        return const Text(
+                          '未確認',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+
+                      final classifyLog = docs.first.data();
+                      if (classifyLog.state == 'completed') {
+                        return const Text(
+                          '処理が完了しました！\n下記から画像をダウンロードできます！',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else if (classifyLog.state == 'isProcessing') {
+                        return const Text(
+                          '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else {
+                        return Text(
+                          classifyLog.state,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+            // ),
+          ),
+        ),
+        const SizedBox(height: 30), // スペースを設定
+        ElevatedButton(
+          onPressed: () {
+            _downloadImages("ramen", ref);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+            ),
+            minimumSize: const Size(250, 50),
+          ),
+          child: const Text(
+            // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
+            'ダウンロード 2/2',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-          const SizedBox(height: 30), // スペースを設定
-          ElevatedButton(
-            onPressed: () {
-              _downloadImages("ramen", ref);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0), // 角を丸くする
-              ),
-              minimumSize: const Size(250, 50),
+        ),
+      ],
+                      final classifyLog = docs.first.data();
+                      if (classifyLog.state == 'completed') {
+                        return const Text(
+                          '処理が完了しました！\n下記から画像をダウンロードできます！',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else if (classifyLog.state == 'isProcessing') {
+                        return const Text(
+                          '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      } else {
+                        return Text(
+                          classifyLog.state,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+            // ),
+          ),
+        ),
+        const SizedBox(height: 30), // スペースを設定
+        ElevatedButton(
+          onPressed: () {
+            _downloadImages("ramen", ref);
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0), // 角を丸くする
             ),
-            child: const Text(
-              // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
-              'ダウンロード 2/2',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+            minimumSize: const Size(250, 50),
+          ),
+          child: const Text(
+            // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
+            'ダウンロード 2/2',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

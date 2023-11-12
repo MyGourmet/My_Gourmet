@@ -52,7 +52,7 @@ class ClassifyLog {
   final DocumentReference reference;
 }
 
-final ClassifyLogsReference = FirebaseFirestore.instance
+final classifyLogsReference = FirebaseFirestore.instance
     .collection('ClassifyLogs')
     .withConverter<ClassifyLog>(
   // <> ここに変換したい型名をいれます。今回は ClassifyLog です。
