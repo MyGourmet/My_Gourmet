@@ -12,7 +12,7 @@ class FunctionUtil {
 
   Future<void> callFirebaseFunction(String accessToken, String userId) async {
     try {
-      final result = await call(
+      await call(
         functionName: 'function-5',
         parameters: {
           'name': accessToken,
@@ -20,7 +20,7 @@ class FunctionUtil {
         },
       );
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       // setState(() {
       //   _functionResult = 'Failed to call function: $error';
       // });
@@ -62,7 +62,6 @@ class FunctionUtil {
         region: region ?? 'asia-northeast1',
       );
       final callable = functions.httpsCallable(functionName);
-      print(callable);
       return await callable.call(parameters);
     } catch (e) {
       rethrow;
