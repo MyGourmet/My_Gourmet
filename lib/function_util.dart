@@ -62,7 +62,6 @@ class FunctionUtil {
         region: region ?? 'asia-northeast1',
       );
       final callable = functions.httpsCallable(functionName);
-      print(callable);
       return await callable.call(parameters);
     } catch (e) {
       rethrow;
