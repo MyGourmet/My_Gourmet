@@ -48,14 +48,7 @@ jobs:
         with:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 静的解析を実行（flutter_lints）
+      # 静的解析を実行
       - name: Run Flutter Lints
-        run: flutter pub get && flutter analyze --lints
+        run: flutter pub get && flutter analyze
 
-      # 静的解析を実行（custom_lint）
-      - name: Run Custom Lint
-        run: flutter pub get && flutter analyze --custom
-
-      # 静的解析を実行（riverpod_lint）
-      - name: Run Riverpod Lint
-        run: flutter pub get && flutter analyze --riverpod
