@@ -38,7 +38,7 @@ runs:
     #       **/.dart_tool/package_config.json
     #     key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
     #     restore-keys: build-pubspec-
-    - run : flutter pub get
-    - name: Create env.dart
-      run: bin/flutter_env -g ${{ inputs.GITHUB_ACCESS_TOKEN }}
-      shell: bash
+    # - run : flutter pub get
+    # - name: Create env.dart
+    #   run: bin/flutter_env -g ${{ inputs.GITHUB_ACCESS_TOKEN }}
+    #   shell: bash
