@@ -1,13 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/auth_util.dart';
-import 'package:my_gourmet/function_util.dart';
-import 'package:my_gourmet/home_page.dart';
+import 'package:my_gourmet/features/auth/auth_util.dart';
+import 'package:my_gourmet/features/image/function_util.dart';
+import 'package:my_gourmet/view/home_page.dart';
 
-import 'classify_log_repository.dart';
+import 'auth/classify_log_repository.dart';
 
 final homepageControllerProvider =
     Provider<HomePageController>(HomePageController._);
 
+// TODO(masaki): feature単位のcontrollerにする
 /// [HomePage]における外部通信の操作を担当するコントローラー
 ///
 /// [HomePage]から外部通信を行う際にはこのコントローラーを[homepageControllerProvider]経由で操作する。

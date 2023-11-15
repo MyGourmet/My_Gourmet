@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_gourmet/classify_log.dart';
+import 'package:my_gourmet/features/auth/classify_log.dart';
 
 // TODO(masaki): 命名やディレクトリ構成を改修
+
+// TODO(masaki): userIdをドキュメントIDに指定
 
 Future<void> updateOrCreateLog(String userId) async {
   // 既存のドキュメントを検索

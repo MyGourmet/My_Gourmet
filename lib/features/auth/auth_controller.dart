@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/auth_util.dart';
+import 'package:my_gourmet/features/auth/auth_util.dart';
 
 // TODO(masaki): 置き場所検討
 // data層的なところに置く場合→わざわざauth utilからインスタンスを持ってくる必要ない

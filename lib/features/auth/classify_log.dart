@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// TODO(masaki): AuthedUserに差し替え
 class ClassifyLog {
   ClassifyLog({
     required this.createdAt,

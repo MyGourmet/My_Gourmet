@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/auth_controller.dart';
-import 'package:my_gourmet/home_page_controller.dart';
+import 'package:my_gourmet/features/auth/auth_controller.dart';
+import 'package:my_gourmet/features/home_page_controller.dart';
 
-import 'classify_log.dart';
-import 'classify_log_repository.dart';
+import '../features/auth/classify_log.dart';
+import '../features/auth/classify_log_repository.dart';
 
 // TODO(masaki): Themeやconstの管理
 
