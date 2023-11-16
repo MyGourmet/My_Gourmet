@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_controller.dart';
-import 'package:my_gourmet/features/home_page_controller.dart';
+import 'package:my_gourmet/features/image/image_controller.dart';
 
 import '../features/auth/classify_log.dart';
 import '../features/auth/classify_log_repository.dart';
@@ -71,7 +71,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     try {
       await ref
-          .read(homepageControllerProvider)
+          .read(imageControllerProvider)
           .uploadImages(userId: ref.watch(userIdProvider));
     } catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
@@ -91,7 +91,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> _downloadImages(String category, WidgetRef ref) async {
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
-    final result = await ref.read(homepageControllerProvider).downloadImages(
+    final result = await ref.read(imageControllerProvider).downloadImages(
         category: category,
         userId: ref.watch(
           userIdProvider,

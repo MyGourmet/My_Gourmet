@@ -1,22 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_util.dart';
 import 'package:my_gourmet/features/image/function_util.dart';
-import 'package:my_gourmet/view/home_page.dart';
 
-import 'auth/classify_log_repository.dart';
+import '../auth/classify_log_repository.dart';
 
-final homepageControllerProvider =
-    Provider<HomePageController>(HomePageController._);
+final imageControllerProvider = Provider<ImageController>(ImageController._);
 
-// TODO(masaki): feature単位のcontrollerにする
-/// [HomePage]における外部通信の操作を担当するコントローラー
+// TODO(masaki): Image用データモデル作成（Flutter公式のImageとは別名のクラスを用意する）
+/// 画像に関連した外部通信の操作を担当するコントローラー
 ///
-/// [HomePage]から外部通信を行う際にはこのコントローラーを[homepageControllerProvider]経由で操作する。
+/// 画像関連の外部通信を行う際にはこのコントローラーを[imageControllerProvider]経由で操作する。
 /// 別クラスを参照する場合は、refによりgetter経由でインスタンス化して用いる。
 /// refを渡さずコンストラクタから依存性を注入するようにすると
 /// クラス内で_ref.invalidateメソッド等を用いたriverpodらしい状態管理が出来なくなるため、依存関係はgetterで表現しておく。
-class HomePageController {
-  HomePageController._(this._ref);
+class ImageController {
+  ImageController._(this._ref);
 
   final Ref _ref;
 
