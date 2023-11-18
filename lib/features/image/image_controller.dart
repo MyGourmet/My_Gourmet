@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/features/auth/auth_util.dart';
-import 'package:my_gourmet/features/image/function_util.dart';
+import 'package:my_gourmet/features/auth/auth_repository.dart';
+import 'package:my_gourmet/features/image/image_repository.dart';
 
 import '../auth/classify_log_repository.dart';
 
@@ -18,9 +18,9 @@ class ImageController {
 
   final Ref _ref;
 
-  AuthUtil get _authUtil => _ref.read(authUtilProvider);
+  AuthRepository get _authRepository => _ref.read(authRepositoryProvider);
 
-  FunctionUtil get _functionUtil => _ref.read(functionUtilProvider);
+  ImageRepository get _imageRepository => _ref.read(imageRepositoryProvider);
 
   /// 画像アップロード用メソッド
   ///
@@ -34,9 +34,10 @@ class ImageController {
 
     // MEMO(masaki): 未ログインの初回はオンボーディング用の実装に切り替える
 
-    final result = await _authUtil.signInWithGoogle();
+    final result = await _authRepository.signInWithGoogle();
     await updateOrCreateLog(result.userId);
-    await _functionUtil.callFirebaseFunction(result.accessToken, result.userId);
+    await _imageRepository.callFirebaseFunction(
+        result.accessToken, result.userId);
   }
 
   /// 画像ダウンロード用メソッド
@@ -45,6 +46,6 @@ class ImageController {
     if (userId == null) {
       return [];
     }
-    return _functionUtil.downloadImages(category: category, userId: userId);
+    return _imageRepository.downloadImages(category: category, userId: userId);
   }
 }

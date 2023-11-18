@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/features/auth/auth_util.dart';
+import 'package:my_gourmet/features/auth/auth_repository.dart';
 
 // TODO(masaki): 置き場所検討
 // data層的なところに置く場合→わざわざauth utilからインスタンスを持ってくる必要ない
@@ -14,7 +14,7 @@ import 'package:my_gourmet/features/auth/auth_util.dart';
 
 /// [FirebaseAuth]のインスタンスを提供するProvider
 final _authProvider =
-    Provider<FirebaseAuth>((ref) => ref.watch(authUtilProvider).auth);
+    Provider<FirebaseAuth>((ref) => ref.watch(authRepositoryProvider).auth);
 
 /// [FirebaseAuth]の[User]を管理するProvider
 ///

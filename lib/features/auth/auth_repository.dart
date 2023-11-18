@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-final authUtilProvider = Provider((ref) => AuthUtil._());
+final authRepositoryProvider = Provider((ref) => AuthRepository._());
 
 // TODO(masaki): 命名やディレクトリ構成を改修
-class AuthUtil {
-  AuthUtil._();
+class AuthRepository {
+  AuthRepository._();
 
   /// [FirebaseAuth]のインスタンス
   FirebaseAuth get auth => _auth;
