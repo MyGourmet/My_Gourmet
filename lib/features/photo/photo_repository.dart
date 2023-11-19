@@ -4,11 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final imageRepositoryProvider = Provider((ref) => ImageRepository._());
+final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
 
-// TODO(masaki): 命名やディレクトリ構成を改修。画像を関心事にしたrepositoryへ変更
-class ImageRepository {
-  ImageRepository._();
+class PhotoRepository {
+  PhotoRepository._();
 
   Future<void> callFirebaseFunction(String accessToken, String userId) async {
     try {

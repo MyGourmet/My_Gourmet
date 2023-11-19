@@ -1,30 +1,29 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_repository.dart';
-import 'package:my_gourmet/features/image/image_repository.dart';
+import 'package:my_gourmet/features/photo/photo_repository.dart';
 
 import '../auth/classify_log_repository.dart';
 
-final imageControllerProvider = Provider<ImageController>(ImageController._);
+final photoControllerProvider = Provider<PhotoController>(PhotoController._);
 
-// TODO(masaki): Image用データモデル作成（Flutter公式のImageとは別名のクラスを用意する）
-/// 画像に関連した外部通信の操作を担当するコントローラー
+/// 写真に関連した外部通信の操作を担当するコントローラー
 ///
-/// 画像関連の外部通信を行う際にはこのコントローラーを[imageControllerProvider]経由で操作する。
+/// 写真関連の外部通信を行う際にはこのコントローラーを[photoControllerProvider]経由で操作する。
 /// 別クラスを参照する場合は、refによりgetter経由でインスタンス化して用いる。
 /// refを渡さずコンストラクタから依存性を注入するようにすると
 /// クラス内で_ref.invalidateメソッド等を用いたriverpodらしい状態管理が出来なくなるため、依存関係はgetterで表現しておく。
-class ImageController {
-  ImageController._(this._ref);
+class PhotoController {
+  PhotoController._(this._ref);
 
   final Ref _ref;
 
   AuthRepository get _authRepository => _ref.read(authRepositoryProvider);
 
-  ImageRepository get _imageRepository => _ref.read(imageRepositoryProvider);
+  PhotoRepository get _photoRepository => _ref.read(photoRepositoryProvider);
 
-  /// 画像アップロード用メソッド
+  /// 写真アップロード用メソッド
   ///
-  /// サインインをした上でfirestore上で状態管理し、画像アップロード用のCFを起動する。
+  /// サインインをした上でfirestore上で状態管理し、写真アップロード用のCFを起動する。
   Future<void> uploadImages({required String? userId}) async {
     // TODO(masaki): ログイン後はfunction-5とは別のaccessToken不要な更新処理を実行
     // if (userId != null) {
@@ -36,16 +35,16 @@ class ImageController {
 
     final result = await _authRepository.signInWithGoogle();
     await updateOrCreateLog(result.userId);
-    await _imageRepository.callFirebaseFunction(
+    await _photoRepository.callFirebaseFunction(
         result.accessToken, result.userId);
   }
 
-  /// 画像ダウンロード用メソッド
-  Future<List<String>> downloadImages(
+  /// 写真ダウンロード用メソッド
+  Future<List<String>> downloadPhotos(
       {required String category, required String? userId}) async {
     if (userId == null) {
       return [];
     }
-    return _imageRepository.downloadImages(category: category, userId: userId);
+    return _photoRepository.downloadImages(category: category, userId: userId);
   }
 }
