@@ -98,7 +98,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ));
 
     setState(() {
-      imageUrls = result;
+      imageUrls = result.map((e) => e.url).toList();
     });
   }
 

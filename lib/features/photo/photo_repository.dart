@@ -1,8 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_gourmet/features/photo/photo.dart';
 
 final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
 
@@ -26,22 +26,21 @@ class PhotoRepository {
     }
   }
 
-  Future<List<String>> downloadImages(
+  // TODO(masaki): firestoreへデータ作成後に動作確認
+  Future<List<Photo>> downloadPhotos(
       {required String category, required String userId}) async {
     try {
-      final storage = FirebaseStorage.instance;
-      ListResult result = await storage
-          .ref()
-          .child(
-              'photo-jp-my-gourmet-image-classification-2023-08/$userId/$category')
-          .list();
-      List<String> urls = [];
-      // TODO(masaki): 非同期処理最適化
-      for (var item in result.items) {
-        final url = await item.getDownloadURL();
-        urls.add(url);
-      }
-      return urls;
+      final photosSnap = await photoCollectionReference(userId: userId).get();
+      return photosSnap.docs.map((photo) {
+        return Photo(
+          id: photo.id,
+          createdAt: photo.data().createdAt,
+          updatedAt: photo.data().updatedAt,
+          url: photo.data().url,
+          userId: photo.data().userId,
+          otherUrls: photo.data().otherUrls,
+        );
+      }).toList();
     } catch (e) {
       debugPrint("An error occurred: $e");
       return [];

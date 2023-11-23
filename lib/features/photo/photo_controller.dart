@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_repository.dart';
+import 'package:my_gourmet/features/photo/photo.dart';
 import 'package:my_gourmet/features/photo/photo_repository.dart';
 
 import '../auth/classify_log_repository.dart';
@@ -40,11 +41,11 @@ class PhotoController {
   }
 
   /// 写真ダウンロード用メソッド
-  Future<List<String>> downloadPhotos(
+  Future<List<Photo>> downloadPhotos(
       {required String category, required String? userId}) async {
     if (userId == null) {
       return [];
     }
-    return _photoRepository.downloadImages(category: category, userId: userId);
+    return _photoRepository.downloadPhotos(category: category, userId: userId);
   }
 }
