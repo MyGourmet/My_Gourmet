@@ -12,8 +12,7 @@ import '../features/auth/classify_log_repository.dart';
 
 // TODO(masaki): Themeやconstの管理
 
-// TODO(masaki): image用のデータモデル(storageではなくfirestoreからurlを取得したい)設計後、
-//  ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
+//  TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -26,7 +25,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   bool _isContainerVisible = true;
   bool isLoading = false;
 
-  // TODO(masaki): デモ画像であることを明示するためのデザインへ変更
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -87,9 +85,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
   }
 
-  List<String>? imageUrls; // Firebaseからダウンロードした画像のURLを保持
+  List<String>? photoUrls; // Firebaseからダウンロードした写真のURLを保持
 
-  Future<void> _downloadImages(String category, WidgetRef ref) async {
+  Future<void> _downloadPhotos(String category, WidgetRef ref) async {
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
     final result = await ref.read(photoControllerProvider).downloadPhotos(
         category: category,
@@ -98,7 +96,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ));
 
     setState(() {
-      imageUrls = result.map((e) => e.url).toList();
+      photoUrls = result.map((e) => e.url).toList();
     });
   }
 
@@ -134,18 +132,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       _CategoryButton(
                           label: 'ラーメン',
-                          onPressed: () => _downloadImages('ramen', ref)),
+                          onPressed: () => _downloadPhotos('ramen', ref)),
                       _CategoryButton(
                           label: 'カフェ',
-                          onPressed: () => _downloadImages('cafe', ref)),
+                          onPressed: () => _downloadPhotos('cafe', ref)),
                       _CategoryButton(
                           label: '和食',
                           onPressed: () =>
-                              _downloadImages('japanese_food', ref)),
+                              _downloadPhotos('japanese_food', ref)),
                       _CategoryButton(
                           label: 'その他',
                           onPressed: () =>
-                              _downloadImages('international_cuisine', ref)),
+                              _downloadPhotos('international_cuisine', ref)),
                     ],
                   ),
                 ),
@@ -155,12 +153,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3, // 3列
                     ),
-                    itemCount: imageUrls?.length ??
+                    itemCount: photoUrls?.length ??
                         imagePaths.length, // imageUrlsがnullならimagePathsの長さを使用
                     itemBuilder: (context, index) {
                       return Image(
-                        image: imageUrls != null
-                            ? NetworkImage(imageUrls![index])
+                        image: photoUrls != null
+                            ? NetworkImage(photoUrls![index])
                             : AssetImage(imagePaths[index])
                                 as ImageProvider<Object>,
                         fit: BoxFit.cover,
@@ -342,7 +340,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         const SizedBox(height: 30), // スペースを設定
         ElevatedButton(
           onPressed: () {
-            _downloadImages("ramen", ref);
+            _downloadPhotos("ramen", ref);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定

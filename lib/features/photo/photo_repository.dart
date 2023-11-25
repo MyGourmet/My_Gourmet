@@ -20,9 +20,6 @@ class PhotoRepository {
       );
     } catch (error) {
       debugPrint(error.toString());
-      // setState(() {
-      //   _functionResult = 'Failed to call function: $error';
-      // });
     }
   }
 
@@ -48,7 +45,6 @@ class PhotoRepository {
   }
 
   /// CloudFunctionsを呼び出す
-  //TODO(masaki): この部分が別の箇所でも必要なようであれば切り出す
   Future<HttpsCallableResult> call({
     required String functionName,
     String? region,
