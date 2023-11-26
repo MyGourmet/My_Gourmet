@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_gourmet/features/auth/authed_user.dart';
 
 final authRepositoryProvider = Provider((ref) => AuthRepository._());
 
-// TODO(masaki): 命名やディレクトリ構成を改修
 class AuthRepository {
   AuthRepository._();
 
@@ -42,5 +42,29 @@ class AuthRepository {
   Future<String?> getCurrentUserId() async {
     final user = _auth.currentUser;
     return user?.uid;
+  }
+
+  /// [UploadingStatus]を[UploadingStatus.uploading]に更新するためのメソッド
+  ///
+  /// 初回サインアップ後で[AuthedUser]ドキュメントが存在していないようであればドキュメントを新規作成した上で更新する。
+  Future<void> upsertUploadingStatus(String userId) async {
+    final userDoc = authedUsersRef.doc(userId);
+    final userDocSnapshot = await userDoc.get();
+    if (userDocSnapshot.exists) {
+      final user = userDocSnapshot.data()!;
+      await userDoc.update(user
+          .copyWith(
+              // updatedAt: FieldValue.serverTimestamp(),
+              uploadingStatus: UploadingStatus.uploading)
+          .toJson());
+    } else {
+      final authedUser = AuthedUser(
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          uploadingStatus: UploadingStatus.uploading,
+          id: userId);
+
+      await userDoc.set(authedUser);
+    }
   }
 }

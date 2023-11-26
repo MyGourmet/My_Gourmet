@@ -70,7 +70,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     try {
       await ref
           .read(photoControllerProvider)
-          .uploadImages(userId: ref.watch(userIdProvider));
+          .uploadPhotos(userId: ref.watch(userIdProvider));
     } catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
       if (context.mounted) {

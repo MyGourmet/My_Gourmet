@@ -25,7 +25,7 @@ class PhotoController {
   /// 写真アップロード用メソッド
   ///
   /// サインインをした上でfirestore上で状態管理し、写真アップロード用のCFを起動する。
-  Future<void> uploadImages({required String? userId}) async {
+  Future<void> uploadPhotos({required String? userId}) async {
     // TODO(masaki): ログイン後はfunction-5とは別のaccessToken不要な更新処理を実行
     // if (userId != null) {
     //   // 更新処理
@@ -34,8 +34,11 @@ class PhotoController {
 
     // MEMO(masaki): 未ログインの初回はオンボーディング用の実装に切り替える
 
+    // TODO(masaki): ここ用にserviceクラス作るか検討
     final result = await _authRepository.signInWithGoogle();
+    // todo delete
     await updateOrCreateLog(result.userId);
+    await _authRepository.upsertUploadingStatus(result.userId);
     await _photoRepository.callFirebaseFunction(
         result.accessToken, result.userId);
   }
