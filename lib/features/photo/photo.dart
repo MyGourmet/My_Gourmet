@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// TODO(masaki): AuthedUserと同様に実装
 class Photo extends Object {
   const Photo({
     required this.id,
@@ -18,7 +19,8 @@ class Photo extends Object {
   final List<String> otherUrls;
 }
 
-CollectionReference<Photo> photoCollectionReference({required String userId}) {
+/// [Photo]用コレクションのためのレファレンス
+CollectionReference<Photo> photosRef({required String userId}) {
   return FirebaseFirestore.instance
       .collection('users')
       .doc(userId)

@@ -27,7 +27,7 @@ class PhotoRepository {
   Future<List<Photo>> downloadPhotos(
       {required String category, required String userId}) async {
     try {
-      final photosSnap = await photoCollectionReference(userId: userId).get();
+      final photosSnap = await photosRef(userId: userId).get();
       return photosSnap.docs.map((photo) {
         return Photo(
           id: photo.id,
