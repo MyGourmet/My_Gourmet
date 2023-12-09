@@ -77,4 +77,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.2.2')
     // Firebase Analytics
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    // Play Integrity API
+    implementation 'com.google.android.play:integrity:1.3.0'
 }
