@@ -58,11 +58,8 @@ class AuthRepository {
               uploadingStatus: UploadingStatus.uploading)
           .toJson());
     } else {
-      final authedUser = AuthedUser(
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          uploadingStatus: UploadingStatus.uploading,
-          id: userId);
+      final authedUser =
+          AuthedUser(uploadingStatus: UploadingStatus.uploading, id: userId);
 
       await userDoc.set(authedUser);
     }

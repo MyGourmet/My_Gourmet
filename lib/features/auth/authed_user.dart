@@ -15,13 +15,15 @@ class AuthedUser with _$AuthedUser {
     /// firestore上のドキュメントID
     @Default('') String id,
 
-    // TODO(masaki): 初回create時のみサーバー時間使えないか検討
-    // 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
     /// 作成日時
-    @timestampConverter required DateTime createdAt,
+    @timestampConverter
+    @Default(UnionTimestamp.serverTimestamp())
+    UnionTimestamp createdAt,
 
     /// 更新日時
-    @serverTimestampConverter required DateTime updatedAt,
+    @serverTimeTimestampConverter
+    @Default(UnionTimestamp.serverTimestamp())
+    UnionTimestamp updatedAt,
 
     /// 写真アップロードの状態
     @Default(UploadingStatus.completed) UploadingStatus uploadingStatus,
@@ -37,6 +39,18 @@ class AuthedUser with _$AuthedUser {
 
   factory AuthedUser.fromJson(Map<String, dynamic> json) =>
       _$AuthedUserFromJson(json);
+
+  factory AuthedUser.fromDocumentSnapshot(DocumentSnapshot ds) {
+    final data = ds.data()! as Map<String, dynamic>;
+    // TODO(masaki): idが取得できているか動作確認
+    // TODO(masaki): enum用converter作成
+    data['uploadingStatus'] =
+        UploadingStatus.fromString(data['uploadingStatus'].toString());
+    return AuthedUser.fromJson(<String, dynamic>{
+      ...data,
+      'id': ds.id,
+    });
+  }
 }
 
 /// 写真アップロードの状態を表すenum
@@ -71,16 +85,8 @@ enum UploadingStatus {
 /// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
 final authedUsersRef =
     FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
-  fromFirestore: ((snapshot, _) {
-    // TODO(masaki): idが取得できているか動作確認
-    // TODO(masaki): enum用converter作成
-    final data = snapshot.data()!;
-    data['uploadingStatus'] =
-        UploadingStatus.fromString(data['uploadingStatus'].toString());
-    return AuthedUser.fromJson({
-      ...data,
-      'id': snapshot.id,
-    });
+  fromFirestore: ((ds, _) {
+    return AuthedUser.fromDocumentSnapshot(ds);
   }),
   toFirestore: (authedUser, _) {
     final json = authedUser.toJson();

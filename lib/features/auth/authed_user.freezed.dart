@@ -21,16 +21,15 @@ AuthedUser _$AuthedUserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AuthedUser {
   /// firestore上のドキュメントID
-  String get id =>
-      throw _privateConstructorUsedError; // TODO(masaki): 初回create時のみサーバー時間使えないか検討
-// 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
+  String get id => throw _privateConstructorUsedError;
+
   /// 作成日時
   @timestampConverter
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  UnionTimestamp get createdAt => throw _privateConstructorUsedError;
 
   /// 更新日時
-  @serverTimestampConverter
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  @serverTimeTimestampConverter
+  UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
   /// 写真アップロードの状態
   UploadingStatus get uploadingStatus => throw _privateConstructorUsedError;
@@ -49,9 +48,12 @@ abstract class $AuthedUserCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      @timestampConverter DateTime createdAt,
-      @serverTimestampConverter DateTime updatedAt,
+      @timestampConverter UnionTimestamp createdAt,
+      @serverTimeTimestampConverter UnionTimestamp updatedAt,
       UploadingStatus uploadingStatus});
+
+  $UnionTimestampCopyWith<$Res> get createdAt;
+  $UnionTimestampCopyWith<$Res> get updatedAt;
 }
 
 /// @nodoc
@@ -80,16 +82,32 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as UnionTimestamp,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as UnionTimestamp,
       uploadingStatus: null == uploadingStatus
           ? _value.uploadingStatus
           : uploadingStatus // ignore: cast_nullable_to_non_nullable
               as UploadingStatus,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UnionTimestampCopyWith<$Res> get createdAt {
+    return $UnionTimestampCopyWith<$Res>(_value.createdAt, (value) {
+      return _then(_value.copyWith(createdAt: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UnionTimestampCopyWith<$Res> get updatedAt {
+    return $UnionTimestampCopyWith<$Res>(_value.updatedAt, (value) {
+      return _then(_value.copyWith(updatedAt: value) as $Val);
+    });
   }
 }
 
@@ -103,9 +121,14 @@ abstract class _$$AuthedUserImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      @timestampConverter DateTime createdAt,
-      @serverTimestampConverter DateTime updatedAt,
+      @timestampConverter UnionTimestamp createdAt,
+      @serverTimeTimestampConverter UnionTimestamp updatedAt,
       UploadingStatus uploadingStatus});
+
+  @override
+  $UnionTimestampCopyWith<$Res> get createdAt;
+  @override
+  $UnionTimestampCopyWith<$Res> get updatedAt;
 }
 
 /// @nodoc
@@ -132,11 +155,11 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as UnionTimestamp,
       updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as UnionTimestamp,
       uploadingStatus: null == uploadingStatus
           ? _value.uploadingStatus
           : uploadingStatus // ignore: cast_nullable_to_non_nullable
@@ -150,8 +173,10 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
 class _$AuthedUserImpl extends _AuthedUser {
   const _$AuthedUserImpl(
       {this.id = '',
-      @timestampConverter required this.createdAt,
-      @serverTimestampConverter required this.updatedAt,
+      @timestampConverter
+      this.createdAt = const UnionTimestamp.serverTimestamp(),
+      @serverTimeTimestampConverter
+      this.updatedAt = const UnionTimestamp.serverTimestamp(),
       this.uploadingStatus = UploadingStatus.completed})
       : super._();
 
@@ -162,17 +187,18 @@ class _$AuthedUserImpl extends _AuthedUser {
   @override
   @JsonKey()
   final String id;
-// TODO(masaki): 初回create時のみサーバー時間使えないか検討
-// 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
+
   /// 作成日時
   @override
+  @JsonKey()
   @timestampConverter
-  final DateTime createdAt;
+  final UnionTimestamp createdAt;
 
   /// 更新日時
   @override
-  @serverTimestampConverter
-  final DateTime updatedAt;
+  @JsonKey()
+  @serverTimeTimestampConverter
+  final UnionTimestamp updatedAt;
 
   /// 写真アップロードの状態
   @override
@@ -220,8 +246,8 @@ class _$AuthedUserImpl extends _AuthedUser {
 abstract class _AuthedUser extends AuthedUser {
   const factory _AuthedUser(
       {final String id,
-      @timestampConverter required final DateTime createdAt,
-      @serverTimestampConverter required final DateTime updatedAt,
+      @timestampConverter final UnionTimestamp createdAt,
+      @serverTimeTimestampConverter final UnionTimestamp updatedAt,
       final UploadingStatus uploadingStatus}) = _$AuthedUserImpl;
   const _AuthedUser._() : super._();
 
@@ -232,16 +258,16 @@ abstract class _AuthedUser extends AuthedUser {
 
   /// firestore上のドキュメントID
   String get id;
-  @override // TODO(masaki): 初回create時のみサーバー時間使えないか検討
-// 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
+  @override
+
   /// 作成日時
   @timestampConverter
-  DateTime get createdAt;
+  UnionTimestamp get createdAt;
   @override
 
   /// 更新日時
-  @serverTimestampConverter
-  DateTime get updatedAt;
+  @serverTimeTimestampConverter
+  UnionTimestamp get updatedAt;
   @override
 
   /// 写真アップロードの状態
