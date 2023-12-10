@@ -78,8 +78,8 @@ final authedUsersRef =
     final data = ds.data()!;
     // TODO(masaki): idが取得できているか動作確認
     // TODO(masaki): enum用converter作成
-    data['uploadingStatus'] =
-        ClassifyPhotosStatus.fromString(data['uploadingStatus'].toString());
+    data['classifyPhotosStatus'] = ClassifyPhotosStatus.fromString(
+        data['classifyPhotosStatus'].toString());
     return AuthedUser.fromJson(<String, dynamic>{
       ...data,
       'id': ds.id,
