@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../timestamp_converter.dart';
+
 part 'authed_user.freezed.dart';
 part 'authed_user.g.dart';
 
@@ -11,16 +13,15 @@ class AuthedUser with _$AuthedUser {
   // TODO(masaki): 初期値入れてもnullableでしか扱えないようであったら、書き込みと読み込み用(Flutter側で基本用いるもの）を分けることを検討
   const factory AuthedUser({
     /// firestore上のドキュメントID
-    ///
-    /// 書き込み時には使用しないためnullableとしている
     @Default('') String id,
 
+    // TODO(masaki): 初回create時のみサーバー時間使えないか検討
+    // 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
     /// 作成日時
-    // TODO(masaki): timestamp converter
-    required DateTime createdAt,
+    @timestampConverter required DateTime createdAt,
 
     /// 更新日時
-    required DateTime updatedAt,
+    @serverTimestampConverter required DateTime updatedAt,
 
     /// 写真アップロードの状態
     @Default(UploadingStatus.completed) UploadingStatus uploadingStatus,

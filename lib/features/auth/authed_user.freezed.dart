@@ -21,15 +21,15 @@ AuthedUser _$AuthedUserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$AuthedUser {
   /// firestore上のドキュメントID
-  ///
-  /// 書き込み時には使用しないためnullableとしている
-  String get id => throw _privateConstructorUsedError;
-
+  String get id =>
+      throw _privateConstructorUsedError; // TODO(masaki): 初回create時のみサーバー時間使えないか検討
+// 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
   /// 作成日時
-// TODO(masaki): timestamp converter
+  @timestampConverter
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   /// 更新日時
+  @serverTimestampConverter
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// 写真アップロードの状態
@@ -49,8 +49,8 @@ abstract class $AuthedUserCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      DateTime createdAt,
-      DateTime updatedAt,
+      @timestampConverter DateTime createdAt,
+      @serverTimestampConverter DateTime updatedAt,
       UploadingStatus uploadingStatus});
 }
 
@@ -103,8 +103,8 @@ abstract class _$$AuthedUserImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
-      DateTime createdAt,
-      DateTime updatedAt,
+      @timestampConverter DateTime createdAt,
+      @serverTimestampConverter DateTime updatedAt,
       UploadingStatus uploadingStatus});
 }
 
@@ -150,8 +150,8 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
 class _$AuthedUserImpl extends _AuthedUser {
   const _$AuthedUserImpl(
       {this.id = '',
-      required this.createdAt,
-      required this.updatedAt,
+      @timestampConverter required this.createdAt,
+      @serverTimestampConverter required this.updatedAt,
       this.uploadingStatus = UploadingStatus.completed})
       : super._();
 
@@ -159,19 +159,19 @@ class _$AuthedUserImpl extends _AuthedUser {
       _$$AuthedUserImplFromJson(json);
 
   /// firestore上のドキュメントID
-  ///
-  /// 書き込み時には使用しないためnullableとしている
   @override
   @JsonKey()
   final String id;
-
+// TODO(masaki): 初回create時のみサーバー時間使えないか検討
+// 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
   /// 作成日時
-// TODO(masaki): timestamp converter
   @override
+  @timestampConverter
   final DateTime createdAt;
 
   /// 更新日時
   @override
+  @serverTimestampConverter
   final DateTime updatedAt;
 
   /// 写真アップロードの状態
@@ -220,8 +220,8 @@ class _$AuthedUserImpl extends _AuthedUser {
 abstract class _AuthedUser extends AuthedUser {
   const factory _AuthedUser(
       {final String id,
-      required final DateTime createdAt,
-      required final DateTime updatedAt,
+      @timestampConverter required final DateTime createdAt,
+      @serverTimestampConverter required final DateTime updatedAt,
       final UploadingStatus uploadingStatus}) = _$AuthedUserImpl;
   const _AuthedUser._() : super._();
 
@@ -231,17 +231,16 @@ abstract class _AuthedUser extends AuthedUser {
   @override
 
   /// firestore上のドキュメントID
-  ///
-  /// 書き込み時には使用しないためnullableとしている
   String get id;
-  @override
-
+  @override // TODO(masaki): 初回create時のみサーバー時間使えないか検討
+// 関連して、ここやtimestampConverter側のDateTimeはnullableにしても良いかもしれない
   /// 作成日時
-// TODO(masaki): timestamp converter
+  @timestampConverter
   DateTime get createdAt;
   @override
 
   /// 更新日時
+  @serverTimestampConverter
   DateTime get updatedAt;
   @override
 

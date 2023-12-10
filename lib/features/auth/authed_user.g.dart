@@ -9,8 +9,8 @@ part of 'authed_user.dart';
 _$AuthedUserImpl _$$AuthedUserImplFromJson(Map<String, dynamic> json) =>
     _$AuthedUserImpl(
       id: json['id'] as String? ?? '',
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      createdAt: timestampConverter.fromJson(json['createdAt'] as Object),
+      updatedAt: serverTimestampConverter.fromJson(json['updatedAt'] as Object),
       uploadingStatus: $enumDecodeNullable(
               _$UploadingStatusEnumMap, json['uploadingStatus']) ??
           UploadingStatus.completed,
@@ -19,8 +19,8 @@ _$AuthedUserImpl _$$AuthedUserImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$AuthedUserImplToJson(_$AuthedUserImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'updatedAt': instance.updatedAt.toIso8601String(),
+      'createdAt': timestampConverter.toJson(instance.createdAt),
+      'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
       'uploadingStatus': _$UploadingStatusEnumMap[instance.uploadingStatus]!,
     };
 
