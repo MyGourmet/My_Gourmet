@@ -40,18 +40,6 @@ class AuthedUser with _$AuthedUser {
 
   factory AuthedUser.fromJson(Map<String, dynamic> json) =>
       _$AuthedUserFromJson(json);
-
-  factory AuthedUser.fromDocumentSnapshot(DocumentSnapshot ds) {
-    final data = ds.data()! as Map<String, dynamic>;
-    // TODO(masaki): idが取得できているか動作確認
-    // TODO(masaki): enum用converter作成
-    data['uploadingStatus'] =
-        ClassifyPhotosStatus.fromString(data['uploadingStatus'].toString());
-    return AuthedUser.fromJson(<String, dynamic>{
-      ...data,
-      'id': ds.id,
-    });
-  }
 }
 
 /// 写真分類用APIの実行状態を表すenum
@@ -87,7 +75,15 @@ enum ClassifyPhotosStatus {
 final authedUsersRef =
     FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
   fromFirestore: ((ds, _) {
-    return AuthedUser.fromDocumentSnapshot(ds);
+    final data = ds.data()!;
+    // TODO(masaki): idが取得できているか動作確認
+    // TODO(masaki): enum用converter作成
+    data['uploadingStatus'] =
+        ClassifyPhotosStatus.fromString(data['uploadingStatus'].toString());
+    return AuthedUser.fromJson(<String, dynamic>{
+      ...data,
+      'id': ds.id,
+    });
   }),
   toFirestore: (authedUser, _) {
     final json = authedUser.toJson();

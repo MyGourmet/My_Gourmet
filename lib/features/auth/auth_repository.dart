@@ -47,7 +47,7 @@ class AuthRepository {
   /// [ClassifyPhotosStatus]を[ClassifyPhotosStatus.processing]に更新するためのメソッド
   ///
   /// 初回サインアップ後で[AuthedUser]ドキュメントが存在していないようであればドキュメントを新規作成した上で更新する。
-  Future<void> upsertUploadingStatus(String userId) async {
+  Future<void> upsertClassifyPhotosStatus(String userId) async {
     final userDoc = authedUsersRef.doc(userId);
     final userDocSnapshot = await userDoc.get();
     if (userDocSnapshot.exists) {
