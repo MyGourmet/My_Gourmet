@@ -44,7 +44,7 @@ class AuthRepository {
     return user?.uid;
   }
 
-  /// [UploadingStatus]を[UploadingStatus.uploading]に更新するためのメソッド
+  /// [ClassifyPhotosStatus]を[ClassifyPhotosStatus.processing]に更新するためのメソッド
   ///
   /// 初回サインアップ後で[AuthedUser]ドキュメントが存在していないようであればドキュメントを新規作成した上で更新する。
   Future<void> upsertUploadingStatus(String userId) async {
@@ -53,13 +53,11 @@ class AuthRepository {
     if (userDocSnapshot.exists) {
       final user = userDocSnapshot.data()!;
       await userDoc.update(user
-          .copyWith(
-              // updatedAt: FieldValue.serverTimestamp(),
-              uploadingStatus: UploadingStatus.uploading)
+          .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.processing)
           .toJson());
     } else {
-      final authedUser =
-          AuthedUser(uploadingStatus: UploadingStatus.uploading, id: userId);
+      final authedUser = AuthedUser(
+          classifyPhotosStatus: ClassifyPhotosStatus.processing, id: userId);
 
       await userDoc.set(authedUser);
     }

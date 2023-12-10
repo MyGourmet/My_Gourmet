@@ -15,9 +15,9 @@ _$AuthedUserImpl _$$AuthedUserImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : serverTimeTimestampConverter.fromJson(json['updatedAt'] as Object),
-      uploadingStatus: $enumDecodeNullable(
-              _$UploadingStatusEnumMap, json['uploadingStatus']) ??
-          UploadingStatus.completed,
+      classifyPhotosStatus: $enumDecodeNullable(
+              _$ClassifyPhotosStatusEnumMap, json['classifyPhotosStatus']) ??
+          ClassifyPhotosStatus.completed,
     );
 
 Map<String, dynamic> _$$AuthedUserImplToJson(_$AuthedUserImpl instance) =>
@@ -25,11 +25,12 @@ Map<String, dynamic> _$$AuthedUserImplToJson(_$AuthedUserImpl instance) =>
       'id': instance.id,
       'createdAt': timestampConverter.toJson(instance.createdAt),
       'updatedAt': serverTimeTimestampConverter.toJson(instance.updatedAt),
-      'uploadingStatus': _$UploadingStatusEnumMap[instance.uploadingStatus]!,
+      'classifyPhotosStatus':
+          _$ClassifyPhotosStatusEnumMap[instance.classifyPhotosStatus]!,
     };
 
-const _$UploadingStatusEnumMap = {
-  UploadingStatus.uploading: 'uploading',
-  UploadingStatus.completed: 'completed',
-  UploadingStatus.failed: 'failed',
+const _$ClassifyPhotosStatusEnumMap = {
+  ClassifyPhotosStatus.processing: 'processing',
+  ClassifyPhotosStatus.completed: 'completed',
+  ClassifyPhotosStatus.failed: 'failed',
 };

@@ -25,8 +25,9 @@ class AuthedUser with _$AuthedUser {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp updatedAt,
 
-    /// 写真アップロードの状態
-    @Default(UploadingStatus.completed) UploadingStatus uploadingStatus,
+    /// 写真分類用APIの実行状態
+    @Default(ClassifyPhotosStatus.completed)
+    ClassifyPhotosStatus classifyPhotosStatus,
   }) = _AuthedUser;
 
   const AuthedUser._();
@@ -45,7 +46,7 @@ class AuthedUser with _$AuthedUser {
     // TODO(masaki): idが取得できているか動作確認
     // TODO(masaki): enum用converter作成
     data['uploadingStatus'] =
-        UploadingStatus.fromString(data['uploadingStatus'].toString());
+        ClassifyPhotosStatus.fromString(data['uploadingStatus'].toString());
     return AuthedUser.fromJson(<String, dynamic>{
       ...data,
       'id': ds.id,
@@ -53,10 +54,10 @@ class AuthedUser with _$AuthedUser {
   }
 }
 
-/// 写真アップロードの状態を表すenum
-enum UploadingStatus {
+/// 写真分類用APIの実行状態を表すenum
+enum ClassifyPhotosStatus {
   /// 処理中
-  uploading,
+  processing,
 
   /// 完了
   completed,
@@ -68,13 +69,13 @@ enum UploadingStatus {
   static fromString(String value) {
     switch (value) {
       case 'uploading':
-        return UploadingStatus.uploading;
+        return ClassifyPhotosStatus.processing;
       case 'completed':
-        return UploadingStatus.completed;
+        return ClassifyPhotosStatus.completed;
       case 'failed':
-        return UploadingStatus.failed;
+        return ClassifyPhotosStatus.failed;
       default:
-        return UploadingStatus.completed;
+        return ClassifyPhotosStatus.completed;
     }
   }
 }
@@ -90,7 +91,7 @@ final authedUsersRef =
   }),
   toFirestore: (authedUser, _) {
     final json = authedUser.toJson();
-    json['uploadingStatus'] = authedUser.uploadingStatus.name;
+    json['classifyPhotosStatus'] = authedUser.classifyPhotosStatus.name;
     json.remove('id');
     return json;
   },

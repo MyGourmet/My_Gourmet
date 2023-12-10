@@ -31,8 +31,9 @@ mixin _$AuthedUser {
   @serverTimeTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
-  /// 写真アップロードの状態
-  UploadingStatus get uploadingStatus => throw _privateConstructorUsedError;
+  /// 写真分類用APIの実行状態
+  ClassifyPhotosStatus get classifyPhotosStatus =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -50,7 +51,7 @@ abstract class $AuthedUserCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimeTimestampConverter UnionTimestamp updatedAt,
-      UploadingStatus uploadingStatus});
+      ClassifyPhotosStatus classifyPhotosStatus});
 
   $UnionTimestampCopyWith<$Res> get createdAt;
   $UnionTimestampCopyWith<$Res> get updatedAt;
@@ -72,7 +73,7 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? uploadingStatus = null,
+    Object? classifyPhotosStatus = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -87,10 +88,10 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      uploadingStatus: null == uploadingStatus
-          ? _value.uploadingStatus
-          : uploadingStatus // ignore: cast_nullable_to_non_nullable
-              as UploadingStatus,
+      classifyPhotosStatus: null == classifyPhotosStatus
+          ? _value.classifyPhotosStatus
+          : classifyPhotosStatus // ignore: cast_nullable_to_non_nullable
+              as ClassifyPhotosStatus,
     ) as $Val);
   }
 
@@ -123,7 +124,7 @@ abstract class _$$AuthedUserImplCopyWith<$Res>
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimeTimestampConverter UnionTimestamp updatedAt,
-      UploadingStatus uploadingStatus});
+      ClassifyPhotosStatus classifyPhotosStatus});
 
   @override
   $UnionTimestampCopyWith<$Res> get createdAt;
@@ -145,7 +146,7 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? uploadingStatus = null,
+    Object? classifyPhotosStatus = null,
   }) {
     return _then(_$AuthedUserImpl(
       id: null == id
@@ -160,10 +161,10 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      uploadingStatus: null == uploadingStatus
-          ? _value.uploadingStatus
-          : uploadingStatus // ignore: cast_nullable_to_non_nullable
-              as UploadingStatus,
+      classifyPhotosStatus: null == classifyPhotosStatus
+          ? _value.classifyPhotosStatus
+          : classifyPhotosStatus // ignore: cast_nullable_to_non_nullable
+              as ClassifyPhotosStatus,
     ));
   }
 }
@@ -177,7 +178,7 @@ class _$AuthedUserImpl extends _AuthedUser {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimeTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      this.uploadingStatus = UploadingStatus.completed})
+      this.classifyPhotosStatus = ClassifyPhotosStatus.completed})
       : super._();
 
   factory _$AuthedUserImpl.fromJson(Map<String, dynamic> json) =>
@@ -200,14 +201,14 @@ class _$AuthedUserImpl extends _AuthedUser {
   @serverTimeTimestampConverter
   final UnionTimestamp updatedAt;
 
-  /// 写真アップロードの状態
+  /// 写真分類用APIの実行状態
   @override
   @JsonKey()
-  final UploadingStatus uploadingStatus;
+  final ClassifyPhotosStatus classifyPhotosStatus;
 
   @override
   String toString() {
-    return 'AuthedUser(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, uploadingStatus: $uploadingStatus)';
+    return 'AuthedUser(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, classifyPhotosStatus: $classifyPhotosStatus)';
   }
 
   @override
@@ -220,14 +221,14 @@ class _$AuthedUserImpl extends _AuthedUser {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.uploadingStatus, uploadingStatus) ||
-                other.uploadingStatus == uploadingStatus));
+            (identical(other.classifyPhotosStatus, classifyPhotosStatus) ||
+                other.classifyPhotosStatus == classifyPhotosStatus));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, createdAt, updatedAt, uploadingStatus);
+      Object.hash(runtimeType, id, createdAt, updatedAt, classifyPhotosStatus);
 
   @JsonKey(ignore: true)
   @override
@@ -248,7 +249,7 @@ abstract class _AuthedUser extends AuthedUser {
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimeTimestampConverter final UnionTimestamp updatedAt,
-      final UploadingStatus uploadingStatus}) = _$AuthedUserImpl;
+      final ClassifyPhotosStatus classifyPhotosStatus}) = _$AuthedUserImpl;
   const _AuthedUser._() : super._();
 
   factory _AuthedUser.fromJson(Map<String, dynamic> json) =
@@ -270,8 +271,8 @@ abstract class _AuthedUser extends AuthedUser {
   UnionTimestamp get updatedAt;
   @override
 
-  /// 写真アップロードの状態
-  UploadingStatus get uploadingStatus;
+  /// 写真分類用APIの実行状態
+  ClassifyPhotosStatus get classifyPhotosStatus;
   @override
   @JsonKey(ignore: true)
   _$$AuthedUserImplCopyWith<_$AuthedUserImpl> get copyWith =>
