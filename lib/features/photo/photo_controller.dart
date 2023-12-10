@@ -3,8 +3,6 @@ import 'package:my_gourmet/features/auth/auth_repository.dart';
 import 'package:my_gourmet/features/photo/photo.dart';
 import 'package:my_gourmet/features/photo/photo_repository.dart';
 
-import '../auth/classify_log_repository.dart';
-
 final photoControllerProvider = Provider<PhotoController>(PhotoController._);
 
 /// 写真に関連した外部通信の操作を担当するコントローラー
@@ -36,8 +34,6 @@ class PhotoController {
 
     // TODO(masaki): ここ用にserviceクラス作るか検討
     final result = await _authRepository.signInWithGoogle();
-    // todo delete
-    await updateOrCreateLog(result.userId);
     await _authRepository.upsertUploadingStatus(result.userId);
     await _photoRepository.callFirebaseFunction(
         result.accessToken, result.userId);

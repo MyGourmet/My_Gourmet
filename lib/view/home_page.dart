@@ -5,10 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_controller.dart';
+import 'package:my_gourmet/features/auth/authed_user.dart';
 import 'package:my_gourmet/features/photo/photo_controller.dart';
-
-import '../features/auth/classify_log.dart';
-import '../features/auth/classify_log_repository.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -290,8 +288,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   )
-                : StreamBuilder<QuerySnapshot<ClassifyLog>>(
-                    stream: classifylogsReference
+                : StreamBuilder<QuerySnapshot<AuthedUser>>(
+                    stream: authedUsersRef
                         .where('userId', isEqualTo: ref.watch(userIdProvider))
                         .snapshots(),
                     builder: (context, snapshot) {
@@ -306,8 +304,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                         );
                       }
 
-                      final classifyLog = docs.first.data();
-                      if (classifyLog.state == 'completed') {
+                      final authedUser = docs.first.data();
+                      final status = authedUser.classifyPhotosStatus;
+                      if (status == ClassifyPhotosStatus.completed) {
                         return const Text(
                           '処理が完了しました！\n下記から画像をダウンロードできます！',
                           style: TextStyle(
@@ -315,7 +314,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             fontWeight: FontWeight.bold,
                           ),
                         );
-                      } else if (classifyLog.state == 'isProcessing') {
+                      } else if (status == ClassifyPhotosStatus.processing) {
                         return const Text(
                           '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
                           style: TextStyle(
@@ -324,8 +323,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ),
                         );
                       } else {
+                        // TODO(masaki): エラーハンドリング
                         return Text(
-                          classifyLog.state,
+                          status.name,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
