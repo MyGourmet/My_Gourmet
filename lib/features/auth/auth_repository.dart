@@ -12,6 +12,7 @@ class AuthRepository {
   FirebaseAuth get auth => _auth;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  /// サインイン用メソッド
   Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(scopes: [
       'profile',
@@ -37,11 +38,6 @@ class AuthRepository {
       throw Exception('サインインに失敗しました.');
     }
     return (accessToken: accessToken, userId: userId);
-  }
-
-  Future<String?> getCurrentUserId() async {
-    final user = _auth.currentUser;
-    return user?.uid;
   }
 
   /// [ClassifyPhotosStatus]を[ClassifyPhotosStatus.processing]に更新するためのメソッド

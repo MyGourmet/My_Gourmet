@@ -35,7 +35,7 @@ class PhotoController {
     // TODO(masaki): ここ用にserviceクラス作るか検討
     final result = await _authRepository.signInWithGoogle();
     await _authRepository.upsertClassifyPhotosStatus(result.userId);
-    await _photoRepository.callFirebaseFunction(
+    await _photoRepository.callClassifyPhotos(
         result.accessToken, result.userId);
   }
 

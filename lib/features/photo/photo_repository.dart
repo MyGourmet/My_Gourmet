@@ -9,15 +9,17 @@ final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
 class PhotoRepository {
   PhotoRepository._();
 
-  Future<void> callFirebaseFunction(String accessToken, String userId) async {
+  /// CF上のclassifyPhotos関数を呼び出す
+  Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
-      await call(
-        functionName: 'function-5',
-        parameters: {
-          'name': accessToken,
-          'userId': userId,
-        },
-      );
+      // TODO(masaki): 関数実装後にfunctionタイプなど諸々調整して呼び出す
+      // await call(
+      //   functionName: 'classifyPhotos',
+      //   parameters: {
+      //     'name': accessToken,
+      //     'userId': userId,
+      //   },
+      // );
     } catch (error) {
       debugPrint(error.toString());
     }
