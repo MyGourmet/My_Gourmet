@@ -1,10 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_gourmet/features/auth/authed_user.dart';
 
+/// [AuthedUser]用コレクションのためのレファレンス
+///
+/// [AuthedUser]ドキュメントの操作にはこのレファレンスを経由すること。
+/// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
+final authedUsersRef =
+    FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
+  // TODO(masaki): idやenumが取得/書き込みできているか動作確認
+  fromFirestore: ((ds, _) {
+    final data = ds.data()!;
+    return AuthedUser.fromJson(<String, dynamic>{
+      ...data,
+      'id': ds.id,
+    });
+  }),
+  toFirestore: (authedUser, _) {
+    final json = authedUser.toJson();
+    json.remove('id');
+    return json;
+  },
+);
+
+/// [AuthRepository]用Provider
+///
+/// [AuthRepository]を参照する際はこのProviderを用いる。
 final authRepositoryProvider = Provider((ref) => AuthRepository._());
 
+/// Auth関連の外部通信を担当するクラス
 class AuthRepository {
   AuthRepository._();
 

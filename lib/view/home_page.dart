@@ -8,6 +8,8 @@ import 'package:my_gourmet/features/auth/auth_controller.dart';
 import 'package:my_gourmet/features/auth/authed_user.dart';
 import 'package:my_gourmet/features/photo/photo_controller.dart';
 
+import '../features/auth/auth_repository.dart';
+
 // TODO(masaki): Themeやconstの管理
 
 //  TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
@@ -288,6 +290,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   )
+                // TODO(masaki): userIdがなくなったのでここも修正
                 : StreamBuilder<QuerySnapshot<AuthedUser>>(
                     stream: authedUsersRef
                         .where('userId', isEqualTo: ref.watch(userIdProvider))

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../timestamp_converter.dart';
@@ -9,8 +8,6 @@ part 'authed_user.g.dart';
 /// 認証済みユーザーの情報を表すクラス
 @freezed
 class AuthedUser with _$AuthedUser {
-  // TODO(masaki): 初期値を入れるか検討
-  // TODO(masaki): 初期値入れてもnullableでしか扱えないようであったら、書き込みと読み込み用(Flutter側で基本用いるもの）を分けることを検討
   const factory AuthedUser({
     /// firestore上のドキュメントID
     @Default('') String id,
@@ -26,6 +23,7 @@ class AuthedUser with _$AuthedUser {
     UnionTimestamp updatedAt,
 
     /// 写真分類用APIの実行状態
+    @ClassifyPhotosStatusConverter()
     @Default(ClassifyPhotosStatus.completed)
     ClassifyPhotosStatus classifyPhotosStatus,
   }) = _AuthedUser;
@@ -53,8 +51,15 @@ enum ClassifyPhotosStatus {
   /// 失敗
   // TODO(masaki): エラーハンドリングを別途検討
   failed;
+}
 
-  static fromString(String value) {
+/// [ClassifyPhotosStatus]用JsonConverter
+class ClassifyPhotosStatusConverter
+    implements JsonConverter<ClassifyPhotosStatus, String> {
+  const ClassifyPhotosStatusConverter();
+
+  @override
+  ClassifyPhotosStatus fromJson(String value) {
     switch (value) {
       case 'processing':
         return ClassifyPhotosStatus.processing;
@@ -66,31 +71,9 @@ enum ClassifyPhotosStatus {
         return ClassifyPhotosStatus.completed;
     }
   }
+
+  @override
+  String toJson(ClassifyPhotosStatus object) {
+    return object.name;
+  }
 }
-
-/// [AuthedUser]用コレクションのためのレファレンス
-///
-/// [AuthedUser]ドキュメントの操作にはこのレファレンスを経由すること。
-/// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
-final authedUsersRef =
-    FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
-  fromFirestore: ((ds, _) {
-    final data = ds.data()!;
-    // TODO(masaki): idが取得できているか動作確認
-    // TODO(masaki): enum用converter作成
-
-    // TODO(masaki): データ取得周り修正
-    // data['classifyPhotosStatus'] = ClassifyPhotosStatus.fromString(
-    //     data['classifyPhotosStatus'].toString());
-    return AuthedUser.fromJson(<String, dynamic>{
-      ...data,
-      'id': ds.id,
-    });
-  }),
-  toFirestore: (authedUser, _) {
-    final json = authedUser.toJson();
-    json['classifyPhotosStatus'] = authedUser.classifyPhotosStatus.name;
-    json.remove('id');
-    return json;
-  },
-);
