@@ -84,4 +84,17 @@ class AuthRepository {
       await userDoc.set(authedUser);
     }
   }
+
+  Stream<AuthedUser> subscribeAuthedUser() {
+    return authedUsersRef
+        .doc(_auth.currentUser?.uid)
+        .snapshots()
+        .map((snapshot) {
+      final authedUser = snapshot.data();
+      if (authedUser == null) {
+        throw Exception('ユーザー情報が取得できませんでした。');
+      }
+      return authedUser;
+    });
+  }
 }

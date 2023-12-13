@@ -1,14 +1,11 @@
 import 'dart:math' as math;
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_controller.dart';
 import 'package:my_gourmet/features/auth/authed_user.dart';
 import 'package:my_gourmet/features/photo/photo_controller.dart';
-
-import '../features/auth/auth_repository.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -282,63 +279,52 @@ class _HomePageState extends ConsumerState<HomePage> {
         SizedBox(
           width: 250,
           child: Center(
-            child: isLoading
-                ? const Text(
-                    '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
-                // TODO(masaki): userIdがなくなったのでここも修正
-                : StreamBuilder<QuerySnapshot<AuthedUser>>(
-                    stream: authedUsersRef
-                        .where('userId', isEqualTo: ref.watch(userIdProvider))
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      final docs = snapshot.data?.docs ?? [];
-                      if (docs.isEmpty) {
-                        return const Text(
-                          '未確認',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+              child: isLoading
+                  ? const Text(
+                      '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : ref.watch(authedUserStreamProvider).when(
+                      data: (authedUser) {
+                        final status = authedUser.classifyPhotosStatus;
+                        if (status == ClassifyPhotosStatus.completed) {
+                          return const Text(
+                            '処理が完了しました！\n下記から画像をダウンロードできます！',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else if (status == ClassifyPhotosStatus.processing) {
+                          return const Text(
+                            '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else {
+                          // TODO(masaki): エラーハンドリング
+                          return Text(
+                            status.name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                      },
+                      error: (_, __) => const Text(
+                            '未確認',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        );
-                      }
-
-                      final authedUser = docs.first.data();
-                      final status = authedUser.classifyPhotosStatus;
-                      if (status == ClassifyPhotosStatus.completed) {
-                        return const Text(
-                          '処理が完了しました！\n下記から画像をダウンロードできます！',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      } else if (status == ClassifyPhotosStatus.processing) {
-                        return const Text(
-                          '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      } else {
-                        // TODO(masaki): エラーハンドリング
-                        return Text(
-                          status.name,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      }
-                    },
-                  ),
-            // ),
-          ),
+                      loading: () => const CircularProgressIndicator())),
         ),
         const SizedBox(height: 30), // スペースを設定
         ElevatedButton(

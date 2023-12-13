@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_repository.dart';
 
-// TODO(masaki): 置き場所検討
-// data層的なところに置く場合→わざわざauth utilからインスタンスを持ってくる必要ない
-// controllerの場合→controllerクラスを一緒にした際のファイル内の可読性を考慮
+import 'authed_user.dart';
 
 // TODO(masaki): オンボーディングの設計次第でuserIdの取得方法を検討
 // i) 画面遷移時のみuserIdの有無を把握するので良い場合
@@ -19,13 +17,18 @@ final _authProvider =
 /// [FirebaseAuth]の[User]を管理するProvider
 ///
 /// 認証状態が変更(ログイン/ログアウト)される度に更新される
-final _authUserProvider =
+final _userProvider =
     StreamProvider<User?>((ref) => ref.watch(_authProvider).userChanges());
 
 /// userIdを管理するProvider
 ///
-/// [_authUserProvider]をwatchしているため、認証状態の変更を検知する
+/// [_userProvider]をwatchしているため、認証状態の変更を検知する
 final userIdProvider = Provider<String?>((ref) {
-  ref.watch(_authUserProvider);
+  ref.watch(_userProvider);
   return ref.watch(_authProvider).currentUser?.uid;
 });
+
+/// [AuthedUser]を購読するProvider
+final authedUserStreamProvider = StreamProvider.autoDispose<AuthedUser>(
+  (ref) => ref.watch(authRepositoryProvider).subscribeAuthedUser(),
+);
