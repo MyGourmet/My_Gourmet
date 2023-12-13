@@ -56,7 +56,7 @@ enum ClassifyPhotosStatus {
 
   static fromString(String value) {
     switch (value) {
-      case 'uploading':
+      case 'processing':
         return ClassifyPhotosStatus.processing;
       case 'completed':
         return ClassifyPhotosStatus.completed;
@@ -78,8 +78,10 @@ final authedUsersRef =
     final data = ds.data()!;
     // TODO(masaki): idが取得できているか動作確認
     // TODO(masaki): enum用converter作成
-    data['classifyPhotosStatus'] = ClassifyPhotosStatus.fromString(
-        data['classifyPhotosStatus'].toString());
+
+    // TODO(masaki): データ取得周り修正
+    // data['classifyPhotosStatus'] = ClassifyPhotosStatus.fromString(
+    //     data['classifyPhotosStatus'].toString());
     return AuthedUser.fromJson(<String, dynamic>{
       ...data,
       'id': ds.id,
