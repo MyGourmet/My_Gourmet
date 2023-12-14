@@ -13,7 +13,7 @@ class FunctionUtil {
   Future<void> callFirebaseFunction(String accessToken, String userId) async {
     try {
       await call(
-        functionName: "classify-v2",
+        functionName: "classifyImage-v3",
         parameters: {
           'accessToken': accessToken,
           'userId': userId,
