@@ -1,0 +1,294 @@
+{
+  "version": 4,
+  "terraform_version": "1.6.4",
+  "serial": 11,
+  "lineage": "784f0efe-663b-9fb6-4ae2-fab9771b5691",
+  "outputs": {},
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "google_cloudfunctions2_function",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "build_config": [
+              {
+                "build": "projects/588802119789/locations/asia-northeast1/builds/238a5e5d-5fe6-4f4c-949c-55f265bace2d",
+                "docker_repository": "",
+                "entry_point": "handler",
+                "environment_variables": {},
+                "runtime": "python311",
+                "source": [
+                  {
+                    "repo_source": [],
+                    "storage_source": [
+                      {
+                        "bucket": "gcf-v2-sources-588802119789-asia-northeast1",
+                        "generation": 1701263863797525,
+                        "object": "classifyImage/function-source.zip"
+                      }
+                    ]
+                  }
+                ],
+                "worker_pool": ""
+              }
+            ],
+            "description": "",
+            "environment": "GEN_2",
+            "event_trigger": [],
+            "id": "projects/my-gourmet-160fb/locations/asia-northeast1/functions/classifyImage",
+            "kms_key_name": "",
+            "labels": {
+              "deployment-tool": "console-cloud"
+            },
+            "location": "asia-northeast1",
+            "name": "classifyImage",
+            "project": "my-gourmet-160fb",
+            "service_config": [
+              {
+                "all_traffic_on_latest_revision": true,
+                "available_cpu": "1000m",
+                "available_memory": "2Gi",
+                "environment_variables": {},
+                "gcf_uri": "",
+                "ingress_settings": "ALLOW_ALL",
+                "max_instance_count": 100,
+                "max_instance_request_concurrency": 1,
+                "min_instance_count": 0,
+                "secret_environment_variables": [],
+                "secret_volumes": [],
+                "service": "projects/my-gourmet-160fb/locations/asia-northeast1/services/classifyimage",
+                "service_account_email": "588802119789-compute@developer.gserviceaccount.com",
+                "timeout_seconds": 3600,
+                "uri": "https://classifyimage-3pffww4yza-an.a.run.app",
+                "vpc_connector": "",
+                "vpc_connector_egress_settings": ""
+              }
+            ],
+            "state": "ACTIVE",
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "update": null
+            },
+            "update_time": "2023-11-29T13:19:12.974325223Z",
+            "url": "https://asia-northeast1-my-gourmet-160fb.cloudfunctions.net/classifyImage"
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInVwZGF0ZSI6MzYwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMCJ9"
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "google_firebase_android_app",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "api_key_id": "3d68fe11-0e57-4c31-a44a-04cd49547cd5",
+            "app_id": "1:588802119789:android:813b3a0dc8542f79b4c764",
+            "deletion_policy": "DELETE",
+            "display_name": "",
+            "etag": "1_970f9333-94dc-472c-b85d-51cdd7693d10",
+            "id": "projects/my-gourmet-160fb/androidApps/1:588802119789:android:813b3a0dc8542f79b4c764",
+            "name": "projects/my-gourmet-160fb/androidApps/1:588802119789:android:813b3a0dc8542f79b4c764",
+            "package_name": "com.example.my_gourmet",
+            "project": "my-gourmet-160fb",
+            "sha1_hashes": [
+              "5366066ad24e6c112b2fab175e0287e04be15b7f",
+              "fa07e5829257e71b6358724a5711414b45238148",
+              "c4e98aa96569ccccc188b08655560cfeeb8f56a8"
+            ],
+            "sha256_hashes": [
+              "595831d93194875c6054dc770388b3461fa02bb78f796f378305ce90cbaa0e27",
+              "cbf6f898250dac9c2665ca71071c0a6e1da8fa21529f73c99bb44720546d2642",
+              "b7d7b9797dcb864ecfbab01cf9638a16407b265a77047d419d06bbef3b8fac03"
+            ],
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "update": null
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMCJ9",
+          "dependencies": [
+            "google_project.default"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "google_firebase_project",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "display_name": "My-Gourmet",
+            "id": "projects/my-gourmet-160fb",
+            "project": "my-gourmet-160fb",
+            "project_number": "588802119789",
+            "timeouts": {
+              "create": null,
+              "delete": null
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjAifQ==",
+          "dependencies": [
+            "google_project.default"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "google_firebase_storage_bucket",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "bucket_id": "my-gourmet-160fb.appspot.com",
+            "id": "projects/my-gourmet-160fb/buckets/my-gourmet-160fb.appspot.com",
+            "name": "projects/my-gourmet-160fb/buckets/my-gourmet-160fb.appspot.com",
+            "project": "my-gourmet-160fb",
+            "timeouts": {
+              "create": null,
+              "delete": null
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjAifQ==",
+          "dependencies": [
+            "google_project.default"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "google_firestore_database",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "app_engine_integration_mode": "DISABLED",
+            "concurrency_mode": "PESSIMISTIC",
+            "create_time": "",
+            "delete_protection_state": "DELETE_PROTECTION_DISABLED",
+            "earliest_version_time": "2023-12-04T12:30:38.959341Z",
+            "etag": "IPf5uP3x9YIDMIi3k//qjIID",
+            "id": "projects/my-gourmet-160fb/databases/(default)",
+            "key_prefix": "",
+            "location_id": "asia-northeast1",
+            "name": "(default)",
+            "point_in_time_recovery_enablement": "POINT_IN_TIME_RECOVERY_DISABLED",
+            "project": "my-gourmet-160fb",
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "update": null
+            },
+            "type": "FIRESTORE_NATIVE",
+            "uid": "441df7b6-c285-4da7-9671-90f64d1ffdc7",
+            "update_time": "",
+            "version_retention_period": "3600s"
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInVwZGF0ZSI6MTIwMDAwMDAwMDAwMH0sInNjaGVtYV92ZXJzaW9uIjoiMCJ9",
+          "dependencies": [
+            "google_project.default"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "google_project_service",
+      "name": "compute",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "disable_dependent_services": null,
+            "disable_on_destroy": null,
+            "id": "my-gourmet-160fb/compute.googleapis.com",
+            "project": "my-gourmet-160fb",
+            "service": "compute.googleapis.com",
+            "timeouts": {
+              "create": null,
+              "delete": null,
+              "read": null,
+              "update": null
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxMjAwMDAwMDAwMDAwLCJkZWxldGUiOjEyMDAwMDAwMDAwMDAsInJlYWQiOjYwMDAwMDAwMDAwMCwidXBkYXRlIjoxMjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIwIn0=",
+          "dependencies": [
+            "google_project.default"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "google_storage_bucket",
+      "name": "default",
+      "provider": "provider[\"registry.terraform.io/hashicorp/google-beta\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "autoclass": [],
+            "cors": [],
+            "custom_placement_config": [],
+            "default_event_based_hold": false,
+            "encryption": [],
+            "force_destroy": false,
+            "id": "model-jp-my-gourmet-image-classification-2023-08",
+            "labels": {},
+            "lifecycle_rule": [],
+            "location": "ASIA-NORTHEAST1",
+            "logging": [],
+            "name": "model-jp-my-gourmet-image-classification-2023-08",
+            "project": "my-gourmet-160fb",
+            "public_access_prevention": "enforced",
+            "requester_pays": false,
+            "retention_policy": [],
+            "self_link": "https://www.googleapis.com/storage/v1/b/model-jp-my-gourmet-image-classification-2023-08",
+            "storage_class": "STANDARD",
+            "timeouts": {
+              "create": null,
+              "read": null,
+              "update": null
+            },
+            "uniform_bucket_level_access": true,
+            "url": "gs://model-jp-my-gourmet-image-classification-2023-08",
+            "versioning": [],
+            "website": []
+          },
+          "sensitive_attributes": [],
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsInJlYWQiOjI0MDAwMDAwMDAwMCwidXBkYXRlIjoyNDAwMDAwMDAwMDB9LCJzY2hlbWFfdmVyc2lvbiI6IjAifQ==",
+          "dependencies": [
+            "google_project.default"
+          ]
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
