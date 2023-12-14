@@ -18,6 +18,7 @@ class AuthUtil {
       'email',
       'https://www.googleapis.com/auth/photoslibrary'
     ]).signIn();
+
     if (googleUser == null) {
       throw Exception('サインインに失敗しました.');
     }
