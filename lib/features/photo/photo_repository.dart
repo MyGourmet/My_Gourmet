@@ -14,9 +14,9 @@ class PhotoRepository {
     try {
       // TODO(masaki): 関数実装後にfunctionタイプなど諸々調整して呼び出す
       // await call(
-      //   functionName: 'classifyPhotos',
+      //   functionName: 'classify-v2',
       //   parameters: {
-      //     'name': accessToken,
+      //     'accessToken': accessToken,
       //     'userId': userId,
       //   },
       // );
