@@ -13,12 +13,14 @@ class AuthUtil {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   Future<({String accessToken})> signInWithGoogle() async {
+    print("前");
     final googleUser = await GoogleSignIn(scopes: [
       'profile',
       'email',
       'https://www.googleapis.com/auth/photoslibrary'
     ]).signIn();
-
+    print("後");
+    print(googleUser);
     if (googleUser == null) {
       throw Exception('サインインに失敗しました.');
     }
