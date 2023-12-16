@@ -25,7 +25,7 @@ dependencies:
 dev_dependencies:
   custom_lint: ^0.5.4
   flutter_lints: ^2.0.0
-  flutter_native_splash: ^2.3.8
+  flutter_native_splash: ^2.3.7
   flutter_test:
     sdk: flutter
   riverpod_lint: ^2.1.1
@@ -35,7 +35,6 @@ flutter_native_splash:
   image: 'assets/images/splash/splash.png'
   color_dark: '#EF913A'
   image_dark: 'assets/images/splash/splash.png'
-  fullscreen: true
   android_12:
     icon_background_color: '#EF913A'
     image: 'assets/images/splash/splash_android12.png'
