@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:my_gourmet/common/presentation/app_colors.dart';
 import 'package:my_gourmet/common/presentation/widgets/buttons.dart';
-import 'package:my_gourmet/features/onboarding/onboarding_controller.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
