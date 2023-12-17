@@ -8,9 +8,9 @@ import 'package:my_gourmet/features/auth/authed_user.dart';
 ///
 /// [AuthedUser]ドキュメントの操作にはこのレファレンスを経由すること。
 /// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
+/// 常に[toFirestore]を経由するためにドキュメント更新時には[DocumentReference.update]ではなく[DocumentReference.set]を用いる。
 final authedUsersRef =
     FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
-  // TODO(masaki): idやenumが取得/書き込みできているか動作確認
   fromFirestore: ((ds, _) {
     final data = ds.data()!;
     return AuthedUser.fromJson(<String, dynamic>{
@@ -72,17 +72,17 @@ class AuthRepository {
   Future<void> upsertClassifyPhotosStatus(String userId) async {
     final userDoc = authedUsersRef.doc(userId);
     final userDocSnapshot = await userDoc.get();
+    final AuthedUser authedUser;
     if (userDocSnapshot.exists) {
-      final user = userDocSnapshot.data()!;
-      await userDoc.update(user
-          .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.processing)
-          .toJson());
+      authedUser = userDocSnapshot
+          .data()!
+          .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.processing);
     } else {
-      final authedUser = AuthedUser(
-          classifyPhotosStatus: ClassifyPhotosStatus.processing, id: userId);
-
-      await userDoc.set(authedUser);
+      authedUser = const AuthedUser(
+          classifyPhotosStatus: ClassifyPhotosStatus.processing);
     }
+    // ドキュメントが存在しない場合は新規作成、存在する場合は中身を全て置き換え
+    await userDoc.set(authedUser);
   }
 
   Stream<AuthedUser> subscribeAuthedUser() {

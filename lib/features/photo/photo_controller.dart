@@ -24,7 +24,7 @@ class PhotoController {
   ///
   /// サインインをした上でfirestore上で状態管理し、写真アップロード用のCFを起動する。
   Future<void> uploadPhotos({required String? userId}) async {
-    // TODO(masaki): ログイン後はfunction-5とは別のaccessToken不要な更新処理を実行
+    // TODO(masaki): ログインしているユーザーに関しては、リフレッシュトークンを用いてアクセストークンを再生成してログインを不要に出来ないか確認
     // if (userId != null) {
     //   // 更新処理
     //   return;
