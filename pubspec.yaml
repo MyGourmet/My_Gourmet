@@ -9,25 +9,38 @@ environment:
   sdk: '>=3.0.6 <4.0.0'
 
 dependencies:
+  cloud_firestore: null
+  cloud_functions: null
+  cupertino_icons: ^1.0.2
+  firebase_auth: ^4.7.1
+  firebase_core: ^2.15.0
+  firebase_storage: null
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
-  firebase_core: ^2.15.0
-  firebase_storage:
-  firebase_auth: ^4.7.1
-  cloud_functions:
-  cloud_firestore:
+  flutter_riverpod: ^2.4.4
   google_sign_in: ^6.1.4
   http: ^0.13.3
-  logger:
-  flutter_riverpod: ^2.4.4
+  logger: null
 
 dev_dependencies:
+  custom_lint: ^0.5.4
+  flutter_lints: ^2.0.0
+  flutter_native_splash: ^2.3.7
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  custom_lint: ^0.5.4
   riverpod_lint: ^2.1.1
+
+flutter_native_splash:
+  color: '#EF913A'
+  image: 'assets/images/splash/splash.png'
+  color_dark: '#EF913A'
+  image_dark: 'assets/images/splash/splash.png'
+  android_12:
+    icon_background_color: '#EF913A'
+    image: 'assets/images/splash/splash_android12.png'
+    icon_background_color_dark: '#EF913A'
+    image_dark: 'assets/images/splash/splash_android12.png'
+
 flutter:
   assets:
     - assets/images/
