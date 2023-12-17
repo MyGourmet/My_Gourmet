@@ -12,9 +12,9 @@ class PhotoRepository {
   /// CF上のclassifyPhotos関数を呼び出す
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
-      // TODO(masaki): 関数実装後にfunctionタイプなど諸々調整して呼び出す
+      // TODO(masaki): functionタイプなど含めて調整
       // await call(
-      //   functionName: 'classify-v2',
+      //   functionName: 'classifyImage-v3',
       //   parameters: {
       //     'accessToken': accessToken,
       //     'userId': userId,
