@@ -1,48 +1,39 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-// TODO(masaki): AuthedUserと同様に実装
-class Photo extends Object {
-  const Photo({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.shotAt,
-    required this.url,
-    required this.userId,
-  });
+import '../../timestamp_converter.dart';
 
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime shotAt;
-  final String url;
-  final String userId;
-}
+part 'photo.freezed.dart';
+part 'photo.g.dart';
 
-/// [Photo]用コレクションのためのレファレンス
-CollectionReference<Photo> photosRef({required String userId}) {
-  return FirebaseFirestore.instance
-      .collection('users')
-      .doc(userId)
-      .collection('photos')
-      .withConverter<Photo>(
-    fromFirestore: ((snapshot, _) {
-      return Photo(
-        id: snapshot.id,
-        createdAt: snapshot.data()!['createdAt'].toDate(),
-        updatedAt: snapshot.data()!['updatedAt'].toDate(),
-        shotAt: snapshot.data()!['shotAt'].toDate(),
-        url: snapshot.data()!['url'],
-        userId: snapshot.data()!['userId'],
-      );
-    }),
-    toFirestore: (photo, _) {
-      return {
-        'createdAt': photo.createdAt,
-        'updatedAt': photo.updatedAt,
-        'url': photo.url,
-        'userId': photo.userId,
-      };
-    },
-  );
+@freezed
+class Photo with _$Photo {
+  const factory Photo({
+    /// firestore上のドキュメントID
+    @Default('') String id,
+
+    /// 作成日時
+    @timestampConverter
+    @Default(UnionTimestamp.serverTimestamp())
+    UnionTimestamp createdAt,
+
+    /// 更新日時
+    @serverTimestampConverter
+    @Default(UnionTimestamp.serverTimestamp())
+    UnionTimestamp updatedAt,
+
+    /// [FirebaseStorage]に保存された写真のURL
+    @Default('') String url,
+
+    /// [AuthedUser]のドキュメントID
+    @Default('') String userId,
+
+    /// 写真の撮影日時
+    @timestampConverter
+    @Default(UnionTimestamp.serverTimestamp())
+    UnionTimestamp shotAt,
+  }) = _Photo;
+
+  const Photo._();
+
+  factory Photo.fromJson(Map<String, dynamic> json) => _$PhotoFromJson(json);
 }

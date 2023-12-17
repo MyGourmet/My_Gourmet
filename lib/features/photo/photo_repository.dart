@@ -1,8 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/photo/photo.dart';
+
+/// [Photo]用コレクションのためのレファレンス
+///
+/// [Photo]ドキュメントの操作にはこのレファレンスを経由すること。
+/// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
+/// 常に[toFirestore]を経由するためにドキュメント更新時には[DocumentReference.update]ではなく[DocumentReference.set]を用いる。
+CollectionReference<Photo> photosRef({required String userId}) {
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)
+      .collection('photos')
+      .withConverter<Photo>(
+    fromFirestore: ((snapshot, _) {
+      final data = snapshot.data()!;
+      return Photo.fromJson(<String, dynamic>{
+        ...data,
+        'id': snapshot.id,
+      });
+    }),
+    toFirestore: (photo, _) {
+      final json = photo.toJson();
+      json.remove('id');
+      return json;
+    },
+  );
+}
 
 final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
 
@@ -25,21 +52,12 @@ class PhotoRepository {
     }
   }
 
-  // TODO(masaki): firestoreへデータ作成後に動作確認
+  // TODO(masaki): firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
   Future<List<Photo>> downloadPhotos(
       {required String category, required String userId}) async {
     try {
       final photosSnap = await photosRef(userId: userId).get();
-      return photosSnap.docs.map((photo) {
-        return Photo(
-          id: photo.id,
-          createdAt: photo.data().createdAt,
-          updatedAt: photo.data().updatedAt,
-          shotAt: photo.data().shotAt,
-          url: photo.data().url,
-          userId: photo.data().userId,
-        );
-      }).toList();
+      return photosSnap.docs.map((photo) => photo.data()).toList();
     } catch (e) {
       debugPrint("An error occurred: $e");
       return [];

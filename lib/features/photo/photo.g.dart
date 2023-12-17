@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'authed_user.dart';
+part of 'photo.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AuthedUserImpl _$$AuthedUserImplFromJson(Map<String, dynamic> json) =>
-    _$AuthedUserImpl(
+_$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
       id: json['id'] as String? ?? '',
       createdAt: json['createdAt'] == null
           ? const UnionTimestamp.serverTimestamp()
@@ -15,17 +14,19 @@ _$AuthedUserImpl _$$AuthedUserImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : serverTimestampConverter.fromJson(json['updatedAt'] as Object),
-      classifyPhotosStatus: json['classifyPhotosStatus'] == null
-          ? ClassifyPhotosStatus.readyForUse
-          : const ClassifyPhotosStatusConverter()
-              .fromJson(json['classifyPhotosStatus'] as String),
+      url: json['url'] as String? ?? '',
+      userId: json['userId'] as String? ?? '',
+      shotAt: json['shotAt'] == null
+          ? const UnionTimestamp.serverTimestamp()
+          : timestampConverter.fromJson(json['shotAt'] as Object),
     );
 
-Map<String, dynamic> _$$AuthedUserImplToJson(_$AuthedUserImpl instance) =>
+Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'createdAt': timestampConverter.toJson(instance.createdAt),
       'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
-      'classifyPhotosStatus': const ClassifyPhotosStatusConverter()
-          .toJson(instance.classifyPhotosStatus),
+      'url': instance.url,
+      'userId': instance.userId,
+      'shotAt': timestampConverter.toJson(instance.shotAt),
     };

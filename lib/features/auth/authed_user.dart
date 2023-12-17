@@ -18,7 +18,7 @@ class AuthedUser with _$AuthedUser {
     UnionTimestamp createdAt,
 
     /// 更新日時
-    @serverTimeTimestampConverter
+    @serverTimestampConverter
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp updatedAt,
 

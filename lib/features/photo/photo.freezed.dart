@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'authed_user.dart';
+part of 'photo.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-AuthedUser _$AuthedUserFromJson(Map<String, dynamic> json) {
-  return _AuthedUser.fromJson(json);
+Photo _$PhotoFromJson(Map<String, dynamic> json) {
+  return _Photo.fromJson(json);
 }
 
 /// @nodoc
-mixin _$AuthedUser {
+mixin _$Photo {
   /// firestore上のドキュメントID
   String get id => throw _privateConstructorUsedError;
 
@@ -31,38 +31,43 @@ mixin _$AuthedUser {
   @serverTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
-  /// 写真分類用APIの実行状態
-  @ClassifyPhotosStatusConverter()
-  ClassifyPhotosStatus get classifyPhotosStatus =>
-      throw _privateConstructorUsedError;
+  /// [FirebaseStorage]に保存された写真のURL
+  String get url => throw _privateConstructorUsedError;
+
+  /// [AuthedUser]のドキュメントID
+  String get userId => throw _privateConstructorUsedError;
+
+  /// 写真の撮影日時
+  @timestampConverter
+  UnionTimestamp get shotAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $AuthedUserCopyWith<AuthedUser> get copyWith =>
-      throw _privateConstructorUsedError;
+  $PhotoCopyWith<Photo> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AuthedUserCopyWith<$Res> {
-  factory $AuthedUserCopyWith(
-          AuthedUser value, $Res Function(AuthedUser) then) =
-      _$AuthedUserCopyWithImpl<$Res, AuthedUser>;
+abstract class $PhotoCopyWith<$Res> {
+  factory $PhotoCopyWith(Photo value, $Res Function(Photo) then) =
+      _$PhotoCopyWithImpl<$Res, Photo>;
   @useResult
   $Res call(
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
-      @ClassifyPhotosStatusConverter()
-      ClassifyPhotosStatus classifyPhotosStatus});
+      String url,
+      String userId,
+      @timestampConverter UnionTimestamp shotAt});
 
   $UnionTimestampCopyWith<$Res> get createdAt;
   $UnionTimestampCopyWith<$Res> get updatedAt;
+  $UnionTimestampCopyWith<$Res> get shotAt;
 }
 
 /// @nodoc
-class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
-    implements $AuthedUserCopyWith<$Res> {
-  _$AuthedUserCopyWithImpl(this._value, this._then);
+class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
+    implements $PhotoCopyWith<$Res> {
+  _$PhotoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -75,7 +80,9 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? classifyPhotosStatus = null,
+    Object? url = null,
+    Object? userId = null,
+    Object? shotAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -90,10 +97,18 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      classifyPhotosStatus: null == classifyPhotosStatus
-          ? _value.classifyPhotosStatus
-          : classifyPhotosStatus // ignore: cast_nullable_to_non_nullable
-              as ClassifyPhotosStatus,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      shotAt: null == shotAt
+          ? _value.shotAt
+          : shotAt // ignore: cast_nullable_to_non_nullable
+              as UnionTimestamp,
     ) as $Val);
   }
 
@@ -112,35 +127,45 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
       return _then(_value.copyWith(updatedAt: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UnionTimestampCopyWith<$Res> get shotAt {
+    return $UnionTimestampCopyWith<$Res>(_value.shotAt, (value) {
+      return _then(_value.copyWith(shotAt: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
-abstract class _$$AuthedUserImplCopyWith<$Res>
-    implements $AuthedUserCopyWith<$Res> {
-  factory _$$AuthedUserImplCopyWith(
-          _$AuthedUserImpl value, $Res Function(_$AuthedUserImpl) then) =
-      __$$AuthedUserImplCopyWithImpl<$Res>;
+abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
+  factory _$$PhotoImplCopyWith(
+          _$PhotoImpl value, $Res Function(_$PhotoImpl) then) =
+      __$$PhotoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
-      @ClassifyPhotosStatusConverter()
-      ClassifyPhotosStatus classifyPhotosStatus});
+      String url,
+      String userId,
+      @timestampConverter UnionTimestamp shotAt});
 
   @override
   $UnionTimestampCopyWith<$Res> get createdAt;
   @override
   $UnionTimestampCopyWith<$Res> get updatedAt;
+  @override
+  $UnionTimestampCopyWith<$Res> get shotAt;
 }
 
 /// @nodoc
-class __$$AuthedUserImplCopyWithImpl<$Res>
-    extends _$AuthedUserCopyWithImpl<$Res, _$AuthedUserImpl>
-    implements _$$AuthedUserImplCopyWith<$Res> {
-  __$$AuthedUserImplCopyWithImpl(
-      _$AuthedUserImpl _value, $Res Function(_$AuthedUserImpl) _then)
+class __$$PhotoImplCopyWithImpl<$Res>
+    extends _$PhotoCopyWithImpl<$Res, _$PhotoImpl>
+    implements _$$PhotoImplCopyWith<$Res> {
+  __$$PhotoImplCopyWithImpl(
+      _$PhotoImpl _value, $Res Function(_$PhotoImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -149,9 +174,11 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? classifyPhotosStatus = null,
+    Object? url = null,
+    Object? userId = null,
+    Object? shotAt = null,
   }) {
-    return _then(_$AuthedUserImpl(
+    return _then(_$PhotoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -164,29 +191,38 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      classifyPhotosStatus: null == classifyPhotosStatus
-          ? _value.classifyPhotosStatus
-          : classifyPhotosStatus // ignore: cast_nullable_to_non_nullable
-              as ClassifyPhotosStatus,
+      url: null == url
+          ? _value.url
+          : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      shotAt: null == shotAt
+          ? _value.shotAt
+          : shotAt // ignore: cast_nullable_to_non_nullable
+              as UnionTimestamp,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AuthedUserImpl extends _AuthedUser {
-  const _$AuthedUserImpl(
+class _$PhotoImpl extends _Photo {
+  const _$PhotoImpl(
       {this.id = '',
       @timestampConverter
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      @ClassifyPhotosStatusConverter()
-      this.classifyPhotosStatus = ClassifyPhotosStatus.readyForUse})
+      this.url = '',
+      this.userId = '',
+      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp()})
       : super._();
 
-  factory _$AuthedUserImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AuthedUserImplFromJson(json);
+  factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PhotoImplFromJson(json);
 
   /// firestore上のドキュメントID
   @override
@@ -205,61 +241,72 @@ class _$AuthedUserImpl extends _AuthedUser {
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
 
-  /// 写真分類用APIの実行状態
+  /// [FirebaseStorage]に保存された写真のURL
   @override
   @JsonKey()
-  @ClassifyPhotosStatusConverter()
-  final ClassifyPhotosStatus classifyPhotosStatus;
+  final String url;
+
+  /// [AuthedUser]のドキュメントID
+  @override
+  @JsonKey()
+  final String userId;
+
+  /// 写真の撮影日時
+  @override
+  @JsonKey()
+  @timestampConverter
+  final UnionTimestamp shotAt;
 
   @override
   String toString() {
-    return 'AuthedUser(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, classifyPhotosStatus: $classifyPhotosStatus)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthedUserImpl &&
+            other is _$PhotoImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.classifyPhotosStatus, classifyPhotosStatus) ||
-                other.classifyPhotosStatus == classifyPhotosStatus));
+            (identical(other.url, url) || other.url == url) &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.shotAt, shotAt) || other.shotAt == shotAt));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, createdAt, updatedAt, classifyPhotosStatus);
+      Object.hash(runtimeType, id, createdAt, updatedAt, url, userId, shotAt);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AuthedUserImplCopyWith<_$AuthedUserImpl> get copyWith =>
-      __$$AuthedUserImplCopyWithImpl<_$AuthedUserImpl>(this, _$identity);
+  _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
+      __$$PhotoImplCopyWithImpl<_$PhotoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AuthedUserImplToJson(
+    return _$$PhotoImplToJson(
       this,
     );
   }
 }
 
-abstract class _AuthedUser extends AuthedUser {
-  const factory _AuthedUser(
+abstract class _Photo extends Photo {
+  const factory _Photo(
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
-      @ClassifyPhotosStatusConverter()
-      final ClassifyPhotosStatus classifyPhotosStatus}) = _$AuthedUserImpl;
-  const _AuthedUser._() : super._();
+      final String url,
+      final String userId,
+      @timestampConverter final UnionTimestamp shotAt}) = _$PhotoImpl;
+  const _Photo._() : super._();
 
-  factory _AuthedUser.fromJson(Map<String, dynamic> json) =
-      _$AuthedUserImpl.fromJson;
+  factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
 
   @override
 
@@ -277,11 +324,19 @@ abstract class _AuthedUser extends AuthedUser {
   UnionTimestamp get updatedAt;
   @override
 
-  /// 写真分類用APIの実行状態
-  @ClassifyPhotosStatusConverter()
-  ClassifyPhotosStatus get classifyPhotosStatus;
+  /// [FirebaseStorage]に保存された写真のURL
+  String get url;
+  @override
+
+  /// [AuthedUser]のドキュメントID
+  String get userId;
+  @override
+
+  /// 写真の撮影日時
+  @timestampConverter
+  UnionTimestamp get shotAt;
   @override
   @JsonKey(ignore: true)
-  _$$AuthedUserImplCopyWith<_$AuthedUserImpl> get copyWith =>
+  _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
