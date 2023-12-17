@@ -20,9 +20,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   @override
   void initState() {
     super.initState();
-    // オンボーディング済みかどうか
-    hasShownOnboarding =
-        ref.read(onboardingControllerProvider).hasShownOnboarding();
+    // TODO:ここでオンボーディング済みかどうか確認する
     // 初期化
     _onboardingcController = PageController()
       ..addListener(() {
@@ -102,9 +100,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         curve: Curves.linear,
                       );
                     } else {
-                      ref
-                          .read(onboardingControllerProvider)
-                          .completedOnboarding();
+                      // ここでオンボーディング完了フラグたてる
                       setState(() {
                         hasShownOnboarding = true;
                       });
