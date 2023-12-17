@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_gourmet/features/auth/auth_controller.dart';
 import 'package:my_gourmet/features/auth/authed_user.dart';
 import 'package:my_gourmet/features/photo/photo_controller.dart';
+import 'package:my_gourmet/view/onboarding_page.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -21,7 +22,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController;
   bool _isContainerVisible = true;
   bool isLoading = false;
-
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -99,134 +99,143 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // TODO(masaki): ログアウト機能実装後 or 不要になったタイミングで削除
-      floatingActionButton: Visibility(
-        visible: _isContainerVisible,
-        child: FloatingActionButton(
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-          },
-          child: const Icon(
-            Icons.logout,
-            color: Colors.black,
-            size: 40,
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.black,
-              child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _CategoryButton(
-                          label: 'ラーメン',
-                          onPressed: () => _downloadPhotos('ramen', ref)),
-                      _CategoryButton(
-                          label: 'カフェ',
-                          onPressed: () => _downloadPhotos('cafe', ref)),
-                      _CategoryButton(
-                          label: '和食',
-                          onPressed: () =>
-                              _downloadPhotos('japanese_food', ref)),
-                      _CategoryButton(
-                          label: 'その他',
-                          onPressed: () =>
-                              _downloadPhotos('international_cuisine', ref)),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, // 3列
-                    ),
-                    itemCount: photoUrls?.length ??
-                        imagePaths.length, // imageUrlsがnullならimagePathsの長さを使用
-                    itemBuilder: (context, index) {
-                      return Image(
-                        image: photoUrls != null
-                            ? NetworkImage(photoUrls![index])
-                            : AssetImage(imagePaths[index])
-                                as ImageProvider<Object>,
-                        fit: BoxFit.cover,
-                      );
-                    },
-                  ),
-                ),
-              ]),
-            ),
-            Visibility(
-              visible: _isContainerVisible,
-              child: Positioned(
-                top: (MediaQuery.of(context).size.height - 327) / 2, // 縦方向中央に配置
-                left: (MediaQuery.of(context).size.width - 317) / 2, // 横方向中央に配置
-                child: Container(
-                  width: 317, // 長方形の枠の幅を317に設定
-                  height: 327, // 長方形の枠の高さを327に設定
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.88),
-                    borderRadius: BorderRadius.circular(30.0), // 角を丸くする
-                  ),
-                  child: PageView(
-                    controller: _pageController,
-                    children: [
-                      _buildFirstPage(),
-                      _buildSecondPage(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            // SizedBox(height: 30),
-            _MyRotatingButton(
-              onVisibilityChanged: (isVisible) {
-                setState(() {
-                  _isContainerVisible = isVisible; // コンテナの表示状態を更新
-                });
+    return Stack(
+      children: [
+        Scaffold(
+          // TODO(masaki): ログアウト機能実装後 or 不要になったタイミングで削除
+          floatingActionButton: Visibility(
+            visible: _isContainerVisible,
+            child: FloatingActionButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
               },
+              child: const Icon(
+                Icons.logout,
+                color: Colors.black,
+                size: 40,
+              ),
             ),
-          ],
+          ),
+          body: SafeArea(
+            child: Stack(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black,
+                  child: Column(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          _CategoryButton(
+                              label: 'ラーメン',
+                              onPressed: () => _downloadPhotos('ramen', ref)),
+                          _CategoryButton(
+                              label: 'カフェ',
+                              onPressed: () => _downloadPhotos('cafe', ref)),
+                          _CategoryButton(
+                              label: '和食',
+                              onPressed: () =>
+                                  _downloadPhotos('japanese_food', ref)),
+                          _CategoryButton(
+                              label: 'その他',
+                              onPressed: () => _downloadPhotos(
+                                  'international_cuisine', ref)),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, // 3列
+                        ),
+                        itemCount: photoUrls?.length ??
+                            imagePaths
+                                .length, // imageUrlsがnullならimagePathsの長さを使用
+                        itemBuilder: (context, index) {
+                          return Image(
+                            image: photoUrls != null
+                                ? NetworkImage(photoUrls![index])
+                                : AssetImage(imagePaths[index])
+                                    as ImageProvider<Object>,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
+                    ),
+                  ]),
+                ),
+                Visibility(
+                  visible: _isContainerVisible,
+                  child: Positioned(
+                    top: (MediaQuery.of(context).size.height - 327) /
+                        2, // 縦方向中央に配置
+                    left: (MediaQuery.of(context).size.width - 317) /
+                        2, // 横方向中央に配置
+                    child: Container(
+                      width: 317, // 長方形の枠の幅を317に設定
+                      height: 327, // 長方形の枠の高さを327に設定
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.88),
+                        borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+                      ),
+                      child: PageView(
+                        controller: _pageController,
+                        children: [
+                          _buildFirstPage(),
+                          _buildSecondPage(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // SizedBox(height: 30),
+                _MyRotatingButton(
+                  onVisibilityChanged: (isVisible) {
+                    setState(() {
+                      _isContainerVisible = isVisible; // コンテナの表示状態を更新
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.black,
+            selectedFontSize: 0, // 選択時のフォントサイズを0に設定
+            unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
+            items: const [
+              BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+                  child: Icon(
+                    Icons.photo,
+                    size: 40, // アイコンのサイズを設定
+                    color: Color(0xFFEF913A), // アイコン本体の色を指定
+                  ),
+                ),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+                  child: Icon(
+                    Icons.map,
+                    size: 40, // アイコンのサイズを設定
+                    color: Color(0xFFEF913A), // アイコン本体の色を指定
+                  ),
+                ),
+                label: '',
+              ),
+            ],
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedFontSize: 0, // 選択時のフォントサイズを0に設定
-        unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
-        items: const [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-              child: Icon(
-                Icons.photo,
-                size: 40, // アイコンのサイズを設定
-                color: Color(0xFFEF913A), // アイコン本体の色を指定
-              ),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-              child: Icon(
-                Icons.map,
-                size: 40, // アイコンのサイズを設定
-                color: Color(0xFFEF913A), // アイコン本体の色を指定
-              ),
-            ),
-            label: '',
-          ),
-        ],
-      ),
+        // オンボーディングを上に重ねて表示
+        const OnboardingPage(),
+      ],
     );
   }
 
