@@ -290,7 +290,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
                         final status = authedUser.classifyPhotosStatus;
-                        if (status == ClassifyPhotosStatus.completed) {
+                        if (status == ClassifyPhotosStatus.readyForUse) {
                           return const Text(
                             '処理が完了しました！\n下記から画像をダウンロードできます！',
                             style: TextStyle(

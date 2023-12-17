@@ -17,7 +17,7 @@ _$AuthedUserImpl _$$AuthedUserImplFromJson(Map<String, dynamic> json) =>
           : serverTimeTimestampConverter.fromJson(json['updatedAt'] as Object),
       classifyPhotosStatus: $enumDecodeNullable(
               _$ClassifyPhotosStatusEnumMap, json['classifyPhotosStatus']) ??
-          ClassifyPhotosStatus.completed,
+          ClassifyPhotosStatus.readyForUse,
     );
 
 Map<String, dynamic> _$$AuthedUserImplToJson(_$AuthedUserImpl instance) =>
@@ -31,6 +31,6 @@ Map<String, dynamic> _$$AuthedUserImplToJson(_$AuthedUserImpl instance) =>
 
 const _$ClassifyPhotosStatusEnumMap = {
   ClassifyPhotosStatus.processing: 'processing',
-  ClassifyPhotosStatus.completed: 'completed',
+  ClassifyPhotosStatus.readyForUse: 'completed',
   ClassifyPhotosStatus.failed: 'failed',
 };

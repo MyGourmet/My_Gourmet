@@ -178,7 +178,7 @@ class _$AuthedUserImpl extends _AuthedUser {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimeTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      this.classifyPhotosStatus = ClassifyPhotosStatus.completed})
+      this.classifyPhotosStatus = ClassifyPhotosStatus.readyForUse})
       : super._();
 
   factory _$AuthedUserImpl.fromJson(Map<String, dynamic> json) =>

@@ -24,7 +24,7 @@ class AuthedUser with _$AuthedUser {
 
     /// 写真分類用APIの実行状態
     @ClassifyPhotosStatusConverter()
-    @Default(ClassifyPhotosStatus.completed)
+    @Default(ClassifyPhotosStatus.readyForUse)
     ClassifyPhotosStatus classifyPhotosStatus,
   }) = _AuthedUser;
 
@@ -45,8 +45,8 @@ enum ClassifyPhotosStatus {
   /// 処理中
   processing,
 
-  /// 完了
-  completed,
+  /// 利用の準備が整っている
+  readyForUse,
 
   /// 失敗
   // TODO(masaki): エラーハンドリングを別途検討
@@ -63,12 +63,12 @@ class ClassifyPhotosStatusConverter
     switch (value) {
       case 'processing':
         return ClassifyPhotosStatus.processing;
-      case 'completed':
-        return ClassifyPhotosStatus.completed;
+      case 'readyForUse':
+        return ClassifyPhotosStatus.readyForUse;
       case 'failed':
         return ClassifyPhotosStatus.failed;
       default:
-        return ClassifyPhotosStatus.completed;
+        return ClassifyPhotosStatus.readyForUse;
     }
   }
 
