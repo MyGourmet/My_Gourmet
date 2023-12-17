@@ -35,9 +35,9 @@ class PhotoRepository {
           id: photo.id,
           createdAt: photo.data().createdAt,
           updatedAt: photo.data().updatedAt,
+          shotAt: photo.data().shotAt,
           url: photo.data().url,
           userId: photo.data().userId,
-          otherUrls: photo.data().otherUrls,
         );
       }).toList();
     } catch (e) {

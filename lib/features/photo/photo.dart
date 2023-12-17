@@ -6,17 +6,17 @@ class Photo extends Object {
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    required this.shotAt,
     required this.url,
     required this.userId,
-    required this.otherUrls,
   });
 
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime shotAt;
   final String url;
   final String userId;
-  final List<String> otherUrls;
 }
 
 /// [Photo]用コレクションのためのレファレンス
@@ -31,9 +31,9 @@ CollectionReference<Photo> photosRef({required String userId}) {
         id: snapshot.id,
         createdAt: snapshot.data()!['createdAt'].toDate(),
         updatedAt: snapshot.data()!['updatedAt'].toDate(),
+        shotAt: snapshot.data()!['shotAt'].toDate(),
         url: snapshot.data()!['url'],
         userId: snapshot.data()!['userId'],
-        otherUrls: snapshot.data()!['otherUrls'].cast<String>(),
       );
     }),
     toFirestore: (photo, _) {
@@ -42,7 +42,6 @@ CollectionReference<Photo> photosRef({required String userId}) {
         'updatedAt': photo.updatedAt,
         'url': photo.url,
         'userId': photo.userId,
-        'otherUrls': photo.otherUrls,
       };
     },
   );
