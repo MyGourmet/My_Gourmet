@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../timestamp_converter.dart';
+import '../../core/timestamp_converter.dart';
 
 part 'authed_user.freezed.dart';
 part 'authed_user.g.dart';
