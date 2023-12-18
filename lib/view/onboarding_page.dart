@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:my_gourmet/common/presentation/app_colors.dart';
-import 'package:my_gourmet/common/presentation/widgets/buttons.dart';
+import 'package:my_gourmet/core/app_colors.dart';
+import 'package:my_gourmet/core/build_context_extension.dart';
+import 'package:my_gourmet/core/constants.dart';
 import 'package:my_gourmet/core/shared_preferences_service.dart';
+import 'package:my_gourmet/view/home_page.dart';
 
+import 'widgets/buttons.dart';
+
+/// オンボーディング用画面
+///
+/// [SharedPreferencesService]を参照して[HomePage]上に表示するかどうかを判断する。
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
 
@@ -14,7 +21,7 @@ class OnboardingPage extends ConsumerStatefulWidget {
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   bool hasShownOnboarding = false;
-  late PageController _onboardingcController;
+  late PageController _onboardingController;
   int currentOnboarding = 0;
   late SharedPreferencesService _sharedPreferencesService;
 
@@ -22,9 +29,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   void initState() {
     super.initState();
     // 初期化
-    _onboardingcController = PageController()
+    _onboardingController = PageController()
       ..addListener(() {
-        final page = _onboardingcController.page!.round();
+        final page = _onboardingController.page!.round();
         setState(() {
           currentOnboarding = page;
         });
@@ -42,8 +49,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = context.deviceWidth;
+    final screenHeight = context.deviceHeight;
     bool isOnboardingTop = currentOnboarding == 0;
     bool isNotLastOnboarding = currentOnboarding != 3;
 
@@ -53,7 +60,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         // オンボーディング初めのロゴ画面の場合、画面タップで遷移させる
         onTap: isOnboardingTop
             ? () {
-                _onboardingcController.nextPage(
+                _onboardingController.nextPage(
                   duration: const Duration(milliseconds: 300),
                   curve: Curves.linear,
                 );
@@ -68,7 +75,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             children: [
               Flexible(
                 child: PageView(
-                  controller: _onboardingcController,
+                  controller: _onboardingController,
                   children: <Widget>[
                     Center(
                       child: Image.asset(
@@ -104,7 +111,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 CustomButton.orange(
                   onPressed: () async {
                     if (isNotLastOnboarding) {
-                      _onboardingcController.nextPage(
+                      _onboardingController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.linear,
                       );
@@ -143,7 +150,7 @@ class _OnboardingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = context.deviceWidth;
     return Center(
       child: Column(
         children: [
@@ -160,7 +167,7 @@ class _OnboardingContent extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 18,
               decoration: TextDecoration.none,
-              fontFamily: 'ZenkakuGothicNew', // なぜかフォントが適用されないので直接指定
+              fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
             ),
             textAlign: TextAlign.center,
           ),
@@ -173,7 +180,7 @@ class _OnboardingContent extends StatelessWidget {
               color: AppColors.white,
               fontSize: 14,
               decoration: TextDecoration.none,
-              fontFamily: 'ZenkakuGothicNew', // なぜかフォントが適用されないので直接指定
+              fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
             ),
           ),
         ],

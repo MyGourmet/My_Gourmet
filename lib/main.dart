@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_gourmet/core/constants.dart';
 import 'package:my_gourmet/view/home_page.dart';
 
 import 'core/shared_preferences_service.dart';
@@ -21,7 +22,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'ZenkakuGothicNew'),
+      theme: ThemeData(fontFamily: kZenkakuGothicNew),
       home: const _SetUp(child: HomePage()),
     );
   }
