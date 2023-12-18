@@ -36,15 +36,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           currentOnboarding = page;
         });
       });
-  }
-
-  @override
-  didChangeDependencies() {
-    super.didChangeDependencies();
-    // Providerを参照する_sharedPreferencesServiceはここで初期化
-    _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
-    hasShownOnboarding = _sharedPreferencesService.getBool(
-        key: SharedPreferencesKey.isOnboardingCompleted);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
+      hasShownOnboarding = _sharedPreferencesService.getBool(
+          key: SharedPreferencesKey.isOnboardingCompleted);
+    });
   }
 
   @override

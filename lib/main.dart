@@ -42,11 +42,13 @@ class _SetUpState extends ConsumerState<_SetUp> {
   bool isLoading = true;
 
   @override
-  didChangeDependencies() {
-    super.didChangeDependencies();
-    _setUp().then((value) => setState(() {
-          isLoading = false;
-        }));
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _setUp().then((value) => setState(() {
+            isLoading = false;
+          }));
+    });
   }
 
   Future<void> _setUp() async {
