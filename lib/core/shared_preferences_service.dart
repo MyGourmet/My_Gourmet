@@ -25,7 +25,6 @@ class SharedPreferencesService {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  // TODO(masaki): オンボーディング最後の「やってみる」押下時にここを更新
   /// bool用書き込み処理
   Future<bool> setBool({
     required SharedPreferencesKey key,
@@ -35,9 +34,9 @@ class SharedPreferencesService {
   }
 
   /// bool用読み込み処理
-  bool? getBool({
+  bool getBool({
     required SharedPreferencesKey key,
   }) {
-    return _sharedPreferences.getBool(key.name);
+    return _sharedPreferences.getBool(key.name) ?? false;
   }
 }

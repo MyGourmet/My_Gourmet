@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:my_gourmet/common/presentation/app_colors.dart';
 import 'package:my_gourmet/common/presentation/widgets/buttons.dart';
+import 'package:my_gourmet/core/shared_preferences_service.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({super.key});
@@ -15,11 +16,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   bool hasShownOnboarding = false;
   late PageController _onboardingcController;
   int currentOnboarding = 0;
+  late SharedPreferencesService _sharedPreferencesService;
 
   @override
   void initState() {
     super.initState();
-    // TODO:ここでオンボーディング済みかどうか確認する
     // 初期化
     _onboardingcController = PageController()
       ..addListener(() {
@@ -28,6 +29,15 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           currentOnboarding = page;
         });
       });
+  }
+
+  @override
+  didChangeDependencies() {
+    super.didChangeDependencies();
+    // Providerを参照する_sharedPreferencesServiceはここで初期化
+    _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
+    hasShownOnboarding = _sharedPreferencesService.getBool(
+        key: SharedPreferencesKey.isOnboardingCompleted);
   }
 
   @override
@@ -92,17 +102,19 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               ),
               if (!isOnboardingTop)
                 CustomButton.orange(
-                  onPressed: () {
+                  onPressed: () async {
                     if (isNotLastOnboarding) {
                       _onboardingcController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.linear,
                       );
                     } else {
-                      // ここでオンボーディング完了フラグたてる
-                      setState(() {
-                        hasShownOnboarding = true;
-                      });
+                      // オンボーディング完了フラグをたてる
+                      hasShownOnboarding =
+                          await _sharedPreferencesService.setBool(
+                              key: SharedPreferencesKey.isOnboardingCompleted,
+                              value: true);
+                      setState(() {});
                     }
                   },
                   text: isNotLastOnboarding ? 'つぎへ' : 'はじめる',
