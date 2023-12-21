@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../auth/auth_repository.dart';
 import 'photo.dart';
 import 'photo_repository.dart';
@@ -24,7 +25,8 @@ class PhotoController {
   ///
   /// サインインをした上でfirestore上で状態管理し、写真アップロード用のCFを起動する。
   Future<void> uploadPhotos({required String? userId}) async {
-    // TODO(masaki): ログインしているユーザーに関しては、リフレッシュトークンを用いてアクセストークンを再生成してログインを不要に出来ないか確認
+    // TODO(masaki): ログインしているユーザーに関しては、
+    //  リフレッシュトークンを用いてアクセストークンを再生成してログインを不要に出来ないか確認
     // if (userId != null) {
     //   // 更新処理
     //   return;
@@ -33,12 +35,16 @@ class PhotoController {
     final result = await _authRepository.signInWithGoogle();
     await _authRepository.upsertClassifyPhotosStatus(result.userId);
     await _photoRepository.callClassifyPhotos(
-        result.accessToken, result.userId,);
+      result.accessToken,
+      result.userId,
+    );
   }
 
   /// 写真ダウンロード用メソッド
-  Future<List<Photo>> downloadPhotos(
-      {required String category, required String? userId,}) async {
+  Future<List<Photo>> downloadPhotos({
+    required String category,
+    required String? userId,
+  }) async {
     if (userId == null) {
       return [];
     }

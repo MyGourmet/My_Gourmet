@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 import 'authed_user.dart';
 
 /// [AuthedUser]用コレクションのためのレファレンス
 ///
 /// [AuthedUser]ドキュメントの操作にはこのレファレンスを経由すること。
-/// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
-/// 常に[toFirestore]を経由するためにドキュメント更新時には[DocumentReference.update]ではなく[DocumentReference.set]を用いる。
+/// fromFirestoreではドキュメントidを追加し、toFirestoreではドキュメントidを削除する。
+/// 常にtoFirestoreを経由するために、ドキュメント更新時には
+/// [DocumentReference.update]ではなく[DocumentReference.set]を用いる。
 final authedUsersRef =
     FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
   fromFirestore: (ds, _) {
@@ -19,8 +21,7 @@ final authedUsersRef =
     });
   },
   toFirestore: (authedUser, _) {
-    final json = authedUser.toJson();
-    json.remove('id');
+    final json = authedUser.toJson()..remove('id');
     return json;
   },
 );
@@ -40,11 +41,13 @@ class AuthRepository {
 
   /// サインイン用メソッド
   Future<({String accessToken, String userId})> signInWithGoogle() async {
-    final googleUser = await GoogleSignIn(scopes: [
-      'profile',
-      'email',
-      'https://www.googleapis.com/auth/photoslibrary',
-    ],).signIn();
+    final googleUser = await GoogleSignIn(
+      scopes: [
+        'profile',
+        'email',
+        'https://www.googleapis.com/auth/photoslibrary',
+      ],
+    ).signIn();
 
     if (googleUser == null) {
       throw Exception('サインインに失敗しました.');
@@ -79,7 +82,8 @@ class AuthRepository {
           .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.processing);
     } else {
       authedUser = const AuthedUser(
-          classifyPhotosStatus: ClassifyPhotosStatus.processing,);
+        classifyPhotosStatus: ClassifyPhotosStatus.processing,
+      );
     }
     // ドキュメントが存在しない場合は新規作成、存在する場合は中身を全て置き換え
     await userDoc.set(authedUser);

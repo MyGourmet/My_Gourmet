@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+
 import '../core/app_colors.dart';
 import '../core/build_context_extension.dart';
 import '../core/constants.dart';
 import '../core/shared_preferences_service.dart';
 import 'home_page.dart';
-
 import 'widgets/buttons.dart';
 
 /// オンボーディング用画面
@@ -39,7 +39,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
       hasShownOnboarding = _sharedPreferencesService.getBool(
-          key: SharedPreferencesKey.isOnboardingCompleted,);
+        key: SharedPreferencesKey.isOnboardingCompleted,
+      );
     });
   }
 
@@ -82,6 +83,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     const _OnboardingContent(
                       title: 'せっかく撮った食べ物の写真\nそのままになっていませんか？\n',
                       description:
+                          // ignore: lines_longer_than_80_chars
                           '素敵なごはんやお店の写真が\nフォルダ内であちこちにあったり。\nせっかく撮ってもそれっきりで\n見返すことがなかったり。',
                       imagePath: 'assets/images/onboarding1.png',
                       imageWidth: 160,
@@ -89,6 +91,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     const _OnboardingContent(
                       title: 'あなたの画像ライブラリから\n食べ物の写真のみを\n自動ピックアップします！',
                       description:
+                          // ignore: lines_longer_than_80_chars
                           'MyGourmetではあなたの画像フォルダの\nすべての画像を自動で解析し\n食べ物の写真のみ表示させることができます。',
                       imagePath: 'assets/images/onboarding2.png',
                       imageWidth: 220,
@@ -96,6 +99,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     const _OnboardingContent(
                       title: 'あなただけの\n食の思い出アルバムが\n出来上がります！',
                       description:
+                          // ignore: lines_longer_than_80_chars
                           'それぞれの料理の味わいや体験を\nひと目で見返せるようになります。\n\nさあ、さっそく今までの写真を\n記録してみましょう！',
                       imagePath: 'assets/images/onboarding3.png',
                       imageWidth: 140,
@@ -115,8 +119,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       // オンボーディング完了フラグをたてる
                       hasShownOnboarding =
                           await _sharedPreferencesService.setBool(
-                              key: SharedPreferencesKey.isOnboardingCompleted,
-                              value: true,);
+                        key: SharedPreferencesKey.isOnboardingCompleted,
+                        value: true,
+                      );
                       setState(() {});
                     }
                   },

@@ -3,13 +3,15 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
 ///
 /// [Photo]ドキュメントの操作にはこのレファレンスを経由すること。
-/// [fromFirestore]ではドキュメントidを追加し、[toFirestore]ではドキュメントidを削除する。
-/// 常に[toFirestore]を経由するためにドキュメント更新時には[DocumentReference.update]ではなく[DocumentReference.set]を用いる。
+/// fromFirestoreではドキュメントidを追加し、toFirestoreではドキュメントidを削除する。
+/// 常にtoFirestoreを経由するために、ドキュメント更新時には
+/// [DocumentReference.update]ではなく[DocumentReference.set]を用いる。
 CollectionReference<Photo> photosRef({required String userId}) {
   return FirebaseFirestore.instance
       .collection('users')
@@ -24,8 +26,7 @@ CollectionReference<Photo> photosRef({required String userId}) {
       });
     },
     toFirestore: (photo, _) {
-      final json = photo.toJson();
-      json.remove('id');
+      final json = photo.toJson()..remove('id');
       return json;
     },
   );
@@ -47,25 +48,27 @@ class PhotoRepository {
       //     'userId': userId,
       //   },
       // );
-    } catch (error) {
+    } on Exception catch (error) {
       debugPrint(error.toString());
     }
   }
 
   // TODO(masaki): firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
-  Future<List<Photo>> downloadPhotos(
-      {required String category, required String userId,}) async {
+  Future<List<Photo>> downloadPhotos({
+    required String category,
+    required String userId,
+  }) async {
     try {
       final photosSnap = await photosRef(userId: userId).get();
       return photosSnap.docs.map((photo) => photo.data()).toList();
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('An error occurred: $e');
       return [];
     }
   }
 
   /// CloudFunctionsを呼び出す
-  Future<HttpsCallableResult> call({
+  Future<HttpsCallableResult<dynamic>> call({
     required String functionName,
     String? region,
     Map<String, dynamic>? parameters,
@@ -77,7 +80,7 @@ class PhotoRepository {
       );
       final callable = functions.httpsCallable(functionName);
       return await callable.call(parameters);
-    } catch (e) {
+    } on Exception {
       rethrow;
     }
   }

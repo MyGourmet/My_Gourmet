@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
@@ -10,7 +11,7 @@ import 'onboarding_page.dart';
 
 // TODO(masaki): Themeやconstの管理
 
-//  TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
+// TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -68,7 +69,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       await ref
           .read(photoControllerProvider)
           .uploadPhotos(userId: ref.watch(userIdProvider));
-    } catch (e) {
+    } on Exception catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -87,10 +88,11 @@ class _HomePageState extends ConsumerState<HomePage> {
   Future<void> _downloadPhotos(String category, WidgetRef ref) async {
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
     final result = await ref.read(photoControllerProvider).downloadPhotos(
-        category: category,
-        userId: ref.watch(
-          userIdProvider,
-        ),);
+          category: category,
+          userId: ref.watch(
+            userIdProvider,
+          ),
+        );
 
     setState(() {
       photoUrls = result.map((e) => e.url).toList();
@@ -123,50 +125,58 @@ class _HomePageState extends ConsumerState<HomePage> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.black,
-                  child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _CategoryButton(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _CategoryButton(
                               label: 'ラーメン',
-                              onPressed: () => _downloadPhotos('ramen', ref),),
-                          _CategoryButton(
+                              onPressed: () => _downloadPhotos('ramen', ref),
+                            ),
+                            _CategoryButton(
                               label: 'カフェ',
-                              onPressed: () => _downloadPhotos('cafe', ref),),
-                          _CategoryButton(
+                              onPressed: () => _downloadPhotos('cafe', ref),
+                            ),
+                            _CategoryButton(
                               label: '和食',
                               onPressed: () =>
-                                  _downloadPhotos('japanese_food', ref),),
-                          _CategoryButton(
+                                  _downloadPhotos('japanese_food', ref),
+                            ),
+                            _CategoryButton(
                               label: 'その他',
                               onPressed: () => _downloadPhotos(
-                                  'international_cuisine', ref,),),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, // 3列
+                                'international_cuisine',
+                                ref,
+                              ),
+                            ),
+                          ],
                         ),
-                        itemCount: photoUrls?.length ??
-                            imagePaths
-                                .length, // imageUrlsがnullならimagePathsの長さを使用
-                        itemBuilder: (context, index) {
-                          return Image(
-                            image: photoUrls != null
-                                ? NetworkImage(photoUrls![index])
-                                : AssetImage(imagePaths[index])
-                                    as ImageProvider<Object>,
-                            fit: BoxFit.cover,
-                          );
-                        },
                       ),
-                    ),
-                  ],),
+                      Expanded(
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3, // 3列
+                          ),
+                          itemCount: photoUrls?.length ??
+                              imagePaths
+                                  .length, // imageUrlsがnullならimagePathsの長さを使用
+                          itemBuilder: (context, index) {
+                            return Image(
+                              image: photoUrls != null
+                                  ? NetworkImage(photoUrls![index])
+                                  : AssetImage(imagePaths[index])
+                                      as ImageProvider<Object>,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Visibility(
                   visible: _isContainerVisible,
@@ -286,15 +296,16 @@ class _HomePageState extends ConsumerState<HomePage> {
         SizedBox(
           width: 250,
           child: Center(
-              child: isLoading
-                  ? const Text(
-                      '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  : ref.watch(authedUserStreamProvider).when(
+            child: isLoading
+                ? const Text(
+                    // ignore: lines_longer_than_80_chars
+                    '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
@@ -307,6 +318,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
                           return const Text(
+                            // ignore: lines_longer_than_80_chars
                             '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
                             style: TextStyle(
                               fontSize: 20,
@@ -325,13 +337,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                         }
                       },
                       error: (_, __) => const Text(
-                            '未確認',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                      loading: () => const CircularProgressIndicator(),),),
+                        '未確認',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      loading: () => const CircularProgressIndicator(),
+                    ),
+          ),
         ),
         const SizedBox(height: 30), // スペースを設定
         ElevatedButton(
@@ -361,8 +375,8 @@ class _HomePageState extends ConsumerState<HomePage> {
 }
 
 class _CategoryButton extends StatelessWidget {
-
   const _CategoryButton({required this.label, required this.onPressed});
+
   final String label;
   final VoidCallback onPressed;
 
@@ -389,9 +403,11 @@ class _CategoryButton extends StatelessWidget {
   }
 }
 
-class _MyRotatingButton extends StatefulWidget { // コンテナの表示状態を通知するためのコールバック
+class _MyRotatingButton extends StatefulWidget {
+  // コンテナの表示状態を通知するためのコールバック
 
   const _MyRotatingButton({required this.onVisibilityChanged});
+
   final ValueChanged<bool> onVisibilityChanged;
 
   @override

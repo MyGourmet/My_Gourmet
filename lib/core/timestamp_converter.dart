@@ -6,7 +6,7 @@ part 'timestamp_converter.freezed.dart';
 /// [_UnionTimestampConverter]用インスタンス
 const timestampConverter = _UnionTimestampConverter();
 
-/// [usesServerTime]がtrueの場合の[_UnionTimestampConverter]用インスタンス
+/// [_UnionTimestampConverter.usesServerTime]がtrueの場合のインスタンス
 const serverTimestampConverter = _UnionTimestampConverter(usesServerTime: true);
 
 /// [UnionTimestamp]型とFirestoreのタイムスタンプを相互変換するJsonConverter

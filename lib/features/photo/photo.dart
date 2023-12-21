@@ -21,10 +21,10 @@ class Photo with _$Photo {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp updatedAt,
 
-    /// [FirebaseStorage]に保存された写真のURL
+    /// FirebaseStorageに保存された写真のURL
     @Default('') String url,
 
-    /// [AuthedUser]のドキュメントID
+    /// FirebaseStorageのドキュメントID
     @Default('') String userId,
 
     /// 写真の撮影日時
