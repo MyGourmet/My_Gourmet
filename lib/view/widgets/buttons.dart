@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_gourmet/core/app_colors.dart';
+import '../../core/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton._({

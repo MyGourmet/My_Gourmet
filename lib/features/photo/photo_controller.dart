@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/features/auth/auth_repository.dart';
-import 'package:my_gourmet/features/photo/photo.dart';
-import 'package:my_gourmet/features/photo/photo_repository.dart';
+import '../auth/auth_repository.dart';
+import 'photo.dart';
+import 'photo_repository.dart';
 
 final photoControllerProvider = Provider<PhotoController>(PhotoController._);
 

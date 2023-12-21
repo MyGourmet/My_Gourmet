@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:my_gourmet/core/app_colors.dart';
-import 'package:my_gourmet/core/build_context_extension.dart';
-import 'package:my_gourmet/core/constants.dart';
-import 'package:my_gourmet/core/shared_preferences_service.dart';
-import 'package:my_gourmet/view/home_page.dart';
+import '../core/app_colors.dart';
+import '../core/build_context_extension.dart';
+import '../core/constants.dart';
+import '../core/shared_preferences_service.dart';
+import 'home_page.dart';
 
 import 'widgets/buttons.dart';
 

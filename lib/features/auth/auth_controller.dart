@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/features/auth/auth_repository.dart';
+import 'auth_repository.dart';
 
 import 'authed_user.dart';
 

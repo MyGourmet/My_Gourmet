@@ -3,7 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/features/photo/photo.dart';
+import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
 ///
@@ -59,7 +59,7 @@ class PhotoRepository {
       final photosSnap = await photosRef(userId: userId).get();
       return photosSnap.docs.map((photo) => photo.data()).toList();
     } catch (e) {
-      debugPrint("An error occurred: $e");
+      debugPrint('An error occurred: $e');
       return [];
     }
   }

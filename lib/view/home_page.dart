@@ -3,10 +3,10 @@ import 'dart:math' as math;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/features/auth/auth_controller.dart';
-import 'package:my_gourmet/features/auth/authed_user.dart';
-import 'package:my_gourmet/features/photo/photo_controller.dart';
-import 'package:my_gourmet/view/onboarding_page.dart';
+import '../features/auth/auth_controller.dart';
+import '../features/auth/authed_user.dart';
+import '../features/photo/photo_controller.dart';
+import 'onboarding_page.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -338,7 +338,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         const SizedBox(height: 30), // スペースを設定
         ElevatedButton(
           onPressed: () {
-            _downloadPhotos("ramen", ref);
+            _downloadPhotos('ramen', ref);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
