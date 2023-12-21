@@ -33,12 +33,12 @@ class PhotoController {
     final result = await _authRepository.signInWithGoogle();
     await _authRepository.upsertClassifyPhotosStatus(result.userId);
     await _photoRepository.callClassifyPhotos(
-        result.accessToken, result.userId);
+        result.accessToken, result.userId,);
   }
 
   /// 写真ダウンロード用メソッド
   Future<List<Photo>> downloadPhotos(
-      {required String category, required String? userId}) async {
+      {required String category, required String? userId,}) async {
     if (userId == null) {
       return [];
     }

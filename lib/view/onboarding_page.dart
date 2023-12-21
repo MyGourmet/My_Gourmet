@@ -39,7 +39,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
       hasShownOnboarding = _sharedPreferencesService.getBool(
-          key: SharedPreferencesKey.isOnboardingCompleted);
+          key: SharedPreferencesKey.isOnboardingCompleted,);
     });
   }
 
@@ -47,8 +47,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     final screenWidth = context.deviceWidth;
     final screenHeight = context.deviceHeight;
-    bool isOnboardingTop = currentOnboarding == 0;
-    bool isNotLastOnboarding = currentOnboarding != 3;
+    final isOnboardingTop = currentOnboarding == 0;
+    final isNotLastOnboarding = currentOnboarding != 3;
 
     return Visibility(
       visible: !hasShownOnboarding,
@@ -107,7 +107,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 CustomButton.orange(
                   onPressed: () async {
                     if (isNotLastOnboarding) {
-                      _onboardingController.nextPage(
+                      await _onboardingController.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.linear,
                       );
@@ -116,7 +116,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       hasShownOnboarding =
                           await _sharedPreferencesService.setBool(
                               key: SharedPreferencesKey.isOnboardingCompleted,
-                              value: true);
+                              value: true,);
                       setState(() {});
                     }
                   },

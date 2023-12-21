@@ -16,13 +16,13 @@ CollectionReference<Photo> photosRef({required String userId}) {
       .doc(userId)
       .collection('photos')
       .withConverter<Photo>(
-    fromFirestore: ((snapshot, _) {
+    fromFirestore: (snapshot, _) {
       final data = snapshot.data()!;
       return Photo.fromJson(<String, dynamic>{
         ...data,
         'id': snapshot.id,
       });
-    }),
+    },
     toFirestore: (photo, _) {
       final json = photo.toJson();
       json.remove('id');
@@ -54,7 +54,7 @@ class PhotoRepository {
 
   // TODO(masaki): firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
   Future<List<Photo>> downloadPhotos(
-      {required String category, required String userId}) async {
+      {required String category, required String userId,}) async {
     try {
       final photosSnap = await photosRef(userId: userId).get();
       return photosSnap.docs.map((photo) => photo.data()).toList();

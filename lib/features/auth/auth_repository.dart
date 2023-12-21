@@ -11,13 +11,13 @@ import 'authed_user.dart';
 /// 常に[toFirestore]を経由するためにドキュメント更新時には[DocumentReference.update]ではなく[DocumentReference.set]を用いる。
 final authedUsersRef =
     FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
-  fromFirestore: ((ds, _) {
+  fromFirestore: (ds, _) {
     final data = ds.data()!;
     return AuthedUser.fromJson(<String, dynamic>{
       ...data,
       'id': ds.id,
     });
-  }),
+  },
   toFirestore: (authedUser, _) {
     final json = authedUser.toJson();
     json.remove('id');
@@ -43,8 +43,8 @@ class AuthRepository {
     final googleUser = await GoogleSignIn(scopes: [
       'profile',
       'email',
-      'https://www.googleapis.com/auth/photoslibrary'
-    ]).signIn();
+      'https://www.googleapis.com/auth/photoslibrary',
+    ],).signIn();
 
     if (googleUser == null) {
       throw Exception('サインインに失敗しました.');
@@ -79,7 +79,7 @@ class AuthRepository {
           .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.processing);
     } else {
       authedUser = const AuthedUser(
-          classifyPhotosStatus: ClassifyPhotosStatus.processing);
+          classifyPhotosStatus: ClassifyPhotosStatus.processing,);
     }
     // ドキュメントが存在しない場合は新規作成、存在する場合は中身を全て置き換え
     await userDoc.set(authedUser);

@@ -90,7 +90,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         category: category,
         userId: ref.watch(
           userIdProvider,
-        ));
+        ),);
 
     setState(() {
       photoUrls = result.map((e) => e.url).toList();
@@ -125,24 +125,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                   color: Colors.black,
                   child: Column(children: [
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _CategoryButton(
                               label: 'ラーメン',
-                              onPressed: () => _downloadPhotos('ramen', ref)),
+                              onPressed: () => _downloadPhotos('ramen', ref),),
                           _CategoryButton(
                               label: 'カフェ',
-                              onPressed: () => _downloadPhotos('cafe', ref)),
+                              onPressed: () => _downloadPhotos('cafe', ref),),
                           _CategoryButton(
                               label: '和食',
                               onPressed: () =>
-                                  _downloadPhotos('japanese_food', ref)),
+                                  _downloadPhotos('japanese_food', ref),),
                           _CategoryButton(
                               label: 'その他',
                               onPressed: () => _downloadPhotos(
-                                  'international_cuisine', ref)),
+                                  'international_cuisine', ref,),),
                         ],
                       ),
                     ),
@@ -166,7 +166,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         },
                       ),
                     ),
-                  ]),
+                  ],),
                 ),
                 Visibility(
                   visible: _isContainerVisible,
@@ -180,7 +180,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       height: 327, // 長方形の枠の高さを327に設定
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.88),
-                        borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+                        borderRadius: BorderRadius.circular(30), // 角を丸くする
                       ),
                       child: PageView(
                         controller: _pageController,
@@ -258,13 +258,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         const SizedBox(height: 30), // テキストとボタンの間のスペース
         ElevatedButton(
-          onPressed: () {
-            _onButtonPressed(); // isLoadingをtrueにセットし、次のページへ遷移
-          },
+          onPressed: _onButtonPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+              borderRadius: BorderRadius.circular(30), // 角を丸くする
             ),
             minimumSize: const Size(250, 50),
           ),
@@ -333,7 +331,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                      loading: () => const CircularProgressIndicator())),
+                      loading: () => const CircularProgressIndicator(),),),
         ),
         const SizedBox(height: 30), // スペースを設定
         ElevatedButton(
@@ -343,7 +341,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0), // 角を丸くする
+              borderRadius: BorderRadius.circular(30), // 角を丸くする
             ),
             minimumSize: const Size(250, 50),
           ),
@@ -363,10 +361,10 @@ class _HomePageState extends ConsumerState<HomePage> {
 }
 
 class _CategoryButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
 
   const _CategoryButton({required this.label, required this.onPressed});
+  final String label;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -375,7 +373,7 @@ class _CategoryButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: const Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.circular(15.0), // 角を丸くする
+          borderRadius: BorderRadius.circular(15), // 角を丸くする
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Text(
@@ -391,10 +389,10 @@ class _CategoryButton extends StatelessWidget {
   }
 }
 
-class _MyRotatingButton extends StatefulWidget {
-  final ValueChanged<bool> onVisibilityChanged; // コンテナの表示状態を通知するためのコールバック
+class _MyRotatingButton extends StatefulWidget { // コンテナの表示状態を通知するためのコールバック
 
   const _MyRotatingButton({required this.onVisibilityChanged});
+  final ValueChanged<bool> onVisibilityChanged;
 
   @override
   _MyRotatingButtonState createState() => _MyRotatingButtonState();
