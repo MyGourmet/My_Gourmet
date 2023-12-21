@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+    show TargetPlatform, defaultTargetPlatform, kIsWeb;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -36,9 +36,10 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for linux - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
-      default:
+      case TargetPlatform.fuchsia:
         throw UnsupportedError(
-          'DefaultFirebaseOptions are not supported for this platform.',
+          'DefaultFirebaseOptions have not been configured for fuchsia - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
         );
     }
   }
@@ -67,8 +68,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '588802119789',
     projectId: 'my-gourmet-160fb',
     storageBucket: 'my-gourmet-160fb.appspot.com',
-    androidClientId: '588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com',
-    iosClientId: '588802119789-oh11a15chog7l1dkq0q4ju5gh4gofcut.apps.googleusercontent.com',
+    androidClientId:
+        '588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com',
+    iosClientId:
+        '588802119789-oh11a15chog7l1dkq0q4ju5gh4gofcut.apps.googleusercontent.com',
     iosBundleId: 'com.example.myGourmet',
   );
 
@@ -78,8 +81,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '588802119789',
     projectId: 'my-gourmet-160fb',
     storageBucket: 'my-gourmet-160fb.appspot.com',
-    androidClientId: '588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com',
-    iosClientId: '588802119789-lr4ault031vkrdl78p5a3lhmkf54ttp2.apps.googleusercontent.com',
+    androidClientId:
+        '588802119789-655n8ng1ushrfshihu1q7sk3jonp0jil.apps.googleusercontent.com',
+    iosClientId:
+        '588802119789-lr4ault031vkrdl78p5a3lhmkf54ttp2.apps.googleusercontent.com',
     iosBundleId: 'com.example.myGourmet.RunnerTests',
   );
 }
