@@ -1,0 +1,26 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // リクエスト元がすでにFirebaseAuthの認証が行われたものかどうかチェック
+    function userHasLogin() {
+      return request.auth != null;
+    }
+
+    // リクエストしたユーザーが参照するドキュメントがユーザーのものかどうかチェック
+    function dataIsUserData(userId) {
+      return userHasLogin() && userId == request.auth.uid;
+    }
+
+    // ユーザードキュメントの参照
+    match /users/{userId} {
+      allow read, write: if dataIsUserData(userId);
+    }
+
+    // 写真ドキュメントの参照
+    match /users/{userId}/photos/{photoId} {
+      allow read, write: if dataIsUserData(userId);
+    }
+  }
+}
