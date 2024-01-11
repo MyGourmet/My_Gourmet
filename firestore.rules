@@ -1,0 +1,24 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /// 認証済みユーザーかどうか判定する関数
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /// 指定された[userId]が現在の認証ユーザーかどうか判定する関数
+    function isCurrentUser(userId) {
+      return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    match /users/{id} {
+      allow read, write: if isCurrentUser(id);
+    }
+
+    match /users/{userId}/photos {
+      allow read, write: if isCurrentUser(userId);
+    }
+  }
+}
