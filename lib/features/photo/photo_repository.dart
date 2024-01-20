@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 import 'photo.dart';
 
@@ -37,17 +39,30 @@ final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
 class PhotoRepository {
   PhotoRepository._();
 
-  /// CF上のclassifyPhotos関数を呼び出す
+  // OAuth 2.0 REST APIエンドポイント
+  static const String _apiUrl =
+      'https://asia-northeast1-my-gourmet-160fb.cloudfunctions.net';
+
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
-      // TODO(masaki): functionタイプなど含めて調整
-      // await call(
-      //   functionName: 'classifyImage-v3',
-      //   parameters: {
-      //     'accessToken': accessToken,
-      //     'userId': userId,
-      //   },
-      // );
+      final response = await http.post(
+        Uri.parse('$_apiUrl/changeClassifyPhotosStatus'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode({
+          'userId': userId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // 成功した場合の処理
+        debugPrint('API call successful: ${response.body}');
+      } else {
+        // エラーが返された場合の処理
+        debugPrint('API call failed: ${response.body}');
+      }
     } on Exception catch (error) {
       debugPrint(error.toString());
     }
