@@ -1,51 +1,20 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/app_colors.dart';
 
 /// ログイン用画面
 ///
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MyPage extends StatefulWidget {
+  const MyPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyPage> createState() => _MyPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-
-      _counter++;
-    });
-  }
+class _MyPageState extends State<MyPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ListTile(
                     title: Text(
                         'xxxxx',
-                        style: TextStyle(color: AppColors.white)
+                        style: TextStyle(color: AppColors.white),
                     ),
                   ),
                   Divider(
@@ -119,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: AppColors.black.withOpacity(0.9),
         fixedColor: const Color(0xFFEF913A),
         unselectedItemColor: Color(0xFFEF913A).withOpacity(0.6), //選んでない物の色        unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.only(top: 10), // 上側の余白を設定
