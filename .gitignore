@@ -48,3 +48,8 @@ app.*.map.json
 
 # fvm
 .fvm/flutter_sdk
+
+# Dart Defines related
+**/android/app/google-services.json
+
+
