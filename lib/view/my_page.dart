@@ -85,7 +85,7 @@ class _MyPageState extends State<MyPage> {
 
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.black.withOpacity(0.9),
-        fixedColor: const Color(0xFFEF913A),
+        fixedColor: Color(0xFFEF913A),
         unselectedItemColor: Color(0xFFEF913A).withOpacity(0.6), //選んでない物の色        unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
         items: [
           BottomNavigationBarItem(
