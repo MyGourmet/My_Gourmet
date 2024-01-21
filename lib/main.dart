@@ -4,15 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/constants.dart';
 import 'core/shared_preferences_service.dart';
-import 'firebase_options.dart';
 import 'view/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -45,9 +42,11 @@ class _SetUpState extends ConsumerState<_SetUp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _setUp().then((value) => setState(() {
-            isLoading = false;
-          }),);
+      _setUp().then(
+        (value) => setState(() {
+          isLoading = false;
+        }),
+      );
     });
   }
 
