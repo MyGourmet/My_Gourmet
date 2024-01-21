@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import '../core/app_colors.dart';
 
-/// ログアウト用画面
+/// ログイン用画面
 ///
 
 void main() {
@@ -73,6 +74,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   ListTile(
                     title: Text(
+                      'ログアウト',
+                      style: TextStyle(color: AppColors.white),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 20,
+                    color: AppColors.white,
+                  ),
+                  ListTile(
+                    title: Text(
                       'アカウントを削除',
                       style: TextStyle(color: AppColors.white),
                     ),
@@ -112,16 +125,6 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.only(top: 10), // 上側の余白を設定
               child: Icon(
                 Icons.photo,
-                size: 40, // アイコンのサイズを設定
-              ),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-              child: Icon(
-                Icons.room,
                 size: 40, // アイコンのサイズを設定
               ),
             ),
