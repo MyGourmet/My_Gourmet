@@ -1,10 +1,7 @@
 from firebase_admin import firestore
 from fastapi import HTTPException
-# from api.routers.task import get_firestore_client
 
 def update_user_status(user_id: str, access_token: str, db):
-    # ここにビジネスロジックを追加します
-    # db = get_firestore_client()
     
     if not access_token:
         raise HTTPException(status_code=401, detail="アクセストークンが提供されていないか無効です")

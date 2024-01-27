@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from firebase_admin import initialize_app, credentials
 from api.routers import task, done
 
-cred = credentials.Certificate('/auth/service_account.json')  # 適切なパスに置き換えてください
+cred = credentials.Certificate('/auth/service_account.json')
 initialize_app(cred)
 
 app = FastAPI()
