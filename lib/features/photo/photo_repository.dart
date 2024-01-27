@@ -41,12 +41,12 @@ class PhotoRepository {
 
   // OAuth 2.0 REST APIエンドポイント
   static const String _apiUrl =
-      'https://asia-northeast1-my-gourmet-160fb.cloudfunctions.net';
+      'https://demo-app-3pffww4yza-an.a.run.app';
 
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
       final response = await http.post(
-        Uri.parse('$_apiUrl/changeClassifyPhotosStatus'),
+        Uri.parse('$_apiUrl/updateUserStatus'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken',

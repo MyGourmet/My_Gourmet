@@ -1,0 +1,20 @@
+from firebase_admin import firestore
+from fastapi import HTTPException
+# from api.routers.task import get_firestore_client
+
+def update_user_status(user_id: str, access_token: str, db):
+    # ここにビジネスロジックを追加します
+    # db = get_firestore_client()
+    
+    if not access_token:
+        raise HTTPException(status_code=401, detail="アクセストークンが提供されていないか無効です")
+
+    if not user_id:
+        raise HTTPException(status_code=400, detail="userIdが提供されていません")
+
+    # Firestoreの更新ロジック
+    users_ref = db.collection("users")
+    user_doc_ref = users_ref.document(user_id)
+    new_state = "readyForUser"
+    user_doc_ref.update({"classifyPhotosStatus": new_state})
+    return {"message": "正常に更新されました"}

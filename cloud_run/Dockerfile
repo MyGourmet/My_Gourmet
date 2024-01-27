@@ -14,5 +14,11 @@ COPY pyproject.toml* poetry.lock* ./
 RUN poetry config virtualenvs.in-project true
 RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
 
+# サービスアカウントのJSONファイルをコピー
+COPY ./auth/service_account.json /auth/service_account.json
+
+# 環境変数を設定
+ENV GOOGLE_APPLICATION_CREDENTIALS=/auth/service_account.json
+
 # uvicornのサーバーを立ち上げる
 ENTRYPOINT ["poetry", "run", "uvicorn", "api.main:app", "--host", "0.0.0.0", "--reload"]
