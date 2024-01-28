@@ -23,35 +23,37 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       theme: ThemeData(fontFamily: kZenkakuGothicNew),
-      home: const _SetUp(child: HomePage()),
+      home: const _AppInitializer(child: HomePage()),
     );
   }
 }
 
-/// 画面描画前に必要な処理を行うクラス
-class _SetUp extends ConsumerStatefulWidget {
-  const _SetUp({required this.child});
+/// 画面描画前に必要な初期化処理を行うクラス
+class _AppInitializer extends ConsumerStatefulWidget {
+  const _AppInitializer({required this.child});
 
   final Widget child;
 
   @override
-  ConsumerState<_SetUp> createState() => _SetUpState();
+  ConsumerState<_AppInitializer> createState() => _SetUpState();
 }
 
-class _SetUpState extends ConsumerState<_SetUp> {
+class _SetUpState extends ConsumerState<_AppInitializer> {
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _setUp().then((value) => setState(() {
-            isLoading = false;
-          }),);
+      _init().then(
+        (value) => setState(() {
+          isLoading = false;
+        }),
+      );
     });
   }
 
-  Future<void> _setUp() async {
+  Future<void> _init() async {
     // SharedPreferencesを初期化
     final sharedPreferencesService =
         ref.watch(sharedPreferencesServiceProvider);
