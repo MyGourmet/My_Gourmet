@@ -11,17 +11,17 @@ router = APIRouter()
 def get_firestore_client():
     return firestore.client()
 
-# def get_storage_client():
-#     return storage.Client()
+def get_storage_client():
+    return storage.Client()
 
 @router.post("/saveImage")
-async def save_image_endpoint(request: Request, db=Depends(get_firestore_client)):
+async def save_image_endpoint(request: Request, db=Depends(get_firestore_client), storage_client=Depends(get_storage_client)):
     body = await request.json()
     auth_header = request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1] if auth_header and auth_header.startswith("Bearer ") else None
     user_id = body.get("userId")
     
-    return save_image(user_id=user_id, access_token=access_token, db=db)
+    return save_image(user_id=user_id, access_token=access_token, db=db, storage_client=storage_client)
 
 @router.post("/updateUserStatus")
 async def update_user_status_endpoint(request: Request, db=Depends(get_firestore_client)):

@@ -11,6 +11,7 @@ RUN pip install poetry
 COPY pyproject.toml* poetry.lock* ./
 
 # poetryでライブラリをインストール (pyproject.tomlが既にある場合)
+ENV POETRY_REQUESTS_TIMEOUT=120 
 RUN poetry config virtualenvs.in-project true
 RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
 
