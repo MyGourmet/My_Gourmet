@@ -9,7 +9,7 @@ enum SharedPreferencesKey {
 
 /// [SharedPreferencesService]用プロバイダー
 ///
-/// アプリ起動時 or テスト時に、初期化のために[ProviderContainer]経由で呼び出してインスタンスを生成しておく。
+/// アプリ起動時 or テスト時に、初期化処理としてインスタンスを生成しておく。
 final sharedPreferencesServiceProvider = Provider<SharedPreferencesService>(
   (ref) => SharedPreferencesService._(),
 );
