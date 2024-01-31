@@ -40,7 +40,7 @@ class ConfirmDialog extends StatelessWidget {
       content: Text(contentString),
       actions: [
         TextButton(
-          onPressed: () => onConfirmed,
+          onPressed: onConfirmed,
           child: const Text('はい'),
         ),
       ],
