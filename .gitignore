@@ -48,3 +48,6 @@ app.*.map.json
 
 # fvm
 .fvm/flutter_sdk
+
+# auth
+/cloud_run/auth/
