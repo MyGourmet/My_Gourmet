@@ -16,7 +16,7 @@ app = FastAPI()
 
 def get_photos_from_google_photo_api(
     access_token: str,
-    page_size: int = 10, 
+    page_size: int, 
     next_page_token: Optional[str] = None
 ) -> Dict[str, Any]:
     try:
@@ -156,9 +156,9 @@ def save_image(
                 result, message = save_to_firestore(
                     photo["baseUrl"], user_id, db
                 )
-            if not result:
-                logging.error(message)
-                return {"error": message}, 500
+                if not result:
+                    logging.error(message)
+                    return {"error": message}, 500
 
         next_token = photos_data.get("nextPageToken")
         if not next_token:
