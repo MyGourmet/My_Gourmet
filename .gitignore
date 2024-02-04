@@ -49,6 +49,9 @@ app.*.map.json
 # fvm
 .fvm/flutter_sdk
 
+# auth
+/cloud_run/auth/
+
 # Dart Defines related
 **/android/app/google-services.json
 !.idea/run_configurations/

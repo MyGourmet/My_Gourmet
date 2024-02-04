@@ -9,13 +9,14 @@ environment:
   sdk: '>=3.0.6 <4.0.0'
 
 dependencies:
-  cloud_firestore: null
-  cloud_functions: null
+  cloud_firestore: any
+  cloud_functions: any
   collection: ^1.17.2
   cupertino_icons: ^1.0.2
-  firebase_auth: ^4.7.1
-  firebase_core: ^2.15.0
-  firebase_storage: null
+  firebase_auth: any
+  firebase_core: any
+  firebase_remote_config: any
+  firebase_storage: any
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.4.4
@@ -24,7 +25,9 @@ dependencies:
   google_sign_in: ^6.1.4
   http: ^0.13.3
   logger: null
+  package_info: ^2.0.2
   shared_preferences: ^2.2.2
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   build_runner: ^2.4.6
