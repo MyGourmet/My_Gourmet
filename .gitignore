@@ -54,4 +54,4 @@ app.*.map.json
 
 # Dart Defines related
 **/android/app/google-services.json
-!.idea/run_configurations/
+!.idea/runConfigurations/
