@@ -17,7 +17,7 @@ service cloud.firestore {
       allow read, write: if isCurrentUser(id);
     }
 
-    match /users/{userId}/photos {
+    match /users/{userId}/photos/{id} {
       allow read, write: if isCurrentUser(userId);
     }
   }

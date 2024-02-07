@@ -14,7 +14,7 @@ migrate_working_dir/
 *.iml
 *.ipr
 *.iws
-.idea/
+.idea/*
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -51,3 +51,7 @@ app.*.map.json
 
 # auth
 /cloud_run/auth/
+
+# Dart Defines related
+**/android/app/google-services.json
+!.idea/runConfigurations/

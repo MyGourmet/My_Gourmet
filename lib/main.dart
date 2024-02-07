@@ -9,16 +9,13 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'core/constants.dart';
 import 'core/shared_preferences_service.dart';
-import 'firebase_options.dart';
 import 'view/home_page.dart';
 import 'view/widgets/confirm_dialog.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 
