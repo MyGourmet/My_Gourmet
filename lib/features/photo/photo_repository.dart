@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
+import '../../core/flavor.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
@@ -40,8 +42,9 @@ class PhotoRepository {
   PhotoRepository._();
 
   // OAuth 2.0 REST APIエンドポイント
-  static const String _apiUrl =
-      'https://demo-app-3pffww4yza-an.a.run.app';
+  final String _apiUrl = flavor.isProd
+      ? 'https://asia-northeast1-my-gourmet-160fb.cloudfunctions.net'
+      : 'https://asia-northeast1-my-gourmet-dev-f5b45.cloudfunctions.net';
 
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
