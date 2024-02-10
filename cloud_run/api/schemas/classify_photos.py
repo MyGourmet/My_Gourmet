@@ -1,15 +1,21 @@
-from datetime import datetime
-import uuid
-import os
+# Standard Library
 import logging
-import requests
+import os
 import tempfile
-from google.cloud import storage
-from fastapi import FastAPI, HTTPException
-from typing import Optional, Tuple, Dict, Any
-import tensorflow as tf
-from tensorflow.keras.preprocessing.image import load_img, img_to_array
+import uuid
+from datetime import datetime
+from typing import Any, Dict, Optional, Tuple
+
+# Third Party Library
 import numpy as np
+import requests  # type: ignore
+import tensorflow as tf  # type: ignore
+from fastapi import FastAPI, HTTPException  # type: ignore
+from google.cloud import storage  # type: ignore
+from tensorflow.keras.preprocessing.image import (  # type: ignore
+    img_to_array,
+    load_img,
+)
 
 app = FastAPI()
 
@@ -144,28 +150,29 @@ def save_image(
         )
         if not photos_data.get("mediaItems"):
             logging.info("No mediaItems found in the response.")
-            return {"message": "No media items found"}, 200
+            return {"message": "No media items found"}
 
         for photo in photos_data["mediaItems"]:
             if "screenshot" in photo["filename"].lower():
                 continue  # スクリーンショットを含む画像を除外
 
-            predicted, content = classify_image(
-                photo["baseUrl"],
-                interpreter,
-                input_details,
-                output_details,
-                image_size,
-            )
-            if (
-                content and classes[predicted] in classes[:-1]
-            ):  # "other" is excluded
-                result, message = save_to_firestore(
-                    photo["baseUrl"], user_id, db
-                )
-                if not result:
-                    logging.error(message)
-                    return {"error": message}, 500
+        predicted, content = classify_image(
+            photo["baseUrl"],
+            interpreter,
+            input_details,
+            output_details,
+            image_size,
+        )
+        # predictedがNoneでないことを確認してからリストをインデックス参照する
+        if (
+            predicted is not None
+            and content
+            and classes[predicted] in classes[:-1]
+        ):  # "other" is excluded
+            result, message = save_to_firestore(photo["baseUrl"], user_id, db)
+            if not result:
+                logging.error(message)
+                raise HTTPException(status_code=500, detail=message)
 
         next_token = photos_data.get("nextPageToken")
         if not next_token:

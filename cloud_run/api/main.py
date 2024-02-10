@@ -1,8 +1,10 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+# Third Party Library
+from fastapi import FastAPI  # type: ignore
+from fastapi.middleware.cors import CORSMiddleware  # type: ignore
+from firebase_admin import credentials, initialize_app  # type: ignore
 
-from firebase_admin import initialize_app, credentials
-from api.routers import task
+# First Party Library
+from api.routers import task  # type: ignore
 
 cred = credentials.Certificate("/auth/service_account.json")
 initialize_app(cred)

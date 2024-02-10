@@ -1,0 +1,14 @@
+{
+    "mypy.extraArguments": [
+        "--ignore-missing-imports",
+        "--follow-imports=skip"
+    ],
+    "flake8.path": [
+        "/Users/kimsukhong/.pyenv/shims/flake8"
+    ],
+    "flake8.severity": {
+        "E": "Warning",
+        "F": "Warning"
+    },
+    "json.schemas": []
+}

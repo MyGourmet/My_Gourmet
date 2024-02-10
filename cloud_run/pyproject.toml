@@ -60,6 +60,17 @@ extend-ignore = ["E203", "W503"]
 exclude = [".venv", ".git", "__pycache__",]
 max-complexity = 10
 
+[tool.pysen]
+version = "0.9"
+ 
+[tool.pysen.lint]
+enable_black = true
+enable_flake8 = true
+enable_isort = true
+enable_mypy = true
+[[tool.pysen.lint.mypy_targets]]
+paths = ["."]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
