@@ -1,7 +1,5 @@
-from typing import List
 from fastapi import APIRouter, Request, Depends
 from google.cloud import storage
-import api.schemas.task as task_schema
 from api.schemas.classify_photos import save_image, update_user_status
 from firebase_admin import firestore
 

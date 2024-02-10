@@ -3,7 +3,6 @@ import uuid
 import os
 import logging
 import requests
-import traceback
 import tempfile
 from google.cloud import storage
 from fastapi import FastAPI, HTTPException
@@ -106,14 +105,19 @@ def save_to_firestore(
 
 
 @app.post("/saveImage")
-def save_image(user_id: str, access_token: str, db, storage_client) -> Dict[str, str]:
+def save_image(
+    user_id: str, access_token: str, db, storage_client
+) -> Dict[str, str]:
     if not access_token:
         raise HTTPException(
-            status_code=401, detail="アクセストークンが提供されていないか無効です"
+            status_code=401,
+            detail="アクセストークンが提供されていないか無効です",
         )
 
     if not user_id:
-        raise HTTPException(status_code=400, detail="userIdが提供されていません")
+        raise HTTPException(
+            status_code=400, detail="userIdが提供されていません"
+        )
 
     image_size = 224
     model_bucket_name = "model-jp-my-gourmet-image-classification-2023-08"
@@ -125,7 +129,13 @@ def save_image(user_id: str, access_token: str, db, storage_client) -> Dict[str,
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
-    classes = ["ramen", "japanese_food", "international_cuisine", "cafe", "other"]
+    classes = [
+        "ramen",
+        "japanese_food",
+        "international_cuisine",
+        "cafe",
+        "other",
+    ]
 
     next_token: Optional[str] = None
     for _ in range(1):
@@ -147,8 +157,12 @@ def save_image(user_id: str, access_token: str, db, storage_client) -> Dict[str,
                 output_details,
                 image_size,
             )
-            if content and classes[predicted] in classes[:-1]:  # "other" is excluded
-                result, message = save_to_firestore(photo["baseUrl"], user_id, db)
+            if (
+                content and classes[predicted] in classes[:-1]
+            ):  # "other" is excluded
+                result, message = save_to_firestore(
+                    photo["baseUrl"], user_id, db
+                )
                 if not result:
                     logging.error(message)
                     return {"error": message}, 500
@@ -168,11 +182,14 @@ def save_image(user_id: str, access_token: str, db, storage_client) -> Dict[str,
 def update_user_status(user_id: str, access_token: str, db):
     if not access_token:
         raise HTTPException(
-            status_code=401, detail="アクセストークンが提供されていないか無効です"
+            status_code=401,
+            detail="アクセストークンが提供されていないか無効です",
         )
 
     if not user_id:
-        raise HTTPException(status_code=400, detail="userIdが提供されていません")
+        raise HTTPException(
+            status_code=400, detail="userIdが提供されていません"
+        )
 
     # Firestoreの更新ロジック
     users_ref = db.collection("users")

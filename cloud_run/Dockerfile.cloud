@@ -1,4 +1,4 @@
-# ビルドステージ
+# python3.11のイメージをダウンロード
 FROM python:3.11-buster as builder
 ENV PYTHONUNBUFFERED=1
 
@@ -12,25 +12,22 @@ COPY pyproject.toml* poetry.lock* ./
 
 # poetryでライブラリをインストール (pyproject.tomlが既にある場合)
 ENV POETRY_REQUESTS_TIMEOUT=120 
-RUN poetry config virtualenvs.in-project true && \
-    if [ -f pyproject.toml ]; then poetry install --no-root; fi
+RUN poetry config virtualenvs.in-project true
+RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
 
-# 最終ステージ
-FROM python:3.11-slim-buster as final
-ENV PYTHONUNBUFFERED=1 \
-    GOOGLE_APPLICATION_CREDENTIALS=/auth/service_account.json
+FROM builder as production
 
 WORKDIR /src
 
-# pipを使ってpoetryをインストール
-RUN pip install poetry
+# サービスアカウントのJSONファイルをコピー
+COPY ./auth/service_account.json /auth/service_account.json
 
-# ビルドステージから必要なファイルをコピー
-COPY --from=builder /src /src
+# デプロイ前に必要
 COPY api api
 COPY entrypoint.sh ./
-RUN chmod +x ./entrypoint.sh
-COPY ./auth/service_account.json /auth/service_account.json
+
+# 環境変数を設定
+ENV GOOGLE_APPLICATION_CREDENTIALS=/auth/service_account.json
 
 # uvicornのサーバーを立ち上げる
 ENTRYPOINT ["bash", "entrypoint.sh"]
