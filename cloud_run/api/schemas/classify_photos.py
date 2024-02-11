@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional, Tuple
 
 # Third Party Library
 import numpy as np
-import requests  # type: ignore
+import requests
 import tensorflow as tf  # type: ignore
 from fastapi import FastAPI, HTTPException  # type: ignore
 from google.cloud import storage  # type: ignore
@@ -64,7 +64,10 @@ def classify_image(
         response.raise_for_status()
     except requests.RequestException as e:
         logging.error(f"Error fetching image: {e}")
-        return None, None
+        raise HTTPException(
+            status_code=401,
+            detail="Error fetching image: {e}",
+        )
 
     try:
         _, temp_local_path = tempfile.mkstemp()
@@ -86,7 +89,10 @@ def classify_image(
 
     except Exception as e:
         logging.error(f"Error processing image: {e}")
-        return None, None
+        raise HTTPException(
+            status_code=401,
+            detail="Error processing image: {e}",
+        )
 
     finally:
         if os.path.exists(temp_local_path):
@@ -98,17 +104,24 @@ def save_to_cloud_storage(
     filename: str,
     bucket: storage.Bucket,
     user_id: str,
-) -> None:
+) -> str:
     try:
         logging.info(f"Preparing to upload image to Cloud Storage: {filename}")
-        prefix = f"{GCS_PREFIX}/{user_id}/"
-        blob = bucket.blob(prefix + filename)
-        blob.upload_from_string(content)
-        logging.info(
-            f"Successfully uploaded image to Cloud Storage: {filename}"
-        )
+        """Firebase Storageに画像をアップロードし、公開URLを取得する"""
+        blob = bucket.blob(f"{GCS_PREFIX}/{user_id}/{filename}")
+        blob.upload_from_string(content, content_type="image/jpeg")
+
+        # ファイルを公開して、公開URLを取得
+        blob.make_public()
+        image_url = blob.public_url
+        return image_url
+
     except Exception as e:
         logging.error(f"Failed to upload image to Cloud Storage: {e}")
+        raise HTTPException(
+            status_code=401,
+            detail="An error occurred while saving to Firestore: {e}",
+        )
 
 
 def save_to_firestore(
@@ -141,9 +154,13 @@ def save_to_firestore(
         return True, "Firestore update successful"
     except Exception as e:
         logging.error(f"An error occurred while saving to Firestore: {e}")
-        return False, str(e)
+        raise HTTPException(
+            status_code=401,
+            detail="An error occurred while saving to Firestore: {e}",
+        )
 
 
+# いらない？？
 @app.post("/saveImage")
 def save_image(
     user_id: str, access_token: str, db, storage_client
@@ -151,13 +168,11 @@ def save_image(
     if not access_token:
         raise HTTPException(
             status_code=401,
-            detail="アクセストークンが提供されていないか無効です",
+            detail="not provided AccessToken",
         )
 
     if not user_id:
-        raise HTTPException(
-            status_code=400, detail="userIdが提供されていません"
-        )
+        raise HTTPException(status_code=400, detail="not provided userId")
     logging.info(
         f"Processing saveImage request for user: {user_id} with accessToken: [REDACTED]"
     )
@@ -206,15 +221,12 @@ def save_image(
                 and content
                 and classes[predicted] in classes[:-1]
             ):  # "other" is excluded
-                # GCSにアップロードし、そのパスを取得
-                filename = photo["filename"]
-                save_to_cloud_storage(content, filename, bucket, user_id)
-                gcs_image_path = f"https://storage.cloud.google.com/{PROJECT}/{GCS_PREFIX}/{user_id}/{filename}"
-
-                # Firestoreにパスを保存
-                result, message = save_to_firestore(
-                    gcs_image_path, user_id, db
+                filename = f"{uuid.uuid4()}.jpg"  # 一意のファイル名を生成
+                image_url = save_to_cloud_storage(
+                    content, filename, bucket, user_id
                 )
+                result, message = save_to_firestore(image_url, user_id, db)
+
                 if not result:
                     logging.error(message)
                     raise HTTPException(status_code=500, detail=message)
@@ -228,7 +240,7 @@ def save_image(
     user_doc_ref = users_ref.document(user_id)
     new_state = "readyForUse"
     user_doc_ref.update({"classifyPhotosStatus": new_state})
-    return {"message": "正常に更新されました"}
+    return {"message": "Successfully processed photos"}
 
 
 def update_user_status(user_id: str, access_token: str, db):
