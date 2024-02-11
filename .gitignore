@@ -55,3 +55,6 @@ app.*.map.json
 # Dart Defines related
 **/android/app/google-services.json
 !.idea/runConfigurations/
+
+# Auto-fix on file save
+!.idea/watcherTasks.xml
