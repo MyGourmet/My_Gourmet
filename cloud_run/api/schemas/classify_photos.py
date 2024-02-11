@@ -17,12 +17,22 @@ from tensorflow.keras.preprocessing.image import (  # type: ignore
     load_img,
 )
 
+logging.basicConfig(level=logging.INFO)
+
 app = FastAPI()
+
+# Constants
+MODEL_BUCKET_NAME = "model-jp-my-gourmet-image-classification-2023-08"
+GCS_PREFIX = "photo-jp-my-gourmet-image-classification-2023-08"
+PROJECT = "my-gourmet-160fb.appspot.com"
 
 
 def get_photos_from_google_photo_api(
     access_token: str, page_size: int, next_page_token: Optional[str] = None
 ) -> Dict[str, Any]:
+    logging.info(
+        f"Fetching photos with pageSize={page_size} and nextPageToken={next_page_token}"
+    )
     try:
         search_request_data = {"pageSize": page_size}
         if next_page_token:
@@ -48,6 +58,7 @@ def classify_image(
     output_details: Any,
     image_size: int = 224,
 ) -> Tuple[Optional[int], Optional[bytes]]:
+    logging.info(f"Starting classification for image: {url}")
     try:
         response = requests.get(url)
         response.raise_for_status()
@@ -82,11 +93,30 @@ def classify_image(
             os.remove(temp_local_path)
 
 
+def save_to_cloud_storage(
+    content: bytes,
+    filename: str,
+    bucket: storage.Bucket,
+    user_id: str,
+) -> None:
+    try:
+        logging.info(f"Preparing to upload image to Cloud Storage: {filename}")
+        prefix = f"{GCS_PREFIX}/{user_id}/"
+        blob = bucket.blob(prefix + filename)
+        blob.upload_from_string(content)
+        logging.info(
+            f"Successfully uploaded image to Cloud Storage: {filename}"
+        )
+    except Exception as e:
+        logging.error(f"Failed to upload image to Cloud Storage: {e}")
+
+
 def save_to_firestore(
     image_url: str,
     user_id: str,
     db,
 ) -> Tuple[bool, str]:
+    logging.info(f"Preparing to save image URL to Firestore: {image_url}")
     try:
         # Firestoreに保存するデータを作成
         photo_data = {
@@ -99,11 +129,15 @@ def save_to_firestore(
             "storeId": None,
             "areaStoreIds": [],
         }
+        logging.info(f"Generated photo data for Firestore: {photo_data}")
 
         # Firestoreの`users`コレクションにデータを保存
         user_ref = db.collection("users").document(user_id)
         photo_id = str(uuid.uuid4())
+        logging.info(f"Generated unique photo ID: {photo_id}")
+
         user_ref.collection("photos").document(photo_id).set(photo_data)
+        logging.info(f"Successfully saved image URL to Firestore: {image_url}")
         return True, "Firestore update successful"
     except Exception as e:
         logging.error(f"An error occurred while saving to Firestore: {e}")
@@ -124,10 +158,13 @@ def save_image(
         raise HTTPException(
             status_code=400, detail="userIdが提供されていません"
         )
-
+    logging.info(
+        f"Processing saveImage request for user: {user_id} with accessToken: [REDACTED]"
+    )
     image_size = 224
-    model_bucket_name = "model-jp-my-gourmet-image-classification-2023-08"
-    model_bucket = storage_client.bucket(model_bucket_name)
+
+    bucket = storage_client.bucket(PROJECT)
+    model_bucket = storage_client.bucket(MODEL_BUCKET_NAME)
     _, model_local_path = tempfile.mkstemp()
     blob_model = model_bucket.blob("gourmet_cnn_vgg_final.tflite")
     blob_model.download_to_filename(model_local_path)
@@ -156,23 +193,31 @@ def save_image(
             if "screenshot" in photo["filename"].lower():
                 continue  # スクリーンショットを含む画像を除外
 
-        predicted, content = classify_image(
-            photo["baseUrl"],
-            interpreter,
-            input_details,
-            output_details,
-            image_size,
-        )
-        # predictedがNoneでないことを確認してからリストをインデックス参照する
-        if (
-            predicted is not None
-            and content
-            and classes[predicted] in classes[:-1]
-        ):  # "other" is excluded
-            result, message = save_to_firestore(photo["baseUrl"], user_id, db)
-            if not result:
-                logging.error(message)
-                raise HTTPException(status_code=500, detail=message)
+            predicted, content = classify_image(
+                photo["baseUrl"],
+                interpreter,
+                input_details,
+                output_details,
+                image_size,
+            )
+            # predictedがNoneでないことを確認してからリストをインデックス参照する
+            if (
+                predicted is not None
+                and content
+                and classes[predicted] in classes[:-1]
+            ):  # "other" is excluded
+                # GCSにアップロードし、そのパスを取得
+                filename = photo["filename"]
+                save_to_cloud_storage(content, filename, bucket, user_id)
+                gcs_image_path = f"https://storage.cloud.google.com/{PROJECT}/{GCS_PREFIX}/{user_id}/{filename}"
+
+                # Firestoreにパスを保存
+                result, message = save_to_firestore(
+                    gcs_image_path, user_id, db
+                )
+                if not result:
+                    logging.error(message)
+                    raise HTTPException(status_code=500, detail=message)
 
         next_token = photos_data.get("nextPageToken")
         if not next_token:
@@ -203,4 +248,4 @@ def update_user_status(user_id: str, access_token: str, db):
     user_doc_ref = users_ref.document(user_id)
     new_state = "readyForUse"
     user_doc_ref.update({"classifyPhotosStatus": new_state})
-    return {"message": "正常に更新されました"}
+    return {"message": "Successfully processed photos"}
