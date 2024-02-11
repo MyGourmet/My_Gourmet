@@ -20,7 +20,6 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  bool hasShownOnboarding = false;
   late PageController _onboardingController;
   int currentOnboarding = 0;
   late SharedPreferencesService _sharedPreferencesService;
@@ -36,12 +35,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           currentOnboarding = page;
         });
       });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
-      hasShownOnboarding = _sharedPreferencesService.getBool(
-        key: SharedPreferencesKey.isOnboardingCompleted,
-      );
-    });
   }
 
   @override
@@ -50,9 +43,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final screenHeight = context.deviceHeight;
     final isOnboardingTop = currentOnboarding == 0;
     final isNotLastOnboarding = currentOnboarding != 3;
+    _sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
+    var isOnboardingCompleted = _sharedPreferencesService.getBool(
+      key: SharedPreferencesKey.isOnboardingCompleted,
+    );
 
     return Visibility(
-      visible: !hasShownOnboarding,
+      visible: !isOnboardingCompleted,
       child: GestureDetector(
         // オンボーディング初めのロゴ画面の場合、画面タップで遷移させる
         onTap: isOnboardingTop
@@ -117,7 +114,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       );
                     } else {
                       // オンボーディング完了フラグをたてる
-                      hasShownOnboarding =
+                      isOnboardingCompleted =
                           await _sharedPreferencesService.setBool(
                         key: SharedPreferencesKey.isOnboardingCompleted,
                         value: true,
