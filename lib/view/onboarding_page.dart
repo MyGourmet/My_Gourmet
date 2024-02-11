@@ -87,7 +87,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   ),
                   const _OnboardingContent(
                     title: 'せっかく撮った食べ物の写真\nそのままになっていませんか？\n',
-                    description: // ignore: lines_longer_than_80_chars
+                    description:
+                        // ignore: lines_longer_than_80_chars
                         '素敵なごはんやお店の写真が\nフォルダ内であちこちにあったり。\nせっかく撮ってもそれっきりで\n見返すことがなかったり。',
                     imagePath: 'assets/images/onboarding1.png',
                     imageWidth: 160,
