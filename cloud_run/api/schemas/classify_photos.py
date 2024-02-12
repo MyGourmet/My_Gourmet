@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional, Tuple
 
 # Third Party Library
 import numpy as np
-import requests
+import requests  # type: ignore
 import tensorflow as tf  # type: ignore
 from fastapi import FastAPI, HTTPException  # type: ignore
 from google.cloud import storage  # type: ignore
@@ -18,6 +18,8 @@ from tensorflow.keras.preprocessing.image import (  # type: ignore
 )
 
 logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.ERROR)
+
 
 app = FastAPI()
 
@@ -65,7 +67,7 @@ def classify_image(
     except requests.RequestException as e:
         logging.error(f"Error fetching image: {e}")
         raise HTTPException(
-            status_code=401,
+            status_code=500,
             detail="Error fetching image: {e}",
         )
 
@@ -90,7 +92,7 @@ def classify_image(
     except Exception as e:
         logging.error(f"Error processing image: {e}")
         raise HTTPException(
-            status_code=401,
+            status_code=500,
             detail="Error processing image: {e}",
         )
 
@@ -119,13 +121,14 @@ def save_to_cloud_storage(
     except Exception as e:
         logging.error(f"Failed to upload image to Cloud Storage: {e}")
         raise HTTPException(
-            status_code=401,
+            status_code=500,
             detail="An error occurred while saving to Firestore: {e}",
         )
 
 
 def save_to_firestore(
     image_url: str,
+    shot_at: datetime,
     user_id: str,
     db,
 ) -> Tuple[bool, str]:
@@ -135,6 +138,7 @@ def save_to_firestore(
         photo_data = {
             "createdAt": datetime.utcnow(),
             "updatedAt": datetime.utcnow(),
+            # "shotAt": shot_at,
             "userId": user_id,
             "url": image_url,
             "otherUrls": [],
@@ -142,20 +146,17 @@ def save_to_firestore(
             "storeId": None,
             "areaStoreIds": [],
         }
-        logging.info(f"Generated photo data for Firestore: {photo_data}")
 
         # Firestoreの`users`コレクションにデータを保存
         user_ref = db.collection("users").document(user_id)
-        photo_id = str(uuid.uuid4())
-        logging.info(f"Generated unique photo ID: {photo_id}")
+        doc_id = shot_at.strftime("%Y%m%d_%H%M%S")
+        user_ref.collection("photos").document(doc_id).set(photo_data)
 
-        user_ref.collection("photos").document(photo_id).set(photo_data)
-        logging.info(f"Successfully saved image URL to Firestore: {image_url}")
         return True, "Firestore update successful"
     except Exception as e:
         logging.error(f"An error occurred while saving to Firestore: {e}")
         raise HTTPException(
-            status_code=401,
+            status_code=500,
             detail="An error occurred while saving to Firestore: {e}",
         )
 
@@ -177,7 +178,6 @@ def save_image(
         f"Processing saveImage request for user: {user_id} with accessToken: [REDACTED]"
     )
     image_size = 224
-
     bucket = storage_client.bucket(PROJECT)
     model_bucket = storage_client.bucket(MODEL_BUCKET_NAME)
     _, model_local_path = tempfile.mkstemp()
@@ -208,6 +208,19 @@ def save_image(
             if "screenshot" in photo["filename"].lower():
                 continue  # スクリーンショットを含む画像を除外
 
+            # Google Photos APIから撮影日時を取得し、取得できない場合はこの写真の処理をスキップ
+            shot_at = photo.get("mediaMetadata", {}).get("creationTime")
+            if not shot_at:
+                logging.info(
+                    f"No shot_at time for photo {photo['filename']}. Skipping."
+                )
+                continue  # 撮影日時が取得できない場合は次の写真へ
+
+            # APIから取得した日時文字列をdatetimeオブジェクトに変換
+            shot_at_datetime = datetime.strptime(
+                shot_at, "%Y-%m-%dT%H:%M:%S%z"
+            )
+
             predicted, content = classify_image(
                 photo["baseUrl"],
                 interpreter,
@@ -225,7 +238,12 @@ def save_image(
                 image_url = save_to_cloud_storage(
                     content, filename, bucket, user_id
                 )
-                result, message = save_to_firestore(image_url, user_id, db)
+                result, message = save_to_firestore(
+                    image_url,
+                    shot_at_datetime,
+                    user_id,
+                    db,
+                )
 
                 if not result:
                     logging.error(message)
