@@ -244,7 +244,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         // オンボーディングを上に重ねて表示
-        const OnboardingPage(),
+        if (!ref.watch(isOnBoardingCompletedProvider)) const OnboardingPage(),
       ],
     );
   }
