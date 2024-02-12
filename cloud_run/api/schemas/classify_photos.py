@@ -177,6 +177,8 @@ def save_image(
     logging.info(
         f"Processing saveImage request for user: {user_id} with accessToken: [REDACTED]"
     )
+
+    # この辺あとでリファクタ
     image_size = 224
     bucket = storage_client.bucket(PROJECT)
     model_bucket = storage_client.bucket(MODEL_BUCKET_NAME)
@@ -194,6 +196,12 @@ def save_image(
         "cafe",
         "other",
     ]
+
+    # Firestoreの更新ロジック
+    users_ref = db.collection("users")
+    user_doc_ref = users_ref.document(user_id)
+    new_state = "readyForUse"
+    photo_count = 0
 
     next_token: Optional[str] = None
     for _ in range(1):
@@ -245,7 +253,31 @@ def save_image(
                     db,
                 )
 
-                if not result:
+                if result:
+                    logging.info(f"photo_count: {photo_count}")
+                    photo_count += 1  # 写真を正常に保存したらカウントを1増やす
+                    # 8枚の写真が処理されたらclassifyPhotosStatusを更新
+                    if photo_count == 8:
+                        logging.info(f"classifyPhotosStatus: {new_state}")
+                        user_doc_ref.update(
+                            {"classifyPhotosStatus": new_state}
+                        )
+                        # TODO: 以下のtry exceptはあとで消す。
+                        try:
+                            doc_snapshot = user_doc_ref.get()
+                            if doc_snapshot.exists:
+                                current_status = doc_snapshot.to_dict().get(
+                                    "classifyPhotosStatus", "not set"
+                                )
+                                logging.info(
+                                    f"Current classifyPhotosStatus is: {current_status}"
+                                )
+                            else:
+                                logging.error("Document does not exist.")
+                        except Exception as e:
+                            logging.error(f"Failed to read document: {e}")
+
+                else:
                     logging.error(message)
                     raise HTTPException(status_code=500, detail=message)
 
@@ -253,10 +285,6 @@ def save_image(
         if not next_token:
             break
 
-    # Firestoreの更新ロジック
-    users_ref = db.collection("users")
-    user_doc_ref = users_ref.document(user_id)
-    new_state = "readyForUse"
     user_doc_ref.update({"classifyPhotosStatus": new_state})
     return {"message": "Successfully processed photos"}
 
