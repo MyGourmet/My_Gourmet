@@ -3,7 +3,7 @@ import logging
 import os
 import tempfile
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Tuple
 
 # Third Party Library
@@ -161,6 +161,26 @@ def save_to_firestore(
         )
 
 
+def get_latest_document_id(user_id: str, db) -> str:
+    photos_ref = db.collection("users").document(user_id).collection("photos")
+    # IDに基づいて最新のドキュメントを取得
+    latest_photos = (
+        photos_ref.order_by("__name__", direction="DESCENDING").limit(1).get()
+    )
+    latest_photo_id = latest_photos[0].id  # 最新のドキュメントIDを取得
+    return latest_photo_id
+
+
+# 以下の関数は、取得した最新のドキュメントIDから日時情報を抽出します
+def extract_datetime_from_id(document_id: str) -> datetime:
+    # ドキュメントIDから日時情報を抽出
+    # 形式: 'YYYYMMDD_HHMMSS'
+    date_time_str = document_id[:8] + " " + document_id[9:15]
+    # 文字列からdatetimeオブジェクトを作成
+    date_time_obj = datetime.strptime(date_time_str, "%Y%m%d %H%M%S")
+    return date_time_obj
+
+
 # いらない？？
 @app.post("/saveImage")
 def save_image(
@@ -203,6 +223,11 @@ def save_image(
     new_state = "readyForUse"
     photo_count = 0
 
+    # ドキュメントの最新時刻を取得
+    latest_photo_id = get_latest_document_id(user_id, db)
+    latest_photo_datetime = extract_datetime_from_id(latest_photo_id)
+    latest_photo_datetime = latest_photo_datetime.replace(tzinfo=timezone.utc)
+
     next_token: Optional[str] = None
     for _ in range(1):
         photos_data = get_photos_from_google_photo_api(
@@ -228,6 +253,12 @@ def save_image(
             shot_at_datetime = datetime.strptime(
                 shot_at, "%Y-%m-%dT%H:%M:%S%z"
             )
+
+            # 撮影日時が latest_photo_datetime よりも新しいか確認
+            if shot_at_datetime < latest_photo_datetime:
+                # 古い写真が見つかったら、処理を終了
+                user_doc_ref.update({"classifyPhotosStatus": new_state})
+                return {"message": "Successfully processed photos"}
 
             predicted, content = classify_image(
                 photo["baseUrl"],
