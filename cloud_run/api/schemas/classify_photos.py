@@ -220,7 +220,7 @@ def save_image(
     # Firestoreの更新ロジック
     users_ref = db.collection("users")
     user_doc_ref = users_ref.document(user_id)
-    new_state = "readyForUse"
+    ready_for_use = "readyForUse"
     photo_count = 0
 
     # ドキュメントの最新時刻を取得
@@ -257,7 +257,7 @@ def save_image(
             # 撮影日時が latest_photo_datetime よりも新しいか確認
             if shot_at_datetime < latest_photo_datetime:
                 # 古い写真が見つかったら、処理を終了
-                user_doc_ref.update({"classifyPhotosStatus": new_state})
+                user_doc_ref.update({"classifyPhotosStatus": ready_for_use})
                 return {"message": "Successfully processed photos"}
 
             predicted, content = classify_image(
@@ -289,9 +289,9 @@ def save_image(
                     photo_count += 1  # 写真を正常に保存したらカウントを1増やす
                     # 8枚の写真が処理されたらclassifyPhotosStatusを更新
                     if photo_count == 8:
-                        logging.info(f"classifyPhotosStatus: {new_state}")
+                        logging.info(f"classifyPhotosStatus: {ready_for_use}")
                         user_doc_ref.update(
-                            {"classifyPhotosStatus": new_state}
+                            {"classifyPhotosStatus": ready_for_use}
                         )
                         # TODO: 以下のtry exceptはあとで消す。
                         try:
@@ -316,7 +316,7 @@ def save_image(
         if not next_token:
             break
 
-    user_doc_ref.update({"classifyPhotosStatus": new_state})
+    user_doc_ref.update({"classifyPhotosStatus": ready_for_use})
     return {"message": "Successfully processed photos"}
 
 
