@@ -1,5 +1,5 @@
 # python3.11のイメージをダウンロード
-FROM python:3.11-buster
+FROM python:3.11-buster as builder
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /src
@@ -10,17 +10,21 @@ RUN pip install poetry
 # poetryの定義ファイルをコピー (存在する場合)
 COPY pyproject.toml* poetry.lock* ./
 
-# デプロイ前に必要
-COPY api api
-COPY entrypoint.sh ./
-
 # poetryでライブラリをインストール (pyproject.tomlが既にある場合)
 ENV POETRY_REQUESTS_TIMEOUT=120 
 RUN poetry config virtualenvs.in-project true
 RUN if [ -f pyproject.toml ]; then poetry install --no-root; fi
 
+FROM builder as production
+
+WORKDIR /src
+
 # サービスアカウントのJSONファイルをコピー
 COPY ./auth/service_account.json /auth/service_account.json
+
+# デプロイ前に必要
+COPY api api
+COPY entrypoint.sh ./
 
 # 環境変数を設定
 ENV GOOGLE_APPLICATION_CREDENTIALS=/auth/service_account.json
