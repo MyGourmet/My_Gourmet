@@ -1,8 +1,7 @@
 
 .PHONY: setup
 setup:
-	dart pub global activate fvm
-	@echo 'export PATH="$$PATH:$$HOME/.pub-cache/bin"' >> $(HOME)/.zshrc
+	$(MAKE) setup-fvm
 	$(MAKE) run-build-runner
 
 .PHONY: clean
@@ -22,3 +21,11 @@ watch-build-runner:
 fix:
 	fvm dart fix --apply
 
+.PHONY: setup-fvm
+setup-fvm:
+	dart pub global activate fvm
+	@echo "# fvm" >> $(HOME)/.zshrc
+	@echo 'export PATH="$$PATH:$$HOME/.pub-cache/bin"' >> $(HOME)/.zshrc
+	@FLUTTER_VERSION=$$(cat ".fvm/fvm_config.json" | grep flutterSdkVersion | cut -d '"' -f 4) && \
+	fvm install $(FLUTTER_VERSION)  && \
+	fvm use $(FLUTTER_VERSION)

@@ -5,5 +5,4 @@
 make setup
 ```
 
-本プロジェクトはFlutterのバージョン管理に[fvm](https://fvm.app/)を利用している。  
-FVMの詳細については、[こちらの記事](https://zenn.dev/riscait/articles/flutter-version-management)を参照。  
+その後、[こちらの記事](https://zenn.dev/altiveinc/articles/flutter-version-management?redirected=1#android-studio-%E3%81%AE%E8%A8%AD%E5%AE%9A%E4%BE%8B)を参考にIDEに対して[fvm](https://fvm.app/)の設定を行う。
