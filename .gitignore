@@ -58,3 +58,4 @@ app.*.map.json
 
 # Auto-fix on file save
 !.idea/watcherTasks.xml
+!.idea/run_dart_sdk.sh

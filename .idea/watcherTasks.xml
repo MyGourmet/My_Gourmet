@@ -14,7 +14,7 @@
         <array />
       </option>
       <option name="outputFromStdout" value="false" />
-      <option name="program" value="$USER_HOME$/fvm/versions/3.16.1/bin/cache/dart-sdk/bin/dart" />
+      <option name="program" value="$PROJECT_DIR$/.idea/run_dart_sdk.sh" />
       <option name="runOnExternalChanges" value="false" />
       <option name="scopeName" value="Current File" />
       <option name="trackOnlyRoot" value="false" />
