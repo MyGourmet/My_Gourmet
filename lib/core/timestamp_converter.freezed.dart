@@ -119,7 +119,7 @@ class _$UnionDateTimeImpl extends _UnionDateTime {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UnionDateTimeImpl &&
@@ -236,7 +236,7 @@ class _$UnionServerTimestampImpl extends _UnionServerTimestamp {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UnionServerTimestampImpl);
