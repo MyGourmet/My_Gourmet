@@ -26,6 +26,4 @@ setup-fvm:
 	dart pub global activate fvm
 	@echo "# fvm" >> $(HOME)/.zshrc
 	@echo 'export PATH="$$PATH:$$HOME/.pub-cache/bin"' >> $(HOME)/.zshrc
-	@FLUTTER_VERSION=$$(cat ".fvm/fvm_config.json" | grep flutterSdkVersion | cut -d '"' -f 4) && \
-	fvm install $(FLUTTER_VERSION)  && \
-	fvm use $(FLUTTER_VERSION)
+	fvm install
