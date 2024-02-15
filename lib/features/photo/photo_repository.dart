@@ -43,8 +43,8 @@ class PhotoRepository {
 
   // OAuth 2.0 REST APIエンドポイント
   final String _apiUrl = flavor.isProd
-      ? 'https://asia-northeast1-my-gourmet-160fb.cloudfunctions.net'
-      : 'https://asia-northeast1-my-gourmet-dev-f5b45.cloudfunctions.net';
+      ? 'https://demo-app-3pffww4yza-an.a.run.app'
+      : 'https://demo-app-xhbej2y2wq-an.a.run.app';
 
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
@@ -66,6 +66,20 @@ class PhotoRepository {
         // エラーが返された場合の処理
         debugPrint('API call failed: ${response.body}');
       }
+    } on Exception catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  /// CF上のclassifyPhotos関数を呼び出す
+  Future<void> callDeleteUserAccount(String userId) async {
+    try {
+      await call(
+        functionName: 'deleteAccount',
+        parameters: {
+          'userId': userId,
+        },
+      );
     } on Exception catch (error) {
       debugPrint(error.toString());
     }
