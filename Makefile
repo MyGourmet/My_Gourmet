@@ -1,7 +1,8 @@
 
 .PHONY: setup
 setup:
-	fvm install
+	dart pub global activate fvm
+	@echo 'export PATH="$$PATH:$$HOME/.pub-cache/bin"' >> $(HOME)/.zshrc
 	$(MAKE) run-build-runner
 
 .PHONY: clean
@@ -20,3 +21,4 @@ watch-build-runner:
 .PHONY: fix
 fix:
 	fvm dart fix --apply
+
