@@ -9,4 +9,4 @@ analyzer:
   plugins:
     - custom_lint
   exclude:
-    - '**/*.env'
+    - '.env'
