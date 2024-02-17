@@ -55,7 +55,7 @@ flutter_native_splash:
 flutter:
   assets:
     - assets/images/
-    - .env
+    - .env.example
   fonts:
     - family: ZenkakuGothicNew
       fonts:
