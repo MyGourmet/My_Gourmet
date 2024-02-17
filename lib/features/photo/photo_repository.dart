@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -42,9 +43,8 @@ class PhotoRepository {
   PhotoRepository._();
 
   // OAuth 2.0 REST APIエンドポイント
-  final String _apiUrl = flavor.isProd
-      ? 'https://demo-app-3pffww4yza-an.a.run.app'
-      : 'https://demo-app-xhbej2y2wq-an.a.run.app';
+  final String _apiUrl =
+      flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
