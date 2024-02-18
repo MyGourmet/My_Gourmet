@@ -1,7 +1,7 @@
 
 .PHONY: setup
 setup:
-	$(MAKE) setup-fvm
+	fvm install
 	$(MAKE) run-build-runner
 
 .PHONY: clean
@@ -20,10 +20,3 @@ watch-build-runner:
 .PHONY: fix
 fix:
 	fvm dart fix --apply
-
-.PHONY: setup-fvm
-setup-fvm:
-	dart pub global activate fvm
-	@echo "# fvm" >> $(HOME)/.zshrc
-	@echo 'export PATH="$$PATH:$$HOME/.pub-cache/bin"' >> $(HOME)/.zshrc
-	fvm install
