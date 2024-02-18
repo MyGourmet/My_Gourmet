@@ -127,34 +127,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   color: Colors.black,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _CategoryButton(
-                              label: 'ラーメン',
-                              onPressed: () => _downloadPhotos('ramen', ref),
-                            ),
-                            _CategoryButton(
-                              label: 'カフェ',
-                              onPressed: () => _downloadPhotos('cafe', ref),
-                            ),
-                            _CategoryButton(
-                              label: '和食',
-                              onPressed: () =>
-                                  _downloadPhotos('japanese_food', ref),
-                            ),
-                            _CategoryButton(
-                              label: 'その他',
-                              onPressed: () => _downloadPhotos(
-                                'international_cuisine',
-                                ref,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       Expanded(
                         child: GridView.builder(
                           gridDelegate:
