@@ -104,20 +104,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Stack(
       children: [
         Scaffold(
-          // TODO(masaki): ログアウト機能実装後 or 不要になったタイミングで削除
-          floatingActionButton: Visibility(
-            visible: _isContainerVisible,
-            child: FloatingActionButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-              },
-              child: const Icon(
-                Icons.logout,
-                color: Colors.black,
-                size: 40,
-              ),
-            ),
-          ),
           body: SafeArea(
             child: Stack(
               children: [
@@ -401,23 +387,23 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
-      left: (MediaQuery.of(context).size.width - 60) / 2,
+      top: (MediaQuery.of(context).size.height - 327) / 2 + 442,
+      left: MediaQuery.of(context).size.width - 75,
       child: Container(
         width: 60,
         height: 60,
         decoration: const BoxDecoration(
-          color: Colors.black,
+          color: Color(0xFFEF913A),
           shape: BoxShape.circle,
         ),
         child: InkWell(
           onTap: _toggleRotation, // タップ時に回転を切り替える
           child: Center(
             child: Transform.rotate(
-              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
+              angle: _isRotated ? 0 : math.pi / 180, // フラグに基づいて角度を決定
               child: const Icon(
                 Icons.add,
-                color: Color(0xFFEF913A),
+                color: Colors.black,
                 size: 40,
               ),
             ),
