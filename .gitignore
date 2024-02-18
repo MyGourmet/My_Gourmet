@@ -56,6 +56,3 @@ app.*.map.json
 **/android/app/google-services.json
 !.idea/runConfigurations/
 
-# Auto-fix on file save
-!.idea/watcherTasks.xml
-!.idea/run_dart_sdk.sh
