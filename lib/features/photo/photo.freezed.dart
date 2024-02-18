@@ -31,10 +31,10 @@ mixin _$Photo {
   @serverTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
-  /// [FirebaseStorage]に保存された写真のURL
+  /// FirebaseStorageに保存された写真のURL
   String get url => throw _privateConstructorUsedError;
 
-  /// [AuthedUser]のドキュメントID
+  /// FirebaseStorageのドキュメントID
   String get userId => throw _privateConstructorUsedError;
 
   /// 写真の撮影日時
@@ -241,12 +241,12 @@ class _$PhotoImpl extends _Photo {
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
 
-  /// [FirebaseStorage]に保存された写真のURL
+  /// FirebaseStorageに保存された写真のURL
   @override
   @JsonKey()
   final String url;
 
-  /// [AuthedUser]のドキュメントID
+  /// FirebaseStorageのドキュメントID
   @override
   @JsonKey()
   final String userId;
@@ -263,7 +263,7 @@ class _$PhotoImpl extends _Photo {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PhotoImpl &&
@@ -324,11 +324,11 @@ abstract class _Photo extends Photo {
   UnionTimestamp get updatedAt;
   @override
 
-  /// [FirebaseStorage]に保存された写真のURL
+  /// FirebaseStorageに保存された写真のURL
   String get url;
   @override
 
-  /// [AuthedUser]のドキュメントID
+  /// FirebaseStorageのドキュメントID
   String get userId;
   @override
 
