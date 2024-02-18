@@ -1,7 +1,7 @@
 
 .PHONY: setup
 setup:
-	fvm install
+	fvm install --setup
 	$(MAKE) run-build-runner
 
 .PHONY: clean
