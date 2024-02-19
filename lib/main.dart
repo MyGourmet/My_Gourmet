@@ -16,8 +16,10 @@ import 'view/widgets/confirm_dialog.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
-  await dotenv.load();
+  await Future.wait([
+    Firebase.initializeApp(),
+    dotenv.load(),
+  ]);
   runApp(const ProviderScope(child: MyApp()));
 }
 
