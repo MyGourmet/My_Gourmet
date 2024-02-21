@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
@@ -42,9 +43,8 @@ class PhotoRepository {
   PhotoRepository._();
 
   // OAuth 2.0 REST APIエンドポイント
-  final String _apiUrl = flavor.isProd
-      ? 'https://asia-northeast1-my-gourmet-160fb.cloudfunctions.net'
-      : 'https://asia-northeast1-my-gourmet-dev-f5b45.cloudfunctions.net';
+  final String _apiUrl =
+      flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
@@ -66,6 +66,20 @@ class PhotoRepository {
         // エラーが返された場合の処理
         debugPrint('API call failed: ${response.body}');
       }
+    } on Exception catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  /// CF上のclassifyPhotos関数を呼び出す
+  Future<void> callDeleteUserAccount(String userId) async {
+    try {
+      await call(
+        functionName: 'deleteAccount',
+        parameters: {
+          'userId': userId,
+        },
+      );
     } on Exception catch (error) {
       debugPrint(error.toString());
     }

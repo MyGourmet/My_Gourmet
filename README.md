@@ -9,3 +9,11 @@ FVMが未インストールの場合、[こちらの記事](https://zenn.dev/alt
 ```bash
 make setup
 ```
+
+`.env.example`の形式で、ファイル環境変数用のファイルを作成する。  
+```.env.example
+PROD_API_URL=https://dummy-prod-url
+DEV_API_URL=https://dummy-dev-url
+```
+実際のURLは以下を参照：
+https://www.notion.so/masakisato/11a5050794ac414f8f0ef9525ae13809?pvs=4

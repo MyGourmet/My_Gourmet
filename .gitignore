@@ -56,3 +56,6 @@ app.*.map.json
 **/android/app/google-services.json
 !.idea/runConfigurations/
 
+# env
+.env
+

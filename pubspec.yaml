@@ -19,6 +19,7 @@ dependencies:
   firebase_storage: any
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.1.0
   flutter_riverpod: ^2.4.4
   freezed_annotation: ^2.4.1
   gap: ^3.0.1
@@ -55,6 +56,7 @@ flutter_native_splash:
 flutter:
   assets:
     - assets/images/
+    - .env
   fonts:
     - family: ZenkakuGothicNew
       fonts:
