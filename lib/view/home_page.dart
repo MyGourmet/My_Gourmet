@@ -215,35 +215,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               ],
             ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.black,
-            selectedFontSize: 0, // 選択時のフォントサイズを0に設定
-            unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
-            items: const [
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-                  child: Icon(
-                    Icons.photo,
-                    size: 40, // アイコンのサイズを設定
-                    color: Color(0xFFEF913A), // アイコン本体の色を指定
-                  ),
-                ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-                  child: Icon(
-                    Icons.person,
-                    size: 40, // アイコンのサイズを設定
-                    color: Color(0xFFEF913A), // アイコン本体の色を指定
-                  ),
-                ),
-                label: '',
-              ),
-            ],
-          ),
         ),
         // オンボーディングを上に重ねて表示
         if (!ref.watch(isOnBoardingCompletedProvider)) const OnboardingPage(),
