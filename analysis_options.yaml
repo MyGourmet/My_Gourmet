@@ -8,3 +8,5 @@ linter:
 analyzer:
   plugins:
     - custom_lint
+  errors:
+    asset_does_not_exist: ignore

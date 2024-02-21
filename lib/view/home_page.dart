@@ -233,7 +233,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 icon: Padding(
                   padding: EdgeInsets.only(top: 10), // 上側の余白を設定
                   child: Icon(
-                    Icons.map,
+                    Icons.person,
                     size: 40, // アイコンのサイズを設定
                     color: Color(0xFFEF913A), // アイコン本体の色を指定
                   ),

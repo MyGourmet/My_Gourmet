@@ -40,6 +40,11 @@ class PhotoController {
     );
   }
 
+  Future<void> deleteUserAccount({required String? userId}) async {
+    final result = await _authRepository.signInWithGoogle();
+    await _photoRepository.callDeleteUserAccount(result.userId);
+  }
+
   /// 写真ダウンロード用メソッド
   Future<List<Photo>> downloadPhotos({
     required String category,
