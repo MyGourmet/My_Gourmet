@@ -15,6 +15,8 @@ import 'onboarding_page.dart';
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
+  static const routePath = '/home_page';
+
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
