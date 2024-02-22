@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 
-/// ログイン用画面
-///
-
+/// マイページ
 class MyPage extends StatefulWidget {
-  const MyPage({super.key, required this.title});
+  const MyPage({super.key});
 
-  final String title;
+  static const routePath = '/my_page';
 
   @override
   State<MyPage> createState() => _MyPageState();
@@ -68,36 +66,6 @@ class _MyPageState extends State<MyPage> {
             ),
           ],
         ),
-      ),
-
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.black.withOpacity(0.9),
-        fixedColor: const Color(0xFFEF913A),
-        unselectedItemColor: const Color(0xFFEF913A).withOpacity(
-          0.6,
-        ), //選んでない物の色        unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
-        items: const [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-              child: Icon(
-                Icons.photo,
-                size: 40, // アイコンのサイズを設定
-              ),
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-              child: Icon(
-                Icons.person,
-                size: 40, // アイコンのサイズを設定
-              ),
-            ),
-            label: '',
-          ),
-        ],
       ),
     );
   }

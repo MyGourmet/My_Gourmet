@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +13,8 @@ import 'onboarding_page.dart';
 // TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
+
+  static const routePath = '/home_page';
 
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
@@ -104,20 +105,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Stack(
       children: [
         Scaffold(
-          // TODO(masaki): ログアウト機能実装後 or 不要になったタイミングで削除
-          floatingActionButton: Visibility(
-            visible: _isContainerVisible,
-            child: FloatingActionButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
-              },
-              child: const Icon(
-                Icons.logout,
-                color: Colors.black,
-                size: 40,
-              ),
-            ),
-          ),
           body: SafeArea(
             child: Stack(
               children: [
@@ -127,34 +114,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   color: Colors.black,
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _CategoryButton(
-                              label: 'ラーメン',
-                              onPressed: () => _downloadPhotos('ramen', ref),
-                            ),
-                            _CategoryButton(
-                              label: 'カフェ',
-                              onPressed: () => _downloadPhotos('cafe', ref),
-                            ),
-                            _CategoryButton(
-                              label: '和食',
-                              onPressed: () =>
-                                  _downloadPhotos('japanese_food', ref),
-                            ),
-                            _CategoryButton(
-                              label: 'その他',
-                              onPressed: () => _downloadPhotos(
-                                'international_cuisine',
-                                ref,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       Expanded(
                         child: GridView.builder(
                           gridDelegate:
@@ -182,12 +141,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                   visible: _isContainerVisible,
                   child: Positioned(
                     top: (MediaQuery.of(context).size.height - 327) /
-                        2, // 縦方向中央に配置
+                        4, // 縦方向中央に配置
                     left: (MediaQuery.of(context).size.width - 317) /
                         2, // 横方向中央に配置
                     child: Container(
                       width: 317, // 長方形の枠の幅を317に設定
-                      height: 327, // 長方形の枠の高さを327に設定
+                      height: 512, // 長方形の枠の高さを327に設定
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.88),
                         borderRadius: BorderRadius.circular(30), // 角を丸くする
@@ -213,35 +172,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               ],
             ),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.black,
-            selectedFontSize: 0, // 選択時のフォントサイズを0に設定
-            unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
-            items: const [
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-                  child: Icon(
-                    Icons.photo,
-                    size: 40, // アイコンのサイズを設定
-                    color: Color(0xFFEF913A), // アイコン本体の色を指定
-                  ),
-                ),
-                label: '',
-              ),
-              BottomNavigationBarItem(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-                  child: Icon(
-                    Icons.person,
-                    size: 40, // アイコンのサイズを設定
-                    color: Color(0xFFEF913A), // アイコン本体の色を指定
-                  ),
-                ),
-                label: '',
-              ),
-            ],
-          ),
         ),
         // オンボーディングを上に重ねて表示
         if (!ref.watch(isOnBoardingCompletedProvider)) const OnboardingPage(),
@@ -255,13 +185,102 @@ class _HomePageState extends ConsumerState<HomePage> {
       children: [
         const SizedBox(
           width: 250, // テキストの枠の幅を250に設定
-          child: Center(
-            child: Text(
-              '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: EdgeInsets.only(top: 5),
+            child:Center(
+              child: Text(
+                'あなたのGoogle Photosから自動で食べ物の写真を読み込みます。',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 250, // テキストの枠の幅を250に設定
+          child: Padding(
+            padding: EdgeInsets.only(top: 5),
+            child:Center(
+              child: Text(
+                '読み込まれた画像は順次ホーム画面に表示されます。',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 260, // テキストの枠の幅を250に設定
+          child: Padding(
+            padding: EdgeInsets.only(top: 30),
+              child:Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 50, // テキストの枠の幅を250に設定
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child:Center(
+                        child: Text(
+                          '注意点',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFEF913A),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 150, // テキストの枠の幅を250に設定
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child:Center(
+                        child: Text(
+                          '必ずご確認ください',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFFEF913A),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ),
+        ),
+        SizedBox(
+          width: 265, // テキストの枠の幅を250に設定
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child:Card(
+              color: const Color(0xFFFFE8DB),
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(
+                  color: Color(0xFFEF913A), //色
+                  width: 2, //太さ
+                ),
+                borderRadius: BorderRadius.circular(8),              ),
+              child:const Padding(
+                padding: EdgeInsets.all(8),
+                child: Text(
+                  '※ 3分程、時間がかかります。'
+                      '\n※ 読み込み中はアプリをバックグラウンドに残してください。'
+                      '完全に閉じないでください。(他のアプリを使用しても問題ありません。)',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
@@ -277,11 +296,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             minimumSize: const Size(250, 50),
           ),
           child: const Text(
-            '画像を読み込む  1/2',
+            '画像読み込みを開始する',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
@@ -299,9 +318,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: isLoading
                 ? const Text(
                     // ignore: lines_longer_than_80_chars
-                    '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                    '画像を読み込み中です...',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   )
@@ -310,16 +329,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
                           return const Text(
-                            '処理が完了しました！\n下記から画像をダウンロードできます！',
+                            '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
                           return const Text(
                             // ignore: lines_longer_than_80_chars
-                            '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                            '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -361,7 +380,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           child: const Text(
             // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
-            'ダウンロード 2/2',
+            'ダウンロードする',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -370,35 +389,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _CategoryButton extends StatelessWidget {
-  const _CategoryButton({required this.label, required this.onPressed});
-
-  final String label;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed, // タップされたときに onPressed を呼び出す
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFFD9D9D9),
-          borderRadius: BorderRadius.circular(15), // 角を丸くする
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-      ),
     );
   }
 }
@@ -429,23 +419,23 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: (MediaQuery.of(context).size.height - 327) / 2 + 405,
-      left: (MediaQuery.of(context).size.width - 60) / 2,
+      top: (MediaQuery.of(context).size.height - 327) / 2 + 442,
+      left: MediaQuery.of(context).size.width - 75,
       child: Container(
         width: 60,
         height: 60,
         decoration: const BoxDecoration(
-          color: Colors.black,
+          color: Color(0xFFEF913A),
           shape: BoxShape.circle,
         ),
         child: InkWell(
           onTap: _toggleRotation, // タップ時に回転を切り替える
           child: Center(
             child: Transform.rotate(
-              angle: _isRotated ? 0 : 45 * (math.pi / 180), // フラグに基づいて角度を決定
+              angle: _isRotated ? 0 : math.pi / 180, // フラグに基づいて角度を決定
               child: const Icon(
                 Icons.add,
-                color: Color(0xFFEF913A),
+                color: Colors.black,
                 size: 40,
               ),
             ),

@@ -9,8 +9,8 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'core/constants.dart';
+import 'core/router.dart';
 import 'core/shared_preferences_service.dart';
-import 'view/home_page.dart';
 import 'view/widgets/confirm_dialog.dart';
 
 Future<void> main() async {
@@ -28,9 +28,11 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
-      theme: ThemeData(fontFamily: kZenkakuGothicNew),
-      home: const _AppInitializer(child: HomePage()),
+    return _AppInitializer(
+      child: MaterialApp.router(
+        theme: ThemeData(fontFamily: kZenkakuGothicNew),
+        routerConfig: ref.watch(routerProvider),
+      ),
     );
   }
 }
