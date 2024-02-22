@@ -299,7 +299,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
                 borderRadius: BorderRadius.circular(8),              ),
               child:const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8),
                 child: Text(
                   '※ 3分程、時間がかかります。'
                       '\n※ 読み込み中はアプリをバックグラウンドに残してください。'
