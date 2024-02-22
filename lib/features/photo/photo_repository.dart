@@ -49,7 +49,7 @@ class PhotoRepository {
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
       final response = await http.post(
-        Uri.parse('$_apiUrl/saveImage'),
+        Uri.parse('$_apiUrl/updateUserStatus'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken',
@@ -91,8 +91,29 @@ class PhotoRepository {
     required String userId,
   }) async {
     try {
-      final photosSnap = await photosRef(userId: userId).get();
-      return photosSnap.docs.map((photo) => photo.data()).toList();
+      // Firestoreのクエリを実行して、ドキュメントIDで降順にソート
+      final QuerySnapshot photosSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('photos')
+          // ドキュメントIDで降順にソート
+          .orderBy(FieldPath.documentId, descending: true)
+          .get();
+
+      // ドキュメントのデータをPhotoオブジェクトに変換
+      return photosSnap.docs
+          .map((doc) {
+            final data = doc.data();
+            if (data != null) {
+              // nullチェックを追加
+              return Photo.fromJson(data as Map<String, dynamic>); // キャストを修正
+            } else {
+              return null;
+            }
+          })
+          .where((photo) => photo != null)
+          .cast<Photo>()
+          .toList();
     } on Exception catch (e) {
       debugPrint('An error occurred: $e');
       return [];

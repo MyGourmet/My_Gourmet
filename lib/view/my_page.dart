@@ -61,18 +61,6 @@ class _MyPageState extends State<MyPage> {
                     endIndent: 20,
                     color: AppColors.white,
                   ),
-                  ListTile(
-                    title: Text(
-                      'xxxxx',
-                      style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: AppColors.white,
-                  ),
                 ],
               ),
             ),
