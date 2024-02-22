@@ -159,7 +159,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         child: GridView.builder(
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, // 3列
+                            crossAxisCount: 2, // 3列
                           ),
                           itemCount: photoUrls?.length ??
                               imagePaths
