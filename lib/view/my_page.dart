@@ -24,38 +24,15 @@ class _MyPageState extends State<MyPage> {
           children: [
             Expanded(
               child: ListView(
-                children: const [
+                children: [
                   ListTile(
-                    title: Text(
-                      'ログイン',
-                      style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: AppColors.white,
-                  ),
-                  ListTile(
-                    title: Text(
-                      'ログアウト',
-                      style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: AppColors.white,
-                  ),
-                  ListTile(
-                    title: Text(
+                    onTap: () {},
+                    title: const Text(
                       'アカウントを削除',
                       style: TextStyle(color: AppColors.white),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1,
                     indent: 20,
                     endIndent: 20,
