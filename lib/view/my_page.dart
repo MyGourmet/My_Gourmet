@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/app_colors.dart';
 
 /// ログイン用画面
@@ -14,15 +15,13 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       // ログインのリスト部分の設定
       body: Container(
         padding: const EdgeInsets.only(top: 50),
-        color:AppColors.black,
+        color: AppColors.black,
         child: Column(
           children: [
             Expanded(
@@ -64,18 +63,6 @@ class _MyPageState extends State<MyPage> {
                     endIndent: 20,
                     color: AppColors.white,
                   ),
-                  ListTile(
-                    title: Text(
-                        'xxxxx',
-                        style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: AppColors.white,
-                  ),
                 ],
               ),
             ),
@@ -86,7 +73,8 @@ class _MyPageState extends State<MyPage> {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: AppColors.black.withOpacity(0.9),
         fixedColor: const Color(0xFFEF913A),
-        unselectedItemColor: const Color(0xFFEF913A).withOpacity(0.6), //選んでない物の色        unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
+        unselectedItemColor: const Color(0xFFEF913A).withOpacity(
+            0.6), //選んでない物の色        unselectedFontSize: 0, // 非選択時のフォントサイズを0に設定
         items: const [
           BottomNavigationBarItem(
             icon: Padding(
