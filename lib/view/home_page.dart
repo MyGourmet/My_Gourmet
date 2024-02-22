@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -140,12 +141,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                   visible: _isContainerVisible,
                   child: Positioned(
                     top: (MediaQuery.of(context).size.height - 327) /
-                        2, // 縦方向中央に配置
+                        4, // 縦方向中央に配置
                     left: (MediaQuery.of(context).size.width - 317) /
                         2, // 横方向中央に配置
                     child: Container(
                       width: 317, // 長方形の枠の幅を317に設定
-                      height: 327, // 長方形の枠の高さを327に設定
+                      height: 512, // 長方形の枠の高さを327に設定
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.88),
                         borderRadius: BorderRadius.circular(30), // 角を丸くする
@@ -213,13 +214,100 @@ class _HomePageState extends ConsumerState<HomePage> {
       children: [
         const SizedBox(
           width: 250, // テキストの枠の幅を250に設定
-          child: Center(
-            child: Text(
-              '以下のボタンを押すと、Google Photoの画像から\n料理の画像のみを判別して\nダウンロードできます！',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: EdgeInsets.only(top: 5.0),
+            child:Center(
+              child: Text(
+                'あなたのGoogle Photosから自動で食べ物の写真を読み込みます。',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 250, // テキストの枠の幅を250に設定
+          child: Padding(
+            padding: EdgeInsets.only(top: 5.0),
+            child:Center(
+              child: Text(
+                '読み込まれた画像は順次ホーム画面に表示されます。',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 260, // テキストの枠の幅を250に設定
+          child: Padding(
+            padding: EdgeInsets.only(top: 30.0),
+              child:Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 50, // テキストの枠の幅を250に設定
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5.0),
+                      child:Center(
+                        child: Text(
+                          '注意点',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFEF913A),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 150, // テキストの枠の幅を250に設定
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 5.0),
+                      child:Center(
+                        child: Text(
+                          '必ずご確認ください',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFFEF913A),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ),
+        ),
+        SizedBox(
+          width: 265, // テキストの枠の幅を250に設定
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5.0),
+            child:Card(
+              color: const Color(0xFFFFE8DB),
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(
+                  color: Color(0xFFEF913A), //色
+                  width: 2, //太さ
+                ),
+                borderRadius: BorderRadius.circular(8),              ),
+              child:const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  '※ 3分程、時間がかかります。\n※ 読み込み中はアプリをバックグラウンドに残してください。\n完全に閉じないでください。\n(他のアプリを使用しても問題ありません。)',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
@@ -235,11 +323,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             minimumSize: const Size(250, 50),
           ),
           child: const Text(
-            '画像を読み込む  1/2',
+            '画像読み込みを開始する',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
         ),
@@ -257,9 +345,9 @@ class _HomePageState extends ConsumerState<HomePage> {
             child: isLoading
                 ? const Text(
                     // ignore: lines_longer_than_80_chars
-                    '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                    '画像を読み込み中です...',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   )
@@ -268,16 +356,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
                           return const Text(
-                            '処理が完了しました！\n下記から画像をダウンロードできます！',
+                            '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
                           return const Text(
                             // ignore: lines_longer_than_80_chars
-                            '画像を処理中です...\n10分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                            '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -319,7 +407,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           child: const Text(
             // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
-            'ダウンロード 2/2',
+            'ダウンロードする',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
