@@ -301,7 +301,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               child:const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  '※ 3分程、時間がかかります。\n※ 読み込み中はアプリをバックグラウンドに残してください。\n完全に閉じないでください。\n(他のアプリを使用しても問題ありません。)',
+                  '※ 3分程、時間がかかります。'
+                      '\n※ 読み込み中はアプリをバックグラウンドに残してください。'
+                      '完全に閉じないでください。(他のアプリを使用しても問題ありません。)',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 14,
