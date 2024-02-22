@@ -215,7 +215,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         const SizedBox(
           width: 250, // テキストの枠の幅を250に設定
           child: Padding(
-            padding: EdgeInsets.only(top: 5.0),
+            padding: EdgeInsets.only(top: 5),
             child:Center(
               child: Text(
                 'あなたのGoogle Photosから自動で食べ物の写真を読み込みます。',
@@ -231,7 +231,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         const SizedBox(
           width: 250, // テキストの枠の幅を250に設定
           child: Padding(
-            padding: EdgeInsets.only(top: 5.0),
+            padding: EdgeInsets.only(top: 5),
             child:Center(
               child: Text(
                 '読み込まれた画像は順次ホーム画面に表示されます。',
@@ -246,13 +246,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         const SizedBox(
           width: 260, // テキストの枠の幅を250に設定
           child: Padding(
-            padding: EdgeInsets.only(top: 30.0),
+            padding: EdgeInsets.only(top: 30),
               child:Row(
                 children: <Widget>[
                   SizedBox(
                     width: 50, // テキストの枠の幅を250に設定
                     child: Padding(
-                      padding: EdgeInsets.only(top: 5.0),
+                      padding: EdgeInsets.only(top: 5),
                       child:Center(
                         child: Text(
                           '注意点',
@@ -269,7 +269,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   SizedBox(
                     width: 150, // テキストの枠の幅を250に設定
                     child: Padding(
-                      padding: EdgeInsets.only(top: 5.0),
+                      padding: EdgeInsets.only(top: 5),
                       child:Center(
                         child: Text(
                           '必ずご確認ください',
@@ -289,7 +289,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         SizedBox(
           width: 265, // テキストの枠の幅を250に設定
           child: Padding(
-            padding: const EdgeInsets.only(top: 5.0),
+            padding: const EdgeInsets.only(top: 5),
             child:Card(
               color: const Color(0xFFFFE8DB),
               shape: RoundedRectangleBorder(
