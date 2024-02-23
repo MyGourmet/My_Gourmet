@@ -28,11 +28,9 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return _AppInitializer(
-      child: MaterialApp.router(
-        theme: ThemeData(fontFamily: kZenkakuGothicNew),
-        routerConfig: ref.watch(routerProvider),
-      ),
+    return MaterialApp.router(
+      theme: ThemeData(fontFamily: kZenkakuGothicNew),
+      routerConfig: ref.watch(routerProvider),
     );
   }
 }
