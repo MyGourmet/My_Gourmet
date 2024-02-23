@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 確認用のダイアログ
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog._({
     required this.contentString,
@@ -9,12 +10,19 @@ class ConfirmDialog extends StatelessWidget {
     required this.shouldPopOnConfirmed,
   });
 
+  /// ダイアログのタイトル
   final String titleString;
+
+  /// ダイアログの中身
   final String contentString;
+
+  /// 「はい」ボタン押下後の挙動
   final VoidCallback onConfirmed;
+
+  /// 「いいえ」ボタンを表示するかどうか
   final bool hasCancelButton;
 
-  /// ボタン押下後にダイアログを閉じるかどうか
+  /// [onConfirmed]完了後にダイアログを閉じるかどうか
   final bool shouldPopOnConfirmed;
 
   static Future<void> show(
@@ -25,7 +33,7 @@ class ConfirmDialog extends StatelessWidget {
     bool hasCancelButton = false,
     bool shouldPopOnConfirmed = true,
   }) async {
-    await showDialog<bool>(
+    await showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (_) {
