@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'auth_repository.dart';
 
+import 'auth_repository.dart';
 import 'authed_user.dart';
 
 // TODO(masaki): オンボーディングの設計次第でuserIdの取得方法を検討
@@ -32,3 +32,19 @@ final userIdProvider = Provider<String?>((ref) {
 final authedUserStreamProvider = StreamProvider.autoDispose<AuthedUser>(
   (ref) => ref.watch(authRepositoryProvider).subscribeAuthedUser(),
 );
+
+final authControllerProvider = Provider<AuthController>(AuthController.new);
+
+/// [AuthRepository]の書き込み用クラス
+class AuthController {
+  AuthController(this._ref);
+
+  final Ref _ref;
+
+  AuthRepository get _authRepository => _ref.read(authRepositoryProvider);
+
+  /// ユーザーアカウント削除用メソッド
+  Future<void> deleteUserAccount() async {
+    await _authRepository.deleteUserAccount();
+  }
+}

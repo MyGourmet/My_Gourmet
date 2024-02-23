@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,20 +69,6 @@ class PhotoRepository {
     }
   }
 
-  /// CF上のclassifyPhotos関数を呼び出す
-  Future<void> callDeleteUserAccount(String userId) async {
-    try {
-      await call(
-        functionName: 'deleteAccount',
-        parameters: {
-          'userId': userId,
-        },
-      );
-    } on Exception catch (error) {
-      debugPrint(error.toString());
-    }
-  }
-
   // TODO(masaki): firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
   Future<List<Photo>> downloadPhotos({
     required String category,
@@ -117,24 +101,6 @@ class PhotoRepository {
     } on Exception catch (e) {
       debugPrint('An error occurred: $e');
       return [];
-    }
-  }
-
-  /// CloudFunctionsを呼び出す
-  Future<HttpsCallableResult<dynamic>> call({
-    required String functionName,
-    String? region,
-    Map<String, dynamic>? parameters,
-  }) async {
-    try {
-      final functions = FirebaseFunctions.instanceFor(
-        app: Firebase.app(),
-        region: region ?? 'asia-northeast1',
-      );
-      final callable = functions.httpsCallable(functionName);
-      return await callable.call(parameters);
-    } on Exception {
-      rethrow;
     }
   }
 }

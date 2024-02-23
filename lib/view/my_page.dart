@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/app_colors.dart';
+import '../features/auth/auth_controller.dart';
 
 /// マイページ
-class MyPage extends StatefulWidget {
+class MyPage extends ConsumerWidget {
   const MyPage({super.key});
 
   static const routePath = '/my_page';
 
   @override
-  State<MyPage> createState() => _MyPageState();
-}
-
-class _MyPageState extends State<MyPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       // ログインのリスト部分の設定
       body: Container(
@@ -24,38 +21,16 @@ class _MyPageState extends State<MyPage> {
           children: [
             Expanded(
               child: ListView(
-                children: const [
+                children: [
                   ListTile(
-                    title: Text(
-                      'ログイン',
-                      style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: AppColors.white,
-                  ),
-                  ListTile(
-                    title: Text(
-                      'ログアウト',
-                      style: TextStyle(color: AppColors.white),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: AppColors.white,
-                  ),
-                  ListTile(
-                    title: Text(
+                    onTap: () async =>
+                        ref.read(authControllerProvider).deleteUserAccount(),
+                    title: const Text(
                       'アカウントを削除',
                       style: TextStyle(color: AppColors.white),
                     ),
                   ),
-                  Divider(
+                  const Divider(
                     thickness: 1,
                     indent: 20,
                     endIndent: 20,

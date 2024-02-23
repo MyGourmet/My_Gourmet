@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -100,5 +103,43 @@ class AuthRepository {
       }
       return authedUser;
     });
+  }
+
+  /// ユーザーアカウントを削除する
+  Future<void> deleteUserAccount() async {
+    try {
+      var userId = _auth.currentUser?.uid;
+      if (userId == null) {
+        final result = await signInWithGoogle();
+        userId = result.userId;
+      }
+      await call(
+        functionName: 'deleteAccount',
+        parameters: {
+          'userId': userId,
+        },
+      );
+      await _auth.currentUser?.delete();
+    } on Exception catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  /// CloudFunctionsのCallable関数を呼び出す
+  Future<HttpsCallableResult<dynamic>> call({
+    required String functionName,
+    String? region,
+    Map<String, dynamic>? parameters,
+  }) async {
+    try {
+      final functions = FirebaseFunctions.instanceFor(
+        app: Firebase.app(),
+        region: region ?? 'asia-northeast1',
+      );
+      final callable = functions.httpsCallable(functionName);
+      return await callable.call(parameters);
+    } on Exception {
+      rethrow;
+    }
   }
 }
