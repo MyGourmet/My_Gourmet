@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:864724760472:android:c788df023772c3540edded",
+        "mobilesdk_app_id": "1:864724760472:android:2ceabd9167ba5e9c0edded",
         "android_client_info": {
-          "package_name": "com.example.dev_my_gourmet"
+          "package_name": "com.blue_waltz.my_gourmet"
         }
       },
       "oauth_client": [
@@ -38,7 +38,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:864724760472:android:34a84e8bb9549fa10edded",
         "android_client_info": {
-          "package_name": "com.example.my_gourmet.dev"
+          "package_name": "com.blue_waltz.my_gourmet.dev"
         }
       },
       "oauth_client": [
@@ -46,7 +46,7 @@
           "client_id": "864724760472-4596fufi7trqoi0jmrolpdgd24hrutai.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.my_gourmet.dev",
+            "package_name": "com.blue_waltz.my_gourmet.dev",
             "certificate_hash": "fa07e5829257e71b6358724a5711414b45238148"
           }
         },
@@ -54,7 +54,7 @@
           "client_id": "864724760472-5urj0h5t8face7vsa4ccom359odepikj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.my_gourmet.dev",
+            "package_name": "com.blue_waltz.my_gourmet.dev",
             "certificate_hash": "5366066ad24e6c112b2fab175e0287e04be15b7f"
           }
         },
@@ -62,7 +62,7 @@
           "client_id": "864724760472-acrcnbcad6ci83r6mnuoqnrqbb79c4qs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.my_gourmet.dev",
+            "package_name": "com.blue_waltz.my_gourmet.dev",
             "certificate_hash": "c4e98aa96569ccccc188b08655560cfeeb8f56a8"
           }
         },

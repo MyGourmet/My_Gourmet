@@ -103,7 +103,7 @@ class _SetUpState extends ConsumerState<_AppInitializer> {
             // TODO(masaki): Google Playにてアプリ作成後に動作確認
             await launchUrl(
               Uri.parse(
-                'https://play.google.com/store/apps/details?id=com.example.my_gourmet',
+                'https://play.google.com/store/apps/details?id=com.blue_waltz.my_gourmet',
               ),
             );
           } else if (Platform.isIOS) {
