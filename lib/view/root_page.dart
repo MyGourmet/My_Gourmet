@@ -80,6 +80,8 @@ class _RootPageState extends ConsumerState<RootPage> {
         context,
         titleString: '緊急アップデートのお願い',
         contentString: '新しいバージョンが公開されました。\nアプリをアップデートしてください。',
+        // アプリをアップデートせずに画面に戻って来た場合、引き続きダイアログが表示されている状態にしておく
+        shouldPopOnConfirmed: false,
         onConfirmed: () async {
           if (Platform.isAndroid) {
             // TODO(masaki): Google Playにてアプリ作成後に動作確認
