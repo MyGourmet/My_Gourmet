@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
+import 'widgets/confirm_dialog.dart';
+import 'widgets/success_snack_bar.dart';
 
 /// マイページ
 class MyPage extends ConsumerWidget {
@@ -23,8 +25,25 @@ class MyPage extends ConsumerWidget {
               child: ListView(
                 children: [
                   ListTile(
-                    onTap: () async =>
-                        ref.read(authControllerProvider).deleteUserAccount(),
+                    onTap: () async {
+                      await ConfirmDialog.show(
+                        context,
+                        hasCancelButton: true,
+                        titleString: '注意',
+                        contentString: '本当にアカウントを削除しますか？',
+                        onConfirmed: () async {
+                          await ref
+                              .read(authControllerProvider)
+                              .deleteUserAccount();
+                          if (context.mounted) {
+                            SuccessSnackBar.show(
+                              context,
+                              message: 'アカウントを削除しました',
+                            );
+                          }
+                        },
+                      );
+                    },
                     title: const Text(
                       'アカウントを削除',
                       style: TextStyle(color: AppColors.white),

@@ -1,21 +1,37 @@
 import 'package:flutter/material.dart';
 
+/// 確認用のダイアログ
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog._({
     required this.contentString,
     required this.titleString,
     required this.onConfirmed,
+    required this.hasCancelButton,
+    required this.shouldPopOnConfirmed,
   });
 
+  /// ダイアログのタイトル
   final String titleString;
+
+  /// ダイアログの中身
   final String contentString;
+
+  /// 「はい」ボタン押下後の挙動
   final VoidCallback onConfirmed;
+
+  /// 「いいえ」ボタンを表示するかどうか
+  final bool hasCancelButton;
+
+  /// [onConfirmed]完了後にダイアログを閉じるかどうか
+  final bool shouldPopOnConfirmed;
 
   static Future<void> show(
     BuildContext context, {
     required String titleString,
     required String contentString,
     required VoidCallback onConfirmed,
+    bool hasCancelButton = false,
+    bool shouldPopOnConfirmed = true,
   }) async {
     await showDialog<void>(
       context: context,
@@ -25,6 +41,8 @@ class ConfirmDialog extends StatelessWidget {
           titleString: titleString,
           contentString: contentString,
           onConfirmed: onConfirmed,
+          hasCancelButton: hasCancelButton,
+          shouldPopOnConfirmed: shouldPopOnConfirmed,
         );
       },
     );
@@ -39,8 +57,18 @@ class ConfirmDialog extends StatelessWidget {
       title: Center(child: Text(titleString)),
       content: Text(contentString),
       actions: [
+        if (hasCancelButton)
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('いいえ'),
+          ),
         TextButton(
-          onPressed: onConfirmed,
+          onPressed: () {
+            onConfirmed();
+            if (shouldPopOnConfirmed) {
+              Navigator.of(context).pop();
+            }
+          },
           child: const Text('はい'),
         ),
       ],
