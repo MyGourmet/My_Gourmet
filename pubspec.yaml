@@ -30,6 +30,7 @@ dependencies:
   package_info: ^2.0.2
   shared_preferences: ^2.2.2
   url_launcher: ^6.2.4
+  recaptcha_enterprise_flutter: ^18.4.0
 
 dev_dependencies:
   build_runner: ^2.4.6
