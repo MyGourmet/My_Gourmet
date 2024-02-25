@@ -77,11 +77,13 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        if (dartEnvironmentVariables.FLAVOR != 'prod') {
+        // Check if FLAVOR exists and not set to 'prod'
+        if (dartEnvironmentVariables.FLAVOR != null && dartEnvironmentVariables.FLAVOR != 'prod') {
             applicationIdSuffix ".${dartEnvironmentVariables.FLAVOR}"
+            resValue "string", "app_name", "MyGourmet.${dartEnvironmentVariables.FLAVOR}"
+        } else {
+            resValue "string", "app_name", "MyGourmet"
         }
-        resValue "string", "app_name", "FlutterAT" +
-                (dartEnvironmentVariables.FLAVOR == 'prod' ? '' : ".${dartEnvironmentVariables.FLAVOR}")
     }
 
     buildTypes {
