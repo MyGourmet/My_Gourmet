@@ -26,23 +26,15 @@ class _HomePageState extends ConsumerState<HomePage> {
   bool isLoading = false;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
-    'assets/images/image2.jpeg',
     'assets/images/image3.jpeg',
     'assets/images/image4.png',
     'assets/images/image5.jpeg',
-    'assets/images/image6.jpeg',
     'assets/images/image7.jpeg',
     'assets/images/image8.jpeg',
-    'assets/images/image9.jpeg',
     'assets/images/image10.jpeg',
     'assets/images/image11.jpeg',
-    'assets/images/image12.jpeg',
     'assets/images/image13.jpeg',
     'assets/images/image14.jpeg',
-    'assets/images/image15.jpeg',
-    'assets/images/image16.jpeg',
-    'assets/images/image17.jpeg',
-    'assets/images/image18.jpeg',
   ];
 
   @override
