@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
@@ -96,14 +97,16 @@ class _HomePageState extends ConsumerState<HomePage> {
       children: [
         Scaffold(
           floatingActionButton: FloatingActionButton(
-            backgroundColor: const Color(0xFFEF913A),
-            onPressed: () {},
-            child: _MyRotatingButton(
-              onVisibilityChanged: (isVisible) {
-                setState(() {
-                  _isContainerVisible = isVisible; // コンテナの表示状態を更新
-                });
-              },
+            backgroundColor: AppColors.orange,
+            onPressed: () {
+              setState(() {
+                _isContainerVisible = !_isContainerVisible;
+              });
+            },
+            child: const Icon(
+              Icons.add,
+              color: AppColors.black,
+              size: 40,
             ),
           ),
           body: SafeArea(
@@ -383,42 +386,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _MyRotatingButton extends StatefulWidget {
-  // コンテナの表示状態を通知するためのコールバック
-
-  const _MyRotatingButton({required this.onVisibilityChanged});
-
-  final ValueChanged<bool> onVisibilityChanged;
-
-  @override
-  _MyRotatingButtonState createState() => _MyRotatingButtonState();
-}
-
-class _MyRotatingButtonState extends State<_MyRotatingButton> {
-  bool _isContainerVisible = true; // 新しく追加したフラグ
-
-  void _toggleRotation() {
-    setState(() {
-      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
-      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: _toggleRotation, // タップ時に回転を切り替える
-      child: const Center(
-        child: Icon(
-          Icons.add,
-          color: Colors.black,
-          size: 40,
-        ),
-      ),
     );
   }
 }
