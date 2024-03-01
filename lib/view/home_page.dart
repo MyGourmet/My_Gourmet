@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -97,6 +95,17 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Stack(
       children: [
         Scaffold(
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: const Color(0xFFEF913A),
+            onPressed: () {},
+            child: _MyRotatingButton(
+              onVisibilityChanged: (isVisible) {
+                setState(() {
+                  _isContainerVisible = isVisible; // コンテナの表示状態を更新
+                });
+              },
+            ),
+          ),
           body: SafeArea(
             child: Stack(
               children: [
@@ -152,14 +161,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                     ),
                   ),
-                ),
-                // SizedBox(height: 30),
-                _MyRotatingButton(
-                  onVisibilityChanged: (isVisible) {
-                    setState(() {
-                      _isContainerVisible = isVisible; // コンテナの表示状態を更新
-                    });
-                  },
                 ),
               ],
             ),
@@ -398,12 +399,10 @@ class _MyRotatingButton extends StatefulWidget {
 }
 
 class _MyRotatingButtonState extends State<_MyRotatingButton> {
-  bool _isRotated = false;
-  bool _isContainerVisible = false; // 新しく追加したフラグ
+  bool _isContainerVisible = true; // 新しく追加したフラグ
 
   void _toggleRotation() {
     setState(() {
-      _isRotated = !_isRotated;
       _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
       widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
     });
@@ -411,28 +410,13 @@ class _MyRotatingButtonState extends State<_MyRotatingButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: (MediaQuery.of(context).size.height - 327) / 2 + 442,
-      left: MediaQuery.of(context).size.width - 75,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: const BoxDecoration(
-          color: Color(0xFFEF913A),
-          shape: BoxShape.circle,
-        ),
-        child: InkWell(
-          onTap: _toggleRotation, // タップ時に回転を切り替える
-          child: Center(
-            child: Transform.rotate(
-              angle: _isRotated ? 0 : math.pi / 180, // フラグに基づいて角度を決定
-              child: const Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 40,
-              ),
-            ),
-          ),
+    return InkWell(
+      onTap: _toggleRotation, // タップ時に回転を切り替える
+      child: const Center(
+        child: Icon(
+          Icons.add,
+          color: Colors.black,
+          size: 40,
         ),
       ),
     );
