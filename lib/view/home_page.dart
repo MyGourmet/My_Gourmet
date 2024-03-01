@@ -26,23 +26,15 @@ class _HomePageState extends ConsumerState<HomePage> {
   bool isLoading = false;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
-    'assets/images/image2.jpeg',
     'assets/images/image3.jpeg',
     'assets/images/image4.png',
     'assets/images/image5.jpeg',
-    'assets/images/image6.jpeg',
     'assets/images/image7.jpeg',
     'assets/images/image8.jpeg',
-    'assets/images/image9.jpeg',
     'assets/images/image10.jpeg',
     'assets/images/image11.jpeg',
-    'assets/images/image12.jpeg',
     'assets/images/image13.jpeg',
     'assets/images/image14.jpeg',
-    'assets/images/image15.jpeg',
-    'assets/images/image16.jpeg',
-    'assets/images/image17.jpeg',
-    'assets/images/image18.jpeg',
   ];
 
   @override
@@ -146,7 +138,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         2, // 横方向中央に配置
                     child: Container(
                       width: 317, // 長方形の枠の幅を317に設定
-                      height: 512, // 長方形の枠の高さを327に設定
+                      height: 457, // 長方形の枠の高さを327に設定
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.88),
                         borderRadius: BorderRadius.circular(30), // 角を丸くする
@@ -187,7 +179,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 250, // テキストの枠の幅を250に設定
           child: Padding(
             padding: EdgeInsets.only(top: 5),
-            child:Center(
+            child: Center(
               child: Text(
                 'あなたのGoogle Photosから自動で食べ物の写真を読み込みます。',
                 textAlign: TextAlign.left,
@@ -203,7 +195,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 250, // テキストの枠の幅を250に設定
           child: Padding(
             padding: EdgeInsets.only(top: 5),
-            child:Center(
+            child: Center(
               child: Text(
                 '読み込まれた画像は順次ホーム画面に表示されます。',
                 textAlign: TextAlign.left,
@@ -218,63 +210,64 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 260, // テキストの枠の幅を250に設定
           child: Padding(
             padding: EdgeInsets.only(top: 30),
-              child:Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 50, // テキストの枠の幅を250に設定
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child:Center(
-                        child: Text(
-                          '注意点',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFEF913A),
-                          ),
+            child: Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 50, // テキストの枠の幅を250に設定
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Center(
+                      child: Text(
+                        '注意点',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFEF913A),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 150, // テキストの枠の幅を250に設定
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child:Center(
-                        child: Text(
-                          '必ずご確認ください',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFFEF913A),
-                          ),
+                ),
+                SizedBox(
+                  width: 150, // テキストの枠の幅を250に設定
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Center(
+                      child: Text(
+                        '必ずご確認ください',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFFEF913A),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(
           width: 265, // テキストの枠の幅を250に設定
           child: Padding(
             padding: const EdgeInsets.only(top: 5),
-            child:Card(
+            child: Card(
               color: const Color(0xFFFFE8DB),
               shape: RoundedRectangleBorder(
                 side: const BorderSide(
                   color: Color(0xFFEF913A), //色
                   width: 2, //太さ
                 ),
-                borderRadius: BorderRadius.circular(8),              ),
-              child:const Padding(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Padding(
                 padding: EdgeInsets.all(8),
                 child: Text(
                   '※ 3分程、時間がかかります。'
-                      '\n※ 読み込み中はアプリをバックグラウンドに残してください。'
-                      '完全に閉じないでください。(他のアプリを使用しても問題ありません。)',
+                  '\n※ 読み込み中はアプリをバックグラウンドに残してください。'
+                  '完全に閉じないでください。(他のアプリを使用しても問題ありません。)',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 14,
@@ -406,7 +399,7 @@ class _MyRotatingButton extends StatefulWidget {
 
 class _MyRotatingButtonState extends State<_MyRotatingButton> {
   bool _isRotated = false;
-  bool _isContainerVisible = true; // 新しく追加したフラグ
+  bool _isContainerVisible = false; // 新しく追加したフラグ
 
   void _toggleRotation() {
     setState(() {

@@ -129,7 +129,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 },
                 text: isNotLastOnboarding ? 'つぎへ' : 'はじめる',
               ),
-            const Gap(32),
+            const Gap(28),
           ],
         ),
       ),
@@ -161,7 +161,7 @@ class _OnboardingContent extends StatelessWidget {
             'assets/images/food_memory.png',
             width: screenWidth / 2,
           ),
-          const Gap(32),
+          const Gap(28),
           Text(
             title,
             style: const TextStyle(
@@ -173,9 +173,9 @@ class _OnboardingContent extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          const Gap(32),
+          const Gap(28),
           Image.asset(imagePath, width: imageWidth ?? screenWidth / 2.5),
-          const Gap(32),
+          const Gap(28),
           Text(
             description,
             style: const TextStyle(

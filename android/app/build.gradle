@@ -50,7 +50,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services' // Google Services plugin
 
 android {
-    namespace "com.example.my_gourmet"
+    namespace "com.blue_waltz.my_gourmet"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
@@ -69,7 +69,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.my_gourmet"
+        applicationId "com.blue_waltz.my_gourmet"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 19
@@ -77,11 +77,13 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        if (dartEnvironmentVariables.FLAVOR != 'prod') {
+        // Check if FLAVOR exists and not set to 'prod'
+        if (dartEnvironmentVariables.FLAVOR != null && dartEnvironmentVariables.FLAVOR != 'prod') {
             applicationIdSuffix ".${dartEnvironmentVariables.FLAVOR}"
+            resValue "string", "app_name", "MyGourmet.${dartEnvironmentVariables.FLAVOR}"
+        } else {
+            resValue "string", "app_name", "MyGourmet"
         }
-        resValue "string", "app_name", "FlutterAT" +
-                (dartEnvironmentVariables.FLAVOR == 'prod' ? '' : ".${dartEnvironmentVariables.FLAVOR}")
     }
 
     buildTypes {
