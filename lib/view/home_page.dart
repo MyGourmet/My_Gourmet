@@ -5,7 +5,6 @@ import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
-import 'onboarding_page.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -169,8 +168,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
         ),
-        // オンボーディングを上に重ねて表示
-        if (!ref.watch(isOnBoardingCompletedProvider)) const OnboardingPage(),
       ],
     );
   }

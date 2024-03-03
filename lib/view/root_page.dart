@@ -11,6 +11,7 @@ import '../core/app_colors.dart';
 import '../core/shared_preferences_service.dart';
 import 'home_page.dart';
 import 'my_page.dart';
+import 'onboarding_page.dart';
 import 'widgets/confirm_dialog.dart';
 
 /// 全てのページの基盤となるページ
@@ -54,8 +55,14 @@ class _RootPageState extends ConsumerState<RootPage> {
   Widget build(BuildContext context) {
     return isLoading
         ? const SizedBox.shrink()
-        : _NavigationFrame(
-            child: widget.child,
+        : Stack(
+            children: [
+              _NavigationFrame(
+                child: widget.child,
+              ),
+              if (!ref.watch(isOnBoardingCompletedProvider))
+                const OnboardingPage(),
+            ],
           );
   }
 
@@ -112,10 +119,9 @@ class _NavigationFrame extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
-        // TODO(masaki): 以下、色やレイアウトを要調整
         backgroundColor: AppColors.black.withOpacity(0.9),
-        fixedColor: const Color(0xFFEF913A),
-        unselectedItemColor: const Color(0xFFEF913A).withOpacity(
+        fixedColor: AppColors.orange,
+        unselectedItemColor: AppColors.orange.withOpacity(
           0.6,
         ),
         unselectedFontSize: 0,
