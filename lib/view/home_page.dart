@@ -1,8 +1,7 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
@@ -26,15 +25,15 @@ class _HomePageState extends ConsumerState<HomePage> {
   bool isLoading = false;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
-    'assets/images/image3.jpeg',
-    'assets/images/image4.png',
+    'assets/images/image2.jpeg',
+    'assets/images/image3.png',
+    'assets/images/image4.jpeg',
     'assets/images/image5.jpeg',
+    'assets/images/image6.jpeg',
     'assets/images/image7.jpeg',
     'assets/images/image8.jpeg',
+    'assets/images/image9.jpeg',
     'assets/images/image10.jpeg',
-    'assets/images/image11.jpeg',
-    'assets/images/image13.jpeg',
-    'assets/images/image14.jpeg',
   ];
 
   @override
@@ -97,6 +96,19 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Stack(
       children: [
         Scaffold(
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: AppColors.orange,
+            onPressed: () {
+              setState(() {
+                _isContainerVisible = !_isContainerVisible;
+              });
+            },
+            child: const Icon(
+              Icons.add,
+              color: AppColors.black,
+              size: 40,
+            ),
+          ),
           body: SafeArea(
             child: Stack(
               children: [
@@ -152,14 +164,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ),
                     ),
                   ),
-                ),
-                // SizedBox(height: 30),
-                _MyRotatingButton(
-                  onVisibilityChanged: (isVisible) {
-                    setState(() {
-                      _isContainerVisible = isVisible; // コンテナの表示状態を更新
-                    });
-                  },
                 ),
               ],
             ),
@@ -382,59 +386,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _MyRotatingButton extends StatefulWidget {
-  // コンテナの表示状態を通知するためのコールバック
-
-  const _MyRotatingButton({required this.onVisibilityChanged});
-
-  final ValueChanged<bool> onVisibilityChanged;
-
-  @override
-  _MyRotatingButtonState createState() => _MyRotatingButtonState();
-}
-
-class _MyRotatingButtonState extends State<_MyRotatingButton> {
-  bool _isRotated = false;
-  bool _isContainerVisible = false; // 新しく追加したフラグ
-
-  void _toggleRotation() {
-    setState(() {
-      _isRotated = !_isRotated;
-      _isContainerVisible = !_isContainerVisible; // タップする度にコンテナの表示状態を切り替える
-      widget.onVisibilityChanged(_isContainerVisible); // コンテナの表示状態を外部に通知
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      top: (MediaQuery.of(context).size.height - 327) / 2 + 442,
-      left: MediaQuery.of(context).size.width - 75,
-      child: Container(
-        width: 60,
-        height: 60,
-        decoration: const BoxDecoration(
-          color: Color(0xFFEF913A),
-          shape: BoxShape.circle,
-        ),
-        child: InkWell(
-          onTap: _toggleRotation, // タップ時に回転を切り替える
-          child: Center(
-            child: Transform.rotate(
-              angle: _isRotated ? 0 : math.pi / 180, // フラグに基づいて角度を決定
-              child: const Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 40,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

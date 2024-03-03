@@ -47,7 +47,7 @@ app.*.map.json
 /.history/
 
 # fvm
-.fvm/flutter_sdk
+.fvm/
 
 # auth
 /cloud_run/auth/
