@@ -5,6 +5,7 @@ import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
+import 'onboarding_page.dart';
 
 // TODO(masaki): Themeやconstの管理
 
@@ -20,7 +21,7 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController;
-  bool _isContainerVisible = true;
+  late bool _isContainerVisible;
   bool isLoading = false;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -38,7 +39,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(); // 初期化
+    _pageController = PageController();
+    _isContainerVisible = !ref.read(isOnBoardingCompletedProvider);
   }
 
   @override
