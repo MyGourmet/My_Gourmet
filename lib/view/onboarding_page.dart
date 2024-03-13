@@ -68,7 +68,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             }
           : null,
       child: Container(
-        color: Themes.grayColor.shade900.withOpacity(0.9),
+        color: Themes.gray.shade900.withOpacity(0.9),
         width: screenWidth,
         height: screenHeight,
         padding: const EdgeInsets.symmetric(horizontal: 24),

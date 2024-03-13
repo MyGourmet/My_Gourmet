@@ -291,7 +291,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
           width: 250,
           child: Center(
             child: isLoading
