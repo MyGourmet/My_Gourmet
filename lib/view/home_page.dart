@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/app_colors.dart';
+import '../core/themes.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
@@ -97,49 +97,37 @@ class _HomePageState extends ConsumerState<HomePage> {
       children: [
         Scaffold(
           floatingActionButton: FloatingActionButton(
-            backgroundColor: AppColors.orange,
-            onPressed: () {
-              setState(() {
-                _isContainerVisible = !_isContainerVisible;
-              });
-            },
-            child: const Icon(
-              Icons.add,
-              color: AppColors.black,
-              size: 40,
-            ),
+            onPressed: () => setState(() {
+              _isContainerVisible = !_isContainerVisible;
+            }),
+            child: const Icon(Icons.add),
           ),
           body: SafeArea(
             child: Stack(
               children: [
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, // 3列
-                          ),
-                          itemCount: photoUrls?.length ??
-                              imagePaths
-                                  .length, // imageUrlsがnullならimagePathsの長さを使用
-                          itemBuilder: (context, index) {
-                            return Image(
-                              image: photoUrls != null
-                                  ? NetworkImage(photoUrls![index])
-                                  : AssetImage(imagePaths[index])
-                                      as ImageProvider<Object>,
-                              fit: BoxFit.cover,
-                            );
-                          },
+                Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // 3列
                         ),
+                        itemCount: photoUrls?.length ??
+                            imagePaths
+                                .length, // imageUrlsがnullならimagePathsの長さを使用
+                        itemBuilder: (context, index) {
+                          return Image(
+                            image: photoUrls != null
+                                ? NetworkImage(photoUrls![index])
+                                : AssetImage(imagePaths[index])
+                                    as ImageProvider<Object>,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
                 Visibility(
                   visible: _isContainerVisible,
@@ -227,7 +215,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFEF913A),
+                          color: Themes.mainOrange,
                         ),
                       ),
                     ),
@@ -243,7 +231,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFFEF913A),
+                          color: Themes.mainOrange,
                         ),
                       ),
                     ),
@@ -261,7 +249,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               color: const Color(0xFFFFE8DB),
               shape: RoundedRectangleBorder(
                 side: const BorderSide(
-                  color: Color(0xFFEF913A), //色
+                  color: Themes.mainOrange, //色
                   width: 2, //太さ
                 ),
                 borderRadius: BorderRadius.circular(8),
@@ -283,21 +271,15 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         const SizedBox(height: 30), // テキストとボタンの間のスペース
-        ElevatedButton(
-          onPressed: _onButtonPressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30), // 角を丸くする
-            ),
-            minimumSize: const Size(250, 50),
-          ),
-          child: const Text(
-            '画像読み込みを開始する',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ElevatedButton(
+            onPressed: _onButtonPressed,
+            child: const Text(
+              '画像読み込みを開始する',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
@@ -309,7 +291,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(
+        Container(
           width: 250,
           child: Center(
             child: isLoading
@@ -364,24 +346,18 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         const SizedBox(height: 30), // スペースを設定
-        ElevatedButton(
-          onPressed: () {
-            _downloadPhotos('ramen', ref);
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30), // 角を丸くする
-            ),
-            minimumSize: const Size(250, 50),
-          ),
-          child: const Text(
-            // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
-            'ダウンロードする',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: ElevatedButton(
+            onPressed: () {
+              _downloadPhotos('ramen', ref);
+            },
+            child: const Text(
+              // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
+              'ダウンロードする',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),
