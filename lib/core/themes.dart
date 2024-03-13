@@ -6,7 +6,7 @@ class Themes {
   static ThemeData get defaultTheme => ThemeData(
         useMaterial3: true,
         brightness: Brightness.light,
-        scaffoldBackgroundColor: grayColor.shade900,
+        scaffoldBackgroundColor: gray.shade900,
         colorSchemeSeed: mainOrange,
         fontFamily: 'kZenkakuGothicNew',
         appBarTheme: AppBarTheme(
@@ -17,11 +17,11 @@ class Themes {
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
-          iconTheme: IconThemeData(color: grayColor[800], size: 20),
+          iconTheme: IconThemeData(color: gray[800], size: 20),
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           shape: const CircleBorder(),
-          foregroundColor: Themes.grayColor.shade900,
+          foregroundColor: Themes.gray.shade900,
           backgroundColor: Themes.mainOrange,
           elevation: 10,
         ),
@@ -50,7 +50,7 @@ class Themes {
           elevation: 4,
           shadowColor: mainOrange.shade300.withOpacity(0.25),
           textStyle: TextStyle(
-            color: grayColor.shade900,
+            color: gray.shade900,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -67,7 +67,7 @@ class Themes {
           surfaceTintColor: Colors.white,
         ),
         inputDecorationTheme: InputDecorationTheme(
-          fillColor: grayColor.shade50,
+          fillColor: gray.shade50,
           filled: true,
           contentPadding: const EdgeInsets.all(16),
           border: OutlineInputBorder(
@@ -75,13 +75,13 @@ class Themes {
             borderSide: BorderSide.none,
           ),
           hintStyle: TextStyle(
-            color: grayColor.shade300,
+            color: gray.shade300,
             fontSize: 16,
           ),
         ),
         listTileTheme: ListTileThemeData(
           contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          iconColor: grayColor.shade700,
+          iconColor: gray.shade700,
           titleTextStyle: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -93,7 +93,7 @@ class Themes {
         ),
         dialogTheme: DialogTheme(
           surfaceTintColor: Colors.white,
-          backgroundColor: Themes.grayColor.shade800,
+          backgroundColor: Themes.gray.shade800,
           alignment: Alignment.center,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -106,14 +106,12 @@ class Themes {
         ),
         switchTheme: SwitchThemeData(
           thumbColor: MaterialStateProperty.resolveWith(
-            (states) => states.contains(MaterialState.selected)
-                ? Colors.white
-                : grayColor,
+            (states) =>
+                states.contains(MaterialState.selected) ? Colors.white : gray,
           ),
           trackOutlineColor: MaterialStateProperty.resolveWith(
-            (states) => states.contains(MaterialState.selected)
-                ? mainOrange
-                : grayColor,
+            (states) =>
+                states.contains(MaterialState.selected) ? mainOrange : gray,
           ),
           trackColor: MaterialStateProperty.resolveWith(
             (states) => states.contains(MaterialState.selected)
@@ -122,9 +120,9 @@ class Themes {
           ),
         ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Themes.grayColor.shade900,
+          backgroundColor: Themes.gray.shade900,
           selectedItemColor: mainOrange,
-          unselectedItemColor: grayColor.shade700,
+          unselectedItemColor: gray.shade700,
           elevation: 4,
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.bold,
@@ -134,7 +132,7 @@ class Themes {
           ),
         ),
         dividerColor: Colors.transparent,
-        shadowColor: grayColor.shade700,
+        shadowColor: gray.shade700,
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: ButtonStyle(
             side: MaterialStateProperty.all<BorderSide>(BorderSide.none),
@@ -143,7 +141,7 @@ class Themes {
             ),
             backgroundColor: MaterialStateProperty.resolveWith(
               (states) => states.contains(MaterialState.disabled)
-                  ? grayColor.withOpacity(0.5)
+                  ? gray.withOpacity(0.5)
                   : mainOrange,
             ),
             shape: MaterialStateProperty.all<OutlinedBorder>(
@@ -166,7 +164,7 @@ class Themes {
         ),
         textTheme: TextTheme(
           headlineSmall: TextStyle(
-            color: grayColor.shade700,
+            color: gray.shade700,
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
@@ -188,7 +186,7 @@ class Themes {
   });
   static const int _mainOrangeValue = 0xFFef913a;
 
-  static const MaterialColor grayColor =
+  static const MaterialColor gray =
       MaterialColor(_grayPrimaryValue, <int, Color>{
     50: Color(0xFFfff4eb),
     100: Color(0xFFf8eae1),
