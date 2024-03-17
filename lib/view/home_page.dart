@@ -78,10 +78,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<String>? photoUrls; // Firebaseからダウンロードした写真のURLを保持
 
-  Future<void> _downloadPhotos(String category, WidgetRef ref) async {
+  Future<void> _downloadPhotos(WidgetRef ref) async {
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
     final result = await ref.read(photoControllerProvider).downloadPhotos(
-          category: category,
           userId: ref.watch(
             userIdProvider,
           ),
@@ -365,7 +364,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         const SizedBox(height: 30), // スペースを設定
         ElevatedButton(
           onPressed: () {
-            _downloadPhotos('ramen', ref);
+            _downloadPhotos(ref);
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFEF913A), // ボタンの背景色を設定
