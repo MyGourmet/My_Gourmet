@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../core/app_colors.dart';
 import '../core/build_context_extension.dart';
 import '../core/constants.dart';
 import '../core/shared_preferences_service.dart';
-import 'widgets/buttons.dart';
+import '../core/themes.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
 ///
@@ -69,7 +68,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             }
           : null,
       child: Container(
-        color: AppColors.black.withOpacity(0.9),
+        color: Themes.gray.shade900.withOpacity(0.9),
         width: screenWidth,
         height: screenHeight,
         padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -113,7 +112,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               ),
             ),
             if (!isOnboardingTop)
-              CustomButton.orange(
+              ElevatedButton(
                 onPressed: () async {
                   if (isNotLastOnboarding) {
                     await _onboardingController.nextPage(
@@ -127,7 +126,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         .update((state) => true);
                   }
                 },
-                text: isNotLastOnboarding ? 'つぎへ' : 'はじめる',
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 48),
+                ),
+                child: Text(
+                  isNotLastOnboarding ? 'つぎへ' : 'はじめる',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             const Gap(28),
           ],
@@ -165,7 +170,7 @@ class _OnboardingContent extends StatelessWidget {
           Text(
             title,
             style: const TextStyle(
-              color: AppColors.white,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 18,
               decoration: TextDecoration.none,
@@ -179,7 +184,7 @@ class _OnboardingContent extends StatelessWidget {
           Text(
             description,
             style: const TextStyle(
-              color: AppColors.white,
+              color: Colors.white,
               fontSize: 14,
               decoration: TextDecoration.none,
               fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
