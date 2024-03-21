@@ -7,8 +7,6 @@ import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
 import 'onboarding_page.dart';
 
-// TODO(masaki): Themeやconstの管理
-
 // TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -348,7 +346,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
             onPressed: () {
-              _downloadPhotos('ramen', ref);
+              _downloadPhotos(ref);
             },
             child: const Text(
               // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修

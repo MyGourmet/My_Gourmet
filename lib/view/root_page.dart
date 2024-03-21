@@ -118,7 +118,6 @@ class _NavigationFrame extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
-        // TODO(masaki): 以下、色やレイアウトを要調整
         unselectedFontSize: 0,
         items: const [
           BottomNavigationBarItem(
