@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../core/app_colors.dart';
 import '../core/shared_preferences_service.dart';
 import 'home_page.dart';
+import 'map_page.dart';
 import 'my_page.dart';
 import 'widgets/confirm_dialog.dart';
 
@@ -132,6 +133,16 @@ class _NavigationFrame extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Padding(
+              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+              child: Icon(
+                Icons.map,
+                size: 40,
+              ),
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
               padding: EdgeInsets.only(top: 10),
               child: Icon(
                 Icons.person,
@@ -159,6 +170,8 @@ class _NavigationFrame extends StatelessWidget {
       case 0:
         context.go(HomePage.routePath);
       case 1:
+        context.go(MapPage.routePath);
+      case 2:
         context.go(MyPage.routePath);
     }
   }
