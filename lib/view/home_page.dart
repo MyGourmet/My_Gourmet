@@ -21,6 +21,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController;
   late bool _isContainerVisible;
   bool isLoading = false;
+  bool isReady = false;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -39,6 +40,11 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
     _pageController = PageController();
     _isContainerVisible = !ref.read(isOnBoardingCompletedProvider);
+    if (!_isContainerVisible) {
+      _downloadPhotos(ref).then((value) => isReady = true);
+    } else {
+      isReady = true;
+    }
   }
 
   @override
@@ -91,72 +97,76 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => setState(() {
-              _isContainerVisible = !_isContainerVisible;
-            }),
-            child: const Icon(Icons.add),
-          ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // 3列
-                        ),
-                        itemCount: photoUrls?.length ??
-                            imagePaths
-                                .length, // imageUrlsがnullならimagePathsの長さを使用
-                        itemBuilder: (context, index) {
-                          return Image(
-                            image: photoUrls != null
-                                ? NetworkImage(photoUrls![index])
-                                : AssetImage(imagePaths[index])
-                                    as ImageProvider<Object>,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+    return !isReady
+        ? SizedBox.expand(
+            child: ColoredBox(color: Theme.of(context).scaffoldBackgroundColor),
+          )
+        : Stack(
+            children: [
+              Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () => setState(() {
+                    _isContainerVisible = !_isContainerVisible;
+                  }),
+                  child: const Icon(Icons.add),
                 ),
-                Visibility(
-                  visible: _isContainerVisible,
-                  child: Positioned(
-                    top: (MediaQuery.of(context).size.height - 327) /
-                        4, // 縦方向中央に配置
-                    left: (MediaQuery.of(context).size.width - 317) /
-                        2, // 横方向中央に配置
-                    child: Container(
-                      width: 317, // 長方形の枠の幅を317に設定
-                      height: 457, // 長方形の枠の高さを327に設定
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.88),
-                        borderRadius: BorderRadius.circular(30), // 角を丸くする
-                      ),
-                      child: PageView(
-                        controller: _pageController,
+                body: SafeArea(
+                  child: Stack(
+                    children: [
+                      Column(
                         children: [
-                          _buildFirstPage(),
-                          _buildSecondPage(),
+                          Expanded(
+                            child: GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // 3列
+                              ),
+                              itemCount: photoUrls?.length ??
+                                  imagePaths
+                                      .length, // imageUrlsがnullならimagePathsの長さを使用
+                              itemBuilder: (context, index) {
+                                return Image(
+                                  image: photoUrls != null
+                                      ? NetworkImage(photoUrls![index])
+                                      : AssetImage(imagePaths[index])
+                                          as ImageProvider<Object>,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+                      Visibility(
+                        visible: _isContainerVisible,
+                        child: Positioned(
+                          top: (MediaQuery.of(context).size.height - 327) /
+                              4, // 縦方向中央に配置
+                          left: (MediaQuery.of(context).size.width - 317) /
+                              2, // 横方向中央に配置
+                          child: Container(
+                            width: 317, // 長方形の枠の幅を317に設定
+                            height: 457, // 長方形の枠の高さを327に設定
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.88),
+                              borderRadius: BorderRadius.circular(30), // 角を丸くする
+                            ),
+                            child: PageView(
+                              controller: _pageController,
+                              children: [
+                                _buildFirstPage(),
+                                _buildSecondPage(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+              ),
+            ],
+          );
   }
 
   Widget _buildFirstPage() {
