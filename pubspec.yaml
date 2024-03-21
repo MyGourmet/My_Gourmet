@@ -27,6 +27,7 @@ dependencies:
   google_sign_in: ^6.1.4
   http: ^0.13.3
   logger: null
+  mapbox_maps_flutter: ^1.0.0
   package_info: ^2.0.2
   shared_preferences: ^2.2.2
   url_launcher: ^6.2.4
