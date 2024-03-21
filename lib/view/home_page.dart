@@ -118,12 +118,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           Expanded(
                             child: GridView.builder(
                               gridDelegate:
+                                  // ignore: lines_longer_than_80_chars
                                   const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2, // 3列
+                                crossAxisCount: 2,
                               ),
-                              itemCount: photoUrls?.length ??
-                                  imagePaths
-                                      .length, // imageUrlsがnullならimagePathsの長さを使用
+                              itemCount: photoUrls?.length ?? imagePaths.length,
                               itemBuilder: (context, index) {
                                 return Image(
                                   image: photoUrls != null
@@ -302,7 +301,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Center(
             child: isLoading
                 ? const Text(
-                    // ignore: lines_longer_than_80_chars
                     '画像を読み込み中です...',
                     style: TextStyle(
                       fontSize: 16,
