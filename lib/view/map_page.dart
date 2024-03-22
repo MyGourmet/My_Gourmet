@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
-import '../core/app_colors.dart';
-import '../features/auth/auth_controller.dart';
-import 'widgets/confirm_dialog.dart';
-import 'widgets/success_snack_bar.dart';
-
 /// マイページ
 class MapPage extends ConsumerWidget {
   const MapPage({super.key});
