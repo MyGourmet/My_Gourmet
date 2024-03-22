@@ -152,7 +152,8 @@ class _NavigationFrame extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
     return switch (location) {
       HomePage.routePath => 0,
-      MyPage.routePath => 1,
+      MapPage.routePath => 1,
+      MyPage.routePath => 2,
       String() => throw UnimplementedError(),
     };
   }
