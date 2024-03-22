@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
 import 'widgets/confirm_dialog.dart';
 import 'widgets/success_snack_bar.dart';
@@ -18,7 +17,6 @@ class MyPage extends ConsumerWidget {
       // ログインのリスト部分の設定
       body: Container(
         padding: const EdgeInsets.only(top: 50),
-        color: AppColors.black,
         child: Column(
           children: [
             Expanded(
@@ -44,16 +42,13 @@ class MyPage extends ConsumerWidget {
                         },
                       );
                     },
-                    title: const Text(
-                      'アカウントを削除',
-                      style: TextStyle(color: AppColors.white),
-                    ),
+                    title: const Text('アカウントを削除'),
                   ),
                   const Divider(
                     thickness: 1,
                     indent: 20,
                     endIndent: 20,
-                    color: AppColors.white,
+                    color: Colors.white,
                   ),
                 ],
               ),

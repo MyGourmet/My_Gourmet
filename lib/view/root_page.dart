@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../core/app_colors.dart';
 import '../core/shared_preferences_service.dart';
 import 'home_page.dart';
 import 'map_page.dart';
@@ -114,11 +113,6 @@ class _NavigationFrame extends StatelessWidget {
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
         // TODO(masaki): 以下、色やレイアウトを要調整
-        backgroundColor: AppColors.black.withOpacity(0.9),
-        fixedColor: const Color(0xFFEF913A),
-        unselectedItemColor: const Color(0xFFEF913A).withOpacity(
-          0.6,
-        ),
         unselectedFontSize: 0,
         items: const [
           BottomNavigationBarItem(
@@ -126,7 +120,6 @@ class _NavigationFrame extends StatelessWidget {
               padding: EdgeInsets.only(top: 10), // 上側の余白を設定
               child: Icon(
                 Icons.photo,
-                size: 40,
               ),
             ),
             label: '',
@@ -146,7 +139,6 @@ class _NavigationFrame extends StatelessWidget {
               padding: EdgeInsets.only(top: 10),
               child: Icon(
                 Icons.person,
-                size: 40,
               ),
             ),
             label: '',

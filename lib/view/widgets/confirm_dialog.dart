@@ -54,7 +54,12 @@ class ConfirmDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      title: Center(child: Text(titleString)),
+      title: Center(
+        child: Text(
+          titleString,
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
       content: Text(contentString),
       actions: [
         if (hasCancelButton)
