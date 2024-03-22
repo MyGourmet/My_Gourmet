@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 
 import '../core/app_colors.dart';
 import '../features/auth/auth_controller.dart';
@@ -18,7 +19,7 @@ class MapPage extends ConsumerWidget {
       // ログインのリスト部分の設定
       body: Container(
         padding: const EdgeInsets.only(top: 50),
-        child: const Placeholder(),
+        child: MapWidget(),
       ),
     );
   }
