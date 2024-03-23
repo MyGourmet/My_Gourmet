@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/themes.dart';
@@ -40,11 +41,35 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
     _pageController = PageController();
     _isContainerVisible = !ref.read(isOnBoardingCompletedProvider);
-    if (!_isContainerVisible) {
-      _downloadPhotos(ref).then((value) => isReady = true);
-    } else {
-      isReady = true;
-    }
+    _initDownloadPhotos();
+  }
+
+  /// 写真ダウンロード用初期化処理
+  ///
+  /// サインイン済みで画像の読み込み準備が出来ている場合、写真をダウンロードする。
+  Future<void> _initDownloadPhotos() async {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      final isSignedIn = ref.watch(userIdProvider) != null;
+      // TODO(masaki): サインイン後（一度写真をアップロード出来るようになった後)、以下を動作確認
+      if (!isSignedIn) {
+        setState(() => isReady = true);
+        return;
+      }
+      final isReadyForUse = ref.watch(authedUserStreamProvider).when(
+            data: (authedUser) =>
+                authedUser.classifyPhotosStatus ==
+                ClassifyPhotosStatus.readyForUse,
+            error: (_, __) => false,
+            loading: () => false,
+          );
+      if (!isReadyForUse) {
+        setState(() => isReady = true);
+        return;
+      }
+
+      await _downloadPhotos(ref);
+      setState(() => isReady = true);
+    });
   }
 
   @override
