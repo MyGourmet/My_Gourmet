@@ -47,7 +47,7 @@ class PhotoRepository {
   Future<void> callClassifyPhotos(String accessToken, String userId) async {
     try {
       final response = await http.post(
-        Uri.parse('$_apiUrl/saveImage'),
+        Uri.parse('$_apiUrl/classifyPhotos'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken',
