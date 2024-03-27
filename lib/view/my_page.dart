@@ -42,7 +42,7 @@ class MyPage extends ConsumerWidget {
                         },
                       );
                     },
-                    title: const Text('アカウントを削除'),
+                    title: const Text('   アカウントを削除'),
                   ),
                   const Divider(
                     thickness: 1,
