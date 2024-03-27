@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/themes.dart';
@@ -6,8 +7,6 @@ import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
 import 'onboarding_page.dart';
-
-// TODO(masaki): Themeやconstの管理
 
 // TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
@@ -21,8 +20,9 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   late PageController _pageController;
-  bool _isContainerVisible = true;
+  late bool _isContainerVisible;
   bool isLoading = false;
+  bool isReady = false;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -39,7 +39,33 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(); // 初期化
+    _pageController = PageController();
+    _isContainerVisible = !ref.read(isOnBoardingCompletedProvider);
+    _initDownloadPhotos();
+  }
+
+  /// 写真ダウンロード用初期化処理
+  ///
+  /// サインイン済みで画像の読み込み準備が出来ている場合、写真をダウンロードする。
+  Future<void> _initDownloadPhotos() async {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      final isSignedIn = ref.watch(userIdProvider) != null;
+      if (!isSignedIn) {
+        setState(() => isReady = true);
+        return;
+      }
+      await ref.watch(authedUserStreamProvider.future);
+      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
+          ClassifyPhotosStatus.readyForUse;
+      if (!isReadyForUse) {
+        setState(() => isReady = true);
+        return;
+      }
+
+      await _downloadPhotos(ref);
+      setState(() => isReady = true);
+    });
   }
 
   @override
@@ -77,10 +103,9 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   List<String>? photoUrls; // Firebaseからダウンロードした写真のURLを保持
 
-  Future<void> _downloadPhotos(String category, WidgetRef ref) async {
+  Future<void> _downloadPhotos(WidgetRef ref) async {
     // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
     final result = await ref.read(photoControllerProvider).downloadPhotos(
-          category: category,
           userId: ref.watch(
             userIdProvider,
           ),
@@ -93,74 +118,75 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () => setState(() {
-              _isContainerVisible = !_isContainerVisible;
-            }),
-            child: const Icon(Icons.add),
-          ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // 3列
-                        ),
-                        itemCount: photoUrls?.length ??
-                            imagePaths
-                                .length, // imageUrlsがnullならimagePathsの長さを使用
-                        itemBuilder: (context, index) {
-                          return Image(
-                            image: photoUrls != null
-                                ? NetworkImage(photoUrls![index])
-                                : AssetImage(imagePaths[index])
-                                    as ImageProvider<Object>,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+    return !isReady
+        ? SizedBox.expand(
+            child: ColoredBox(color: Theme.of(context).scaffoldBackgroundColor),
+          )
+        : Stack(
+            children: [
+              Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () => setState(() {
+                    _isContainerVisible = !_isContainerVisible;
+                  }),
+                  child: const Icon(Icons.add),
                 ),
-                Visibility(
-                  visible: _isContainerVisible,
-                  child: Positioned(
-                    top: (MediaQuery.of(context).size.height - 327) /
-                        4, // 縦方向中央に配置
-                    left: (MediaQuery.of(context).size.width - 317) /
-                        2, // 横方向中央に配置
-                    child: Container(
-                      width: 317, // 長方形の枠の幅を317に設定
-                      height: 457, // 長方形の枠の高さを327に設定
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.88),
-                        borderRadius: BorderRadius.circular(30), // 角を丸くする
-                      ),
-                      child: PageView(
-                        controller: _pageController,
+                body: SafeArea(
+                  child: Stack(
+                    children: [
+                      Column(
                         children: [
-                          _buildFirstPage(),
-                          _buildSecondPage(),
+                          Expanded(
+                            child: GridView.builder(
+                              gridDelegate:
+                                  // ignore: lines_longer_than_80_chars
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                              ),
+                              itemCount: photoUrls?.length ?? imagePaths.length,
+                              itemBuilder: (context, index) {
+                                return Image(
+                                  image: photoUrls != null
+                                      ? NetworkImage(photoUrls![index])
+                                      : AssetImage(imagePaths[index])
+                                          as ImageProvider<Object>,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
-                    ),
+                      Visibility(
+                        visible: _isContainerVisible,
+                        child: Positioned(
+                          top: (MediaQuery.of(context).size.height - 327) /
+                              4, // 縦方向中央に配置
+                          left: (MediaQuery.of(context).size.width - 317) /
+                              2, // 横方向中央に配置
+                          child: Container(
+                            width: 317, // 長方形の枠の幅を317に設定
+                            height: 457, // 長方形の枠の高さを327に設定
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.88),
+                              borderRadius: BorderRadius.circular(30), // 角を丸くする
+                            ),
+                            child: PageView(
+                              controller: _pageController,
+                              children: [
+                                _buildFirstPage(),
+                                _buildSecondPage(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-        // オンボーディングを上に重ねて表示
-        if (!ref.watch(isOnBoardingCompletedProvider)) const OnboardingPage(),
-      ],
-    );
+              ),
+            ],
+          );
   }
 
   Widget _buildFirstPage() {
@@ -296,7 +322,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Center(
             child: isLoading
                 ? const Text(
-                    // ignore: lines_longer_than_80_chars
                     '画像を読み込み中です...',
                     style: TextStyle(
                       fontSize: 16,
@@ -350,10 +375,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
             onPressed: () {
-              _downloadPhotos('ramen', ref);
+              _downloadPhotos(ref);
             },
             child: const Text(
-              // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
               'ダウンロードする',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
