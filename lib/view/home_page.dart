@@ -50,18 +50,14 @@ class _HomePageState extends ConsumerState<HomePage> {
   Future<void> _initDownloadPhotos() async {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       final isSignedIn = ref.watch(userIdProvider) != null;
-      // TODO(masaki): サインイン後（一度写真をアップロード出来るようになった後)、以下を動作確認
       if (!isSignedIn) {
         setState(() => isReady = true);
         return;
       }
-      final isReadyForUse = ref.watch(authedUserStreamProvider).when(
-            data: (authedUser) =>
-                authedUser.classifyPhotosStatus ==
-                ClassifyPhotosStatus.readyForUse,
-            error: (_, __) => false,
-            loading: () => false,
-          );
+      await ref.watch(authedUserStreamProvider.future);
+      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
+          ClassifyPhotosStatus.readyForUse;
       if (!isReadyForUse) {
         setState(() => isReady = true);
         return;
@@ -382,7 +378,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               _downloadPhotos(ref);
             },
             child: const Text(
-              // MEMO(masaki): ステップの2/2というのを伝わりやすいUIに改修
               'ダウンロードする',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
