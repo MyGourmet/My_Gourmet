@@ -373,14 +373,31 @@ class _HomePageState extends ConsumerState<HomePage> {
                   )
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
+                        // TODO(masaki): 初回読み込み時のreadyForUseが一瞬画面に反映されてしまうので、全体的に見直す
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
-                          return const Text(
-                            '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          return Column(
+                            children: [
+                              const Text(
+                                '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Gap(48),
+                              ElevatedButton(
+                                onPressed: () {
+                                  _downloadPhotos(ref);
+                                },
+                                child: const Text(
+                                  'ダウンロードする',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
                           return const Column(
@@ -419,22 +436,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
           ),
         ),
-        const SizedBox(height: 30), // スペースを設定
-        if (!isLoading)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                _downloadPhotos(ref);
-              },
-              child: const Text(
-                'ダウンロードする',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }
