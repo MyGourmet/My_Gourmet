@@ -173,6 +173,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               borderRadius: BorderRadius.circular(30), // 角を丸くする
                             ),
                             child: PageView(
+                              physics: const NeverScrollableScrollPhysics(),
                               controller: _pageController,
                               children: [
                                 _buildFirstPage(),
