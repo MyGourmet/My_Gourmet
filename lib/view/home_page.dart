@@ -373,12 +373,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                   )
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
-                        // TODO(masaki): 初回読み込み時のreadyForUseが一瞬画面に反映されてしまうので、全体的に見直す
+                        // TODO(masaki): 初回読み込み時のreadyForUseが一瞬画面に反映されてしまうので、
+                        //  全体的に見直す
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
                           return Column(
                             children: [
                               const Text(
+                                // ignore: lines_longer_than_80_chars
                                 '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
                                 style: TextStyle(
                                   fontSize: 16,
