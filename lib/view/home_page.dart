@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 import '../core/themes.dart';
 import '../features/auth/auth_controller.dart';
@@ -199,31 +200,31 @@ class _HomePageState extends ConsumerState<HomePage> {
             padding: EdgeInsets.only(top: 5),
             child: Center(
               child: Text(
-                'あなたのGoogle Photosから自動で食べ物の写真を読み込みます。',
+                'あなたのGooglePhotoを\nAIで直近300枚まで解析し、\n料理の写真のみ保存します！',
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
         ),
-        const SizedBox(
-          width: 250, // テキストの枠の幅を250に設定
-          child: Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Center(
-              child: Text(
-                '読み込まれた画像は順次ホーム画面に表示されます。',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
+        // const SizedBox(
+        //   width: 250, // テキストの枠の幅を250に設定
+        //   child: Padding(
+        //     padding: EdgeInsets.only(top: 5),
+        //     child: Center(
+        //       child: Text(
+        //         '読み込まれた画像は\n順次ホーム画面に表示されます。',
+        //         textAlign: TextAlign.left,
+        //         style: TextStyle(
+        //           fontSize: 16,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
         const SizedBox(
           width: 260, // テキストの枠の幅を250に設定
           child: Padding(
@@ -247,22 +248,22 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 150, // テキストの枠の幅を250に設定
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Center(
-                      child: Text(
-                        '必ずご確認ください',
-                        textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Themes.mainOrange,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // SizedBox(
+                //   width: 150, // テキストの枠の幅を250に設定
+                //   child: Padding(
+                //     padding: EdgeInsets.only(top: 5),
+                //     child: Center(
+                //       child: Text(
+                //         '必ずご確認ください',
+                //         textAlign: TextAlign.left,
+                //         style: TextStyle(
+                //           fontSize: 12,
+                //           color: Themes.mainOrange,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -283,9 +284,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: const Padding(
                 padding: EdgeInsets.all(8),
                 child: Text(
-                  '※ 3分程、時間がかかります。'
-                  '\n※ 読み込み中はアプリをバックグラウンドに残してください。'
-                  '完全に閉じないでください。(他のアプリを使用しても問題ありません。)',
+                  '・3分ほど、時間がかかります。'
+                  '\n・アプリを終了すると、最初からやりなおしになります。'
+                  '\n・必ずアプリはバックグラウンドに残してください。',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 14,
@@ -302,7 +303,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: ElevatedButton(
             onPressed: _onButtonPressed,
             child: const Text(
-              '画像読み込みを開始する',
+              '写真を読みこむ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -321,12 +322,18 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 250,
           child: Center(
             child: isLoading
-                ? const Text(
-                    '画像を読み込み中です...',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ? const Column(
+                    children: [
+                      Text(
+                        '画像を読み込み中です...',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Gap(16),
+                      CircularProgressIndicator(),
+                    ],
                   )
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
@@ -371,20 +378,21 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         const SizedBox(height: 30), // スペースを設定
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ElevatedButton(
-            onPressed: () {
-              _downloadPhotos(ref);
-            },
-            child: const Text(
-              'ダウンロードする',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+        if (!isLoading)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton(
+              onPressed: () {
+                _downloadPhotos(ref);
+              },
+              child: const Text(
+                'ダウンロードする',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
