@@ -15,9 +15,9 @@ FVMが未インストールの場合、[こちらの記事](https://zenn.dev/alt
 make setup
 ```
 
-`.env.example`の形式で、ファイル環境変数用のファイルを作成する。
+`.env.example`をコピーして`.env`を作成する。下記のPROD_API_URLとDEV_API_URLを、下記のnotionのURLを参照して変更する。
 
-```.env.example
+```.env
 PROD_API_URL=https://dummy-prod-url
 DEV_API_URL=https://dummy-dev-url
 ```
