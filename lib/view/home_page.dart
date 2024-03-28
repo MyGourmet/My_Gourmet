@@ -85,9 +85,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     try {
-      await ref
-          .read(photoControllerProvider)
-          .uploadPhotos(userId: ref.watch(userIdProvider));
+      final result = await ref.read(authControllerProvider).signInWithGoogle();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      await ref.read(photoControllerProvider).uploadPhotos(
+            accessToken: result.accessToken,
+            userId: result.userId,
+          );
     } on Exception catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
       if (context.mounted) {
@@ -95,9 +102,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           SnackBar(content: Text(e.toString())),
         );
       }
-    } finally {
       setState(() {
-        isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
+        isLoading = false;
       });
     }
   }
@@ -377,13 +383,19 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
-                          return const Text(
-                            // ignore: lines_longer_than_80_chars
-                            '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          return const Column(
+                            children: [
+                              Text(
+                                // ignore: lines_longer_than_80_chars
+                                '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Gap(16),
+                              CircularProgressIndicator(),
+                            ],
                           );
                         } else {
                           // TODO(masaki): エラーハンドリング
