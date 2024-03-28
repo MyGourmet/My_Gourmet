@@ -130,7 +130,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                   onPressed: () => setState(() {
                     _isContainerVisible = !_isContainerVisible;
                   }),
-                  child: const Icon(Icons.add),
+                  child: _isContainerVisible
+                      ? const Icon(Icons.close, size: 22)
+                      : const Icon(Icons.add),
                 ),
                 body: SafeArea(
                   child: Stack(
@@ -165,21 +167,48 @@ class _HomePageState extends ConsumerState<HomePage> {
                               4, // 縦方向中央に配置
                           left: (MediaQuery.of(context).size.width - 317) /
                               2, // 横方向中央に配置
-                          child: Container(
-                            width: 317, // 長方形の枠の幅を317に設定
-                            height: 457, // 長方形の枠の高さを327に設定
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.88),
-                              borderRadius: BorderRadius.circular(30), // 角を丸くする
-                            ),
-                            child: PageView(
-                              physics: const NeverScrollableScrollPhysics(),
-                              controller: _pageController,
-                              children: [
-                                _buildFirstPage(),
-                                _buildSecondPage(),
-                              ],
-                            ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: 317, // 長方形の枠の幅を317に設定
+                                height: 457, // 長方形の枠の高さを327に設定
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.88),
+                                  borderRadius:
+                                      BorderRadius.circular(24), // 角を丸くする
+                                ),
+                                child: PageView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  controller: _pageController,
+                                  children: [
+                                    _buildFirstPage(),
+                                    _buildSecondPage(),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 16,
+                                right: 16,
+                                child: Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    color: Themes.gray[50],
+                                    borderRadius:
+                                        BorderRadius.circular(24), // 角を丸くする
+                                  ),
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isContainerVisible = false;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
