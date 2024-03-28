@@ -207,7 +207,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
             ),
-
           ),
         ),
         // const SizedBox(
@@ -322,12 +321,17 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 250,
           child: Center(
             child: isLoading
-                ? const Text(
-                    '画像を読み込み中です...',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ? const Column(
+                    children: [
+                      Text(
+                        '画像を読み込み中です...',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      CircularProgressIndicator(),
+                    ],
                   )
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
@@ -372,20 +376,21 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         const SizedBox(height: 30), // スペースを設定
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ElevatedButton(
-            onPressed: () {
-              _downloadPhotos(ref);
-            },
-            child: const Text(
-              'ダウンロードする',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+        if (!isLoading)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ElevatedButton(
+              onPressed: () {
+                _downloadPhotos(ref);
+              },
+              child: const Text(
+                'ダウンロードする',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
