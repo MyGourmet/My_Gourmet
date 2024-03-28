@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 import '../core/themes.dart';
 import '../features/auth/auth_controller.dart';
@@ -330,6 +331,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      Gap(16),
                       CircularProgressIndicator(),
                     ],
                   )
