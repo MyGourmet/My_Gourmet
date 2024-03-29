@@ -85,9 +85,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     });
 
     try {
-      await ref
-          .read(photoControllerProvider)
-          .uploadPhotos(userId: ref.watch(userIdProvider));
+      final result = await ref.read(authControllerProvider).signInWithGoogle();
+
+      setState(() {
+        isLoading = false;
+      });
+
+      await ref.read(photoControllerProvider).uploadPhotos(
+            accessToken: result.accessToken,
+            userId: result.userId,
+          );
     } on Exception catch (e) {
       // 例外が発生した場合、エラーメッセージを表示
       if (context.mounted) {
@@ -95,9 +102,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           SnackBar(content: Text(e.toString())),
         );
       }
-    } finally {
       setState(() {
-        isLoading = false; // 非同期処理が完了したら、isLoadingをfalseに設定
+        isLoading = false;
       });
     }
   }
@@ -367,23 +373,48 @@ class _HomePageState extends ConsumerState<HomePage> {
                   )
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
+                        // TODO(masaki): 初回読み込み時のreadyForUseが一瞬画面に反映されてしまうので、
+                        //  全体的に見直す
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
-                          return const Text(
-                            '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          return Column(
+                            children: [
+                              const Text(
+                                // ignore: lines_longer_than_80_chars
+                                '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Gap(48),
+                              ElevatedButton(
+                                onPressed: () {
+                                  _downloadPhotos(ref);
+                                },
+                                child: const Text(
+                                  'ダウンロードする',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
-                          return const Text(
-                            // ignore: lines_longer_than_80_chars
-                            '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          return const Column(
+                            children: [
+                              Text(
+                                // ignore: lines_longer_than_80_chars
+                                '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Gap(16),
+                              CircularProgressIndicator(),
+                            ],
                           );
                         } else {
                           // TODO(masaki): エラーハンドリング
@@ -407,22 +438,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
           ),
         ),
-        const SizedBox(height: 30), // スペースを設定
-        if (!isLoading)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ElevatedButton(
-              onPressed: () {
-                _downloadPhotos(ref);
-              },
-              child: const Text(
-                'ダウンロードする',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
       ],
     );
   }

@@ -24,19 +24,14 @@ class PhotoController {
   /// 写真アップロード用メソッド
   ///
   /// サインインをした上でfirestore上で状態管理し、写真アップロード用のCFを起動する。
-  Future<void> uploadPhotos({required String? userId}) async {
-    // TODO(masaki): ログインしているユーザーに関しては、
-    //  リフレッシュトークンを用いてアクセストークンを再生成してログインを不要に出来ないか確認
-    // if (userId != null) {
-    //   // 更新処理
-    //   return;
-    // }
-
-    final result = await _authRepository.signInWithGoogle();
-    await _authRepository.upsertClassifyPhotosStatus(result.userId);
+  Future<void> uploadPhotos({
+    required String accessToken,
+    required String userId,
+  }) async {
+    await _authRepository.upsertClassifyPhotosStatus(userId);
     await _photoRepository.callClassifyPhotos(
-      result.accessToken,
-      result.userId,
+      accessToken,
+      userId,
     );
   }
 

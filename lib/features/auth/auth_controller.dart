@@ -35,7 +35,7 @@ final authedUserStreamProvider = StreamProvider.autoDispose<AuthedUser>(
 
 final authControllerProvider = Provider<AuthController>(AuthController.new);
 
-/// [AuthRepository]の書き込み用クラス
+/// [AuthRepository]を経由して外部通信の操作を担当するコントローラー
 class AuthController {
   AuthController(this._ref);
 
@@ -46,5 +46,10 @@ class AuthController {
   /// ユーザーアカウント削除用メソッド
   Future<void> deleteUserAccount() async {
     await _authRepository.deleteUserAccount();
+  }
+
+  /// サインイン用メソッド
+  Future<({String accessToken, String userId})> signInWithGoogle() async {
+    return _authRepository.signInWithGoogle();
   }
 }
