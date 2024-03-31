@@ -21,14 +21,18 @@ class PhotoController {
 
   PhotoRepository get _photoRepository => _ref.read(photoRepositoryProvider);
 
+  /// 画像分類ステータスの更新用メソッド
+  Future<void> upsertClassifyPhotosStatus({
+    required String userId,
+  }) async {
+    await _authRepository.upsertClassifyPhotosStatus(userId);
+  }
+
   /// 写真アップロード用メソッド
-  ///
-  /// サインインをした上でfirestore上で状態管理し、写真アップロード用のCFを起動する。
   Future<void> uploadPhotos({
     required String accessToken,
     required String userId,
   }) async {
-    await _authRepository.upsertClassifyPhotosStatus(userId);
     await _photoRepository.callClassifyPhotos(
       accessToken,
       userId,

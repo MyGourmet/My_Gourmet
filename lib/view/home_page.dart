@@ -86,11 +86,12 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     try {
       final result = await ref.read(authControllerProvider).signInWithGoogle();
-
+      await ref
+          .read(photoControllerProvider)
+          .upsertClassifyPhotosStatus(userId: result.userId);
       setState(() {
         isLoading = false;
       });
-
       await ref.read(photoControllerProvider).uploadPhotos(
             accessToken: result.accessToken,
             userId: result.userId,
@@ -373,8 +374,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   )
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
-                        // TODO(masaki): 初回読み込み時のreadyForUseが一瞬画面に反映されてしまうので、
-                        //  全体的に見直す
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
                           return Column(
