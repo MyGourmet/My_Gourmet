@@ -86,11 +86,12 @@ class _HomePageState extends ConsumerState<HomePage> {
 
     try {
       final result = await ref.read(authControllerProvider).signInWithGoogle();
-
+      await ref
+          .read(photoControllerProvider)
+          .upsertClassifyPhotosStatus(userId: result.userId);
       setState(() {
         isLoading = false;
       });
-
       await ref.read(photoControllerProvider).uploadPhotos(
             accessToken: result.accessToken,
             userId: result.userId,
@@ -111,7 +112,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   List<String>? photoUrls; // Firebaseからダウンロードした写真のURLを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
-    // TODO(masaki): 現状userIdがnull状態になり得るので、サインインするまでボタンを押せないようにする
     final result = await ref.read(photoControllerProvider).downloadPhotos(
           userId: ref.watch(
             userIdProvider,
@@ -358,25 +358,12 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 250,
           child: Center(
             child: isLoading
-                ? const Column(
-                    children: [
-                      Text(
-                        '画像を読み込み中です...',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Gap(16),
-                      CircularProgressIndicator(),
-                    ],
-                  )
+                ? const _LoadingDialog()
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
-                        // TODO(masaki): 初回読み込み時のreadyForUseが一瞬画面に反映されてしまうので、
-                        //  全体的に見直す
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
+                          // TODO(masaki): TextStyleはtheme側で定義
                           return Column(
                             children: [
                               const Text(
@@ -389,8 +376,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                               const Gap(48),
                               ElevatedButton(
-                                onPressed: () {
-                                  _downloadPhotos(ref);
+                                onPressed: () async {
+                                  await _downloadPhotos(ref);
+                                  setState(() => _isContainerVisible = false);
                                 },
                                 child: const Text(
                                   'ダウンロードする',
@@ -402,20 +390,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ],
                           );
                         } else if (status == ClassifyPhotosStatus.processing) {
-                          return const Column(
-                            children: [
-                              Text(
-                                // ignore: lines_longer_than_80_chars
-                                '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。\n完了すると通知でお知らせします',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Gap(16),
-                              CircularProgressIndicator(),
-                            ],
-                          );
+                          return const _LoadingDialog();
                         } else {
                           // TODO(masaki): エラーハンドリング
                           return Text(
@@ -438,6 +413,27 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _LoadingDialog extends StatelessWidget {
+  const _LoadingDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Text(
+          '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Gap(16),
+        CircularProgressIndicator(),
       ],
     );
   }
