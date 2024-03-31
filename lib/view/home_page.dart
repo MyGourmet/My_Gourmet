@@ -376,8 +376,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                               const Gap(48),
                               ElevatedButton(
-                                onPressed: () {
-                                  _downloadPhotos(ref);
+                                onPressed: () async {
+                                  await _downloadPhotos(ref);
+                                  setState(() => _isContainerVisible = false);
                                 },
                                 child: const Text(
                                   'ダウンロードする',
