@@ -19,6 +19,8 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
       shotAt: json['shotAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : timestampConverter.fromJson(json['shotAt'] as Object),
+      addressInfo: _$JsonConverterFromJson<GeoPoint, GeoPoint>(
+          json['addressInfo'], const GeoPointConverter().fromJson),
     );
 
 Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
@@ -29,4 +31,18 @@ Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
       'url': instance.url,
       'userId': instance.userId,
       'shotAt': timestampConverter.toJson(instance.shotAt),
+      'addressInfo': _$JsonConverterToJson<GeoPoint, GeoPoint>(
+          instance.addressInfo, const GeoPointConverter().toJson),
     };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

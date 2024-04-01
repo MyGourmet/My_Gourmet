@@ -41,6 +41,10 @@ mixin _$Photo {
   @timestampConverter
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
 
+  /// 写真のジオポイント
+  @GeoPointConverter()
+  GeoPoint? get addressInfo => throw _privateConstructorUsedError;
+
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $PhotoCopyWith<Photo> get copyWith => throw _privateConstructorUsedError;
@@ -57,7 +61,8 @@ abstract class $PhotoCopyWith<$Res> {
       @serverTimestampConverter UnionTimestamp updatedAt,
       String url,
       String userId,
-      @timestampConverter UnionTimestamp shotAt});
+      @timestampConverter UnionTimestamp shotAt,
+      @GeoPointConverter() GeoPoint? addressInfo});
 
   $UnionTimestampCopyWith<$Res> get createdAt;
   $UnionTimestampCopyWith<$Res> get updatedAt;
@@ -83,6 +88,7 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? url = null,
     Object? userId = null,
     Object? shotAt = null,
+    Object? addressInfo = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -109,6 +115,10 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      addressInfo: freezed == addressInfo
+          ? _value.addressInfo
+          : addressInfo // ignore: cast_nullable_to_non_nullable
+              as GeoPoint?,
     ) as $Val);
   }
 
@@ -150,7 +160,8 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
       @serverTimestampConverter UnionTimestamp updatedAt,
       String url,
       String userId,
-      @timestampConverter UnionTimestamp shotAt});
+      @timestampConverter UnionTimestamp shotAt,
+      @GeoPointConverter() GeoPoint? addressInfo});
 
   @override
   $UnionTimestampCopyWith<$Res> get createdAt;
@@ -177,6 +188,7 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? url = null,
     Object? userId = null,
     Object? shotAt = null,
+    Object? addressInfo = freezed,
   }) {
     return _then(_$PhotoImpl(
       id: null == id
@@ -203,6 +215,10 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      addressInfo: freezed == addressInfo
+          ? _value.addressInfo
+          : addressInfo // ignore: cast_nullable_to_non_nullable
+              as GeoPoint?,
     ));
   }
 }
@@ -218,7 +234,8 @@ class _$PhotoImpl extends _Photo {
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
       this.url = '',
       this.userId = '',
-      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp()})
+      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
+      @GeoPointConverter() required this.addressInfo})
       : super._();
 
   factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
@@ -257,9 +274,14 @@ class _$PhotoImpl extends _Photo {
   @timestampConverter
   final UnionTimestamp shotAt;
 
+  /// 写真のジオポイント
+  @override
+  @GeoPointConverter()
+  final GeoPoint? addressInfo;
+
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt, addressInfo: $addressInfo)';
   }
 
   @override
@@ -274,13 +296,15 @@ class _$PhotoImpl extends _Photo {
                 other.updatedAt == updatedAt) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.shotAt, shotAt) || other.shotAt == shotAt));
+            (identical(other.shotAt, shotAt) || other.shotAt == shotAt) &&
+            (identical(other.addressInfo, addressInfo) ||
+                other.addressInfo == addressInfo));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, createdAt, updatedAt, url, userId, shotAt);
+  int get hashCode => Object.hash(
+      runtimeType, id, createdAt, updatedAt, url, userId, shotAt, addressInfo);
 
   @JsonKey(ignore: true)
   @override
@@ -303,7 +327,8 @@ abstract class _Photo extends Photo {
       @serverTimestampConverter final UnionTimestamp updatedAt,
       final String url,
       final String userId,
-      @timestampConverter final UnionTimestamp shotAt}) = _$PhotoImpl;
+      @timestampConverter final UnionTimestamp shotAt,
+      @GeoPointConverter() required final GeoPoint? addressInfo}) = _$PhotoImpl;
   const _Photo._() : super._();
 
   factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
@@ -335,6 +360,11 @@ abstract class _Photo extends Photo {
   /// 写真の撮影日時
   @timestampConverter
   UnionTimestamp get shotAt;
+  @override
+
+  /// 写真のジオポイント
+  @GeoPointConverter()
+  GeoPoint? get addressInfo;
   @override
   @JsonKey(ignore: true)
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
