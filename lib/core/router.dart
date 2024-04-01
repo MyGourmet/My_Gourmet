@@ -15,15 +15,21 @@ final routerProvider = Provider(
         routes: [
           GoRoute(
             path: HomePage.routePath,
-            builder: (context, state) => const HomePage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: HomePage(),
+            ),
           ),
           GoRoute(
             path: MapPage.routePath,
-            builder: (context, state) => const MapPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: MapPage(),
+            ),
           ),
           GoRoute(
             path: MyPage.routePath,
-            builder: (context, state) => const MyPage(),
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: MyPage(),
+            ),
           ),
         ],
       ),
