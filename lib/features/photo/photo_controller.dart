@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../auth/auth_repository.dart';
@@ -41,13 +43,73 @@ class PhotoController {
   }
 
   /// 写真ダウンロード用メソッド
+  ///
+  /// useMockがtrueの場合は、モックデータを返す。
   Future<List<Photo>> downloadPhotos({
     required String category,
     required String? userId,
+    bool useMock = false,
   }) async {
     if (userId == null) {
       return [];
     }
-    return _photoRepository.downloadPhotos(category: category, userId: userId);
+
+    final photos = await _photoRepository.downloadPhotos(
+      category: category,
+      userId: userId,
+    );
+    // モックデータを用いる場合は、モックデータを返す
+    if (useMock) {
+      return photos
+          .sublist(0, 7)
+          .mapIndexed(
+            (index, element) => element.copyWith(
+              addressInfo: GeoPoint(
+                mockCoordinates[index].latitude,
+                mockCoordinates[index].longitude,
+              ),
+            ),
+          )
+          .toList();
+    }
+    return photos;
   }
 }
+
+final mockCoordinates = [
+  // Shibuya Crossing
+  (
+    longitude: 139.7004,
+    latitude: 35.6595,
+  ),
+  // Shinjuku Gyoen National Garden
+  (
+    longitude: 139.7101,
+    latitude: 35.6854,
+  ),
+  // Imperial Palace
+  (
+    longitude: 139.7528,
+    latitude: 35.6854,
+  ),
+  // Akihabara Electric Town
+  (
+    longitude: 139.7712,
+    latitude: 35.7023,
+  ),
+  // Ginza
+  (
+    longitude: 139.7649,
+    latitude: 35.6712,
+  ),
+  // Asakusa and Senso-ji Temple
+  (
+    longitude: 139.7967,
+    latitude: 35.7146,
+  ),
+  // Meiji Shrine
+  (
+    longitude: 139.7003,
+    latitude: 35.6764,
+  ),
+];
