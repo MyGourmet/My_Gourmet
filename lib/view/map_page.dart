@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mapbox;
+import 'package:location/location.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import '../core/enums/map_style.dart';
 import '../core/enums/marker_type.dart';
 import '../features/auth/auth_controller.dart';
@@ -21,17 +21,18 @@ class MapPage extends ConsumerStatefulWidget {
 }
 
 class _MapPageState extends ConsumerState<MapPage> {
-  late mapbox.MapboxMap _mapboxMap;
-  late mapbox.PointAnnotationManager _annotationManager;
-  late Position _currentPosition;
+  late MapboxMap _mapboxMap;
+  late PointAnnotationManager _annotationManager;
+  late LocationData _currentPosition;
 
   @override
   void initState() {
     super.initState();
     Future(() async {
-      final permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        await Geolocator.requestPermission();
+      final location = Location();
+      final permission = await location.hasPermission();
+      if (permission == PermissionStatus.deniedForever) {
+        await location.requestPermission();
       }
     });
   }
@@ -48,11 +49,11 @@ class _MapPageState extends ConsumerState<MapPage> {
 
     return SafeArea(
       child: Scaffold(
-        body: mapbox.MapWidget(
+        body: MapWidget(
           styleUri: MapStyle.standard.url,
-          cameraOptions: mapbox.CameraOptions(
-            center: mapbox.Point(
-              coordinates: mapbox.Position(
+          cameraOptions: CameraOptions(
+            center: Point(
+              coordinates: Position(
                 139.7586677640881,
                 35.67369269880291,
               ),
@@ -62,9 +63,7 @@ class _MapPageState extends ConsumerState<MapPage> {
           onMapCreated: (controller) async {
             _mapboxMap = controller;
 
-            _currentPosition = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high,
-            );
+            _currentPosition = await Location().getLocation();
 
             // create annotation manager
             _annotationManager = await _mapboxMap.annotations.createPointAnnotationManager();
@@ -119,11 +118,11 @@ class _MapPageState extends ConsumerState<MapPage> {
     final list = bytes.buffer.asUint8List();
 
     await _annotationManager.create(
-      mapbox.PointAnnotationOptions(
-        geometry: mapbox.Point(
-          coordinates: mapbox.Position(
-            _currentPosition.longitude,
-            _currentPosition.latitude,
+      PointAnnotationOptions(
+        geometry: Point(
+          coordinates: Position(
+            _currentPosition.longitude!,
+            _currentPosition.latitude!,
           ),
         ).toJson(),
         iconSize: 1,
@@ -137,7 +136,7 @@ class _MapPageState extends ConsumerState<MapPage> {
   Future<void> _addPhotoMarkers({
     required List<Photo> photos,
   }) async {
-    final options = <mapbox.PointAnnotationOptions>[];
+    final options = <PointAnnotationOptions>[];
     for (final photo in photos) {
       if (photo.addressInfo == null) continue;
       options.add(
@@ -151,15 +150,15 @@ class _MapPageState extends ConsumerState<MapPage> {
 
   Future<void> _easeToCurrentPosition() async {
     await _mapboxMap.easeTo(
-      mapbox.CameraOptions(
-        center: mapbox.Point(
-          coordinates: mapbox.Position(
-            _currentPosition.longitude,
-            _currentPosition.latitude,
+      CameraOptions(
+        center: Point(
+          coordinates: Position(
+            _currentPosition.longitude!,
+            _currentPosition.latitude!,
           ),
         ).toJson(),
       ),
-      mapbox.MapAnimationOptions(
+      MapAnimationOptions(
         duration: 500,
       ),
     );
@@ -168,28 +167,28 @@ class _MapPageState extends ConsumerState<MapPage> {
   // zoom in
   Future<void> _zoomIn() async {
     final cs = await _mapboxMap.getCameraState();
-    final co = mapbox.CameraOptions(
+    final co = CameraOptions(
       center: cs.center,
       zoom: cs.zoom + 1,
       bearing: cs.bearing,
     );
     await _mapboxMap.easeTo(
       co,
-      mapbox.MapAnimationOptions(duration: 200, startDelay: 0),
+      MapAnimationOptions(duration: 200, startDelay: 0),
     );
   }
 
   // zoom out
   Future<void> _zoomOut() async {
     final cs = await _mapboxMap.getCameraState();
-    final co = mapbox.CameraOptions(
+    final co = CameraOptions(
       center: cs.center,
       zoom: cs.zoom - 1,
       bearing: cs.bearing,
     );
     await _mapboxMap.easeTo(
       co,
-      mapbox.MapAnimationOptions(duration: 200, startDelay: 0),
+      MapAnimationOptions(duration: 200, startDelay: 0),
     );
   }
 
@@ -198,15 +197,15 @@ class _MapPageState extends ConsumerState<MapPage> {
     return bytes.buffer.asUint8List();
   }
 
-  Future<mapbox.PointAnnotationOptions> _convertPhotoToPointAnnotationOptions({
+  Future<PointAnnotationOptions> _convertPhotoToPointAnnotationOptions({
     required Photo photo,
   }) async {
     final list = await _convertUrlToUint8List(photo.url);
 
-    return mapbox.PointAnnotationOptions(
+    return PointAnnotationOptions(
       // geometry: photo.addressInfo!.toPoint,
-      geometry: mapbox.Point(
-        coordinates: mapbox.Position(
+      geometry: Point(
+        coordinates: Position(
           photo.addressInfo!.longitude,
           photo.addressInfo!.latitude,
         ),
