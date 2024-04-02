@@ -46,27 +46,29 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   /// 写真ダウンロード用初期化処理
-  ///
-  /// サインイン済みで画像の読み込み準備が出来ている場合、写真をダウンロードする。
   Future<void> _initDownloadPhotos() async {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      final isSignedIn = ref.watch(userIdProvider) != null;
-      if (!isSignedIn) {
+      final isDownloadable = await _validateDownload();
+      if (!isDownloadable) {
         setState(() => isReady = true);
         return;
       }
-      await ref.watch(authedUserStreamProvider.future);
-      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
-          ClassifyPhotosStatus.readyForUse;
-      if (!isReadyForUse) {
-        setState(() => isReady = true);
-        return;
-      }
-
       await _downloadPhotos(ref);
       setState(() => isReady = true);
     });
+  }
+
+  /// 写真のダウンロードが可能な状態か確認するメソッド
+  Future<bool> _validateDownload() async {
+    final isSignedIn = ref.watch(userIdProvider) != null;
+    if (!isSignedIn) {
+      return false;
+    }
+    await ref.watch(authedUserStreamProvider.future);
+    final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+    final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
+        ClassifyPhotosStatus.readyForUse;
+    return isReadyForUse;
   }
 
   @override
@@ -143,28 +145,37 @@ class _HomePageState extends ConsumerState<HomePage> {
                 body: SafeArea(
                   child: Stack(
                     children: [
-                      Column(
-                        children: [
-                          Expanded(
-                            child: GridView.builder(
-                              gridDelegate:
-                                  // ignore: lines_longer_than_80_chars
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
+                      RefreshIndicator(
+                        onRefresh: () async {
+                          final isDownloadable = await _validateDownload();
+                          if (isDownloadable) {
+                            await _downloadPhotos(ref);
+                          }
+                        },
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: GridView.builder(
+                                gridDelegate:
+                                    // ignore: lines_longer_than_80_chars
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                ),
+                                itemCount:
+                                    photoUrls?.length ?? imagePaths.length,
+                                itemBuilder: (context, index) {
+                                  return Image(
+                                    image: photoUrls != null
+                                        ? NetworkImage(photoUrls![index])
+                                        : AssetImage(imagePaths[index])
+                                            as ImageProvider<Object>,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
                               ),
-                              itemCount: photoUrls?.length ?? imagePaths.length,
-                              itemBuilder: (context, index) {
-                                return Image(
-                                  image: photoUrls != null
-                                      ? NetworkImage(photoUrls![index])
-                                      : AssetImage(imagePaths[index])
-                                          as ImageProvider<Object>,
-                                  fit: BoxFit.cover,
-                                );
-                              },
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       Visibility(
                         visible: _isContainerVisible,
