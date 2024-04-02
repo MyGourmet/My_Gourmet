@@ -24,6 +24,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   late bool _isContainerVisible;
   bool isLoading = false;
   bool isReady = false;
+  List<String>? photoUrls;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
     'assets/images/image2.jpeg',
@@ -73,7 +74,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   void dispose() {
-    _pageController.dispose(); // リソースの解放
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -110,8 +111,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       });
     }
   }
-
-  List<String>? photoUrls; // Firebaseからダウンロードした写真のURLを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
     final result = await ref.read(photoControllerProvider).downloadPhotos(
@@ -154,47 +153,38 @@ class _HomePageState extends ConsumerState<HomePage> {
                             await _downloadPhotos(ref);
                           }
                         },
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: GridView.builder(
-                                gridDelegate:
-                                    // ignore: lines_longer_than_80_chars
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                ),
-                                itemCount:
-                                    photoUrls?.length ?? imagePaths.length,
-                                itemBuilder: (context, index) {
-                                  return Image(
-                                    image: photoUrls != null
-                                        ? NetworkImage(photoUrls![index])
-                                        : AssetImage(imagePaths[index])
-                                            as ImageProvider<Object>,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          itemCount: photoUrls?.length ?? imagePaths.length,
+                          itemBuilder: (context, index) {
+                            return Image(
+                              image: photoUrls != null
+                                  ? NetworkImage(photoUrls![index])
+                                  : AssetImage(imagePaths[index])
+                                      as ImageProvider<Object>,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
                       Visibility(
                         visible: _isContainerVisible,
                         child: Positioned(
-                          top: (MediaQuery.of(context).size.height - 327) /
-                              4, // 縦方向中央に配置
-                          left: (MediaQuery.of(context).size.width - 317) /
-                              2, // 横方向中央に配置
+                          // 縦方向中央に配置
+                          top: (MediaQuery.of(context).size.height - 327) / 4,
+                          // 横方向中央に配置
+                          left: (MediaQuery.of(context).size.width - 317) / 2,
                           child: Stack(
                             children: [
                               Container(
-                                width: 317, // 長方形の枠の幅を317に設定
-                                height: 457, // 長方形の枠の高さを327に設定
+                                width: 317,
+                                height: 457,
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.88),
-                                  borderRadius:
-                                      BorderRadius.circular(24), // 角を丸くする
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
                                 child: PageView(
                                   physics: const NeverScrollableScrollPhysics(),
@@ -213,8 +203,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   height: 32,
                                   decoration: BoxDecoration(
                                     color: Themes.gray[50],
-                                    borderRadius:
-                                        BorderRadius.circular(24), // 角を丸くする
+                                    borderRadius: BorderRadius.circular(24),
                                   ),
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
@@ -244,7 +233,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(
-          width: 250, // テキストの枠の幅を250に設定
+          width: 250,
           child: Padding(
             padding: EdgeInsets.only(top: 5),
             child: Center(
@@ -259,29 +248,14 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
         ),
-        // const SizedBox(
-        //   width: 250, // テキストの枠の幅を250に設定
-        //   child: Padding(
-        //     padding: EdgeInsets.only(top: 5),
-        //     child: Center(
-        //       child: Text(
-        //         '読み込まれた画像は\n順次ホーム画面に表示されます。',
-        //         textAlign: TextAlign.left,
-        //         style: TextStyle(
-        //           fontSize: 16,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
         const SizedBox(
-          width: 260, // テキストの枠の幅を250に設定
+          width: 260,
           child: Padding(
             padding: EdgeInsets.only(top: 30),
             child: Row(
               children: <Widget>[
                 SizedBox(
-                  width: 50, // テキストの枠の幅を250に設定
+                  width: 50,
                   child: Padding(
                     padding: EdgeInsets.only(top: 5),
                     child: Center(
@@ -297,36 +271,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   ),
                 ),
-                // SizedBox(
-                //   width: 150, // テキストの枠の幅を250に設定
-                //   child: Padding(
-                //     padding: EdgeInsets.only(top: 5),
-                //     child: Center(
-                //       child: Text(
-                //         '必ずご確認ください',
-                //         textAlign: TextAlign.left,
-                //         style: TextStyle(
-                //           fontSize: 12,
-                //           color: Themes.mainOrange,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
         ),
         SizedBox(
-          width: 265, // テキストの枠の幅を250に設定
+          width: 265,
           child: Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Card(
               color: const Color(0xFFFFE8DB),
               shape: RoundedRectangleBorder(
                 side: const BorderSide(
-                  color: Themes.mainOrange, //色
-                  width: 2, //太さ
+                  color: Themes.mainOrange,
+                  width: 2,
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -346,7 +304,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
           ),
         ),
-        const SizedBox(height: 30), // テキストとボタンの間のスペース
+        const Gap(30),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: ElevatedButton(
