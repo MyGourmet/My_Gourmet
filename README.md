@@ -9,7 +9,7 @@ FVMが未インストールの場合、[こちらの記事](https://zenn.dev/alt
 
 ### セットアップ
 
-本リポジトリをクローン後、プロジェクトのルートディレクトリにて以下のコマンドを実行する。
+1. 本リポジトリをクローン後、プロジェクトのルートディレクトリにて以下のコマンドを実行する。
 
 ```bash
 make setup
@@ -24,3 +24,14 @@ DEV_API_URL=https://dummy-dev-url
 
 実際のURLは以下を参照：
 https://www.notion.so/masakisato/11a5050794ac414f8f0ef9525ae13809?pvs=4
+
+
+
+2. firebaseにsha1証明書を登録する。
+my-gourmetとmy-gourmet-devに下記で出力されたsha1証明書を登録する。
+```
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+```
+
+詳細は、以下のURLを参照：
+https://zenn.dev/flutteruniv/books/flutter-textbook/viewer/make-chat
