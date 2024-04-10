@@ -4,6 +4,7 @@ include: package:pedantic_mono/analysis_options.yaml
 linter:
   rules:
      prefer_relative_imports: true
+     avoid_classes_with_only_static_members: false
 
 analyzer:
   plugins:

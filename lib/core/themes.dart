@@ -1,10 +1,8 @@
-// ignore_for_file: avoid_classes_with_only_static_members
-
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
 
-class Themes {
+abstract final class Themes {
   static ThemeData get defaultTheme {
     final theme = ThemeData.from(
       useMaterial3: true,
