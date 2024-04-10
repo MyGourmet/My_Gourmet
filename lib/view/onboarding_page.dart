@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../core/build_context_extension.dart';
-import '../core/constants.dart';
 import '../core/shared_preferences_service.dart';
 import '../core/themes.dart';
 
@@ -131,7 +130,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
                 child: Text(
                   isNotLastOnboarding ? 'つぎへ' : 'はじめる',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             const Gap(28),
@@ -158,6 +156,8 @@ class _OnboardingContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = context.deviceWidth;
+    final textTheme = context.textTheme;
+
     return Center(
       child: Column(
         children: [
@@ -169,12 +169,8 @@ class _OnboardingContent extends StatelessWidget {
           const Gap(28),
           Text(
             title,
-            style: const TextStyle(
+            style: textTheme.titleLarge!.copyWith(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              decoration: TextDecoration.none,
-              fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
             ),
             textAlign: TextAlign.center,
           ),
@@ -183,11 +179,8 @@ class _OnboardingContent extends StatelessWidget {
           const Gap(28),
           Text(
             description,
-            style: const TextStyle(
+            style: textTheme.bodyMedium!.copyWith(
               color: Colors.white,
-              fontSize: 14,
-              decoration: TextDecoration.none,
-              fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
             ),
           ),
         ],

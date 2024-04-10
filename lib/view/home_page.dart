@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../core/build_context_extension.dart';
 import '../core/themes.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
@@ -24,6 +25,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   late bool _isContainerVisible;
   bool isLoading = false;
   bool isReady = false;
+
+  // todo: null→empty検討
   List<String>? photoUrls;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -78,6 +81,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.dispose();
   }
 
+  // todo: page controller以外検討
+  // todo: 切り出し不要か検討
   Future<void> _onButtonPressed() async {
     setState(() {
       isLoading = true;
@@ -92,6 +97,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       await ref
           .read(photoControllerProvider)
           .upsertClassifyPhotosStatus(userId: result.userId);
+      // todo: isLoadingの持ち方工夫して修正を検討
       setState(() {
         isLoading = false;
       });
@@ -118,7 +124,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             userIdProvider,
           ),
         );
-
     setState(() {
       photoUrls = result.map((e) => e.url).toList();
     });
@@ -232,39 +237,35 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(
+        // todo: 横幅調整
+        SizedBox(
           width: 250,
           child: Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(top: 5),
             child: Center(
               child: Text(
                 'あなたのGooglePhotoを\nAIで直近300枚まで解析し、\n料理の写真のみ保存します！',
                 textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: context.textTheme.titleMedium,
               ),
             ),
           ),
         ),
-        const SizedBox(
+        SizedBox(
           width: 260,
           child: Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: const EdgeInsets.only(top: 30),
             child: Row(
               children: <Widget>[
                 SizedBox(
                   width: 50,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 5),
+                    padding: const EdgeInsets.only(top: 5),
                     child: Center(
                       child: Text(
                         '注意点',
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        style: context.textTheme.titleSmall!.copyWith(
                           color: Themes.mainOrange,
                         ),
                       ),
@@ -280,6 +281,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Padding(
             padding: const EdgeInsets.only(top: 5),
             child: Card(
+              // todo カラー変える
               color: const Color(0xFFFFE8DB),
               shape: RoundedRectangleBorder(
                 side: const BorderSide(
@@ -288,17 +290,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Padding(
-                padding: EdgeInsets.all(8),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
                 child: Text(
                   '・3分ほど、時間がかかります。'
                   '\n・アプリを終了すると、最初からやりなおしになります。'
                   '\n・必ずアプリはバックグラウンドに残してください。',
                   textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: context.textTheme.titleSmall,
                 ),
               ),
             ),
@@ -311,9 +310,6 @@ class _HomePageState extends ConsumerState<HomePage> {
             onPressed: _onButtonPressed,
             child: const Text(
               '写真を読みこむ',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ),
         ),
@@ -334,16 +330,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                       data: (authedUser) {
                         final status = authedUser.classifyPhotosStatus;
                         if (status == ClassifyPhotosStatus.readyForUse) {
-                          // TODO(masaki): TextStyleはtheme側で定義
                           return Column(
                             children: [
-                              const Text(
+                              Text(
                                 // ignore: lines_longer_than_80_chars
                                 '初期表示用の画像の読み込みが完了しました。\n下記ボタンから、画像をダウンロードしてください。',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: context.textTheme.titleMedium,
                               ),
                               const Gap(48),
                               ElevatedButton(
@@ -353,9 +345,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 },
                                 child: const Text(
                                   'ダウンロードする',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
                                 ),
                               ),
                             ],
@@ -366,19 +355,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                           // TODO(masaki): エラーハンドリング
                           return Text(
                             status.name,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: context.textTheme.titleLarge,
                           );
                         }
                       },
-                      error: (_, __) => const Text(
-                        '未確認',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      error: (_, __) => Text(
+                        'エラーが発生しました',
+                        style: context.textTheme.titleLarge,
                       ),
                       loading: () => const CircularProgressIndicator(),
                     ),
@@ -394,17 +377,14 @@ class _LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Text(
           '画像を処理中です...\n3分ほどお待ちください。\n他のアプリに切り替えても大丈夫です。',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: context.textTheme.titleMedium,
         ),
-        Gap(16),
-        CircularProgressIndicator(),
+        const Gap(16),
+        const CircularProgressIndicator(),
       ],
     );
   }
