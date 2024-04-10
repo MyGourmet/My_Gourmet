@@ -51,8 +51,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = context.deviceWidth;
-    final screenHeight = context.deviceHeight;
     final isOnboardingTop = currentOnboarding == 0;
     final isNotLastOnboarding = currentOnboarding != 3;
 
@@ -68,8 +66,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           : null,
       child: Container(
         color: Themes.gray.shade900.withOpacity(0.9),
-        width: screenWidth,
-        height: screenHeight,
+        width: context.screenWidth,
+        height: context.screenHeight,
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
@@ -80,7 +78,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   Center(
                     child: Image.asset(
                       'assets/images/top_image.png',
-                      width: screenWidth / 2,
+                      width: context.screenWidth / 2,
                     ),
                   ),
                   const _OnboardingContent(
@@ -155,7 +153,7 @@ class _OnboardingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = context.deviceWidth;
+    final screenWidth = context.screenWidth;
     final textTheme = context.textTheme;
 
     return Center(
