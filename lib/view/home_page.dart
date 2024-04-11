@@ -256,15 +256,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         const Gap(8),
         Card(
-          // todo カラー変える
-          color: const Color(0xFFFFE8DB),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(
-              color: Themes.mainOrange,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Text(

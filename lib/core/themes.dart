@@ -67,10 +67,15 @@ abstract final class Themes {
       ),
       cardTheme: CardTheme(
         elevation: 4,
+        color: mainOrange.shade50,
         shadowColor: mainOrange.shade300.withOpacity(0.25),
         surfaceTintColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
+          side: const BorderSide(
+            color: Themes.mainOrange,
+            width: 2,
+          ),
         ),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
