@@ -7,5 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final analyticsRepository = Provider((ref) => FirebaseAnalytics.instance);
 
 /// FirebaseAnalyticsObserverのインスタンス
-final analyticsObserverRepository = Provider((ref) =>
-    FirebaseAnalyticsObserver(analytics: ref.watch(analyticsRepository)));
+final analyticsObserverRepository = Provider(
+  (ref) => FirebaseAnalyticsObserver(analytics: ref.watch(analyticsRepository)),
+);
