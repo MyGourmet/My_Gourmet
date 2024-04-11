@@ -40,6 +40,7 @@ abstract final class Themes {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           elevation: 4,
           shadowColor: mainOrange.shade300.withOpacity(0.25),
           textStyle: theme.textTheme.labelLarge!.copyWith(

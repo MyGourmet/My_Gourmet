@@ -26,7 +26,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   bool isLoading = false;
   bool isReady = false;
 
-  // todo: null→empty検討
   List<String>? photoUrls;
   final List<String> imagePaths = [
     'assets/images/image1.jpeg',
@@ -187,6 +186,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                               Container(
                                 width: 317,
                                 height: 457,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 24),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withOpacity(0.88),
                                   borderRadius: BorderRadius.circular(24),
@@ -237,80 +238,49 @@ class _HomePageState extends ConsumerState<HomePage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // todo: 横幅調整
-        SizedBox(
-          width: 250,
+        const Gap(8),
+        Center(
+          child: Text(
+            'あなたのGooglePhotoを\nAIで直近300枚まで解析し、\n料理の写真のみ保存します！',
+            textAlign: TextAlign.left,
+            style: context.textTheme.titleMedium,
+          ),
+        ),
+        const Gap(32),
+        Text(
+          '注意点',
+          textAlign: TextAlign.left,
+          style: context.textTheme.titleSmall!.copyWith(
+            color: Themes.mainOrange,
+          ),
+        ),
+        const Gap(8),
+        Card(
+          // todo カラー変える
+          color: const Color(0xFFFFE8DB),
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(
+              color: Themes.mainOrange,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Center(
-              child: Text(
-                'あなたのGooglePhotoを\nAIで直近300枚まで解析し、\n料理の写真のみ保存します！',
-                textAlign: TextAlign.left,
-                style: context.textTheme.titleMedium,
-              ),
+            padding: const EdgeInsets.all(8),
+            child: Text(
+              '・3分ほど、時間がかかります。'
+              '\n・アプリを終了すると、最初からやりなおしになります。'
+              '\n・必ずアプリはバックグラウンドに残してください。',
+              textAlign: TextAlign.left,
+              style: context.textTheme.titleSmall,
             ),
           ),
         ),
-        SizedBox(
-          width: 260,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 50,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Center(
-                      child: Text(
-                        '注意点',
-                        textAlign: TextAlign.left,
-                        style: context.textTheme.titleSmall!.copyWith(
-                          color: Themes.mainOrange,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 265,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Card(
-              // todo カラー変える
-              color: const Color(0xFFFFE8DB),
-              shape: RoundedRectangleBorder(
-                side: const BorderSide(
-                  color: Themes.mainOrange,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  '・3分ほど、時間がかかります。'
-                  '\n・アプリを終了すると、最初からやりなおしになります。'
-                  '\n・必ずアプリはバックグラウンドに残してください。',
-                  textAlign: TextAlign.left,
-                  style: context.textTheme.titleSmall,
-                ),
-              ),
-            ),
-          ),
-        ),
-        const Gap(30),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: ElevatedButton(
-            onPressed: _onButtonPressed,
-            child: const Text(
-              '写真を読みこむ',
-            ),
+        const Gap(32),
+        ElevatedButton(
+          onPressed: _onButtonPressed,
+          child: const Text(
+            '写真を読みこむ',
           ),
         ),
       ],
