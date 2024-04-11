@@ -106,6 +106,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       setState(() {
         isLoading = false;
       });
+      throw Exception();
     }
   }
 
