@@ -10,7 +10,6 @@ import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
 import 'onboarding_page.dart';
 
-// TODO(masaki): ストリーム管理&オンボーディングの実装後にbuildSecondPage()など画面描画を全体的に見直す
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -80,48 +79,14 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.dispose();
   }
 
-  // todo: page controller以外検討
-  // todo: 切り出し不要か検討
-  Future<void> _onButtonPressed() async {
-    setState(() {
-      isLoading = true;
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    });
-
-    try {
-      final result = await ref.read(authControllerProvider).signInWithGoogle();
-      await ref
-          .read(photoControllerProvider)
-          .upsertClassifyPhotosStatus(userId: result.userId);
-      // todo: isLoadingの持ち方工夫して修正を検討
-      setState(() {
-        isLoading = false;
-      });
-      await ref.read(photoControllerProvider).uploadPhotos(
-            accessToken: result.accessToken,
-            userId: result.userId,
-          );
-    } on Exception catch (e) {
-      // 例外が発生した場合、エラーメッセージを表示
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString())),
-        );
-      }
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
+  /// 写真ダウンロード用メソッド
+  ///
+  /// [_validateDownload]後に呼び出す。
   Future<void> _downloadPhotos(WidgetRef ref) async {
     final result = await ref.read(photoControllerProvider).downloadPhotos(
           userId: ref.watch(
             userIdProvider,
-          ),
+          )!,
         );
     setState(() {
       photoUrls = result.map((e) => e.url).toList();
@@ -269,7 +234,40 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         const Gap(32),
         ElevatedButton(
-          onPressed: _onButtonPressed,
+          onPressed: () async {
+            setState(() {
+              isLoading = true;
+              _pageController.nextPage(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            });
+
+            try {
+              final result =
+                  await ref.read(authControllerProvider).signInWithGoogle();
+              await ref
+                  .read(photoControllerProvider)
+                  .upsertClassifyPhotosStatus(userId: result.userId);
+              setState(() {
+                isLoading = false;
+              });
+              await ref.read(photoControllerProvider).uploadPhotos(
+                    accessToken: result.accessToken,
+                    userId: result.userId,
+                  );
+            } on Exception catch (e) {
+              // 例外が発生した場合、エラーメッセージを表示
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(e.toString())),
+                );
+              }
+              setState(() {
+                isLoading = false;
+              });
+            }
+          },
           child: const Text(
             '写真を読みこむ',
           ),
@@ -286,11 +284,13 @@ class _HomePageState extends ConsumerState<HomePage> {
           width: 250,
           child: Center(
             child: isLoading
-                ? const _LoadingDialog()
+                ? const _LoadingIndicator()
                 : ref.watch(authedUserStreamProvider).when(
                       data: (authedUser) {
                         final status = authedUser.classifyPhotosStatus;
-                        if (status == ClassifyPhotosStatus.readyForUse) {
+                        if (status == ClassifyPhotosStatus.processing) {
+                          return const _LoadingIndicator();
+                        } else if (status == ClassifyPhotosStatus.readyForUse) {
                           return Column(
                             children: [
                               Text(
@@ -310,12 +310,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                             ],
                           );
-                        } else if (status == ClassifyPhotosStatus.processing) {
-                          return const _LoadingDialog();
                         } else {
-                          // TODO(masaki): エラーハンドリング
                           return Text(
-                            status.name,
+                            'エラーが発生しました',
                             style: context.textTheme.titleLarge,
                           );
                         }
@@ -324,7 +321,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         'エラーが発生しました',
                         style: context.textTheme.titleLarge,
                       ),
-                      loading: () => const CircularProgressIndicator(),
+                      loading: _LoadingIndicator.new,
                     ),
           ),
         ),
@@ -333,8 +330,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 }
 
-class _LoadingDialog extends StatelessWidget {
-  const _LoadingDialog();
+class _LoadingIndicator extends StatelessWidget {
+  const _LoadingIndicator();
 
   @override
   Widget build(BuildContext context) {
