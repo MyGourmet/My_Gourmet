@@ -177,8 +177,9 @@ class _OnboardingContent extends StatelessWidget {
           const Gap(28),
           Text(
             description,
-            style: textTheme.bodyMedium!.copyWith(
+            style: textTheme.titleSmall!.copyWith(
               color: Colors.white,
+              decoration: TextDecoration.none,
             ),
           ),
         ],
