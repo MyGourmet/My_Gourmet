@@ -41,11 +41,8 @@ class PhotoController {
 
   /// 写真ダウンロード用メソッド
   Future<List<Photo>> downloadPhotos({
-    required String? userId,
+    required String userId,
   }) async {
-    if (userId == null) {
-      return [];
-    }
     return _photoRepository.downloadPhotos(userId: userId);
   }
 }
