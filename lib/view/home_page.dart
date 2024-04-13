@@ -13,6 +13,7 @@ import 'onboarding_page.dart';
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
+  static const routeName = 'home_page';
   static const routePath = '/home_page';
 
   @override

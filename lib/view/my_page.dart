@@ -9,6 +9,7 @@ import 'widgets/success_snack_bar.dart';
 class MyPage extends ConsumerWidget {
   const MyPage({super.key});
 
+  static const routeName = 'my_page';
   static const routePath = '/my_page';
 
   @override

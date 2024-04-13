@@ -16,10 +16,12 @@ final routerProvider = Provider(
         builder: (context, state, child) => RootPage(child: child),
         routes: [
           GoRoute(
+            name: HomePage.routeName,
             path: HomePage.routePath,
             builder: (context, state) => const HomePage(),
           ),
           GoRoute(
+            name: MyPage.routeName,
             path: MyPage.routePath,
             builder: (context, state) => const MyPage(),
           ),
