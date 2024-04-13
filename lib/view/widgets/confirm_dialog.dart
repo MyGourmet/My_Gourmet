@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/build_context_extension.dart';
+
 /// 確認用のダイアログ
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog._({
@@ -57,7 +59,9 @@ class ConfirmDialog extends StatelessWidget {
       title: Center(
         child: Text(
           titleString,
-          style: const TextStyle(color: Colors.white),
+          style: context.textTheme.bodyMedium!.copyWith(
+            color: Colors.white,
+          ),
         ),
       ),
       content: Text(contentString),

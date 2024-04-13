@@ -54,14 +54,14 @@ class _RootPageState extends ConsumerState<RootPage> {
   Widget build(BuildContext context) {
     return isLoading
         ? const SizedBox.shrink()
-        : Stack(
-            children: [
-              _NavigationFrame(
-                child: widget.child,
-              ),
-              if (!ref.watch(isOnBoardingCompletedProvider))
-                const OnboardingPage(),
-            ],
+        : _NavigationFrame(
+            child: Stack(
+              children: [
+                widget.child,
+                if (!ref.watch(isOnBoardingCompletedProvider))
+                  const OnboardingPage(),
+              ],
+            ),
           );
   }
 

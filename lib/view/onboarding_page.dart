@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../core/build_context_extension.dart';
-import '../core/constants.dart';
 import '../core/shared_preferences_service.dart';
 import '../core/themes.dart';
 
@@ -52,8 +51,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = context.deviceWidth;
-    final screenHeight = context.deviceHeight;
     final isOnboardingTop = currentOnboarding == 0;
     final isNotLastOnboarding = currentOnboarding != 3;
 
@@ -69,8 +66,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           : null,
       child: Container(
         color: Themes.gray.shade900.withOpacity(0.9),
-        width: screenWidth,
-        height: screenHeight,
+        width: context.screenWidth,
+        height: context.screenHeight,
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           children: [
@@ -81,7 +78,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                   Center(
                     child: Image.asset(
                       'assets/images/top_image.png',
-                      width: screenWidth / 2,
+                      width: context.screenWidth / 2,
                     ),
                   ),
                   const _OnboardingContent(
@@ -131,7 +128,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
                 child: Text(
                   isNotLastOnboarding ? 'つぎへ' : 'はじめる',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
             const Gap(28),
@@ -157,7 +153,9 @@ class _OnboardingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = context.deviceWidth;
+    final screenWidth = context.screenWidth;
+    final textTheme = context.textTheme;
+
     return Center(
       child: Column(
         children: [
@@ -169,12 +167,8 @@ class _OnboardingContent extends StatelessWidget {
           const Gap(28),
           Text(
             title,
-            style: const TextStyle(
+            style: textTheme.titleLarge!.copyWith(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-              decoration: TextDecoration.none,
-              fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
             ),
             textAlign: TextAlign.center,
           ),
@@ -183,11 +177,9 @@ class _OnboardingContent extends StatelessWidget {
           const Gap(28),
           Text(
             description,
-            style: const TextStyle(
+            style: textTheme.titleSmall!.copyWith(
               color: Colors.white,
-              fontSize: 14,
               decoration: TextDecoration.none,
-              fontFamily: kZenkakuGothicNew, // なぜかフォントが適用されないので直接指定
             ),
           ),
         ],
