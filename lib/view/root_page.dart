@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +9,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
+import '../core/themes.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 import 'onboarding_page.dart';
@@ -116,29 +118,51 @@ class _NavigationFrame extends StatelessWidget {
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Themes.gray.shade900,
+        showUnselectedLabels: true,
+        unselectedItemColor:  Colors.white,
+        unselectedIconTheme: const IconThemeData(color: Colors.white),
+        unselectedLabelStyle: const TextStyle(color: Colors.white),
+        selectedFontSize: 12,
+        selectedItemColor: Themes.gradientBackgroundOrange,
+        selectedLabelStyle: const TextStyle(color: Themes.gradientBackgroundOrange),
+        selectedIconTheme: const IconThemeData(
+          color: Themes.gradientBackgroundOrange,
+        ),
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
-        unselectedFontSize: 0,
-        items: const [
+
+        items:  const [
+           BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+              child: Icon(
+                Icons.photo_outlined,
+              ),
+            ),
+            label: 'ギャラリー',
+          ),
           BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.only(top: 10), // 上側の余白を設定
               child: Icon(
-                Icons.photo,
+                Icons.map,
               ),
             ),
-            label: '',
+            label: 'マップ',
           ),
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.only(top: 10),
+              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
               child: Icon(
-                Icons.person,
+                Icons.person_outline,
               ),
             ),
-            label: '',
+            label: 'マイページ',
           ),
+
         ],
+
       ),
     );
   }
@@ -147,16 +171,18 @@ class _NavigationFrame extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
     return switch (location) {
       HomePage.routePath => 0,
-      MyPage.routePath => 1,
+      MyPage.routePath => 2,
       String() => throw UnimplementedError(),
     };
   }
+
+
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
         context.go(HomePage.routePath);
-      case 1:
+      case 2:
         context.go(MyPage.routePath);
     }
   }
