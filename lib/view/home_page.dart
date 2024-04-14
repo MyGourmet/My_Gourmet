@@ -13,6 +13,7 @@ import 'onboarding_page.dart';
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
+  static const routeName = 'home_page';
   static const routePath = '/home_page';
 
   @override
@@ -266,6 +267,9 @@ class _HomePageState extends ConsumerState<HomePage> {
               setState(() {
                 isLoading = false;
               });
+
+              // この処理を追加することで、crashlyticsにクラッシュを送信できる。
+              throw Exception();
             }
           },
           child: const Text(

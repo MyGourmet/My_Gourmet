@@ -13,8 +13,10 @@ dependencies:
   cloud_functions: any
   collection: ^1.17.2
   cupertino_icons: ^1.0.2
+  firebase_analytics: any
   firebase_auth: any
   firebase_core: any
+  firebase_crashlytics: any
   firebase_remote_config: any
   firebase_storage: any
   flutter:
@@ -26,6 +28,7 @@ dependencies:
   gap: ^3.0.1
   go_router: ^13.2.0
   google_sign_in: ^6.1.4
+  hooks_riverpod: any
   http: ^0.13.3
   logger: null
   package_info: ^2.0.2
