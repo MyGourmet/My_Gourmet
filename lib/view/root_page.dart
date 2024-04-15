@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -120,24 +119,24 @@ class _NavigationFrame extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Themes.gray.shade900,
         showUnselectedLabels: true,
-        unselectedItemColor:  Colors.white,
+        unselectedItemColor: Colors.white,
         unselectedIconTheme: const IconThemeData(color: Colors.white),
         unselectedLabelStyle: const TextStyle(color: Colors.white),
         selectedFontSize: 12,
         selectedItemColor: Themes.gradientBackgroundOrange,
-        selectedLabelStyle: const TextStyle(color: Themes.gradientBackgroundOrange),
+        selectedLabelStyle:
+            const TextStyle(color: Themes.gradientBackgroundOrange),
         selectedIconTheme: const IconThemeData(
           color: Themes.gradientBackgroundOrange,
         ),
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
-
-        items:  const [
-           BottomNavigationBarItem(
+        items: const [
+          BottomNavigationBarItem(
             icon: Padding(
               padding: EdgeInsets.only(top: 10), // 上側の余白を設定
               child: Icon(
-                Icons.photo_outlined,
+                Icons.photo,
               ),
             ),
             label: 'ギャラリー',
@@ -146,23 +145,12 @@ class _NavigationFrame extends StatelessWidget {
             icon: Padding(
               padding: EdgeInsets.only(top: 10), // 上側の余白を設定
               child: Icon(
-                Icons.map,
-              ),
-            ),
-            label: 'マップ',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
-              child: Icon(
-                Icons.person_outline,
+                Icons.person,
               ),
             ),
             label: 'マイページ',
           ),
-
         ],
-
       ),
     );
   }
@@ -171,18 +159,16 @@ class _NavigationFrame extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
     return switch (location) {
       HomePage.routePath => 0,
-      MyPage.routePath => 2,
+      MyPage.routePath => 1,
       String() => throw UnimplementedError(),
     };
   }
-
-
 
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
         context.go(HomePage.routePath);
-      case 2:
+      case 1:
         context.go(MyPage.routePath);
     }
   }
