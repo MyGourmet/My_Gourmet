@@ -237,7 +237,7 @@ abstract final class Themes {
     100: Color(0xFFf8eae1),
     200: Color(0xFFebded4),
     300: Color(0xFFd8cac1),
-    400: Color(0xFFd8cac1),
+    400: Color(0xFFb2a59c),
     500: Color(_grayPrimaryValue),
     600: Color(0xFF685d55),
     700: Color(0xFF554b43),
