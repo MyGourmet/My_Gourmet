@@ -117,18 +117,6 @@ class _NavigationFrame extends StatelessWidget {
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Themes.gray.shade900,
-        showUnselectedLabels: true,
-        unselectedItemColor: Colors.white,
-        unselectedIconTheme: const IconThemeData(color: Colors.white),
-        unselectedLabelStyle: const TextStyle(color: Colors.white),
-        selectedFontSize: 12,
-        selectedItemColor: Themes.gradientBackgroundOrange,
-        selectedLabelStyle:
-            const TextStyle(color: Themes.gradientBackgroundOrange),
-        selectedIconTheme: const IconThemeData(
-          color: Themes.gradientBackgroundOrange,
-        ),
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
         items: const [
