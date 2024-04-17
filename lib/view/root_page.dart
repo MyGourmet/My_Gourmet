@@ -8,7 +8,6 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
-import '../core/themes.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 import 'onboarding_page.dart';
