@@ -139,9 +139,11 @@ abstract final class Themes {
         backgroundColor: Themes.gray.shade900,
         selectedItemColor: mainOrange,
         unselectedItemColor: gray.shade700,
+        showUnselectedLabels: true,
         elevation: 4,
         selectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
         unselectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.bold,
@@ -231,7 +233,6 @@ abstract final class Themes {
   });
   static const int _mainOrangeValue = 0xFFef913a;
   static const Color gradientBackgroundOrange = Color(0xFFFFAD61);
-
 
   static const MaterialColor gray =
       MaterialColor(_grayPrimaryValue, <int, Color>{
