@@ -134,7 +134,7 @@ class _NavigationFrame extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+              padding: EdgeInsets.only(top: 10),
               child: Icon(
                 Icons.photo,
               ),
@@ -143,7 +143,7 @@ class _NavigationFrame extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+              padding: EdgeInsets.only(top: 10),
               child: Icon(
                 Icons.person,
               ),

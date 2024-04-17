@@ -232,7 +232,6 @@ abstract final class Themes {
     900: Color(0xFFd3612f),
   });
   static const int _mainOrangeValue = 0xFFef913a;
-  static const Color gradientBackgroundOrange = Color(0xFFFFAD61);
 
   static const MaterialColor gray =
       MaterialColor(_grayPrimaryValue, <int, Color>{
