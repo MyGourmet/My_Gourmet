@@ -204,6 +204,7 @@ abstract final class Themes {
         ),
         bodyLarge: theme.textTheme.bodyLarge!.copyWith(
           fontSize: 16,
+          height: 1.5,
         ),
         // デフォルト
         bodyMedium: theme.textTheme.bodyMedium!.copyWith(
