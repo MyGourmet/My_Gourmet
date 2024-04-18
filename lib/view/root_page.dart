@@ -118,16 +118,15 @@ class _NavigationFrame extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _calcSelectedIndex(context),
         onTap: (int index) => _onItemTapped(index, context),
-        unselectedFontSize: 0,
         items: const [
           BottomNavigationBarItem(
             icon: Padding(
-              padding: EdgeInsets.only(top: 10), // 上側の余白を設定
+              padding: EdgeInsets.only(top: 10),
               child: Icon(
                 Icons.photo,
               ),
             ),
-            label: '',
+            label: 'ギャラリー',
           ),
           BottomNavigationBarItem(
             icon: Padding(
@@ -136,7 +135,7 @@ class _NavigationFrame extends StatelessWidget {
                 Icons.person,
               ),
             ),
-            label: '',
+            label: 'マイページ',
           ),
         ],
       ),
