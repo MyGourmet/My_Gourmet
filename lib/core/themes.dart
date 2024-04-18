@@ -26,9 +26,9 @@ abstract final class Themes {
         ),
         iconTheme: IconThemeData(color: gray[800], size: 20),
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        shape: const CircleBorder(),
-        foregroundColor: Themes.gray.shade900,
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        shape: CircleBorder(),
+        foregroundColor: Colors.white,
         backgroundColor: Themes.mainOrange,
         elevation: 10,
       ),
