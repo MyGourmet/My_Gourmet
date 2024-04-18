@@ -115,7 +115,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: Stack(
                     children: [
                       RefreshIndicator(
-                        color: Themes.gray.shade900,
+                        color: Colors.white,
                         backgroundColor: Themes.mainOrange,
                         onRefresh: () async {
                           final isDownloadable = await _validateDownload();

@@ -15,12 +15,12 @@ abstract final class Themes {
 
     return theme.copyWith(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: gray.shade900,
+      scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         surfaceTintColor: ThemeData.light().scaffoldBackgroundColor,
         elevation: 0,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: gray[900],
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
@@ -36,7 +36,7 @@ abstract final class Themes {
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 48),
           backgroundColor: mainOrange,
-          foregroundColor: Colors.white,
+          foregroundColor: gray[900],
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
@@ -98,8 +98,8 @@ abstract final class Themes {
       listTileTheme: ListTileThemeData(
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         iconColor: gray.shade700,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: gray[900],
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
@@ -109,21 +109,21 @@ abstract final class Themes {
       ),
       dialogTheme: DialogTheme(
         surfaceTintColor: Colors.white,
-        backgroundColor: Themes.gray.shade800,
+        backgroundColor: Colors.white,
         alignment: Alignment.center,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         elevation: 8,
-        contentTextStyle: const TextStyle(
-          color: Colors.white,
+        contentTextStyle: TextStyle(
+          color: gray[900],
           fontSize: 16,
         ),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: MaterialStateProperty.resolveWith(
           (states) =>
-              states.contains(MaterialState.selected) ? Colors.white : gray,
+              states.contains(MaterialState.selected) ? gray[900] : gray,
         ),
         trackOutlineColor: MaterialStateProperty.resolveWith(
           (states) =>
@@ -136,7 +136,7 @@ abstract final class Themes {
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Themes.gray.shade900,
+        backgroundColor: Colors.white,
         selectedItemColor: mainOrange,
         unselectedItemColor: gray.shade700,
         showUnselectedLabels: true,
@@ -168,17 +168,21 @@ abstract final class Themes {
             ),
           ),
           textStyle: MaterialStateProperty.all<TextStyle>(
-            const TextStyle(
-              color: Colors.white,
+            TextStyle(
+              color: gray[900],
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          foregroundColor: MaterialStateProperty.all<Color>(gray[900]!),
           shadowColor: MaterialStateProperty.all<Color>(
             mainOrange.shade300.withOpacity(0.25),
           ),
         ),
+      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: Colors.white,
+        refreshBackgroundColor: mainOrange,
       ),
       // 以下の初期値を適宜変更して設定(多様化するようであればExtension導入を検討）
       // https://m3.material.io/styles/typography/type-scale-tokens
