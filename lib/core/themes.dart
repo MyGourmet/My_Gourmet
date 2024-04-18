@@ -36,7 +36,7 @@ abstract final class Themes {
         style: ElevatedButton.styleFrom(
           minimumSize: const Size(double.infinity, 48),
           backgroundColor: mainOrange,
-          foregroundColor: gray[900],
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
