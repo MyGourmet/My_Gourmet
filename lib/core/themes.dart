@@ -15,20 +15,20 @@ abstract final class Themes {
 
     return theme.copyWith(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: gray.shade900,
+      scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         surfaceTintColor: ThemeData.light().scaffoldBackgroundColor,
         elevation: 0,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: gray[900],
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
         iconTheme: IconThemeData(color: gray[800], size: 20),
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        shape: const CircleBorder(),
-        foregroundColor: Themes.gray.shade900,
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        shape: CircleBorder(),
+        foregroundColor: Colors.white,
         backgroundColor: Themes.mainOrange,
         elevation: 10,
       ),
@@ -98,8 +98,8 @@ abstract final class Themes {
       listTileTheme: ListTileThemeData(
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         iconColor: gray.shade700,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
+        titleTextStyle: TextStyle(
+          color: gray[900],
           fontWeight: FontWeight.bold,
           fontSize: 16,
         ),
@@ -109,21 +109,21 @@ abstract final class Themes {
       ),
       dialogTheme: DialogTheme(
         surfaceTintColor: Colors.white,
-        backgroundColor: Themes.gray.shade800,
+        backgroundColor: Colors.white,
         alignment: Alignment.center,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
         elevation: 8,
-        contentTextStyle: const TextStyle(
-          color: Colors.white,
+        contentTextStyle: TextStyle(
+          color: gray[900],
           fontSize: 16,
         ),
       ),
       switchTheme: SwitchThemeData(
         thumbColor: MaterialStateProperty.resolveWith(
           (states) =>
-              states.contains(MaterialState.selected) ? Colors.white : gray,
+              states.contains(MaterialState.selected) ? gray[900] : gray,
         ),
         trackOutlineColor: MaterialStateProperty.resolveWith(
           (states) =>
@@ -136,7 +136,7 @@ abstract final class Themes {
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Themes.gray.shade900,
+        backgroundColor: Colors.white,
         selectedItemColor: mainOrange,
         unselectedItemColor: gray.shade700,
         showUnselectedLabels: true,
@@ -168,17 +168,21 @@ abstract final class Themes {
             ),
           ),
           textStyle: MaterialStateProperty.all<TextStyle>(
-            const TextStyle(
-              color: Colors.white,
+            TextStyle(
+              color: gray[900],
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          foregroundColor: MaterialStateProperty.all<Color>(gray[900]!),
           shadowColor: MaterialStateProperty.all<Color>(
             mainOrange.shade300.withOpacity(0.25),
           ),
         ),
+      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: Colors.white,
+        refreshBackgroundColor: mainOrange,
       ),
       // 以下の初期値を適宜変更して設定(多様化するようであればExtension導入を検討）
       // https://m3.material.io/styles/typography/type-scale-tokens
@@ -206,6 +210,7 @@ abstract final class Themes {
         ),
         bodyLarge: theme.textTheme.bodyLarge!.copyWith(
           fontSize: 16,
+          height: 1.5,
         ),
         // デフォルト
         bodyMedium: theme.textTheme.bodyMedium!.copyWith(
@@ -239,7 +244,7 @@ abstract final class Themes {
     100: Color(0xFFf8eae1),
     200: Color(0xFFebded4),
     300: Color(0xFFd8cac1),
-    400: Color(0xFFd8cac1),
+    400: Color(0xFFb2a59c),
     500: Color(_grayPrimaryValue),
     600: Color(0xFF685d55),
     700: Color(0xFF554b43),
