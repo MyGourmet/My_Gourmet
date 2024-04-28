@@ -259,7 +259,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   );
             } on Exception catch (e) {
               // 例外が発生した場合、エラーメッセージを表示
-              if (context.mounted) {
+              if (context.mounted && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(e.toString())),
                 );
