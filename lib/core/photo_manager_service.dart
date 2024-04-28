@@ -51,7 +51,8 @@ class PhotoService {
       return [];
     }
 
-    final photos = await albums[0].getAssetListPaged(page: 0, size: 2);
+    // 100件取得(とりあえずの値なのであとで変更するかも)
+    final photos = await albums[0].getAssetListPaged(page: 0, size: 100);
 
     return photos;
   }
