@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../view/home_page.dart';
 import '../view/my_page.dart';
 import '../view/root_page.dart';
+import '../view/swipe_photo_page.dart';
 import 'analytics_repository.dart';
 
 final routerProvider = Provider(
@@ -24,6 +25,11 @@ final routerProvider = Provider(
             name: MyPage.routeName,
             path: MyPage.routePath,
             builder: (context, state) => const MyPage(),
+          ),
+          GoRoute(
+            name: SwipePhotoPage.routeName,
+            path: SwipePhotoPage.routePath,
+            builder: (context, state) => const SwipePhotoPage(),
           ),
         ],
       ),

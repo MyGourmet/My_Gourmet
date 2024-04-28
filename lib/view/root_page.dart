@@ -11,6 +11,7 @@ import '../core/shared_preferences_service.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 import 'onboarding_page.dart';
+import 'swipe_photo_page.dart';
 import 'widgets/confirm_dialog.dart';
 
 /// 全てのページの基盤となるページ
@@ -132,6 +133,15 @@ class _NavigationFrame extends StatelessWidget {
             icon: Padding(
               padding: EdgeInsets.only(top: 10),
               child: Icon(
+                Icons.photo_library,
+              ),
+            ),
+            label: '写真保存',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Icon(
                 Icons.person,
               ),
             ),
@@ -146,7 +156,8 @@ class _NavigationFrame extends StatelessWidget {
     final location = GoRouterState.of(context).uri.toString();
     return switch (location) {
       HomePage.routePath => 0,
-      MyPage.routePath => 1,
+      SwipePhotoPage.routePath => 1,
+      MyPage.routePath => 2,
       String() => throw UnimplementedError(),
     };
   }
@@ -156,6 +167,8 @@ class _NavigationFrame extends StatelessWidget {
       case 0:
         context.go(HomePage.routePath);
       case 1:
+        context.go(SwipePhotoPage.routePath);
+      case 2:
         context.go(MyPage.routePath);
     }
   }
