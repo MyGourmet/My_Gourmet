@@ -26,7 +26,7 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<void> initializePhotos() async {
     try {
-      _photos = getAppDatabaseInstance().getAllPhotos(); // 写真データを非同期で取得
+      _photos = getAppDatabaseInstance().getAllPhotos();
     } catch (e) {
       print('写真データの取得に失敗しました: $e');
     }
