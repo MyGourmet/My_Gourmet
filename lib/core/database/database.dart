@@ -33,6 +33,10 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  Future<List<Photo>> getAllPhotos() async {
+    return select(photos).get();
+  }
 }
 
 /// コネクション生成
