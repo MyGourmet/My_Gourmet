@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/core/database/database.dart';
+import '../core/database/database.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -27,19 +27,19 @@ class _HomePageState extends ConsumerState<HomePage> {
   Future<void> initializePhotos() async {
     try {
       _photos = getAppDatabaseInstance().getAllPhotos();
-    } catch (e) {
-      print('写真データの取得に失敗しました: $e');
+    } on Exception catch (e) {
+      debugPrint('写真データの取得に失敗しました: $e');
     }
   }
 
   Future<void> printPhotoPaths() async {
     try {
       final photos = await getAppDatabaseInstance().getAllPhotos();
-      for (var photo in photos) {
-        print('Photo path: ${photo.path}');
+      for (final photo in photos) {
+        debugPrint('Photo path: ${photo.path}');
       }
-    } catch (e) {
-      print('Error fetching photos: $e');
+    } on Exception catch (e) {
+      debugPrint('Error fetching photos: $e');
     }
   }
 
@@ -47,15 +47,15 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('保存された写真'),
+        title: const Text('保存された写真'),
       ),
       body: FutureBuilder<List<Photo>>(
         future: _photos,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text('エラーが発生しました'));
+            return const Center(child: Text('エラーが発生しました'));
           } else if (snapshot.hasData) {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -63,7 +63,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                Photo photo = snapshot.data![index];
+                final photo = snapshot.data![index];
                 return Image.file(
                   File(photo.path),
                   fit: BoxFit.cover,
@@ -71,7 +71,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               },
             );
           } else {
-            return Center(child: Text('データがありません'));
+            return const Center(child: Text('データがありません'));
           }
         },
       ),
