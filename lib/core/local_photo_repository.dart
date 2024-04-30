@@ -15,11 +15,8 @@ class LocalPhotoRepository {
   final AppDatabase db = AppDatabase();
 
   /// 最後の写真データを取得する
-  Future<Photo?> getLastPhoto() async {
-    return (db.select(db.photos)
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc),
-          ])
+  Future<LastPhoto?> getLastPhoto() async {
+    return (db.select(db.lastPhotos)
           ..limit(1))
         .getSingleOrNull();
   }
@@ -32,14 +29,25 @@ class LocalPhotoRepository {
     required bool isFood,
   }) async {
     final file = await photo.file;
-    if (file != null) {
+    // 飯の場合写真データ保存
+    if (isFood && file != null) {
       final photoModel = PhotosCompanion(
         id: Value(photo.id),
         path: Value(file.path),
-        // date: Value(DateTime.now()),
-        isFood: Value(isFood),
       );
-      await db.into(db.photos).insert(photoModel);
+      await db.into(db.photos).insertOnConflictUpdate(photoModel);
+    }
+
+    // 最後の写真id保存
+    final lastPhotoModel = LastPhotosCompanion(
+      id: Value(photo.id),
+    );
+    if ((await getLastPhoto()) != null) {
+      // 更新
+      await db.update(db.lastPhotos).write(lastPhotoModel);
+    } else {
+      // 登録
+      await db.into(db.lastPhotos).insert(lastPhotoModel);
     }
   }
 }
