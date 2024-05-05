@@ -252,4 +252,6 @@ abstract final class Themes {
     900: Color(0xFF180c00),
   });
   static const int _grayPrimaryValue = 0xFF90847c;
+
+  static const Color grayPrimaryColor = Color(0xFF90847c);
 }

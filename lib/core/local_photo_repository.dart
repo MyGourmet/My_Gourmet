@@ -14,11 +14,9 @@ class LocalPhotoRepository {
   /// DBインスタンス生成
   final AppDatabase db = AppDatabase();
 
-  /// 最後の写真データを取得する
-  Future<LastPhoto?> getLastPhoto() async {
-    return (db.select(db.lastPhotos)
-          ..limit(1))
-        .getSingleOrNull();
+  /// 写真情報を取得する
+  Future<PhotoDetail?> getPhotoDetail() async {
+    return (db.select(db.photoDetails)..limit(1)).getSingleOrNull();
   }
 
   /// 写真データを保存する
@@ -38,16 +36,19 @@ class LocalPhotoRepository {
       await db.into(db.photos).insertOnConflictUpdate(photoModel);
     }
 
-    // 最後の写真id保存
-    final lastPhotoModel = LastPhotosCompanion(
-      id: Value(photo.id),
+    // 写真情報保存
+    final photoDetail = await getPhotoDetail();
+    final lastPhotoModel = PhotoDetailsCompanion(
+      lastId: Value(photo.id),
+      currentCount:
+          Value(photoDetail != null ? photoDetail.currentCount + 1 : 1),
     );
-    if ((await getLastPhoto()) != null) {
+    if (photoDetail != null) {
       // 更新
-      await db.update(db.lastPhotos).write(lastPhotoModel);
+      await db.update(db.photoDetails).write(lastPhotoModel);
     } else {
       // 登録
-      await db.into(db.lastPhotos).insert(lastPhotoModel);
+      await db.into(db.photoDetails).insert(lastPhotoModel);
     }
   }
 }

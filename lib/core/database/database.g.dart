@@ -185,128 +185,165 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
   }
 }
 
-class $LastPhotosTable extends LastPhotos
-    with TableInfo<$LastPhotosTable, LastPhoto> {
+class $PhotoDetailsTable extends PhotoDetails
+    with TableInfo<$PhotoDetailsTable, PhotoDetail> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $LastPhotosTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  $PhotoDetailsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _lastIdMeta = const VerificationMeta('lastId');
   @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
+  late final GeneratedColumn<String> lastId = GeneratedColumn<String>(
+      'last_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _currentCountMeta =
+      const VerificationMeta('currentCount');
   @override
-  List<GeneratedColumn> get $columns => [id];
+  late final GeneratedColumn<int> currentCount = GeneratedColumn<int>(
+      'current_count', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [lastId, currentCount];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'last_photos';
+  static const String $name = 'photo_details';
   @override
-  VerificationContext validateIntegrity(Insertable<LastPhoto> instance,
+  VerificationContext validateIntegrity(Insertable<PhotoDetail> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('last_id')) {
+      context.handle(_lastIdMeta,
+          lastId.isAcceptableOrUnknown(data['last_id']!, _lastIdMeta));
     } else if (isInserting) {
-      context.missing(_idMeta);
+      context.missing(_lastIdMeta);
+    }
+    if (data.containsKey('current_count')) {
+      context.handle(
+          _currentCountMeta,
+          currentCount.isAcceptableOrUnknown(
+              data['current_count']!, _currentCountMeta));
+    } else if (isInserting) {
+      context.missing(_currentCountMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  LastPhoto map(Map<String, dynamic> data, {String? tablePrefix}) {
+  PhotoDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return LastPhoto(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+    return PhotoDetail(
+      lastId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}last_id'])!,
+      currentCount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}current_count'])!,
     );
   }
 
   @override
-  $LastPhotosTable createAlias(String alias) {
-    return $LastPhotosTable(attachedDatabase, alias);
+  $PhotoDetailsTable createAlias(String alias) {
+    return $PhotoDetailsTable(attachedDatabase, alias);
   }
 }
 
-class LastPhoto extends DataClass implements Insertable<LastPhoto> {
-  /// 写真のid
-  final String id;
-  const LastPhoto({required this.id});
+class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
+  /// 最後の写真id
+  final String lastId;
+
+  /// 現在の写真処理数
+  final int currentCount;
+  const PhotoDetail({required this.lastId, required this.currentCount});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
+    map['last_id'] = Variable<String>(lastId);
+    map['current_count'] = Variable<int>(currentCount);
     return map;
   }
 
-  LastPhotosCompanion toCompanion(bool nullToAbsent) {
-    return LastPhotosCompanion(
-      id: Value(id),
+  PhotoDetailsCompanion toCompanion(bool nullToAbsent) {
+    return PhotoDetailsCompanion(
+      lastId: Value(lastId),
+      currentCount: Value(currentCount),
     );
   }
 
-  factory LastPhoto.fromJson(Map<String, dynamic> json,
+  factory PhotoDetail.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return LastPhoto(
-      id: serializer.fromJson<String>(json['id']),
+    return PhotoDetail(
+      lastId: serializer.fromJson<String>(json['lastId']),
+      currentCount: serializer.fromJson<int>(json['currentCount']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
+      'lastId': serializer.toJson<String>(lastId),
+      'currentCount': serializer.toJson<int>(currentCount),
     };
   }
 
-  LastPhoto copyWith({String? id}) => LastPhoto(
-        id: id ?? this.id,
+  PhotoDetail copyWith({String? lastId, int? currentCount}) => PhotoDetail(
+        lastId: lastId ?? this.lastId,
+        currentCount: currentCount ?? this.currentCount,
       );
   @override
   String toString() {
-    return (StringBuffer('LastPhoto(')
-          ..write('id: $id')
+    return (StringBuffer('PhotoDetail(')
+          ..write('lastId: $lastId, ')
+          ..write('currentCount: $currentCount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(lastId, currentCount);
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || (other is LastPhoto && other.id == this.id);
+      identical(this, other) ||
+      (other is PhotoDetail &&
+          other.lastId == this.lastId &&
+          other.currentCount == this.currentCount);
 }
 
-class LastPhotosCompanion extends UpdateCompanion<LastPhoto> {
-  final Value<String> id;
+class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
+  final Value<String> lastId;
+  final Value<int> currentCount;
   final Value<int> rowid;
-  const LastPhotosCompanion({
-    this.id = const Value.absent(),
+  const PhotoDetailsCompanion({
+    this.lastId = const Value.absent(),
+    this.currentCount = const Value.absent(),
     this.rowid = const Value.absent(),
   });
-  LastPhotosCompanion.insert({
-    required String id,
+  PhotoDetailsCompanion.insert({
+    required String lastId,
+    required int currentCount,
     this.rowid = const Value.absent(),
-  }) : id = Value(id);
-  static Insertable<LastPhoto> custom({
-    Expression<String>? id,
+  })  : lastId = Value(lastId),
+        currentCount = Value(currentCount);
+  static Insertable<PhotoDetail> custom({
+    Expression<String>? lastId,
+    Expression<int>? currentCount,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (lastId != null) 'last_id': lastId,
+      if (currentCount != null) 'current_count': currentCount,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
-  LastPhotosCompanion copyWith({Value<String>? id, Value<int>? rowid}) {
-    return LastPhotosCompanion(
-      id: id ?? this.id,
+  PhotoDetailsCompanion copyWith(
+      {Value<String>? lastId, Value<int>? currentCount, Value<int>? rowid}) {
+    return PhotoDetailsCompanion(
+      lastId: lastId ?? this.lastId,
+      currentCount: currentCount ?? this.currentCount,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -314,8 +351,11 @@ class LastPhotosCompanion extends UpdateCompanion<LastPhoto> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
+    if (lastId.present) {
+      map['last_id'] = Variable<String>(lastId.value);
+    }
+    if (currentCount.present) {
+      map['current_count'] = Variable<int>(currentCount.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -325,8 +365,9 @@ class LastPhotosCompanion extends UpdateCompanion<LastPhoto> {
 
   @override
   String toString() {
-    return (StringBuffer('LastPhotosCompanion(')
-          ..write('id: $id, ')
+    return (StringBuffer('PhotoDetailsCompanion(')
+          ..write('lastId: $lastId, ')
+          ..write('currentCount: $currentCount, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -336,10 +377,10 @@ class LastPhotosCompanion extends UpdateCompanion<LastPhoto> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final $PhotosTable photos = $PhotosTable(this);
-  late final $LastPhotosTable lastPhotos = $LastPhotosTable(this);
+  late final $PhotoDetailsTable photoDetails = $PhotoDetailsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [photos, lastPhotos];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [photos, photoDetails];
 }
