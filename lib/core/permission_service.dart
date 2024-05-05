@@ -26,7 +26,7 @@ class PermissionService {
         return (await Permission.photos.request()).isGranted;
       }
 
-      return (await Permission.photos.request()).isGranted;
+      return (await Permission.storage.request()).isGranted;
     } else {
       return (await Permission.photos.request()).isGranted;
     }

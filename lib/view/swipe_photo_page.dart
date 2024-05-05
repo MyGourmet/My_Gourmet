@@ -98,62 +98,61 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   Widget _buildButtons() {
     return SizedBox(
       height: 80,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 178,
-            height: 50,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(
-                    width: 2,
-                    color: Themes.grayPrimaryColor,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8, top: 16, right: 8, bottom: 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(
+                      width: 2,
+                      color: Themes.grayPrimaryColor,
+                    ),
                   ),
+                  backgroundColor: Themes.mainOrange.shade50,
+                  foregroundColor: Themes.grayPrimaryColor,
                 ),
-                backgroundColor: Themes.mainOrange.shade50,
-                foregroundColor: Themes.grayPrimaryColor,
-              ),
-              onPressed: controller.swipeLeft,
-              child: const Text(
-                'スキップ',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+                onPressed: controller.swipeLeft,
+                child: const Text(
+                  'スキップ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          SizedBox(
-            width: 178,
-            height: 50,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: const BorderSide(
-                    width: 2,
-                    color: Themes.grayPrimaryColor,
+            const SizedBox(
+              width: 12,
+            ),
+            Flexible(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: const BorderSide(
+                      width: 2,
+                      color: Themes.grayPrimaryColor,
+                    ),
                   ),
+                  foregroundColor: Colors.white,
                 ),
-                foregroundColor: Colors.white,
-              ),
-              onPressed: controller.swipeRight,
-              child: const Text(
-                'ご飯',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+                onPressed: controller.swipeRight,
+                child: const Text(
+                  'ご飯',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
