@@ -64,7 +64,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 curve: Curves.linear,
               );
             },
-      child: Container(
+      child: SizedBox(
         width: context.screenWidth,
         height: context.screenHeight,
         child: Column(
