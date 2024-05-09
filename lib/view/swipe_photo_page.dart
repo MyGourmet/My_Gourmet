@@ -1,6 +1,7 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 
 import '../core/permission_service.dart';
 import '../core/themes.dart';
@@ -32,7 +33,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
       child: Scaffold(
         body: Column(
           children: [
-            const SizedBox(height: 8),
+            const Gap(8),
             _buildCount(),
             Expanded(
               child: _buildPhotoContainer(),
@@ -59,7 +60,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                   ),
                 ),
               )
-            : const SizedBox();
+            : const SizedBox.shrink();
       },
     );
   }
@@ -126,9 +127,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 ),
               ),
             ),
-            const SizedBox(
-              width: 12,
-            ),
+            const Gap(12),
             Flexible(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -169,8 +168,8 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
             '保存が完了しました！',
             style: textStyle,
           ),
-          SizedBox(
-            height: 16,
+          Gap(
+            16,
           ),
           Row(
             children: [
