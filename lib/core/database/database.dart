@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
+
+Logger logger = Logger();
 
 /// 写真テーブル
 @DataClassName('Photo')
@@ -36,6 +39,16 @@ class AppDatabase extends _$AppDatabase {
 
   Future<List<Photo>> getAllPhotos() async {
     return select(photos).get();
+  }
+
+  Future<void> deletePhoto(String id) async {
+    try {
+      final count =
+          await (delete(photos)..where((tbl) => tbl.id.equals(id))).go();
+      logger.i('Deleted $count rows with id $id');
+    } on Exception catch (e) {
+      logger.e('Error: $e');
+    }
   }
 }
 

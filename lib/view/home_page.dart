@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:go_router/go_router.dart';
+
 import '../core/database/database.dart';
+import '../features/home/home_controller.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -16,64 +20,86 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   late Future<List<Photo>> _photos;
+  late Future<List<Size>> _sizes;
 
   @override
   void initState() {
     super.initState();
-    initializePhotos();
-    printPhotoPaths();
-  }
-
-  Future<void> initializePhotos() async {
-    try {
-      _photos = getAppDatabaseInstance().getAllPhotos();
-    } on Exception catch (e) {
-      debugPrint('写真データの取得に失敗しました: $e');
-    }
-  }
-
-  Future<void> printPhotoPaths() async {
-    try {
-      final photos = await getAppDatabaseInstance().getAllPhotos();
-      for (final photo in photos) {
-        debugPrint('Photo path: ${photo.path}');
-      }
-    } on Exception catch (e) {
-      debugPrint('Error fetching photos: $e');
-    }
+    _photos = ref.read(homeControllerProvider).getPhotos();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('保存された写真'),
-      ),
-      body: FutureBuilder<List<Photo>>(
-        future: _photos,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text('エラーが発生しました'));
-          } else if (snapshot.hasData) {
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-              ),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final photo = snapshot.data![index];
-                return Image.file(
-                  File(photo.path),
-                  fit: BoxFit.cover,
-                );
-              },
-            );
-          } else {
-            return const Center(child: Text('データがありません'));
-          }
-        },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: FutureBuilder<List<Photo>>(
+          future: _photos,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(child: Text('エラーが発生しました'));
+            } else if (snapshot.hasData) {
+              _sizes = ref
+                  .read(homeControllerProvider)
+                  .calculateSizes(snapshot.data!);
+              return FutureBuilder<List<Size>>(
+                future: _sizes,
+                builder: (context, sizeSnapshot) {
+                  if (sizeSnapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (sizeSnapshot.hasError) {
+                    return const Center(child: Text('エラーが発生しました'));
+                  } else if (sizeSnapshot.hasData) {
+                    return MasonryGridView.count(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing: 8,
+                      itemBuilder: (context, index) {
+                        final photo = snapshot.data![index];
+                        final size = sizeSnapshot.data![index];
+                        final file = File(photo.path);
+                        return Hero(
+                          tag: photo.path,
+                          child: GestureDetector(
+                            onTap: () {
+                              context.go(
+                                '/home_page/image_detail',
+                                extra: photo.path,
+                              );
+                            },
+                            child: Container(
+                              width: size.width,
+                              height: size.height,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.grey, width: 2),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(14),
+                                child: Image.file(
+                                  file,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: snapshot.data!.length,
+                    );
+                  } else {
+                    return const Center(child: Text('データがありません'));
+                  }
+                },
+              );
+            } else {
+              return const Center(child: Text('データがありません'));
+            }
+          },
+        ),
       ),
     );
   }
