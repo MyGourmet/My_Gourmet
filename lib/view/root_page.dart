@@ -161,8 +161,10 @@ class _NavigationFrame extends StatelessWidget {
     };
 
     return routeIndexMap.entries
-        .firstWhere((entry) => location.contains(entry.key),
-            orElse: () => throw UnimplementedError())
+        .firstWhere(
+          (entry) => location.contains(entry.key),
+          orElse: () => throw UnimplementedError(),
+        )
         .value;
   }
 
