@@ -9,6 +9,7 @@ import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
 import 'onboarding_page.dart';
+import 'widgets/custom_elevated_button.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -234,7 +235,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
         const Gap(32),
-        ElevatedButton(
+        CustomElevatedButton(
           onPressed: () async {
             setState(() {
               isLoading = true;
@@ -272,9 +273,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               throw Exception();
             }
           },
-          child: const Text(
-            '写真を読みこむ',
-          ),
+          text: '写真を読みこむ',
         ),
       ],
     );
