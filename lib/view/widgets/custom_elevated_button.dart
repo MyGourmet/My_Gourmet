@@ -99,8 +99,7 @@ class CustomElevatedButton extends StatelessWidget {
               child: InkWell(
                 onTap: onPressed,
                 borderRadius: BorderRadius.circular(40),
-                splashColor:
-                    backgroundColor ?? Themes.gray.shade900.withOpacity(0.25),
+                splashColor: Themes.mainOrange.withOpacity(0.3),
               ),
             ),
           ),
