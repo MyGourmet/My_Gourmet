@@ -88,7 +88,7 @@ class CustomElevatedButton extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                   ),
-                  if (widget != null) const SizedBox(width: 8)
+                  if (widget != null) const SizedBox(width: 8),
                 ],
               ),
             ),
