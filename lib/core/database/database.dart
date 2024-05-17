@@ -42,13 +42,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   Future<void> deletePhoto(String id) async {
-    try {
-      final count =
-          await (delete(photos)..where((tbl) => tbl.id.equals(id))).go();
-      logger.i('Deleted $count rows with id $id');
-    } on Exception catch (e) {
-      logger.e('Error: $e');
-    }
+    await (delete(photos)..where((tbl) => tbl.id.equals(id))).go();
   }
 }
 

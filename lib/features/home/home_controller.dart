@@ -56,10 +56,7 @@ class HomeController {
 
   Future<void> printPhotoPaths() async {
     try {
-      final photos = await _homeRepository.getAllPhotos();
-      for (final photo in photos) {
-        debugPrint('Photo path: ${photo.path}');
-      }
+      await _homeRepository.getAllPhotos();
     } on Exception catch (e) {
       debugPrint('Error fetching photos: $e');
     }
