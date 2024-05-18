@@ -26,10 +26,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
         child: ref.watch(photoListProvider).when(
               data: (photos) {
                 if (photos.isEmpty) {
-                  return Text(
-                    '端末に写真が一枚もありません',
-                    style: Theme.of(context).textTheme.titleSmall,
-                  );
+                  return const Text('写真がありません。');
                 }
 
                 return Column(
