@@ -26,19 +26,9 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
         child: ref.watch(photoListProvider).when(
               data: (photos) {
                 if (photos.isEmpty) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/no_photo.png',
-                        width: 200,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        '写真がまだありません...',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ],
+                  return Text(
+                    '端末に写真が一枚もありません',
+                    style: Theme.of(context).textTheme.titleSmall,
                   );
                 }
 
