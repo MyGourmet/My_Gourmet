@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum SharedPreferencesKey {
   /// オンボーディングが完了したかどうか
   isOnboardingCompleted,
+  /// 写真分類のオンボーディングが完了したかどうか
+  isClassifyOnboardingCompleted,
 }
 
 /// [SharedPreferencesService]用プロバイダー

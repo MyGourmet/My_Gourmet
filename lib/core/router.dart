@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../view/classify_start_page.dart';
 import '../view/home_page.dart';
 import '../view/my_page.dart';
 import '../view/root_page.dart';
@@ -25,6 +26,11 @@ final routerProvider = Provider(
             name: MyPage.routeName,
             path: MyPage.routePath,
             builder: (context, state) => const MyPage(),
+          ),
+          GoRoute(
+            name: ClassifyStartPage.routeName,
+            path: ClassifyStartPage.routePath,
+            builder: (context, state) => const ClassifyStartPage(),
           ),
           GoRoute(
             name: SwipePhotoPage.routeName,

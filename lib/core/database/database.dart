@@ -27,6 +27,9 @@ class PhotoDetails extends Table {
   /// 最後の写真id
   TextColumn get lastId => text()();
 
+  /// 最後の写真日付 iosだとidでソートできないようなので日付でやる
+  IntColumn get lastCreateDateSecond => integer()();
+
   /// 現在の写真処理数
   IntColumn get currentCount => integer()();
 }

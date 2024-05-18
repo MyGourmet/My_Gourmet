@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -10,6 +9,7 @@ import '../../core/photo_manager_service.dart';
 import 'photo_count.dart';
 
 /// 写真のカウントを管理するProvider
+/// スワイプ画面の上部のカウントに使用
 class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   @override
   PhotoCount? build() => null;
@@ -38,19 +38,19 @@ final photoCountProvider =
   _PhotoCountNotifier.new,
 );
 
-/// 写真のキャッシュを管理するProvider
-class _PhotoFileCacheNotifier
-    extends AutoDisposeFamilyAsyncNotifier<File, AssetEntity> {
+/// ご飯の登録数を取得するProvider
+/// 分類完了後の 「追加された写真 ＋XXX枚」に使用
+class _FoodPhotoCountNotifier extends AutoDisposeAsyncNotifier<int> {
   @override
-  Future<File> build(AssetEntity assetEntity) async {
-    final file = await assetEntity.file;
-    return file!;
+  Future<int> build() async {
+    // 取得できない場合はデフォルト値設定
+    return ref.read(localPhotoRepositoryProvider).getPhotoCount();
   }
 }
 
-final photoFileCacheProvider = AsyncNotifierProvider.family
-    .autoDispose<_PhotoFileCacheNotifier, File, AssetEntity>(
-  _PhotoFileCacheNotifier.new,
+final foodPhotoCountProvider =
+    AsyncNotifierProvider.autoDispose<_FoodPhotoCountNotifier, int>(
+  _FoodPhotoCountNotifier.new,
 );
 
 /// 写真を取得するProvider
@@ -83,7 +83,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     final photos = state.asData!.value;
     final length = photos.length;
-    final id = photos[index].id;
+    final dateTime = photos[index].createDateTime;
 
     try {
       // 写真登録
@@ -110,8 +110,9 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     try {
       // 次の写真リストをDBから取得
-      final results =
-          await ref.read(photoManagerServiceProvider).getAllPhotos(lastId: id);
+      final results = await ref.read(photoManagerServiceProvider).getAllPhotos(
+            lastDate: dateTime,
+          );
 
       // 状態更新
       state = AsyncValue<List<AssetEntity>>.data([

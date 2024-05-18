@@ -13,6 +13,7 @@ dependencies:
   cloud_firestore: any
   cloud_functions: any
   collection: ^1.17.2
+  confetti: ^0.7.0
   cupertino_icons: ^1.0.2
   device_info_plus: ^9.1.2
   drift: ^2.15.0

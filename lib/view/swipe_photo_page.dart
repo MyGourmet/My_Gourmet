@@ -1,8 +1,10 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../core/build_context_extension.dart';
 import '../core/permission_service.dart';
 import '../core/themes.dart';
 import '../features/swipe_photo/swipe_photo_controller.dart';
@@ -20,12 +22,16 @@ class SwipePhotoPage extends ConsumerStatefulWidget {
 }
 
 class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
-  final controller = AppinioSwiperController();
-  static const textStyle = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
-    color: Themes.grayPrimaryColor,
-  );
+  /// スワイプ用のコントローラー
+  final _swiperController = AppinioSwiperController();
+
+  /// 完了アニメーション用のコントローラー
+  final _confettiController =
+      ConfettiController(duration: const Duration(seconds: 5));
+
+  /// アニメーションを行うかどうか
+  /// 既にスワイプ完了していたらアニメーションを行わない
+  bool isAnimation = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +59,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
             ? Center(
                 child: Text(
                   '${photoCount.current}枚 / ${photoCount.total}枚',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Themes.grayPrimaryColor,
-                  ),
+                  style: context.textTheme.titleMedium,
                 ),
               )
             : const SizedBox.shrink();
@@ -75,22 +77,30 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 return _buildComplete();
               }
 
-              return Column(
+              isAnimation = true;
+
+              return Stack(
                 children: [
-                  Expanded(
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8,
+                      right: 8,
+                      bottom: 32,
+                    ),
                     child: PhotoCards(
-                      controller: controller,
+                      controller: _swiperController,
                       photos: photos,
                     ),
                   ),
-                  _buildButtons(),
+                  Positioned(
+                    bottom: 0,
+                    child: _buildButtons(),
+                  ),
                 ],
               );
             },
-            error: (error, stackTrace) {
-              return _buildError(error);
-            },
-            loading: () => const CircularProgressIndicator(),
+            error: _buildError,
+            loading: _buildLoading,
           ),
     );
   }
@@ -98,6 +108,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   /// スワイプボタン
   Widget _buildButtons() {
     return SizedBox(
+      width: context.screenWidth,
       height: 80,
       child: Padding(
         padding: const EdgeInsets.only(left: 8, top: 16, right: 8, bottom: 4),
@@ -109,15 +120,15 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: const BorderSide(
+                    side: BorderSide(
                       width: 2,
-                      color: Themes.grayPrimaryColor,
+                      color: Themes.gray.shade500,
                     ),
                   ),
                   backgroundColor: Themes.mainOrange.shade50,
-                  foregroundColor: Themes.grayPrimaryColor,
+                  foregroundColor: Themes.gray.shade500,
                 ),
-                onPressed: controller.swipeLeft,
+                onPressed: _swiperController.swipeLeft,
                 child: const Text(
                   'スキップ',
                   style: TextStyle(
@@ -133,14 +144,14 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: const BorderSide(
+                    side: BorderSide(
                       width: 2,
-                      color: Themes.grayPrimaryColor,
+                      color: Themes.gray.shade500,
                     ),
                   ),
                   foregroundColor: Colors.white,
                 ),
-                onPressed: controller.swipeRight,
+                onPressed: _swiperController.swipeRight,
                 child: const Text(
                   'ご飯',
                   style: TextStyle(
@@ -158,67 +169,113 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
 
   /// 処理完了
   Widget _buildComplete() {
-    return const SizedBox(
-      width: 232,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final text = Text(
+      '全ての写真を分類しました！',
+      style: context.textTheme.titleMedium,
+    );
+
+    if (isAnimation) {
+      if (_confettiController.state.name == 'stopped') {
+        _confettiController.play();
+      }
+
+      return Stack(
+        alignment: Alignment.center,
         children: [
-          Text(
-            '保存が完了しました！',
-            style: textStyle,
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              blastDirection: 0,
+              emissionFrequency: 0.2,
+              minimumSize: const Size(10, 10),
+              maximumSize: const Size(50, 50),
+              numberOfParticles: 1,
+              colors: [
+                Themes.mainOrange,
+                Themes.mainOrange.shade50,
+                Themes.mainOrange.shade100,
+                Themes.gray,
+                Themes.gray.shade200,
+                Themes.gray.shade400,
+              ], // manually specify the colors to be used
+            ),
           ),
-          Gap(
-            16,
-          ),
-          Row(
-            children: [
-              Text(
-                'さっそく',
-                style: textStyle,
-              ),
-              Column(
-                children: [
-                  Icon(
-                    Icons.photo_outlined,
-                    color: Themes.grayPrimaryColor,
-                    size: 18,
-                  ),
-                  Text(
-                    'ギャラリー',
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: Themes.grayPrimaryColor,
+          text,
+          Positioned(
+            bottom: context.screenHeight * 0.25,
+            child: Column(
+              children: [
+                Text(
+                  '追加された写真',
+                  style: context.textTheme.bodyMedium
+                      ?.copyWith(color: Themes.gray.shade400),
+                ),
+                const Gap(8),
+                ref.watch(foodPhotoCountProvider).when(
+                      data: (count) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.add,
+                              color: Themes.mainOrange,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 16, bottom: 2),
+                              child: Text(
+                                '$count 枚',
+                                style:
+                                    context.textTheme.headlineSmall?.copyWith(
+                                  color: Themes.mainOrange,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      error: _buildError,
+                      loading: _buildLoading,
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Text(
-            'を確認しましょう！',
-            style: textStyle,
+              ],
+            ),
           ),
         ],
-      ),
+      );
+    }
+
+    return Center(
+      child: text,
     );
   }
 
   /// エラー
-  Widget _buildError(Object error) {
+  Widget _buildError(Object error, StackTrace _) {
     if (error is PermissionException) {
-      return const Text('権限がありません。', style: textStyle);
+      return Text('権限がありません。', style: context.textTheme.titleMedium);
     }
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
           onPressed: () => ref.read(photoListProvider.notifier).forceRefresh(),
-          icon: const Icon(Icons.refresh, color: Themes.grayPrimaryColor),
+          icon: Icon(Icons.refresh, color: Themes.gray.shade500),
         ),
-        const Text('エラーが発生しました。', style: textStyle),
+        Text('エラーが発生しました。', style: context.textTheme.titleMedium),
       ],
     );
+  }
+
+  /// ローディング
+  Widget _buildLoading() => const CircularProgressIndicator();
+
+  /// 終了処理
+  @override
+  void dispose() {
+    super.dispose();
+    _swiperController.dispose();
+    _confettiController.dispose();
   }
 }

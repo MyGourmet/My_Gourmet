@@ -16,18 +16,20 @@ class PhotoService {
   final Ref ref;
 
   /// 写真取得
-  /// [lastId] 最後の写真id
-  Future<List<AssetEntity>> getAllPhotos({String? lastId}) async {
-    var filter = _getPhotoFilter();
+  /// [lastDate] 最後の写真日付
+  Future<List<AssetEntity>> getAllPhotos({DateTime? lastDate}) async {
+    AdvancedCustomFilter filter;
 
     // 初回ロード
-    if (lastId == null) {
+    if (lastDate == null) {
       // DBから写真情報を取得
       final photoDetail =
           await ref.read(localPhotoRepositoryProvider).getPhotoDetail();
 
       // PhotoManagerから写真数取得
-      final totalCount = await PhotoManager.getAssetCount(filterOption: filter);
+      final totalCount = await PhotoManager.getAssetCount(
+        type: RequestType.image,
+      );
       // カウント更新
       ref
           .read(photoCountProvider.notifier)
@@ -35,16 +37,23 @@ class PhotoService {
 
       // 取得できた場合続きから写真を取得する
       if (photoDetail != null) {
-        filter = _getPhotoIdFilter(filter, photoDetail.lastId);
+        filter = _getPhotoIdFilter(
+          DateTime.fromMillisecondsSinceEpoch(
+            photoDetail.lastCreateDateSecond * 1000,
+          ),
+        );
+      } else {
+        filter = AdvancedCustomFilter();
       }
     } else {
-      filter = _getPhotoIdFilter(filter, lastId);
+      filter = _getPhotoIdFilter(lastDate);
     }
 
     // 写真を古い順に取得
     final albums = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
       filterOption: filter.addOrderBy(
-        column: CustomColumns.base.id,
+        column: CustomColumns.base.createDate,
       ),
     );
 
@@ -62,30 +71,19 @@ class PhotoService {
     return photos;
   }
 
-  /// 画像でフィルタリングする
-  AdvancedCustomFilter _getPhotoFilter() {
-    return AdvancedCustomFilter().addWhereCondition(
-      ColumnWhereCondition(
-        column: CustomColumns.base.mediaType,
-        operator: '=',
-        value: '1',
-      ),
-    );
-  }
-
-  /// 写真idでフィルタリングする
-  /// [filter] フィルター
-  /// [lastId] 最後の写真id
+  /// 写真日付でフィルタリングする
+  /// [lastDate] 最後の写真日付
   AdvancedCustomFilter _getPhotoIdFilter(
-    AdvancedCustomFilter filter,
-    String lastId,
+    DateTime lastDate,
   ) {
-    return filter.addWhereCondition(
-      ColumnWhereCondition(
-        column: CustomColumns.base.id,
-        operator: '>',
-        value: lastId,
-      ),
+    return AdvancedCustomFilter(
+      where: [
+        DateColumnWhereCondition(
+          column: CustomColumns.base.createDate,
+          operator: '>',
+          value: lastDate,
+        ),
+      ],
     );
   }
 }

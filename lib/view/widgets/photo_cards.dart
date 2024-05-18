@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,21 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/themes.dart';
 import '../../features/swipe_photo/swipe_photo_controller.dart';
+
+/// 写真のキャッシュを管理するProvider
+class _PhotoFileCacheNotifier
+    extends AutoDisposeFamilyAsyncNotifier<File, AssetEntity> {
+  @override
+  Future<File> build(AssetEntity assetEntity) async {
+    final file = await assetEntity.originFile;
+    return file!;
+  }
+}
+
+final photoFileCacheProvider = AsyncNotifierProvider.family
+    .autoDispose<_PhotoFileCacheNotifier, File, AssetEntity>(
+  _PhotoFileCacheNotifier.new,
+);
 
 /// 写真カードリスト
 class PhotoCards extends ConsumerStatefulWidget {
@@ -22,6 +39,9 @@ class PhotoCardsState extends ConsumerState<PhotoCards> {
   Widget build(BuildContext context) {
     // Tinder風スワイプウィジェット
     return AppinioSwiper(
+      backgroundCardCount: 2,
+      backgroundCardOffset: const Offset(8, 14),
+      backgroundCardScale: 0.98,
       controller: widget.controller,
       cardCount: widget.photos.length,
       onSwipeEnd: (
@@ -66,6 +86,7 @@ class _PhotoCard extends ConsumerWidget {
           data: (file) {
             return SizedBox.expand(
               child: Card(
+                color: Colors.white,
                 margin: const EdgeInsets.only(
                   left: 8,
                   top: 12,
@@ -73,25 +94,42 @@ class _PhotoCard extends ConsumerWidget {
                   bottom: 8,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                  side: const BorderSide(
-                    width: 3,
-                    color: Themes.grayPrimaryColor,
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    width: 2,
+                    color: Themes.gray.shade900,
                   ),
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: Image.file(
-                  file,
-                  fit: BoxFit.cover,
+                child: FractionallySizedBox(
+                  alignment: Alignment.topCenter,
+                  heightFactor: 0.85,
+                  child: Card(
+                    color: Colors.white,
+                    margin: const EdgeInsets.all(20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        width: 2,
+                        color: Themes.gray.shade900,
+                      ),
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Image.file(
+                      key: ObjectKey(file.path),
+                      file,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             );
           },
           error: (error, stackTrace) {
-            const style = TextStyle(
+            final style = TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Themes.grayPrimaryColor,
+              color: Themes.gray.shade500,
             );
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -100,9 +138,9 @@ class _PhotoCard extends ConsumerWidget {
                   onPressed: () =>
                       ref.read(photoListProvider.notifier).forceRefresh(),
                   icon:
-                      const Icon(Icons.refresh, color: Themes.grayPrimaryColor),
+                      Icon(Icons.refresh, color: Themes.gray.shade500),
                 ),
-                const Text('エラーが発生しました。', style: style),
+                Text('エラーが発生しました。', style: style),
               ],
             );
           },

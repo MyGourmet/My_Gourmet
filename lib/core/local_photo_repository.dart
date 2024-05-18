@@ -19,6 +19,14 @@ class LocalPhotoRepository {
     return (db.select(db.photoDetails)..limit(1)).getSingleOrNull();
   }
 
+  /// 写真数を取得する
+  Future<int> getPhotoCount() async {
+    final countExpression = countAll();
+    final query = db.selectOnly(db.photos)..addColumns([countExpression]);
+    final row = await query.getSingle();
+    return row.rawData.data.values.first as int;
+  }
+
   /// 写真データを保存する
   /// [photo] 写真データ
   /// [isFood] 食べ物かどうか
@@ -40,6 +48,7 @@ class LocalPhotoRepository {
     final photoDetail = await getPhotoDetail();
     final lastPhotoModel = PhotoDetailsCompanion(
       lastId: Value(photo.id),
+      lastCreateDateSecond: Value(photo.createDateSecond!),
       currentCount:
           Value(photoDetail != null ? photoDetail.currentCount + 1 : 1),
     );
