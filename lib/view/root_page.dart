@@ -154,12 +154,18 @@ class _NavigationFrame extends StatelessWidget {
 
   int _calcSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
-    return switch (location) {
-      HomePage.routePath => 0,
-      SwipePhotoPage.routePath => 1,
-      MyPage.routePath => 2,
-      String() => throw UnimplementedError(),
+    const routeIndexMap = {
+      HomePage.routePath: 0,
+      SwipePhotoPage.routePath: 1,
+      MyPage.routePath: 2,
     };
+
+    return routeIndexMap.entries
+        .firstWhere(
+          (entry) => location.contains(entry.key),
+          orElse: () => throw UnimplementedError(),
+        )
+        .value;
   }
 
   void _onItemTapped(int index, BuildContext context) {
