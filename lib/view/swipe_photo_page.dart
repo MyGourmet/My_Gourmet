@@ -69,7 +69,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                             onPressed: () {
                               ref.read(photoListProvider.notifier).loadNext();
                             },
-                            text: '無視',
+                            text: 'ちがう',
                             backgroundColor: Themes.gray[200],
                             textColor: Themes.gray[900],
                             height: 56,
@@ -88,7 +88,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                                     isFood: true,
                                   );
                             },
-                            text: '飯',
+                            text: 'グルメ',
                             height: 56,
                             width: 150,
                             widget: Image.asset(
