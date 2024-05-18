@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
+import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
 
 class CustomElevatedButton extends StatelessWidget {
@@ -55,7 +57,7 @@ class CustomElevatedButton extends StatelessWidget {
         children: [
           Row(
             children: [
-              const SizedBox(width: 8),
+              const Gap(8),
               Expanded(
                 child: Container(
                   height: backgroundHeight(),
@@ -79,16 +81,15 @@ class CustomElevatedButton extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (widget != null) widget!,
-                  if (widget != null) const SizedBox(width: 8),
+                  if (widget != null) ...[widget!, const Gap(8)],
                   Text(
                     text,
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: textColor ?? Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: context.textTheme.labelLarge!.copyWith(
+                      color: textColor ?? Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  if (widget != null) const SizedBox(width: 8),
+                  if (widget != null) const Gap(8),
                 ],
               ),
             ),
