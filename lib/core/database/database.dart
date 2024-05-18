@@ -42,6 +42,14 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  Future<List<Photo>> getAllPhotos() async {
+    return select(photos).get();
+  }
+
+  Future<void> deletePhoto(String id) async {
+    await (delete(photos)..where((tbl) => tbl.id.equals(id))).go();
+  }
 }
 
 /// コネクション生成

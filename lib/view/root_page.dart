@@ -164,13 +164,27 @@ class _NavigationFrame extends ConsumerWidget {
   ) {
     final location = GoRouterState.of(context).uri.toString();
 
-    return switch (location) {
-      HomePage.routePath => 0,
-      ClassifyStartPage.routePath => 1,
+    const routeIndexMap = {
+      HomePage.routePath: 0,
+      SwipePhotoPage.routePath: 1,
       SwipePhotoPage.routePath => 1,
-      MyPage.routePath => 2,
-      String() => throw UnimplementedError(),
+      MyPage.routePath: 2,
     };
+
+    // return switch (location) {
+    //   HomePage.routePath => 0,
+    //   ClassifyStartPage.routePath => 1,
+    //   SwipePhotoPage.routePath => 1,
+    //   MyPage.routePath => 2,
+    //   String() => throw UnimplementedError(),
+    // };
+
+    return routeIndexMap.entries
+        .firstWhere(
+          (entry) => location.contains(entry.key),
+      orElse: () => throw UnimplementedError(),
+    )
+        .value;
   }
 
   void _onItemTapped(
