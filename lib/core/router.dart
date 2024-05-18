@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../view/home_page.dart';
+import '../view/image_detail_page.dart';
 import '../view/my_page.dart';
 import '../view/root_page.dart';
 import '../view/swipe_photo_page.dart';
@@ -20,6 +21,16 @@ final routerProvider = Provider(
             name: HomePage.routeName,
             path: HomePage.routePath,
             builder: (context, state) => const HomePage(),
+            routes: [
+              GoRoute(
+                name: ImageDetailPage.routeName,
+                path: ImageDetailPage.routePath,
+                builder: (context, state) {
+                  final imagePath = state.extra! as String;
+                  return ImageDetailPage(imagePath: imagePath);
+                },
+              ),
+            ],
           ),
           GoRoute(
             name: MyPage.routeName,
