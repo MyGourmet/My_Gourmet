@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../core/shared_preferences_service.dart';
@@ -48,13 +49,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isLastPage = currentOnboarding == 2; // 最後のページ判定
+    final isLastPage = currentOnboarding == 2;
 
     return Scaffold(
       body: Stack(
         children: <Widget>[
           PageView(
-            controller: _pageController, // PageControllerをPageViewに接続
+            controller: _pageController,
             onPageChanged: (int page) {
               setState(() {
                 currentOnboarding = page;
@@ -62,33 +63,30 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             },
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/new_onboarding1.png'),
+                    image: AssetImage('assets/images/onboarding1.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/new_onboarding2.png'),
+                    image: AssetImage('assets/images/onboarding2.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/new_onboarding3.png'),
+                    image: AssetImage('assets/images/onboarding3.png'),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ],
-          ),
-          SizedBox(
-            height: 20,
           ),
           SafeArea(
             child: Column(
@@ -96,43 +94,43 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               children: <Widget>[
                 Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
+                    padding: const EdgeInsets.only(top: 20),
                     child: SmoothPageIndicator(
-                      controller: _pageController, // PageControllerを渡す
-                      count: 3, // ページの数を3に設定
+                      controller: _pageController,
+                      count: 3,
                       effect: WormEffect(
-                        dotHeight: 12, // 点の高さを小さくする
-                        dotWidth: 12, // 点の幅を小さくする
+                        dotHeight: 12,
+                        dotWidth: 12,
                         spacing: 23,
-                        activeDotColor: Colors.grey[800]!, // アクティブな点の色を濃い灰色にする
-                        dotColor: Colors.grey[400]!, // 非アクティブな点の色を薄い灰色にする
-                      ), // インジケータのエフェクト
+                        activeDotColor: Colors.grey[800]!,
+                        dotColor: Colors.grey[400]!,
+                      ),
                       onDotClicked: (index) {
                         _pageController.animateToPage(
                           index,
-                          duration: Duration(milliseconds: 300),
+                          duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                         );
                       },
                     ),
                   ),
                 ),
-                SizedBox(height: 28),
+                const Gap(28),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.05,
                   ),
                   child: Container(
-                    height: 60, // お好みの高さに設定してください
+                    height: 60,
                     decoration: BoxDecoration(
-                      color: Themes.mainOrange, // 背景色
-                      borderRadius: BorderRadius.circular(8.0), // 角の丸み
+                      color: Themes.mainOrange,
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: InkWell(
                       onTap: () {
                         if (!isLastPage) {
                           _pageController.nextPage(
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
                           );
                         } else {
@@ -145,7 +143,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         children: <Widget>[
                           Expanded(
                             child: Align(
-                              alignment: Alignment.center,
                               child: Text(
                                 isLastPage ? 'はじめる' : 'やってみる',
                                 style: const TextStyle(
@@ -161,7 +158,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 43),
+                const Gap(43),
               ],
             ),
           ),

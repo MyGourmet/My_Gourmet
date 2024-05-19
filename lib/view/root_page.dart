@@ -126,29 +126,29 @@ class _NavigationFrame extends ConsumerWidget {
                   icon: Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Icon(
+                      Icons.add,
+                    ),
+                  ),
+                  label: '画像追加',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
                       Icons.photo,
                     ),
                   ),
                   label: 'ギャラリー',
                 ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.photo_library,
-                    ),
-                  ),
-                  label: '写真保存',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.person,
-                    ),
-                  ),
-                  label: 'マイページ',
-                ),
+                // BottomNavigationBarItem(
+                //   icon: Padding(
+                //     padding: EdgeInsets.only(top: 10),
+                //     child: Icon(
+                //       Icons.person,
+                //     ),
+                //   ),
+                //   label: 'マイページ',
+                // ),
               ],
             )
           : null,
@@ -158,9 +158,9 @@ class _NavigationFrame extends ConsumerWidget {
   int _calcSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     return switch (location) {
-      HomePage.routePath => 0,
-      SwipePhotoPage.routePath => 1,
-      MyPage.routePath => 2,
+      SwipePhotoPage.routePath => 0,
+      HomePage.routePath => 1,
+      // MyPage.routePath => 2,
       String() => throw UnimplementedError(),
     };
   }
@@ -168,9 +168,9 @@ class _NavigationFrame extends ConsumerWidget {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        context.go(HomePage.routePath);
-      case 1:
         context.go(SwipePhotoPage.routePath);
+      case 1:
+        context.go(HomePage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }
