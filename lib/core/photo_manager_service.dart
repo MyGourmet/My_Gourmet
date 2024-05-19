@@ -80,6 +80,11 @@ class PhotoService {
   ) {
     return AdvancedCustomFilter(
       where: [
+        ColumnWhereCondition(
+          column: CustomColumns.base.mediaType,
+          operator: '=',
+          value: '1',
+        ),
         DateColumnWhereCondition(
           column: CustomColumns.base.createDate,
           operator: '>',

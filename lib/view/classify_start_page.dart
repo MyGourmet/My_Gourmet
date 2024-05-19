@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
 import 'swipe_photo_page.dart';
+import 'widgets/custom_elevated_button.dart';
 
 /// 写真分類スタート画面表示フラグ[StateProvider]
 ///
@@ -44,9 +45,11 @@ class ClassifyStartPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
+                    width: 300,
+                    height: 350,
                     'assets/images/classify_photo.png',
                   ),
-                  const Gap(32),
+                  const Gap(16),
                   Text(
                     'スマホに入っている写真を読み込みます！',
                     style: context.textTheme.titleMedium,
@@ -59,19 +62,15 @@ class ClassifyStartPage extends ConsumerWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                bottom: 16,
-              ),
-              child: ElevatedButton(
+              padding: const EdgeInsets.all(16),
+              child: CustomElevatedButton(
                 onPressed: () {
                   ref
                       .read(isClassifyOnboardingCompletedProvider.notifier)
                       .update((state) => true);
                   context.go(SwipePhotoPage.routePath);
                 },
-                child: const Text('分類スタート'),
+                text: '分類スタート',
               ),
             ),
           ],

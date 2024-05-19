@@ -54,6 +54,7 @@ class LocalPhotoRepository {
       );
       await db.into(db.photos).insert(
             photoModel,
+            mode: InsertMode.insertOrIgnore,
           );
     }
 

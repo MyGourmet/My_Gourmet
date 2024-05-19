@@ -13,7 +13,7 @@ class _PhotoFileCacheNotifier
     extends AutoDisposeFamilyAsyncNotifier<File, AssetEntity> {
   @override
   Future<File> build(AssetEntity assetEntity) async {
-    final file = await assetEntity.originFile;
+    final file = await assetEntity.file;
     return file!;
   }
 }
