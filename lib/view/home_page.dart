@@ -52,6 +52,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                   } else if (sizeSnapshot.hasError) {
                     return const Center(child: Text('エラーが発生しました'));
                   } else if (sizeSnapshot.hasData) {
+                    if (snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/no_photo.png',
+                              width: 200,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              '保存された写真がまだありません...',
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
                     return MasonryGridView.count(
                       crossAxisCount: 2,
                       mainAxisSpacing: 8,
@@ -91,12 +109,38 @@ class _HomePageState extends ConsumerState<HomePage> {
                       itemCount: snapshot.data!.length,
                     );
                   } else {
-                    return const Center(child: Text('データがありません'));
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/no_photo.png',
+                          width: 200,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          '保存された写真がまだありません...',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                      ],
+                    );
                   }
                 },
               );
             } else {
-              return const Center(child: Text('データがありません'));
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/no_photo.png',
+                    width: 200,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '保存された写真がまだありません...',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                ],
+              );
             }
           },
         ),

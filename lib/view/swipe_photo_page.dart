@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/permission_service.dart';
+import '../core/themes.dart';
 import '../features/swipe_photo/swipe_photo_controller.dart';
+import 'widgets/custom_elevated_button.dart';
 
 /// 写真スワイプページ
 class SwipePhotoPage extends ConsumerStatefulWidget {
@@ -60,27 +62,36 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
+                          CustomElevatedButton(
+                            onPressed: () {
+                              ref.read(photoListProvider.notifier).loadNext();
+                            },
+                            text: 'ちがう',
+                            backgroundColor: Themes.gray[200],
+                            textColor: Themes.gray[900],
+                            height: 56,
                             width: 150,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                ref.read(photoListProvider.notifier).loadNext();
-                              },
-                              child: const Text('無視'),
+                            widget: Icon(
+                              Icons.close,
+                              color: Themes.gray[900],
                             ),
                           ),
                           const SizedBox(
                             width: 16,
                           ),
-                          SizedBox(
+                          CustomElevatedButton(
+                            onPressed: () {
+                              ref.read(photoListProvider.notifier).loadNext(
+                                    isFood: true,
+                                  );
+                            },
+                            text: 'グルメ',
+                            height: 56,
                             width: 150,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                ref.read(photoListProvider.notifier).loadNext(
-                                      isFood: true,
-                                    );
-                              },
-                              child: const Text('飯'),
+                            widget: Image.asset(
+                              'assets/images/gourmet.png',
+                              width: 32,
+                              height: 32,
                             ),
                           ),
                         ],
