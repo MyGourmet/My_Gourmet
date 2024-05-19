@@ -89,7 +89,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                             height: 56,
                             width: 150,
                             widget: Image.asset(
-                              'assets/images/meshi.png',
+                              'assets/images/gourmet.png',
                               width: 32,
                               height: 32,
                             ),
