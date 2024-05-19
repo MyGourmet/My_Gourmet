@@ -166,24 +166,16 @@ class _NavigationFrame extends ConsumerWidget {
 
     const routeIndexMap = {
       HomePage.routePath: 0,
+      ClassifyStartPage.routePath: 1,
       SwipePhotoPage.routePath: 1,
-      SwipePhotoPage.routePath => 1,
       MyPage.routePath: 2,
     };
-
-    // return switch (location) {
-    //   HomePage.routePath => 0,
-    //   ClassifyStartPage.routePath => 1,
-    //   SwipePhotoPage.routePath => 1,
-    //   MyPage.routePath => 2,
-    //   String() => throw UnimplementedError(),
-    // };
 
     return routeIndexMap.entries
         .firstWhere(
           (entry) => location.contains(entry.key),
-      orElse: () => throw UnimplementedError(),
-    )
+          orElse: () => throw UnimplementedError(),
+        )
         .value;
   }
 

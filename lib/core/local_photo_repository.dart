@@ -14,6 +14,17 @@ class LocalPhotoRepository {
   /// DBインスタンス生成
   final AppDatabase db = AppDatabase();
 
+  /// 写真リストを取得する
+  Future<List<Photo>> getAllPhotos() async {
+    return db.select(db.photos).get();
+  }
+
+  /// 写真を削除する
+  /// [id] 写真id
+  Future<void> deletePhoto(String id) async {
+    await (db.delete(db.photos)..where((tbl) => tbl.id.equals(id))).go();
+  }
+
   /// 写真情報を取得する
   Future<PhotoDetail?> getPhotoDetail() async {
     return (db.select(db.photoDetails)..limit(1)).getSingleOrNull();
@@ -34,14 +45,16 @@ class LocalPhotoRepository {
     required AssetEntity photo,
     required bool isFood,
   }) async {
-    final file = await photo.file;
+    final file = await photo.originFile;
     // 飯の場合写真データ保存
     if (isFood && file != null) {
       final photoModel = PhotosCompanion(
         id: Value(photo.id),
         path: Value(file.path),
       );
-      await db.into(db.photos).insertOnConflictUpdate(photoModel);
+      await db.into(db.photos).insert(
+            photoModel,
+          );
     }
 
     // 写真情報保存

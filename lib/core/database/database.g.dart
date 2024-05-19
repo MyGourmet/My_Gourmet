@@ -271,7 +271,7 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
   /// 最後の写真id
   final String lastId;
 
-  /// 最後の写真日付 iosだとidでソートできないようなので日付でやる
+  /// 最後の写真日付
   final int lastCreateDateSecond;
 
   /// 現在の写真処理数

@@ -37,7 +37,7 @@ class PhotoService {
 
       // 取得できた場合続きから写真を取得する
       if (photoDetail != null) {
-        filter = _getPhotoIdFilter(
+        filter = _getPhotoDateFilter(
           DateTime.fromMillisecondsSinceEpoch(
             photoDetail.lastCreateDateSecond * 1000,
           ),
@@ -46,7 +46,7 @@ class PhotoService {
         filter = AdvancedCustomFilter();
       }
     } else {
-      filter = _getPhotoIdFilter(lastDate);
+      filter = _getPhotoDateFilter(lastDate);
     }
 
     // 写真を古い順に取得
@@ -57,11 +57,13 @@ class PhotoService {
       ),
     );
 
-    // 写真が取得できない場合 スワイプ完了もしくは、最初から写真がない
+    // 写真が取得できない場合
     if (albums.isEmpty) {
+      // スワイプ完了
       if (ref.read(photoCountProvider) != null) {
         ref.read(photoCountProvider.notifier).complete();
       }
+
       return [];
     }
 
@@ -73,7 +75,7 @@ class PhotoService {
 
   /// 写真日付でフィルタリングする
   /// [lastDate] 最後の写真日付
-  AdvancedCustomFilter _getPhotoIdFilter(
+  AdvancedCustomFilter _getPhotoDateFilter(
     DateTime lastDate,
   ) {
     return AdvancedCustomFilter(

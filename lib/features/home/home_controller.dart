@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/database/database.dart';
-import 'home_repository.dart';
+import '../../core/local_photo_repository.dart';
 
 final homeControllerProvider = Provider<HomeController>((ref) {
   return HomeController(ref);
@@ -15,11 +15,12 @@ class HomeController {
 
   final Ref ref;
 
-  HomeRepository get _homeRepository => ref.read(homeRepositoryProvider);
+  LocalPhotoRepository get _localPhotoRepository =>
+      ref.read(localPhotoRepositoryProvider);
 
   Future<List<Photo>> getPhotos() async {
     try {
-      final photos = await _homeRepository.getAllPhotos();
+      final photos = await _localPhotoRepository.getAllPhotos();
       return _removeInvalidPhotos(photos);
     } on Exception catch (e) {
       debugPrint('Error fetching photos: $e');
@@ -56,7 +57,7 @@ class HomeController {
 
   Future<void> printPhotoPaths() async {
     try {
-      await _homeRepository.getAllPhotos();
+      await _localPhotoRepository.getAllPhotos();
     } on Exception catch (e) {
       debugPrint('Error fetching photos: $e');
     }

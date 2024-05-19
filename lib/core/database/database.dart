@@ -27,7 +27,7 @@ class PhotoDetails extends Table {
   /// 最後の写真id
   TextColumn get lastId => text()();
 
-  /// 最後の写真日付 iosだとidでソートできないようなので日付でやる
+  /// 最後の写真日付
   IntColumn get lastCreateDateSecond => integer()();
 
   /// 現在の写真処理数
@@ -42,14 +42,6 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
-
-  Future<List<Photo>> getAllPhotos() async {
-    return select(photos).get();
-  }
-
-  Future<void> deletePhoto(String id) async {
-    await (delete(photos)..where((tbl) => tbl.id.equals(id))).go();
-  }
 }
 
 /// コネクション生成

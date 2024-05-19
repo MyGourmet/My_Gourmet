@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../core/exception.dart';
 import '../../core/local_photo_repository.dart';
-import '../../core/permission_service.dart';
 import '../../core/photo_manager_service.dart';
 import 'photo_count.dart';
 
@@ -59,7 +59,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   @override
   Future<List<AssetEntity>> build() async {
     // パーミッション確認
-    if (!await ref.read(permissionServiceProvider).getPhotoPermission()) {
+    final permission = await PhotoManager.requestPermissionExtend();
+    if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
 

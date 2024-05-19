@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../core/build_context_extension.dart';
-import '../core/permission_service.dart';
+import '../core/exception.dart';
 import '../core/themes.dart';
 import '../features/swipe_photo/swipe_photo_controller.dart';
 import 'widgets/photo_cards.dart';
