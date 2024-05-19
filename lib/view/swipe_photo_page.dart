@@ -9,6 +9,7 @@ import '../core/exception.dart';
 import '../core/themes.dart';
 import '../features/swipe_photo/swipe_photo_controller.dart';
 import 'widgets/photo_cards.dart';
+import 'widgets/custom_elevated_button.dart';
 
 /// 写真スワイプページ
 class SwipePhotoPage extends ConsumerStatefulWidget {
@@ -27,7 +28,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
 
   /// 完了アニメーション用のコントローラー
   final _confettiController =
-      ConfettiController(duration: const Duration(seconds: 5));
+  ConfettiController(duration: const Duration(seconds: 5));
 
   /// アニメーションを行うかどうか
   /// 既にスワイプ完了していたらアニメーションを行わない
@@ -57,11 +58,11 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
         final photoCount = ref.watch(photoCountProvider);
         return photoCount != null
             ? Center(
-                child: Text(
-                  '${photoCount.current}枚 / ${photoCount.total}枚',
-                  style: context.textTheme.titleMedium,
-                ),
-              )
+          child: Text(
+            '${photoCount.current}枚 / ${photoCount.total}枚',
+            style: context.textTheme.titleMedium,
+          ),
+        )
             : const SizedBox.shrink();
       },
     );
@@ -72,36 +73,36 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
     return Center(
       // 写真リスト監視
       child: ref.watch(photoListProvider).when(
-            data: (photos) {
-              if (photos.isEmpty) {
-                return _buildComplete();
-              }
+        data: (photos) {
+          if (photos.isEmpty) {
+            return _buildComplete();
+          }
 
-              isAnimation = true;
+          isAnimation = true;
 
-              return Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8,
-                      right: 8,
-                      bottom: 32,
-                    ),
-                    child: PhotoCards(
-                      controller: _swiperController,
-                      photos: photos,
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: _buildButtons(),
-                  ),
-                ],
-              );
-            },
-            error: _buildError,
-            loading: _buildLoading,
-          ),
+          return Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8,
+                  right: 8,
+                  bottom: 32,
+                ),
+                child: PhotoCards(
+                  controller: _swiperController,
+                  photos: photos,
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                child: _buildButtons(),
+              ),
+            ],
+          );
+        },
+        error: _buildError,
+        loading: _buildLoading,
+      ),
     );
   }
 
@@ -115,50 +116,81 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Flexible(
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(16),
+            //         side: BorderSide(
+            //           width: 2,
+            //           color: Themes.gray.shade500,
+            //         ),
+            //       ),
+            //       backgroundColor: Themes.mainOrange.shade50,
+            //       foregroundColor: Themes.gray.shade500,
+            //     ),
+            //     onPressed: _swiperController.swipeLeft,
+            //     child: const Text(
+            //       'スキップ',
+            //       style: TextStyle(
+            //         fontSize: 20,
+            //         fontWeight: FontWeight.w400,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Flexible(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(
-                      width: 2,
-                      color: Themes.gray.shade500,
-                    ),
-                  ),
-                  backgroundColor: Themes.mainOrange.shade50,
-                  foregroundColor: Themes.gray.shade500,
-                ),
-                onPressed: _swiperController.swipeLeft,
-                child: const Text(
-                  'スキップ',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
+              child: CustomElevatedButton(
+                onPressed: () {
+                  ref.read(photoListProvider.notifier).loadNext();
+                },
+                text: 'ちがう',
+                backgroundColor: Themes.gray[200],
+                textColor: Themes.gray[900],
+                height: 56,
+                width: 150,
+                widget: Icon(
+                  Icons.close,
+                  color: Themes.gray[900],
                 ),
               ),
             ),
             const Gap(12),
-            Flexible(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    side: BorderSide(
-                      width: 2,
-                      color: Themes.gray.shade500,
-                    ),
-                  ),
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: _swiperController.swipeRight,
-                child: const Text(
-                  'ご飯',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+            // Flexible(
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(
+            //       shape: RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.circular(16),
+            //         side: BorderSide(
+            //           width: 2,
+            //           color: Themes.gray.shade500,
+            //         ),
+            //       ),
+            //       foregroundColor: Colors.white,
+            //     ),
+            //     onPressed: _swiperController.swipeRight,
+            //     child: const Text(
+            //       'ご飯',
+            //       style: TextStyle(
+            //         fontSize: 20,
+            //         fontWeight: FontWeight.w400,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            CustomElevatedButton(
+              onPressed: () {
+                ref.read(photoListProvider.notifier).loadNext(
+                  isFood: true,
+                );
+              },
+              text: 'グルメ',
+              height: 56,
+              width: 150,
+              widget: Image.asset(
+                'assets/images/gourmet.png',
+                width: 32,
+                height: 32,
               ),
             ),
           ],
@@ -214,31 +246,31 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 ),
                 const Gap(8),
                 ref.watch(foodPhotoCountProvider).when(
-                      data: (count) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.add,
+                  data: (count) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          color: Themes.mainOrange,
+                        ),
+                        Padding(
+                          padding:
+                          const EdgeInsets.only(left: 16, bottom: 2),
+                          child: Text(
+                            '$count 枚',
+                            style:
+                            context.textTheme.headlineSmall?.copyWith(
                               color: Themes.mainOrange,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16, bottom: 2),
-                              child: Text(
-                                '$count 枚',
-                                style:
-                                    context.textTheme.headlineSmall?.copyWith(
-                                  color: Themes.mainOrange,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      error: _buildError,
-                      loading: _buildLoading,
-                    ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  error: _buildError,
+                  loading: _buildLoading,
+                ),
               ],
             ),
           ),

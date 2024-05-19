@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
 import '../core/themes.dart';
+import 'widgets/custom_elevated_button.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
 ///
@@ -109,7 +110,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               ),
             ),
             if (!isOnboardingTop)
-              ElevatedButton(
+              CustomElevatedButton(
                 onPressed: () async {
                   if (isNotLastOnboarding) {
                     await _onboardingController.nextPage(
@@ -123,12 +124,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         .update((state) => true);
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 48),
-                ),
-                child: Text(
-                  isNotLastOnboarding ? 'つぎへ' : 'はじめる',
-                ),
+                text: isNotLastOnboarding ? 'つぎへ' : 'はじめる',
+                borderColor: Colors.white.withOpacity(0.5),
               ),
             const Gap(28),
           ],

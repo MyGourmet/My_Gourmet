@@ -17,7 +17,7 @@ abstract final class Themes {
       brightness: Brightness.light,
       scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
-        surfaceTintColor: ThemeData.light().scaffoldBackgroundColor,
+        surfaceTintColor: Colors.white,
         elevation: 0,
         titleTextStyle: TextStyle(
           color: gray[900],
