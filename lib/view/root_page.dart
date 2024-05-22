@@ -107,56 +107,59 @@ class _RootPageState extends ConsumerState<RootPage> {
 }
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
-class _NavigationFrame extends StatelessWidget {
+class _NavigationFrame extends ConsumerWidget {
   const _NavigationFrame({required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _calcSelectedIndex(context),
-        onTap: (int index) => _onItemTapped(index, context),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.photo,
-              ),
-            ),
-            label: 'ギャラリー',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.photo_library,
-              ),
-            ),
-            label: '写真保存',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.person,
-              ),
-            ),
-            label: 'マイページ',
-          ),
-        ],
-      ),
+      bottomNavigationBar: isOnboardingComplete
+          ? BottomNavigationBar(
+              currentIndex: _calcSelectedIndex(context),
+              onTap: (int index) => _onItemTapped(index, context),
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.add,
+                    ),
+                  ),
+                  label: '画像追加',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.photo,
+                    ),
+                  ),
+                  label: 'ギャラリー',
+                ),
+                // BottomNavigationBarItem(
+                //   icon: Padding(
+                //     padding: EdgeInsets.only(top: 10),
+                //     child: Icon(
+                //       Icons.person,
+                //     ),
+                //   ),
+                //   label: 'マイページ',
+                // ),
+              ],
+            )
+          : null,
     );
   }
 
   int _calcSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     const routeIndexMap = {
-      HomePage.routePath: 0,
-      SwipePhotoPage.routePath: 1,
+      SwipePhotoPage.routePath: 0,
+      HomePage.routePath: 1,
       MyPage.routePath: 2,
     };
 
@@ -171,9 +174,9 @@ class _NavigationFrame extends StatelessWidget {
   void _onItemTapped(int index, BuildContext context) {
     switch (index) {
       case 0:
-        context.go(HomePage.routePath);
-      case 1:
         context.go(SwipePhotoPage.routePath);
+      case 1:
+        context.go(HomePage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }
