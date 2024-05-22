@@ -5,6 +5,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../core/shared_preferences_service.dart';
 import '../core/themes.dart';
+import 'widgets/custom_elevated_button.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
 ///
@@ -126,8 +127,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       color: Themes.mainOrange,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: InkWell(
-                      onTap: () {
+                    child: CustomElevatedButton(
+                      onPressed: () {
                         if (!isLastPage) {
                           _pageController.nextPage(
                             duration: const Duration(milliseconds: 300),
@@ -139,22 +140,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                               .update((state) => true);
                         }
                       },
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Align(
-                              child: Text(
-                                isLastPage ? 'はじめる' : 'やってみる',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      text: isLastPage ? 'はじめる' : 'やってみる',
                     ),
                   ),
                 ),
