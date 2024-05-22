@@ -55,7 +55,7 @@ class ClassifyStartPage extends ConsumerWidget {
                     style: context.textTheme.titleMedium,
                   ),
                   Text(
-                    'ご飯の画像とそれ以外を分類してください。',
+                    'グルメの画像とそれ以外を分類してください。',
                     style: context.textTheme.titleMedium,
                   ),
                 ],
