@@ -8,6 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
+import 'classify_start_page.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 import 'onboarding_page.dart';
@@ -114,51 +115,58 @@ class _NavigationFrame extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+    final isClassifyOnboardingCompleted =
+        ref.watch(isClassifyOnboardingCompletedProvider);
+
     return Scaffold(
       body: child,
-      bottomNavigationBar: isOnboardingComplete
-          ? BottomNavigationBar(
-              currentIndex: _calcSelectedIndex(context),
-              onTap: (int index) => _onItemTapped(index, context),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.add,
-                    ),
-                  ),
-                  label: '画像追加',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.photo,
-                    ),
-                  ),
-                  label: 'ギャラリー',
-                ),
-                // BottomNavigationBarItem(
-                //   icon: Padding(
-                //     padding: EdgeInsets.only(top: 10),
-                //     child: Icon(
-                //       Icons.person,
-                //     ),
-                //   ),
-                //   label: 'マイページ',
-                // ),
-              ],
-            )
-          : null,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex:
+            _calcSelectedIndex(context, isClassifyOnboardingCompleted),
+        onTap: (int index) =>
+            _onItemTapped(index, context, isClassifyOnboardingCompleted),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Icon(
+                Icons.photo,
+              ),
+            ),
+            label: 'ギャラリー',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Icon(
+                Icons.photo_library,
+              ),
+            ),
+            label: '写真保存',
+          ),
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Icon(
+                Icons.person,
+              ),
+            ),
+            label: 'マイページ',
+          ),
+        ],
+      ),
     );
   }
 
-  int _calcSelectedIndex(BuildContext context) {
+  int _calcSelectedIndex(
+    BuildContext context,
+    bool isClassifyOnboardingCompleted,
+  ) {
     final location = GoRouterState.of(context).uri.toString();
+
     const routeIndexMap = {
       SwipePhotoPage.routePath: 0,
+      ClassifyStartPage.routePath: 0,
       HomePage.routePath: 1,
       MyPage.routePath: 2,
     };
@@ -171,10 +179,18 @@ class _NavigationFrame extends ConsumerWidget {
         .value;
   }
 
-  void _onItemTapped(int index, BuildContext context) {
+  void _onItemTapped(
+    int index,
+    BuildContext context,
+    bool isClassifyOnboardingCompleted,
+  ) {
     switch (index) {
       case 0:
-        context.go(SwipePhotoPage.routePath);
+        context.go(
+          isClassifyOnboardingCompleted
+              ? SwipePhotoPage.routePath
+              : ClassifyStartPage.routePath,
+        );
       case 1:
         context.go(HomePage.routePath);
       case 2:
