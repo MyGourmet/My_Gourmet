@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../features/swipe_photo/swipe_photo_controller.dart';
 import 'local_photo_repository.dart';
 
 /// [PhotoService]用プロバイダー
@@ -15,39 +16,54 @@ class PhotoService {
   final Ref ref;
 
   /// 写真取得
-  /// [lastId] 最後の写真id
-  Future<List<AssetEntity>> getAllPhotos({String? lastId}) async {
-    var filter = AdvancedCustomFilter().addWhereCondition(
-      // 画像でフィルタリング
-      ColumnWhereCondition(
-        column: CustomColumns.base.mediaType,
-        operator: '=',
-        value: '1',
-      ),
-    );
+  /// [lastDate] 最後の写真日付
+  Future<List<AssetEntity>> getAllPhotos({DateTime? lastDate}) async {
+    AdvancedCustomFilter filter;
 
     // 初回ロード
-    if (lastId == null) {
-      // DBから最後の写真データを取得
-      final lastPhoto =
-          await ref.read(localPhotoRepositoryProvider).getLastPhoto();
+    if (lastDate == null) {
+      // DBから写真情報を取得
+      final photoDetail =
+          await ref.read(localPhotoRepositoryProvider).getPhotoDetail();
+
+      // PhotoManagerから写真数取得
+      final totalCount = await PhotoManager.getAssetCount(
+        type: RequestType.image,
+      );
+      // カウント更新
+      ref
+          .read(photoCountProvider.notifier)
+          .updateCount(photoDetail?.currentCount ?? 0, totalCount);
 
       // 取得できた場合続きから写真を取得する
-      if (lastPhoto != null) {
-        filter = _getPhotoIdFilter(filter, lastPhoto.id);
+      if (photoDetail != null) {
+        filter = _getPhotoDateFilter(
+          DateTime.fromMillisecondsSinceEpoch(
+            photoDetail.lastCreateDateSecond * 1000,
+          ),
+        );
+      } else {
+        filter = AdvancedCustomFilter();
       }
     } else {
-      filter = _getPhotoIdFilter(filter, lastId);
+      filter = _getPhotoDateFilter(lastDate);
     }
 
     // 写真を古い順に取得
     final albums = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
       filterOption: filter.addOrderBy(
-        column: CustomColumns.base.id,
+        column: CustomColumns.base.createDate,
       ),
     );
 
+    // 写真が取得できない場合
     if (albums.isEmpty) {
+      // スワイプ完了
+      if (ref.read(photoCountProvider) != null) {
+        ref.read(photoCountProvider.notifier).complete();
+      }
+
       return [];
     }
 
@@ -57,19 +73,24 @@ class PhotoService {
     return photos;
   }
 
-  /// 写真idでフィルタリングする
-  /// [filter] フィルター
-  /// [lastId] 最後の写真id
-  AdvancedCustomFilter _getPhotoIdFilter(
-    AdvancedCustomFilter filter,
-    String lastId,
+  /// 写真日付でフィルタリングする
+  /// [lastDate] 最後の写真日付
+  AdvancedCustomFilter _getPhotoDateFilter(
+    DateTime lastDate,
   ) {
-    return filter.addWhereCondition(
-      ColumnWhereCondition(
-        column: CustomColumns.base.id,
-        operator: '>',
-        value: lastId,
-      ),
+    return AdvancedCustomFilter(
+      where: [
+        ColumnWhereCondition(
+          column: CustomColumns.base.mediaType,
+          operator: '=',
+          value: '1',
+        ),
+        DateColumnWhereCondition(
+          column: CustomColumns.base.createDate,
+          operator: '>',
+          value: lastDate,
+        ),
+      ],
     );
   }
 }

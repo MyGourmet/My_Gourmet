@@ -8,6 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
+import 'classify_start_page.dart';
 import 'home_page.dart';
 import 'my_page.dart';
 import 'onboarding_page.dart';
@@ -107,18 +108,23 @@ class _RootPageState extends ConsumerState<RootPage> {
 }
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
-class _NavigationFrame extends StatelessWidget {
+class _NavigationFrame extends ConsumerWidget {
   const _NavigationFrame({required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isClassifyOnboardingCompleted =
+        ref.watch(isClassifyOnboardingCompletedProvider);
+
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _calcSelectedIndex(context),
-        onTap: (int index) => _onItemTapped(index, context),
+        currentIndex:
+            _calcSelectedIndex(context, isClassifyOnboardingCompleted),
+        onTap: (int index) =>
+            _onItemTapped(index, context, isClassifyOnboardingCompleted),
         items: const [
           BottomNavigationBarItem(
             icon: Padding(
@@ -152,10 +158,15 @@ class _NavigationFrame extends StatelessWidget {
     );
   }
 
-  int _calcSelectedIndex(BuildContext context) {
+  int _calcSelectedIndex(
+    BuildContext context,
+    bool isClassifyOnboardingCompleted,
+  ) {
     final location = GoRouterState.of(context).uri.toString();
+
     const routeIndexMap = {
       HomePage.routePath: 0,
+      ClassifyStartPage.routePath: 1,
       SwipePhotoPage.routePath: 1,
       MyPage.routePath: 2,
     };
@@ -168,12 +179,20 @@ class _NavigationFrame extends StatelessWidget {
         .value;
   }
 
-  void _onItemTapped(int index, BuildContext context) {
+  void _onItemTapped(
+    int index,
+    BuildContext context,
+    bool isClassifyOnboardingCompleted,
+  ) {
     switch (index) {
       case 0:
         context.go(HomePage.routePath);
       case 1:
-        context.go(SwipePhotoPage.routePath);
+        context.go(
+          isClassifyOnboardingCompleted
+              ? SwipePhotoPage.routePath
+              : ClassifyStartPage.routePath,
+        );
       case 2:
         context.go(MyPage.routePath);
     }

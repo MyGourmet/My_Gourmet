@@ -3,25 +3,54 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../core/exception.dart';
 import '../../core/local_photo_repository.dart';
-import '../../core/permission_service.dart';
 import '../../core/photo_manager_service.dart';
+import 'photo_count.dart';
 
-/// 写真のインデックスを管理するProvider
-class _PhotoIndexNotifier extends AutoDisposeNotifier<int> {
+/// 写真のカウントを管理するProvider
+/// スワイプ画面の上部のカウントに使用
+class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   @override
-  int build() => 0;
+  PhotoCount? build() => null;
 
-  /// indexプラス
-  void increment() => state++;
+  /// カウント更新
+  void updateCount(int current, int total) => state = PhotoCount(
+        current: current,
+        total: total,
+      );
 
-  /// indexクリア
-  void clear() => state = 0;
+  /// 現在のカウント更新
+  void updateCurrentCount() {
+    state = state?.copyWith(
+      current: (state?.current ?? 0) + 1,
+    );
+  }
+
+  /// 完了
+  void complete() {
+    state = null;
+  }
 }
 
-final photoIndexProvider =
-    NotifierProvider.autoDispose<_PhotoIndexNotifier, int>(
-  _PhotoIndexNotifier.new,
+final photoCountProvider =
+    NotifierProvider.autoDispose<_PhotoCountNotifier, PhotoCount?>(
+  _PhotoCountNotifier.new,
+);
+
+/// ご飯の登録数を取得するProvider
+/// 分類完了後の 「追加された写真 ＋XXX枚」に使用
+class _FoodPhotoCountNotifier extends AutoDisposeAsyncNotifier<int> {
+  @override
+  Future<int> build() async {
+    // 取得できない場合はデフォルト値設定
+    return ref.read(localPhotoRepositoryProvider).getPhotoCount();
+  }
+}
+
+final foodPhotoCountProvider =
+    AsyncNotifierProvider.autoDispose<_FoodPhotoCountNotifier, int>(
+  _FoodPhotoCountNotifier.new,
 );
 
 /// 写真を取得するProvider
@@ -30,7 +59,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   @override
   Future<List<AssetEntity>> build() async {
     // パーミッション確認
-    if (!await ref.read(permissionServiceProvider).getPhotoPermission()) {
+    final permission = await PhotoManager.requestPermissionExtend();
+    if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
 
@@ -40,7 +70,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
   /// 次の写真を取得する
   /// [isFood] 食べ物かどうか
-  Future<void> loadNext({bool isFood = false}) async {
+  Future<void> loadNext({bool isFood = false, required int index}) async {
     // データがない時は何もしない
     final value = state.valueOrNull;
     if (value == null || state.asData == null) {
@@ -54,8 +84,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     final photos = state.asData!.value;
     final length = photos.length;
-    final index = ref.read(photoIndexProvider);
-    final id = photos[index].id;
+    final dateTime = photos[index].createDateTime;
 
     try {
       // 写真登録
@@ -63,13 +92,13 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
             photo: photos[index],
             isFood: isFood,
           );
+
+      // カウント更新
+      ref.read(photoCountProvider.notifier).updateCurrentCount();
     } on Exception catch (e, stacktrace) {
       state = AsyncValue.error(e, stacktrace);
       return;
     }
-
-    // 写真のindex更新
-    ref.read(photoIndexProvider.notifier).increment();
 
     // 最後の写真までスワイプしていない場合
     if (index != length - 1) {
@@ -82,11 +111,9 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     try {
       // 次の写真リストをDBから取得
-      final results =
-          await ref.read(photoManagerServiceProvider).getAllPhotos(lastId: id);
-
-      // indexクリア
-      ref.read(photoIndexProvider.notifier).clear();
+      final results = await ref.read(photoManagerServiceProvider).getAllPhotos(
+            lastDate: dateTime,
+          );
 
       // 状態更新
       state = AsyncValue<List<AssetEntity>>.data([

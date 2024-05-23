@@ -21,33 +21,27 @@ class Photos extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-/// 最後に処理した写真情報を保存するテーブル
-@DataClassName('LastPhoto')
-class LastPhotos extends Table {
-  /// 写真のid
-  TextColumn get id => text()();
+/// 写真情報を保存するテーブル
+@DataClassName('PhotoDetail')
+class PhotoDetails extends Table {
+  /// 最後の写真id
+  TextColumn get lastId => text()();
 
-  /// 主キー設定
-  @override
-  Set<Column> get primaryKey => {id};
+  /// 最後の写真日付
+  IntColumn get lastCreateDateSecond => integer()();
+
+  /// 現在の写真処理数
+  IntColumn get currentCount => integer()();
 }
 
 /// DB設定
-@DriftDatabase(tables: [Photos, LastPhotos])
+@DriftDatabase(tables: [Photos, PhotoDetails])
 class AppDatabase extends _$AppDatabase {
   // 引数なしのコンストラクタで_openConnectionを直接使用
   AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
-
-  Future<List<Photo>> getAllPhotos() async {
-    return select(photos).get();
-  }
-
-  Future<void> deletePhoto(String id) async {
-    await (delete(photos)..where((tbl) => tbl.id.equals(id))).go();
-  }
 }
 
 /// コネクション生成
