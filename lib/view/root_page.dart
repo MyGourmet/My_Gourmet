@@ -118,43 +118,47 @@ class _NavigationFrame extends ConsumerWidget {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);
 
+    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex:
-            _calcSelectedIndex(context, isClassifyOnboardingCompleted),
-        onTap: (int index) =>
-            _onItemTapped(index, context, isClassifyOnboardingCompleted),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.photo,
-              ),
-            ),
-            label: 'ギャラリー',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.photo_library,
-              ),
-            ),
-            label: '写真保存',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.person,
-              ),
-            ),
-            label: 'マイページ',
-          ),
-        ],
-      ),
+      bottomNavigationBar: isOnboardingComplete
+          ? BottomNavigationBar(
+              currentIndex:
+                  _calcSelectedIndex(context, isClassifyOnboardingCompleted),
+              onTap: (int index) =>
+                  _onItemTapped(index, context, isClassifyOnboardingCompleted),
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.add,
+                    ),
+                  ),
+                  label: '画像追加',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.photo,
+                    ),
+                  ),
+                  label: 'ギャラリー',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.person,
+                    ),
+                  ),
+                  label: 'マイページ',
+                ),
+              ],
+            )
+          : null,
     );
   }
 

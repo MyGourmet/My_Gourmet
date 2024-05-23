@@ -139,7 +139,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     ),
                   ),
                 ),
-                const Gap(43),
+                const Gap(44),
               ],
             ),
           ),
