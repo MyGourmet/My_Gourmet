@@ -64,7 +64,7 @@ class GoRouterObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route.settings.name != null) {
-      analytics.setCurrentScreen(screenName: route.settings.name);
+      analytics.logScreenView(screenName: route.settings.name);
     }
   }
 }

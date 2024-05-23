@@ -118,43 +118,47 @@ class _NavigationFrame extends ConsumerWidget {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);
 
+    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+
     return Scaffold(
       body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex:
-            _calcSelectedIndex(context, isClassifyOnboardingCompleted),
-        onTap: (int index) =>
-            _onItemTapped(index, context, isClassifyOnboardingCompleted),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.photo,
-              ),
-            ),
-            label: 'ギャラリー',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.photo_library,
-              ),
-            ),
-            label: '写真保存',
-          ),
-          BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Icon(
-                Icons.person,
-              ),
-            ),
-            label: 'マイページ',
-          ),
-        ],
-      ),
+      bottomNavigationBar: isOnboardingComplete
+          ? BottomNavigationBar(
+              currentIndex:
+                  _calcSelectedIndex(context, isClassifyOnboardingCompleted),
+              onTap: (int index) =>
+                  _onItemTapped(index, context, isClassifyOnboardingCompleted),
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.add,
+                    ),
+                  ),
+                  label: '画像追加',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.photo,
+                    ),
+                  ),
+                  label: 'ギャラリー',
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.person,
+                    ),
+                  ),
+                  label: 'マイページ',
+                ),
+              ],
+            )
+          : null,
     );
   }
 
@@ -165,9 +169,9 @@ class _NavigationFrame extends ConsumerWidget {
     final location = GoRouterState.of(context).uri.toString();
 
     const routeIndexMap = {
-      HomePage.routePath: 0,
-      ClassifyStartPage.routePath: 1,
-      SwipePhotoPage.routePath: 1,
+      SwipePhotoPage.routePath: 0,
+      ClassifyStartPage.routePath: 0,
+      HomePage.routePath: 1,
       MyPage.routePath: 2,
     };
 
@@ -186,13 +190,13 @@ class _NavigationFrame extends ConsumerWidget {
   ) {
     switch (index) {
       case 0:
-        context.go(HomePage.routePath);
-      case 1:
         context.go(
           isClassifyOnboardingCompleted
               ? SwipePhotoPage.routePath
               : ClassifyStartPage.routePath,
         );
+      case 1:
+        context.go(HomePage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }
