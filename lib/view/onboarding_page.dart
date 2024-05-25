@@ -51,6 +51,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     final isLastPage = currentOnboarding == 2;
 
+    final screenHeight = MediaQuery.of(context).size.height;
+    final indicatorPadding = screenHeight * 0.035;
+    final bottomPadding = screenHeight * 0.05;
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -63,26 +67,29 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             },
             children: <Widget>[
               Container(
+                margin: EdgeInsets.only(bottom: indicatorPadding),
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/images/onboarding1.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
               Container(
+                margin: EdgeInsets.only(bottom: indicatorPadding),
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/images/onboarding2.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
               Container(
+                margin: EdgeInsets.only(bottom: indicatorPadding),
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/images/onboarding3.png'),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
@@ -92,30 +99,25 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: SmoothPageIndicator(
-                      controller: _pageController,
-                      count: 3,
-                      effect: WormEffect(
-                        dotHeight: 12,
-                        dotWidth: 12,
-                        spacing: 23,
-                        activeDotColor: Colors.grey[800]!,
-                        dotColor: Colors.grey[400]!,
-                      ),
-                      onDotClicked: (index) {
-                        _pageController.animateToPage(
-                          index,
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                    ),
+                SmoothPageIndicator(
+                  controller: _pageController,
+                  count: 3,
+                  effect: WormEffect(
+                    dotHeight: 12,
+                    dotWidth: 12,
+                    spacing: 24,
+                    activeDotColor: Colors.grey[800]!,
+                    dotColor: Colors.grey[400]!,
                   ),
+                  onDotClicked: (index) {
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
                 ),
-                const Gap(28),
+                Gap(indicatorPadding),
                 Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: MediaQuery.of(context).size.width * 0.05,
@@ -135,11 +137,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                               .update((state) => true);
                         }
                       },
-                      text: isLastPage ? 'はじめる' : 'やってみる',
+                      text: isLastPage ? 'やってみる' : 'つぎへ',
                     ),
                   ),
                 ),
-                const Gap(44),
+                Gap(bottomPadding),
               ],
             ),
           ),
