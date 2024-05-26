@@ -56,96 +56,98 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final bottomPadding = screenHeight * 0.05;
 
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          PageView(
-            controller: _pageController,
-            onPageChanged: (int page) {
-              setState(() {
-                currentOnboarding = page;
-              });
-            },
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(bottom: indicatorPadding),
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/onboarding1.png'),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: indicatorPadding),
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/onboarding2.png'),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: indicatorPadding),
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/onboarding3.png'),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            PageView(
+              controller: _pageController,
+              onPageChanged: (int page) {
+                setState(() {
+                  currentOnboarding = page;
+                });
+              },
               children: <Widget>[
-                SmoothPageIndicator(
-                  controller: _pageController,
-                  count: 3,
-                  effect: WormEffect(
-                    dotHeight: 12,
-                    dotWidth: 12,
-                    spacing: 24,
-                    activeDotColor: Colors.grey[800]!,
-                    dotColor: Colors.grey[400]!,
-                  ),
-                  onDotClicked: (index) {
-                    _pageController.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                ),
-                Gap(indicatorPadding),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.05,
-                  ),
-                  child: SizedBox(
-                    height: 60,
-                    child: CustomElevatedButton(
-                      onPressed: () {
-                        if (!isLastPage) {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        } else {
-                          ref
-                              .read(isOnBoardingCompletedProvider.notifier)
-                              .update((state) => true);
-                        }
-                      },
-                      text: isLastPage ? 'やってみる' : 'つぎへ',
+                Container(
+                  margin: EdgeInsets.only(bottom: indicatorPadding),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/onboarding1.png'),
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
-                Gap(bottomPadding),
+                Container(
+                  margin: EdgeInsets.only(bottom: indicatorPadding),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/onboarding2.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: indicatorPadding),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/onboarding3.png'),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+            SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 3,
+                    effect: WormEffect(
+                      dotHeight: 12,
+                      dotWidth: 12,
+                      spacing: 24,
+                      activeDotColor: Colors.grey[800]!,
+                      dotColor: Colors.grey[400]!,
+                    ),
+                    onDotClicked: (index) {
+                      _pageController.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                  ),
+                  Gap(indicatorPadding),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    child: SizedBox(
+                      height: 60,
+                      child: CustomElevatedButton(
+                        onPressed: () {
+                          if (!isLastPage) {
+                            _pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeInOut,
+                            );
+                          } else {
+                            ref
+                                .read(isOnBoardingCompletedProvider.notifier)
+                                .update((state) => true);
+                          }
+                        },
+                        text: isLastPage ? 'やってみる' : 'つぎへ',
+                      ),
+                    ),
+                  ),
+                  Gap(bottomPadding),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
