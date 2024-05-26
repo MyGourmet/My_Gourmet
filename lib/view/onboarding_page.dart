@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
 import 'widgets/custom_elevated_button.dart';
 
@@ -51,9 +52,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   Widget build(BuildContext context) {
     final isLastPage = currentOnboarding == 2;
 
-    final screenHeight = MediaQuery.of(context).size.height;
-    final indicatorPadding = screenHeight * 0.035;
-    final bottomPadding = screenHeight * 0.05;
+    final indicatorPadding = context.screenHeight * 0.035;
+    final bottomPadding = context.screenHeight * 0.05;
 
     return Scaffold(
       body: SafeArea(
