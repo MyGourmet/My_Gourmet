@@ -84,7 +84,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     final photos = state.asData!.value;
     final length = photos.length;
-    final dateTime = photos[index].createDateTime;
 
     try {
       // 写真登録
@@ -112,7 +111,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     try {
       // 次の写真リストをDBから取得
       final results = await ref.read(photoManagerServiceProvider).getAllPhotos(
-            lastDate: dateTime,
+            lastEntity: photos[index],
           );
 
       // 状態更新

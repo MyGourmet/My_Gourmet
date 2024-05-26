@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -16,15 +18,15 @@ class PhotoService {
   final Ref ref;
 
   /// 写真取得
-  /// [lastDate] 最後の写真日付
-  Future<List<AssetEntity>> getAllPhotos({DateTime? lastDate}) async {
+  /// [lastEntity] 最後の写真情報
+  Future<List<AssetEntity>> getAllPhotos({AssetEntity? lastEntity}) async {
     AdvancedCustomFilter filter;
 
     // 初回ロード
-    if (lastDate == null) {
+    if (lastEntity == null) {
       // DBから写真情報を取得
       final photoDetail =
-          await ref.read(localPhotoRepositoryProvider).getPhotoDetail();
+      await ref.read(localPhotoRepositoryProvider).getPhotoDetail();
 
       // PhotoManagerから写真数取得
       final totalCount = await PhotoManager.getAssetCount(
@@ -37,7 +39,8 @@ class PhotoService {
 
       // 取得できた場合続きから写真を取得する
       if (photoDetail != null) {
-        filter = _getPhotoDateFilter(
+        filter = _getPhotoFilter(
+          photoDetail.lastId,
           DateTime.fromMillisecondsSinceEpoch(
             photoDetail.lastCreateDateSecond * 1000,
           ),
@@ -46,14 +49,16 @@ class PhotoService {
         filter = AdvancedCustomFilter();
       }
     } else {
-      filter = _getPhotoDateFilter(lastDate);
+      filter = _getPhotoFilter(lastEntity.id, lastEntity.createDateTime);
     }
 
     // 写真を古い順に取得
     final albums = await PhotoManager.getAssetPathList(
       type: RequestType.image,
       filterOption: filter.addOrderBy(
-        column: CustomColumns.base.createDate,
+        column: Platform.isAndroid
+            ? CustomColumns.base.id
+            : CustomColumns.base.createDate,
       ),
     );
 
@@ -73,22 +78,51 @@ class PhotoService {
     return photos;
   }
 
-  /// 写真日付でフィルタリングする
+  /// フィルタリング
+  /// [lastId] 最後の写真id
   /// [lastDate] 最後の写真日付
-  AdvancedCustomFilter _getPhotoDateFilter(
-    DateTime lastDate,
-  ) {
+  AdvancedCustomFilter _getPhotoFilter(
+      String lastId,
+      DateTime lastDate,
+      ) {
+    if (Platform.isAndroid) {
+      return _getPhotoFilterForAndroid(lastId);
+    } else {
+      return _getPhotoFilterForIos(lastDate);
+    }
+  }
+
+  /// Android用のフィルタリング
+  /// 写真idでフィルタリングする
+  /// [lastId] 最後の写真id
+  AdvancedCustomFilter _getPhotoFilterForAndroid(
+      String lastId,
+      ) {
     return AdvancedCustomFilter(
       where: [
         ColumnWhereCondition(
-          column: CustomColumns.base.mediaType,
-          operator: '=',
-          value: '1',
+          column: CustomColumns.base.id,
+          operator: '>',
+          value: lastId,
         ),
+      ],
+    );
+  }
+
+  /// iOS用のフィルタリング
+  /// 写真日付でフィルタリングする
+  /// [lastDate] 最後の写真日付
+  AdvancedCustomFilter _getPhotoFilterForIos(
+      DateTime lastDate,
+      ) {
+    return AdvancedCustomFilter(
+      where: [
         DateColumnWhereCondition(
           column: CustomColumns.base.createDate,
           operator: '>',
-          value: lastDate,
+          value: lastDate.add(
+            const Duration(seconds: 1),
+          ),
         ),
       ],
     );
