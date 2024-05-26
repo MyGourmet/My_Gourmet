@@ -17,6 +17,9 @@ class PhotoService {
 
   final Ref ref;
 
+  LocalPhotoRepository get _localPhotoRepository =>
+      ref.read(localPhotoRepositoryProvider);
+
   /// 写真取得
   /// [lastEntity] 最後の写真情報
   Future<List<AssetEntity>> getAllPhotos({AssetEntity? lastEntity}) async {
@@ -25,8 +28,7 @@ class PhotoService {
     // 初回ロード
     if (lastEntity == null) {
       // DBから写真情報を取得
-      final photoDetail =
-      await ref.read(localPhotoRepositoryProvider).getPhotoDetail();
+      final photoDetail = await _localPhotoRepository.getPhotoDetail();
 
       // PhotoManagerから写真数取得
       final totalCount = await PhotoManager.getAssetCount(
@@ -82,9 +84,9 @@ class PhotoService {
   /// [lastId] 最後の写真id
   /// [lastDate] 最後の写真日付
   AdvancedCustomFilter _getPhotoFilter(
-      String lastId,
-      DateTime lastDate,
-      ) {
+    String lastId,
+    DateTime lastDate,
+  ) {
     if (Platform.isAndroid) {
       return _getPhotoFilterForAndroid(lastId);
     } else {
@@ -96,8 +98,8 @@ class PhotoService {
   /// 写真idでフィルタリングする
   /// [lastId] 最後の写真id
   AdvancedCustomFilter _getPhotoFilterForAndroid(
-      String lastId,
-      ) {
+    String lastId,
+  ) {
     return AdvancedCustomFilter(
       where: [
         ColumnWhereCondition(
@@ -113,8 +115,8 @@ class PhotoService {
   /// 写真日付でフィルタリングする
   /// [lastDate] 最後の写真日付
   AdvancedCustomFilter _getPhotoFilterForIos(
-      DateTime lastDate,
-      ) {
+    DateTime lastDate,
+  ) {
     return AdvancedCustomFilter(
       where: [
         DateColumnWhereCondition(

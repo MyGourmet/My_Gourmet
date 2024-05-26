@@ -208,9 +208,15 @@ class $PhotoDetailsTable extends PhotoDetails
   late final GeneratedColumn<int> currentCount = GeneratedColumn<int>(
       'current_count', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _pastFoodTotalMeta =
+      const VerificationMeta('pastFoodTotal');
+  @override
+  late final GeneratedColumn<int> pastFoodTotal = GeneratedColumn<int>(
+      'past_food_total', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [lastId, lastCreateDateSecond, currentCount];
+      [lastId, lastCreateDateSecond, currentCount, pastFoodTotal];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -243,6 +249,14 @@ class $PhotoDetailsTable extends PhotoDetails
     } else if (isInserting) {
       context.missing(_currentCountMeta);
     }
+    if (data.containsKey('past_food_total')) {
+      context.handle(
+          _pastFoodTotalMeta,
+          pastFoodTotal.isAcceptableOrUnknown(
+              data['past_food_total']!, _pastFoodTotalMeta));
+    } else if (isInserting) {
+      context.missing(_pastFoodTotalMeta);
+    }
     return context;
   }
 
@@ -258,6 +272,8 @@ class $PhotoDetailsTable extends PhotoDetails
           DriftSqlType.int, data['${effectivePrefix}last_create_date_second'])!,
       currentCount: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}current_count'])!,
+      pastFoodTotal: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}past_food_total'])!,
     );
   }
 
@@ -276,16 +292,21 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
 
   /// 現在の写真処理数
   final int currentCount;
+
+  /// 過去のグルメ分類合計枚数(追加された写真をカウントするのに使用)
+  final int pastFoodTotal;
   const PhotoDetail(
       {required this.lastId,
       required this.lastCreateDateSecond,
-      required this.currentCount});
+      required this.currentCount,
+      required this.pastFoodTotal});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['last_id'] = Variable<String>(lastId);
     map['last_create_date_second'] = Variable<int>(lastCreateDateSecond);
     map['current_count'] = Variable<int>(currentCount);
+    map['past_food_total'] = Variable<int>(pastFoodTotal);
     return map;
   }
 
@@ -294,6 +315,7 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
       lastId: Value(lastId),
       lastCreateDateSecond: Value(lastCreateDateSecond),
       currentCount: Value(currentCount),
+      pastFoodTotal: Value(pastFoodTotal),
     );
   }
 
@@ -305,6 +327,7 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
       lastCreateDateSecond:
           serializer.fromJson<int>(json['lastCreateDateSecond']),
       currentCount: serializer.fromJson<int>(json['currentCount']),
+      pastFoodTotal: serializer.fromJson<int>(json['pastFoodTotal']),
     );
   }
   @override
@@ -314,60 +337,73 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
       'lastId': serializer.toJson<String>(lastId),
       'lastCreateDateSecond': serializer.toJson<int>(lastCreateDateSecond),
       'currentCount': serializer.toJson<int>(currentCount),
+      'pastFoodTotal': serializer.toJson<int>(pastFoodTotal),
     };
   }
 
   PhotoDetail copyWith(
-          {String? lastId, int? lastCreateDateSecond, int? currentCount}) =>
+          {String? lastId,
+          int? lastCreateDateSecond,
+          int? currentCount,
+          int? pastFoodTotal}) =>
       PhotoDetail(
         lastId: lastId ?? this.lastId,
         lastCreateDateSecond: lastCreateDateSecond ?? this.lastCreateDateSecond,
         currentCount: currentCount ?? this.currentCount,
+        pastFoodTotal: pastFoodTotal ?? this.pastFoodTotal,
       );
   @override
   String toString() {
     return (StringBuffer('PhotoDetail(')
           ..write('lastId: $lastId, ')
           ..write('lastCreateDateSecond: $lastCreateDateSecond, ')
-          ..write('currentCount: $currentCount')
+          ..write('currentCount: $currentCount, ')
+          ..write('pastFoodTotal: $pastFoodTotal')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(lastId, lastCreateDateSecond, currentCount);
+  int get hashCode =>
+      Object.hash(lastId, lastCreateDateSecond, currentCount, pastFoodTotal);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PhotoDetail &&
           other.lastId == this.lastId &&
           other.lastCreateDateSecond == this.lastCreateDateSecond &&
-          other.currentCount == this.currentCount);
+          other.currentCount == this.currentCount &&
+          other.pastFoodTotal == this.pastFoodTotal);
 }
 
 class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
   final Value<String> lastId;
   final Value<int> lastCreateDateSecond;
   final Value<int> currentCount;
+  final Value<int> pastFoodTotal;
   final Value<int> rowid;
   const PhotoDetailsCompanion({
     this.lastId = const Value.absent(),
     this.lastCreateDateSecond = const Value.absent(),
     this.currentCount = const Value.absent(),
+    this.pastFoodTotal = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PhotoDetailsCompanion.insert({
     required String lastId,
     required int lastCreateDateSecond,
     required int currentCount,
+    required int pastFoodTotal,
     this.rowid = const Value.absent(),
   })  : lastId = Value(lastId),
         lastCreateDateSecond = Value(lastCreateDateSecond),
-        currentCount = Value(currentCount);
+        currentCount = Value(currentCount),
+        pastFoodTotal = Value(pastFoodTotal);
   static Insertable<PhotoDetail> custom({
     Expression<String>? lastId,
     Expression<int>? lastCreateDateSecond,
     Expression<int>? currentCount,
+    Expression<int>? pastFoodTotal,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -375,6 +411,7 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
       if (lastCreateDateSecond != null)
         'last_create_date_second': lastCreateDateSecond,
       if (currentCount != null) 'current_count': currentCount,
+      if (pastFoodTotal != null) 'past_food_total': pastFoodTotal,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -383,11 +420,13 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
       {Value<String>? lastId,
       Value<int>? lastCreateDateSecond,
       Value<int>? currentCount,
+      Value<int>? pastFoodTotal,
       Value<int>? rowid}) {
     return PhotoDetailsCompanion(
       lastId: lastId ?? this.lastId,
       lastCreateDateSecond: lastCreateDateSecond ?? this.lastCreateDateSecond,
       currentCount: currentCount ?? this.currentCount,
+      pastFoodTotal: pastFoodTotal ?? this.pastFoodTotal,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -405,6 +444,9 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
     if (currentCount.present) {
       map['current_count'] = Variable<int>(currentCount.value);
     }
+    if (pastFoodTotal.present) {
+      map['past_food_total'] = Variable<int>(pastFoodTotal.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -417,6 +459,7 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
           ..write('lastId: $lastId, ')
           ..write('lastCreateDateSecond: $lastCreateDateSecond, ')
           ..write('currentCount: $currentCount, ')
+          ..write('pastFoodTotal: $pastFoodTotal, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
