@@ -31,7 +31,7 @@ class LocalPhotoRepository {
   }
 
   /// グルメ分類合計枚数を取得する
-  Future<int> getFoodTotal() async {
+  Future<int> getFoodPhotoTotal() async {
     // 過去のグルメ分類合計枚数取得
     final photoDetail = await getPhotoDetail();
 

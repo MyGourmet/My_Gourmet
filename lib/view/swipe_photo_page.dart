@@ -201,7 +201,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                       ?.copyWith(color: Themes.gray.shade400),
                 ),
                 const Gap(8),
-                ref.watch(foodPhotoCountProvider).when(
+                ref.watch(foodPhotoTotalProvider).when(
                       data: (count) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
