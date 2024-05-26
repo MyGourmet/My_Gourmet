@@ -30,12 +30,24 @@ class LocalPhotoRepository {
     return (db.select(db.photoDetails)..limit(1)).getSingleOrNull();
   }
 
-  /// 写真数を取得する
-  Future<int> getPhotoCount() async {
+  /// グルメ分類合計枚数を取得する
+  Future<int> getFoodTotal() async {
+    // 過去のグルメ分類合計枚数取得
+    final photoDetail = await getPhotoDetail();
+
     final countExpression = countAll();
     final query = db.selectOnly(db.photos)..addColumns([countExpression]);
     final row = await query.getSingle();
-    return row.rawData.data.values.first as int;
+
+    final count = row.rawData.data.values.first as int;
+
+    // 過去のグルメ分類合計枚数を更新する
+    final lastPhotoModel = PhotoDetailsCompanion(
+      pastFoodTotal: Value(count),
+    );
+    await db.update(db.photoDetails).write(lastPhotoModel);
+
+    return count - photoDetail!.pastFoodTotal;
   }
 
   /// 写真データを保存する
@@ -65,6 +77,7 @@ class LocalPhotoRepository {
       lastCreateDateSecond: Value(photo.createDateSecond!),
       currentCount:
           Value(photoDetail != null ? photoDetail.currentCount + 1 : 1),
+      pastFoodTotal: Value(photoDetail?.pastFoodTotal ?? 0),
     );
     if (photoDetail != null) {
       // 更新

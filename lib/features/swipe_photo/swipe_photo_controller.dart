@@ -38,13 +38,13 @@ final photoCountProvider =
   _PhotoCountNotifier.new,
 );
 
-/// ご飯の登録数を取得するProvider
+/// グルメの登録数を取得するProvider
 /// 分類完了後の 「追加された写真 ＋XXX枚」に使用
 class _FoodPhotoCountNotifier extends AutoDisposeAsyncNotifier<int> {
   @override
   Future<int> build() async {
     // 取得できない場合はデフォルト値設定
-    return ref.read(localPhotoRepositoryProvider).getPhotoCount();
+    return ref.read(localPhotoRepositoryProvider).getFoodTotal();
   }
 }
 

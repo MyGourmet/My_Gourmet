@@ -32,6 +32,9 @@ class PhotoDetails extends Table {
 
   /// 現在の写真処理数
   IntColumn get currentCount => integer()();
+
+  /// 過去のグルメ分類合計枚数(追加された写真をカウントするのに使用)
+  IntColumn get pastFoodTotal => integer()();
 }
 
 /// DB設定
