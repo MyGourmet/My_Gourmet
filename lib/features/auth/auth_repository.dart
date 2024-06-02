@@ -48,7 +48,6 @@ class AuthRepository {
       scopes: [
         'profile',
         'email',
-        'https://www.googleapis.com/auth/photoslibrary',
       ],
     ).signIn();
 
