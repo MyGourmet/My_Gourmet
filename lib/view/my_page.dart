@@ -16,7 +16,9 @@ class MyPage extends ConsumerWidget {
   // この後のプルリクで、下記のようにメソッドを切り出して呼び出す。
   // Future<void> _onButtonPressed() async {
   //   try {
-  //     final result = await ref.read(authControllerProvider).signInWithGoogle();
+  //     final result =
+  //     await ref
+  //        .read(authControllerProvider).signInWithGoogle();
   //     await ref
   //         .read(photoControllerProvider)
   //         .upsertClassifyPhotosStatus(userId: result.userId);
