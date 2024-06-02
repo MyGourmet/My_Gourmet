@@ -44,10 +44,10 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
-  Future<void> callClassifyPhotos(String accessToken, String userId) async {
+  Future<void> registerStoreInfo(String accessToken, String userId) async {
     try {
       final response = await http.post(
-        Uri.parse('$_apiUrl/classifyPhotos'),
+        Uri.parse('$_apiUrl/findNearbyRestaurants'),
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $accessToken',

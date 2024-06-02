@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/auth/auth_controller.dart';
+import '../features/photo/photo_controller.dart';
 import 'widgets/confirm_dialog.dart';
 import 'widgets/success_snack_bar.dart';
 
@@ -11,6 +12,28 @@ class MyPage extends ConsumerWidget {
 
   static const routeName = 'my_page';
   static const routePath = '/my_page';
+
+  // この後のプルリクで、下記のようにメソッドを切り出して呼び出す。
+  // Future<void> _onButtonPressed() async {
+  //   try {
+  //     final result = await ref.read(authControllerProvider).signInWithGoogle();
+  //     await ref
+  //         .read(photoControllerProvider)
+  //         .upsertClassifyPhotosStatus(userId: result.userId);
+  //     });
+  //     await ref.read(photoControllerProvider).uploadPhotos(
+  //           accessToken: result.accessToken,
+  //           userId: result.userId,
+  //         );
+  //   } on Exception catch (e) {
+  //     // 例外が発生した場合、エラーメッセージを表示
+  //     if (context.mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(e.toString())),
+  //       );
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,6 +46,39 @@ class MyPage extends ConsumerWidget {
             Expanded(
               child: ListView(
                 children: [
+                  ListTile(
+                    onTap: () async {
+                      await ConfirmDialog.show(
+                        context,
+                        hasCancelButton: true,
+                        titleString: '注意',
+                        contentString: '本当に位置情報を取得しますか？',
+                        onConfirmed: () async {
+                          final result = await ref
+                              .read(authControllerProvider)
+                              .signInWithGoogle();
+                          await ref
+                              .read(photoControllerProvider)
+                              .upsertClassifyPhotosStatus(
+                                userId: result.userId,
+                              );
+                          await ref
+                              .read(photoControllerProvider)
+                              .registerStoreInfo(
+                                accessToken: result.accessToken,
+                                userId: result.userId,
+                              );
+                          if (context.mounted) {
+                            SuccessSnackBar.show(
+                              context,
+                              message: '位置情報を取得しました',
+                            );
+                          }
+                        },
+                      );
+                    },
+                    title: const Text('   位置情報を取得'),
+                  ),
                   ListTile(
                     onTap: () async {
                       await ConfirmDialog.show(
