@@ -54,6 +54,9 @@ class PhotoRepository {
         },
         body: jsonEncode({
           'userId': userId,
+          'lat':35.446841666666664,
+          'lon':139.63788888888888,
+          'photo_id':'QLi6rfxJQ1Y0Hx7QELnWLsjq11z2',
         }),
       );
 
