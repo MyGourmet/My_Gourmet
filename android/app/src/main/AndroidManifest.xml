@@ -40,9 +40,5 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <!-- Add the Google Sign-In API key here -->
-        <meta-data
-            android:name="com.google.android.gms.auth.api.signin.API_KEY"
-            android:value="864724760472-ngamh59ivicfmhaei4bm0saonr1l4lsc.apps.googleusercontent.com"/>
     </application>
 </manifest>
