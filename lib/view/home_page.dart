@@ -77,33 +77,49 @@ class _HomePageState extends ConsumerState<HomePage> {
                       itemBuilder: (context, index) {
                         final photo = snapshot.data![index];
                         final size = sizeSnapshot.data![index];
-                        final file = File(photo.path);
-                        return Hero(
-                          tag: photo.path,
-                          child: GestureDetector(
-                            onTap: () {
-                              context.go(
-                                '/home_page/image_detail',
-                                extra: photo.path,
-                              );
-                            },
-                            child: Container(
-                              width: size.width,
-                              height: size.height,
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey, width: 2),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(14),
-                                child: Image.file(
-                                  file,
-                                  fit: BoxFit.cover,
+
+                        return FutureBuilder<File>(
+                          future: ref
+                              .read(homeControllerProvider)
+                              .getFileByPhoto(photo),
+                          builder: (context, snapshot) {
+                            if (sizeSnapshot.hasError) {
+                              return const Center(child: Text('エラーが発生しました'));
+                            }
+                            if (snapshot.data == null) {
+                              return const CircularProgressIndicator();
+                            }
+
+                            return Hero(
+                              tag: photo.path,
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.go(
+                                    '/home_page/image_detail',
+                                    extra: photo.path,
+                                  );
+                                },
+                                child: Container(
+                                  width: size.width,
+                                  height: size.height,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(14),
+                                    child: Image.file(
+                                      snapshot.data!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         );
                       },
                       itemCount: snapshot.data!.length,

@@ -121,16 +121,16 @@ abstract final class Themes {
         ),
       ),
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith(
+        thumbColor: WidgetStateProperty.resolveWith(
           (states) =>
-              states.contains(MaterialState.selected) ? gray[900] : gray,
+              states.contains(WidgetState.selected) ? gray[900] : gray,
         ),
-        trackOutlineColor: MaterialStateProperty.resolveWith(
+        trackOutlineColor: WidgetStateProperty.resolveWith(
           (states) =>
-              states.contains(MaterialState.selected) ? mainOrange : gray,
+              states.contains(WidgetState.selected) ? mainOrange : gray,
         ),
-        trackColor: MaterialStateProperty.resolveWith(
-          (states) => states.contains(MaterialState.selected)
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
               ? mainOrange
               : Colors.white,
         ),
@@ -153,29 +153,29 @@ abstract final class Themes {
       shadowColor: gray.shade700,
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          side: MaterialStateProperty.all<BorderSide>(BorderSide.none),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          side: WidgetStateProperty.all<BorderSide>(BorderSide.none),
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           ),
-          backgroundColor: MaterialStateProperty.resolveWith(
-            (states) => states.contains(MaterialState.disabled)
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (states) => states.contains(WidgetState.disabled)
                 ? gray.withOpacity(0.5)
                 : mainOrange,
           ),
-          shape: MaterialStateProperty.all<OutlinedBorder>(
+          shape: WidgetStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             TextStyle(
               color: gray[900],
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),
           ),
-          foregroundColor: MaterialStateProperty.all<Color>(gray[900]!),
-          shadowColor: MaterialStateProperty.all<Color>(
+          foregroundColor: WidgetStateProperty.all<Color>(gray[900]!),
+          shadowColor: WidgetStateProperty.all<Color>(
             mainOrange.shade300.withOpacity(0.25),
           ),
         ),
