@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
+import '../features/auth/auth_repository.dart';
 import 'swipe_photo_page.dart';
 import 'widgets/custom_elevated_button.dart';
 
@@ -64,11 +65,15 @@ class ClassifyStartPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(16),
               child: CustomElevatedButton(
-                onPressed: () {
+                onPressed: () async {
+                  final goRouter = GoRouter.of(context);
+
+                  await ref.read(authRepositoryProvider).signInWithGoogle();
+
                   ref
                       .read(isClassifyOnboardingCompletedProvider.notifier)
                       .update((state) => true);
-                  context.go(SwipePhotoPage.routePath);
+                  goRouter.go(SwipePhotoPage.routePath);
                 },
                 text: '分類スタート',
               ),

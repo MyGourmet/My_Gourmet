@@ -8,6 +8,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
+import '../features/auth/auth_repository.dart';
 import 'classify_start_page.dart';
 import 'home_page.dart';
 import 'onboarding_page.dart';
@@ -45,9 +46,12 @@ class _RootPageState extends ConsumerState<RootPage> {
     if (context.mounted) {
       await Future.wait([
         _checkBuildNumber(context),
-        // SharedPreferencesを初期化
         ref.watch(sharedPreferencesServiceProvider).init(),
       ]);
+      final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+      if (isOnboardingComplete) {
+        await ref.read(authRepositoryProvider).signInWithGoogle();
+      }
     }
   }
 
