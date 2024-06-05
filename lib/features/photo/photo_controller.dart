@@ -28,12 +28,12 @@ class PhotoController {
     await _authRepository.upsertClassifyPhotosStatus(userId);
   }
 
-  /// 写真アップロード用メソッド
-  Future<void> uploadPhotos({
+  /// 写真の店舗情報登録用メソッド
+  Future<void> registerStoreInfo({
     required String accessToken,
     required String userId,
   }) async {
-    await _photoRepository.callClassifyPhotos(
+    await _photoRepository.registerStoreInfo(
       accessToken,
       userId,
     );
