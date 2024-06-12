@@ -38,6 +38,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
       body: Center(
         child: Stack(
           children: [
+            AppBar(),
             Positioned(
               bottom: 0,
               child: Container(
@@ -54,7 +55,11 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                 itemCount: widget.photoPathList.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.1,
+                      left: 4,
+                      right: 4,
+                    ),
                     child: ImageDetailCard(
                       index: index,
                       heroIndex: widget.index,

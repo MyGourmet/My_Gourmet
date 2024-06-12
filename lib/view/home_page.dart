@@ -82,7 +82,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           tag: photo.path,
                           child: GestureDetector(
                             onTap: () {
-                              context.go(
+                              context.push(
                                 '/home_page/image_detail',
                                 extra: {
                                   'imagePath': photo.path,
