@@ -7,12 +7,18 @@ import 'card_front.dart';
 class ImageDetailCard extends StatefulWidget {
   const ImageDetailCard({
     super.key,
+    required this.index,
+    required this.heroIndex,
+    required this.heroImagePath,
     required this.imagePath,
     required this.shopName,
     required this.dateTime,
     required this.address,
   });
 
+  final int index;
+  final int heroIndex;
+  final String heroImagePath;
   final String imagePath;
   final String shopName;
   final DateTime dateTime;
@@ -36,9 +42,13 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
 
   @override
   Widget build(BuildContext context) {
+    final heroImagePath =
+        (widget.index == widget.heroIndex) ? widget.heroImagePath : null;
+
     return FlipCard(
         fill: Fill.fillBack,
         front: CardFront(
+          heroImagePath: heroImagePath,
           imagePath: imagePath,
           shopName: shopName,
           dateTime: dateTime,
@@ -51,7 +61,6 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
             imagePath,
             imagePath,
             imagePath,
-            "assets/images/top_image.png",
           ],
           holiday: '土曜',
           address: address,

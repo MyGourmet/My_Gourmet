@@ -84,7 +84,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                             onTap: () {
                               context.go(
                                 '/home_page/image_detail',
-                                extra: photo.path,
+                                extra: {
+                                  'imagePath': photo.path,
+                                  'photoPathList': snapshot.data!
+                                      .map((e) => e.path)
+                                      .toList(),
+                                  'index': index,
+                                },
                               );
                             },
                             child: Container(

@@ -27,8 +27,12 @@ final routerProvider = Provider(
                 name: ImageDetailPage.routeName,
                 path: ImageDetailPage.routePath,
                 builder: (context, state) {
-                  final imagePath = state.extra! as String;
-                  return ImageDetailPage(imagePath: imagePath);
+                  final data = state.extra! as Map<String, dynamic>;
+                  return ImageDetailPage(
+                    heroImagePath: data['imagePath'] as String,
+                    index: data['index'] as int,
+                    photoPathList: data['photoPathList'] as List<String>,
+                  );
                 },
               ),
             ],
@@ -59,6 +63,7 @@ final routerProvider = Provider(
 
 class GoRouterObserver extends NavigatorObserver {
   GoRouterObserver({required this.analytics});
+
   final FirebaseAnalytics analytics;
 
   @override

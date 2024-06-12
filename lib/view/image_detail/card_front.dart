@@ -8,12 +8,14 @@ import '../widgets/scalableImage.dart';
 class CardFront extends StatelessWidget {
   const CardFront({
     super.key,
+    this.heroImagePath,
     required this.imagePath,
     this.shopName,
     required this.dateTime,
     required this.address,
   });
 
+  final String? heroImagePath;
   final String imagePath;
   final String? shopName;
   final DateTime dateTime;
@@ -50,13 +52,19 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Hero(
-                        tag: imagePath,
-                        child: ScalableImage(
-                          imagePath: imagePath,
-                          height: MediaQuery.of(context).size.height * 0.5,
-                        ),
-                      ),
+                      (heroImagePath != null)
+                          ? Hero(
+                              tag: heroImagePath!,
+                              child: ScalableImage(
+                                imagePath: heroImagePath!,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                              ),
+                            )
+                          : ScalableImage(
+                              imagePath: imagePath,
+                              height: MediaQuery.of(context).size.height * 0.5,
+                            ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
                       Text(
                         shopName ?? '???',

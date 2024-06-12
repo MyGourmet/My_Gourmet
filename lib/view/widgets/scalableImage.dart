@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class ScalableImage extends StatefulWidget {
@@ -39,8 +41,8 @@ class ScalableImageState extends State<ScalableImage> {
           child: SizedBox(
             height: widget.height,
             width: widget.width,
-            child: Image.asset(
-              widget.imagePath,
+            child: Image.file(
+              File(widget.imagePath),
               fit: BoxFit.cover,
             ),
           ),
