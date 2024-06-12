@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>588802119789-oh11a15chog7l1dkq0q4ju5gh4gofcut.apps.googleusercontent.com</string>
+	<string>864724760472-ojmfn7t555cl77luijugbgra8tkdaftl.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.588802119789-oh11a15chog7l1dkq0q4ju5gh4gofcut</string>
+	<string>com.googleusercontent.apps.864724760472-ojmfn7t555cl77luijugbgra8tkdaftl</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>588802119789-6hda24f2u719ais2ul1o2odjauq9n29m.apps.googleusercontent.com</string>
+	<string>864724760472-39gbrpa2r1mtf4sj999o7r6r6vpqqn62.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDHiEFqj1KOpzYLhCKGOWkF21pIZ6wOdhc</string>
+	<string>AIzaSyAvjs7T3O44p9l4PakgzsL8WO9HJbCOQyM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>588802119789</string>
+	<string>864724760472</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.blue_waltz.myGourmet</string>
+	<string>com.blue-waltz.my-gourmet</string>
 	<key>PROJECT_ID</key>
-	<string>my-gourmet-160fb</string>
+	<string>my-gourmet-dev-f5b45</string>
 	<key>STORAGE_BUCKET</key>
-	<string>my-gourmet-160fb.appspot.com</string>
+	<string>my-gourmet-dev-f5b45.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:588802119789:ios:421aa538ce40863db4c764</string>
+	<string>1:864724760472:ios:733ad4936abb1bbf0edded</string>
 </dict>
 </plist>
