@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
-import '../widgets/scalableImage.dart';
+import '../widgets/scalable_image.dart';
 
 class CardFront extends StatelessWidget {
   const CardFront({

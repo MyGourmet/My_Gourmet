@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
-import '../widgets/scalableImage.dart';
+import '../widgets/scalable_image.dart';
 
 class CardBack extends StatelessWidget {
   const CardBack({

@@ -48,21 +48,22 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
         (widget.index == widget.heroIndex) ? widget.heroImageFile : null;
 
     return FlipCard(
-        fill: Fill.fillBack,
-        front: CardFront(
-          heroImageFile: heroImageFile,
-          imageFile: imageFile,
-          shopName: shopName,
-          dateTime: dateTime,
-          address: address,
-        ),
-        back: CardBack(
-          isLinked: true,
-          shopName: shopName,
-          imageFileList: [imageFile, imageFile, imageFile, imageFile],
-          holiday: '土曜',
-          address: address,
-          url: 'https://example.com',
-        ));
+      fill: Fill.fillBack,
+      front: CardFront(
+        heroImageFile: heroImageFile,
+        imageFile: imageFile,
+        shopName: shopName,
+        dateTime: dateTime,
+        address: address,
+      ),
+      back: CardBack(
+        isLinked: true,
+        shopName: shopName,
+        imageFileList: [imageFile, imageFile, imageFile, imageFile],
+        holiday: '土曜',
+        address: address,
+        url: 'https://example.com',
+      ),
+    );
   }
 }
