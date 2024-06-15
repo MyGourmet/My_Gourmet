@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 class ScalableImage extends StatefulWidget {
   const ScalableImage({
-    required this.imagePath,
+    required this.imageFile,
     this.height,
     this.width,
     super.key,
   });
 
-  final String imagePath;
+  final File imageFile;
   final double? height;
   final double? width;
 
@@ -42,7 +42,7 @@ class ScalableImageState extends State<ScalableImage> {
             height: widget.height,
             width: widget.width,
             child: Image.file(
-              File(widget.imagePath),
+              widget.imageFile,
               fit: BoxFit.cover,
             ),
           ),
@@ -58,8 +58,8 @@ class ScalableImageState extends State<ScalableImage> {
             ),
             onPressed: () {
               showImageDialog(
-                Image.asset(
-                  widget.imagePath,
+                Image.file(
+                  widget.imageFile,
                   fit: BoxFit.cover,
                 ),
               );

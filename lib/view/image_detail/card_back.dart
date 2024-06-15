@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -8,7 +10,7 @@ class CardBack extends StatelessWidget {
   const CardBack({
     required this.isLinked,
     this.shopName,
-    this.imagePathList,
+    this.imageFileList,
     this.openTime,
     this.holiday,
     this.address,
@@ -18,7 +20,7 @@ class CardBack extends StatelessWidget {
 
   final bool isLinked;
   final String? shopName;
-  final List<String>? imagePathList;
+  final List<File>? imageFileList;
   final String? openTime;
   final String? holiday;
   final String? address;
@@ -78,20 +80,20 @@ class CardBack extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
                 ),
-                (imagePathList != null && imagePathList!.isNotEmpty)
+                (imageFileList != null && imageFileList!.isNotEmpty)
                     ? SizedBox(
                         height: 220,
                         child: Scrollbar(
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: imagePathList!.length,
+                            itemCount: imageFileList!.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(right: 8),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: ScalableImage(
-                                    imagePath: imagePathList![index],
+                                    imageFile: imageFileList![index],
                                     height: 200,
                                     width: 200,
                                   ),

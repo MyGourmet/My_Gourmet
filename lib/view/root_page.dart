@@ -11,6 +11,7 @@ import '../core/shared_preferences_service.dart';
 import '../features/auth/auth_repository.dart';
 import 'classify_start_page.dart';
 import 'home_page.dart';
+import 'my_page.dart';
 import 'onboarding_page.dart';
 import 'swipe_photo_page.dart';
 import 'widgets/confirm_dialog.dart';
@@ -150,15 +151,15 @@ class _NavigationFrame extends ConsumerWidget {
                   ),
                   label: 'ギャラリー',
                 ),
-                // BottomNavigationBarItem(
-                //   icon: Padding(
-                //     padding: EdgeInsets.only(top: 10),
-                //     child: Icon(
-                //       Icons.person,
-                //     ),
-                //   ),
-                //   label: 'マイページ',
-                // ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Icon(
+                      Icons.person,
+                    ),
+                  ),
+                  label: 'マイページ',
+                ),
               ],
             )
           : null,
@@ -175,7 +176,7 @@ class _NavigationFrame extends ConsumerWidget {
       SwipePhotoPage.routePath: 0,
       ClassifyStartPage.routePath: 0,
       HomePage.routePath: 1,
-      // MyPage.routePath: 2,
+      MyPage.routePath: 2,
     };
 
     return routeIndexMap.entries
@@ -200,8 +201,8 @@ class _NavigationFrame extends ConsumerWidget {
         );
       case 1:
         context.go(HomePage.routePath);
-      // case 2:
-      //   context.go(MyPage.routePath);
+      case 2:
+        context.go(MyPage.routePath);
     }
   }
 }

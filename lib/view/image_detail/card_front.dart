@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -8,15 +10,15 @@ import '../widgets/scalableImage.dart';
 class CardFront extends StatelessWidget {
   const CardFront({
     super.key,
-    this.heroImagePath,
-    required this.imagePath,
+    this.heroImageFile,
+    required this.imageFile,
     this.shopName,
     required this.dateTime,
     required this.address,
   });
 
-  final String? heroImagePath;
-  final String imagePath;
+  final File? heroImageFile;
+  final File imageFile;
   final String? shopName;
   final DateTime dateTime;
   final String address;
@@ -52,17 +54,17 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      (heroImagePath != null)
+                      (heroImageFile != null)
                           ? Hero(
-                              tag: heroImagePath!,
+                              tag: heroImageFile!,
                               child: ScalableImage(
-                                imagePath: heroImagePath!,
+                                imageFile: heroImageFile!,
                                 height:
                                     MediaQuery.of(context).size.height * 0.5,
                               ),
                             )
                           : ScalableImage(
-                              imagePath: imagePath,
+                              imageFile: imageFile,
                               height: MediaQuery.of(context).size.height * 0.5,
                             ),
                       Text(formattedDate, style: context.textTheme.titleSmall),

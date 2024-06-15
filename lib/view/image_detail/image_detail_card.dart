@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +11,8 @@ class ImageDetailCard extends StatefulWidget {
     super.key,
     required this.index,
     required this.heroIndex,
-    required this.heroImagePath,
-    required this.imagePath,
+    required this.heroImageFile,
+    required this.imageFile,
     required this.shopName,
     required this.dateTime,
     required this.address,
@@ -18,8 +20,8 @@ class ImageDetailCard extends StatefulWidget {
 
   final int index;
   final int heroIndex;
-  final String heroImagePath;
-  final String imagePath;
+  final File heroImageFile;
+  final File imageFile;
   final String shopName;
   final DateTime dateTime;
   final String address;
@@ -29,7 +31,7 @@ class ImageDetailCard extends StatefulWidget {
 }
 
 class _ImageDetailCardState extends State<ImageDetailCard> {
-  String get imagePath => widget.imagePath;
+  File get imageFile => widget.imageFile;
 
   String get shopName => widget.shopName;
 
@@ -42,14 +44,14 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
 
   @override
   Widget build(BuildContext context) {
-    final heroImagePath =
-        (widget.index == widget.heroIndex) ? widget.heroImagePath : null;
+    final heroImageFile =
+        (widget.index == widget.heroIndex) ? widget.heroImageFile : null;
 
     return FlipCard(
         fill: Fill.fillBack,
         front: CardFront(
-          heroImagePath: heroImagePath,
-          imagePath: imagePath,
+          heroImageFile: heroImageFile,
+          imageFile: imageFile,
           shopName: shopName,
           dateTime: dateTime,
           address: address,
@@ -57,11 +59,7 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
         back: CardBack(
           isLinked: true,
           shopName: shopName,
-          imagePathList: [
-            imagePath,
-            imagePath,
-            imagePath,
-          ],
+          imageFileList: [imageFile, imageFile, imageFile, imageFile],
           holiday: '土曜',
           address: address,
           url: 'https://example.com',
