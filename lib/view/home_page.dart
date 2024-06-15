@@ -76,6 +76,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       crossAxisSpacing: 8,
                       itemBuilder: (context, index) {
                         final photo = snapshot.data![index];
+                        final photoList =
+                            snapshot.data!.map((e) => File(e.path)).toList();
                         final size = sizeSnapshot.data![index];
 
                         return FutureBuilder<File>(
@@ -97,8 +99,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   context.push(
                                     '/home_page/image_detail',
                                     extra: {
-                                      'imageFile': File(photo.path),
-                                      'photoFileList': snapshot.data!,
+                                      'heroImageFile': snapshot.data!,
+                                      'photoFileList': photoList,
                                       'index': index,
                                     },
                                   );

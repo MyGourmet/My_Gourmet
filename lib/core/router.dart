@@ -31,7 +31,7 @@ final routerProvider = Provider(
                 builder: (context, state) {
                   final data = state.extra! as Map<String, dynamic>;
                   return ImageDetailPage(
-                    heroImageFile: data['imageFile'] as File,
+                    heroImageFile: data['heroImageFile'] as File,
                     index: data['index'] as int,
                     photoFileList: data['photoFileList'] as List<File>,
                   );
