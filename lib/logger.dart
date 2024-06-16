@@ -34,7 +34,6 @@ final logger = kReleaseMode
     : Roggle(
         printer: SinglePrettyPrinter(
           loggerName: loggerName,
-          colors: !Platform.isIOS,
           stackTraceLevel: Level.warning, // warning 以上のときはスタックトレースを出力する
         ),
         output: _AssertionOutput(),
