@@ -44,7 +44,12 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
-  Future<void> registerStoreInfo(String accessToken, String userId) async {
+  Future<void> registerStoreInfo(
+    String accessToken,
+    String userId, {
+    double? latitude,
+    double? longitude,
+  }) async {
     try {
       final response = await http.post(
         Uri.parse('$_apiUrl/findNearbyRestaurants'),
@@ -54,8 +59,8 @@ class PhotoRepository {
         },
         body: jsonEncode({
           'userId': userId,
-          'lat': 35.446841666666664,
-          'lon': 139.63788888888888,
+          'lat': latitude,
+          'lon': longitude,
           'photo_id': 'QLi6rfxJQ1Y0Hx7QELnWLsjq11z2',
         }),
       );

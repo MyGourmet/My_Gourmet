@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   device_info_plus: ^10.1.0
   drift: ^2.15.0
+  exif: ^3.3.0
   firebase_analytics: any
   firebase_auth: any
   firebase_core: any

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:exif/exif.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -83,14 +85,48 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
 
     final photos = state.asData!.value;
+    final photo = photos[index];
     final length = photos.length;
 
     try {
       // 写真登録
       await ref.read(localPhotoRepositoryProvider).savePhoto(
-            photo: photos[index],
+            photo: photo,
             isFood: isFood,
           );
+
+      // 写真情報をサーバーに登録
+      debugPrint('photo latitude: ${photo.latitude}');
+      debugPrint('photo longitude: ${photo.longitude}');
+
+      unawaited(
+        photo.file.then((value) async {
+          final data = await readExifFromBytes(value!.readAsBytesSync());
+
+          final latitude = data['GPS GPSLatitude'];
+          final longitude = data['GPS GPSLongitude'];
+
+          debugPrint('exif latitude: $latitude');
+          debugPrint('exif longitude: $longitude');
+
+          debugPrint('exif: $data');
+        }),
+      );
+
+      // if (photo.latitude != null && photo.longitude != null) {
+      //   final result =
+      //       await ref.read(authControllerProvider).signInWithGoogle();
+      //   unawaited(
+      //     ref.read(photoRepositoryProvider).registerStoreInfo(
+      //           result.accessToken,
+      //           result.userId,
+      //         ).then((_) {
+      //           print('アップロード成功');
+      //     }).onError((e, stacktrace) {
+      //       print('アップロード失敗: $e');
+      //     }),
+      //   );
+      // }
 
       // カウント更新
       ref.read(photoCountProvider.notifier).updateCurrentCount();

@@ -43,11 +43,8 @@ class HomeController {
   Future<List<Size>> calculateSizes(List<Photo> photos) async {
     final sizes = <Size>[];
     for (final photo in photos) {
-      final file = await getFileByPhoto(photo);
-      final decodedImage = await decodeImageFromList(await file.readAsBytes());
-      final width = decodedImage.width.toDouble();
-      final height = decodedImage.height.toDouble();
-      if (width > height) {
+      if ((photo.width == 0 || photo.height == 0) ||
+          (photo.width > photo.height)) {
         sizes.add(const Size(172, 172));
       } else {
         sizes.add(const Size(172, 228));
