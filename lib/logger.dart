@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:roggle/roggle.dart';
 
 /// フィルターに便利なロガー名
-const loggerName = '[APP]';
+const _loggerName = '[APP]';
 
 final logger = kReleaseMode
 // リリースビルド時は FirebaseCrashlytics にエラーレポートを送信する
@@ -27,13 +27,13 @@ final logger = kReleaseMode
               await FirebaseCrashlytics.instance.log(event.message);
             }
           },
-          loggerName: loggerName,
+          loggerName: _loggerName,
         ),
       )
 // デバッグビルド時はコンソールに出力する
     : Roggle(
         printer: SinglePrettyPrinter(
-          loggerName: loggerName,
+          loggerName: _loggerName,
           stackTraceLevel: Level.warning, // warning 以上のときはスタックトレースを出力する
         ),
         output: _AssertionOutput(),
