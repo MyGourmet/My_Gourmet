@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../logger.dart';
 import 'authed_user.dart';
 
 /// [AuthedUser]用コレクションのためのレファレンス
@@ -120,7 +120,7 @@ class AuthRepository {
       );
       await _auth.currentUser?.delete();
     } on Exception catch (error) {
-      debugPrint(error.toString());
+      logger.e(error.toString());
     }
   }
 
