@@ -112,26 +112,54 @@ class _RootPageState extends ConsumerState<RootPage> {
 }
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
-class _NavigationFrame extends ConsumerWidget {
+class _NavigationFrame extends ConsumerStatefulWidget {
   const _NavigationFrame({required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _NavigationFrameState createState() => _NavigationFrameState();
+}
+
+class _NavigationFrameState extends ConsumerState<_NavigationFrame> {
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
+      if (isOnboardingComplete) {
+        setState(() {
+          _selectedIndex = 0; // 画像追加タブを選択
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);
 
     final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
 
     return Scaffold(
-      body: child,
+      body: Stack(
+        children: [
+          widget.child,
+          if (!isOnboardingComplete) const OnboardingPage(),
+        ],
+      ),
       bottomNavigationBar: isOnboardingComplete
           ? BottomNavigationBar(
-              currentIndex:
-                  _calcSelectedIndex(context, isClassifyOnboardingCompleted),
-              onTap: (int index) =>
-                  _onItemTapped(index, context, isClassifyOnboardingCompleted),
+              currentIndex: _selectedIndex,
+              onTap: (int index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+                _onItemTapped(index, context, isClassifyOnboardingCompleted);
+              },
               items: const [
                 BottomNavigationBarItem(
                   icon: Padding(
@@ -164,27 +192,6 @@ class _NavigationFrame extends ConsumerWidget {
             )
           : null,
     );
-  }
-
-  int _calcSelectedIndex(
-    BuildContext context,
-    bool isClassifyOnboardingCompleted,
-  ) {
-    final location = GoRouterState.of(context).uri.toString();
-
-    const routeIndexMap = {
-      SwipePhotoPage.routePath: 0,
-      ClassifyStartPage.routePath: 0,
-      HomePage.routePath: 1,
-      MyPage.routePath: 2,
-    };
-
-    return routeIndexMap.entries
-        .firstWhere(
-          (entry) => location.contains(entry.key),
-          orElse: () => throw UnimplementedError(),
-        )
-        .value;
   }
 
   void _onItemTapped(
