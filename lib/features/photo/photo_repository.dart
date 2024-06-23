@@ -44,9 +44,10 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
-  Future<void> registerStoreInfo(
-    String accessToken,
-    String userId, {
+  Future<void> registerStoreInfo({
+    required String photoId,
+    String? accessToken,
+    String? userId,
     double? latitude,
     double? longitude,
   }) async {
@@ -61,7 +62,7 @@ class PhotoRepository {
           'userId': userId,
           'lat': latitude,
           'lon': longitude,
-          'photo_id': 'QLi6rfxJQ1Y0Hx7QELnWLsjq11z2',
+          'photo_id': photoId,
         }),
       );
 

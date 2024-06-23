@@ -34,8 +34,9 @@ class PhotoController {
     required String userId,
   }) async {
     await _photoRepository.registerStoreInfo(
-      accessToken,
-      userId,
+      accessToken: accessToken,
+      userId: userId,
+      photoId: 'QLi6rfxJQ1Y0Hx7QELnWLsjq11z2',
     );
   }
 
