@@ -6,6 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/database/database.dart';
 import '../../core/local_photo_repository.dart';
+import '../../logger.dart';
 
 final homeControllerProvider = Provider<HomeController>((ref) {
   return HomeController(ref);
@@ -24,7 +25,7 @@ class HomeController {
       final photos = await _localPhotoRepository.getAllPhotos();
       return _removeInvalidPhotos(photos);
     } on Exception catch (e) {
-      debugPrint('Error fetching photos: $e');
+      logger.e('Error fetching photos: $e');
       return [];
     }
   }
@@ -57,7 +58,7 @@ class HomeController {
     try {
       await _localPhotoRepository.getAllPhotos();
     } on Exception catch (e) {
-      debugPrint('Error fetching photos: $e');
+      logger.e('Error fetching photos: $e');
     }
   }
 

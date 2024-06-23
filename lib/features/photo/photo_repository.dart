@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
+import '../../logger.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
@@ -74,7 +75,7 @@ class PhotoRepository {
         debugPrint('API call failed: ${response.body}');
       }
     } on Exception catch (error) {
-      debugPrint(error.toString());
+      logger.e(error.toString());
     }
   }
 
@@ -107,7 +108,7 @@ class PhotoRepository {
           .cast<Photo>()
           .toList();
     } on Exception catch (e) {
-      debugPrint('An error occurred: $e');
+      logger.e('An error occurred: $e');
       return [];
     }
   }
