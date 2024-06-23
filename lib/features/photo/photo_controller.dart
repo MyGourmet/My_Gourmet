@@ -28,18 +28,6 @@ class PhotoController {
     await _authRepository.upsertClassifyPhotosStatus(userId);
   }
 
-  /// 写真の店舗情報登録用メソッド
-  Future<void> registerStoreInfo({
-    required String accessToken,
-    required String userId,
-  }) async {
-    await _photoRepository.registerStoreInfo(
-      accessToken: accessToken,
-      userId: userId,
-      photoId: 'QLi6rfxJQ1Y0Hx7QELnWLsjq11z2',
-    );
-  }
-
   /// 写真ダウンロード用メソッド
   Future<List<Photo>> downloadPhotos({
     required String userId,

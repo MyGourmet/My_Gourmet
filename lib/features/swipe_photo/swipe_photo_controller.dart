@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../auth/auth_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/exception.dart';
@@ -99,6 +100,9 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
       // 写真情報をサーバーに登録
       if (isFood) {
+        final result =
+            await ref.read(authControllerProvider).signInWithGoogle();
+
         debugPrint('photo_managerパッケージ latitude: ${photo.latitude}');
         debugPrint('photo_managerパッケージ longitude: ${photo.longitude}');
         unawaited(
@@ -111,6 +115,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
               // 写真情報をサーバーに登録
               await ref.read(photoRepositoryProvider).registerStoreInfo(
                     photoId: photo.id,
+                    userId: result.userId,
                     latitude: geoPoint.latitude,
                     longitude: geoPoint.longitude,
                   );
