@@ -4,12 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../auth/auth_controller.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/exception.dart';
 import '../../core/local_photo_repository.dart';
 import '../../core/photo_manager_service.dart';
+import '../auth/auth_controller.dart';
 import '../photo/photo_repository.dart';
 import 'photo_count.dart';
 
