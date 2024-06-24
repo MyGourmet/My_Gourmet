@@ -369,6 +369,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
+  exif:
+    dependency: "direct main"
+    description:
+      name: exif
+      sha256: a7980fdb3b7ffcd0b035e5b8a5e1eef7cadfe90ea6a4e85ebb62f87b96c7a172
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   fake_async:
     dependency: transitive
     description:
@@ -844,10 +852,10 @@ packages:
     dependency: "direct main"
     description:
       name: logger
-      sha256: af05cc8714f356fd1f3888fb6741cbe9fbe25cdb6eedbab80e1a6db21047d4a4
+      sha256: "6bbb9d6f7056729537a4309bda2e74e18e5d9f14302489cc1e93f33b3fe32cac"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "2.0.2+1"
   logging:
     dependency: transitive
     description:
@@ -1056,6 +1064,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.10"
+  roggle:
+    dependency: "direct main"
+    description:
+      name: roggle
+      sha256: d2b3550cf952cb7e55929c7f4b8e8e6cf1536b4652218e44846122c7bac78f45
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.2+1"
   rxdart:
     dependency: transitive
     description:
