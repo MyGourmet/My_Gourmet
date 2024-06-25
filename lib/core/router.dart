@@ -22,16 +22,6 @@ final routerProvider = Provider(
             name: HomePage.routeName,
             path: HomePage.routePath,
             builder: (context, state) => const HomePage(),
-            routes: [
-              GoRoute(
-                name: ImageDetailPage.routeName,
-                path: ImageDetailPage.routePath,
-                builder: (context, state) {
-                  final imagePath = state.extra! as String;
-                  return ImageDetailPage(imagePath: imagePath);
-                },
-              ),
-            ],
           ),
           GoRoute(
             name: MyPage.routeName,
@@ -49,6 +39,14 @@ final routerProvider = Provider(
             builder: (context, state) => const SwipePhotoPage(),
           ),
         ],
+      ),
+      GoRoute(
+        name: ImageDetailPage.routeName,
+        path: ImageDetailPage.routePath,
+        builder: (context, state) {
+          final imagePath = state.extra! as String;
+          return ImageDetailPage(imagePath: imagePath);
+        },
       ),
     ],
     observers: [

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class ImageDetailPage extends StatelessWidget {
   const ImageDetailPage({super.key, required this.imagePath});
 
-  static const String routeName = 'image_detail';
-  static const String routePath = 'image_detail';
+  static const String routeName = '/image_detail';
+  static const String routePath = '/image_detail';
 
   final String imagePath;
 
