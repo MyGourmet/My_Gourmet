@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,8 +29,12 @@ final routerProvider = Provider(
                 name: ImageDetailPage.routeName,
                 path: ImageDetailPage.routePath,
                 builder: (context, state) {
-                  final imagePath = state.extra! as String;
-                  return ImageDetailPage(imagePath: imagePath);
+                  final data = state.extra! as Map<String, dynamic>;
+                  return ImageDetailPage(
+                    heroImageFile: data['heroImageFile'] as File,
+                    index: data['index'] as int,
+                    photoFileList: data['photoFileList'] as List<File>,
+                  );
                 },
               ),
             ],
@@ -59,6 +65,7 @@ final routerProvider = Provider(
 
 class GoRouterObserver extends NavigatorObserver {
   GoRouterObserver({required this.analytics});
+
   final FirebaseAnalytics analytics;
 
   @override

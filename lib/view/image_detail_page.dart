@@ -2,27 +2,80 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-class ImageDetailPage extends StatelessWidget {
-  const ImageDetailPage({super.key, required this.imagePath});
+import '../core/themes.dart';
+import 'image_detail/image_detail_card.dart';
+
+class ImageDetailPage extends StatefulWidget {
+  const ImageDetailPage({
+    super.key,
+    required this.heroImageFile,
+    required this.photoFileList,
+    required this.index,
+  });
 
   static const String routeName = 'image_detail';
   static const String routePath = 'image_detail';
 
-  final String imagePath;
+  final File heroImageFile;
+  final List<File> photoFileList;
+  final int index;
+
+  @override
+  State<ImageDetailPage> createState() => _ImageDetailPageState();
+}
+
+class _ImageDetailPageState extends State<ImageDetailPage> {
+  int get index => widget.index;
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: index, viewportFraction: 0.9);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Image Detail'),
-      ),
       body: Center(
-        child: Hero(
-          tag: imagePath,
-          child: Image.file(
-            File(imagePath),
-            fit: BoxFit.contain,
-          ),
+        child: Stack(
+          children: [
+            AppBar(),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.3,
+                ),
+                width: MediaQuery.of(context).size.width,
+                color: Themes.mainOrange[50],
+              ),
+            ),
+            Expanded(
+              child: PageView.builder(
+                controller: _pageController,
+                itemCount: widget.photoFileList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.1,
+                      left: 4,
+                      right: 4,
+                    ),
+                    child: ImageDetailCard(
+                      index: index,
+                      heroIndex: widget.index,
+                      heroImageFile: widget.heroImageFile,
+                      imageFile: widget.photoFileList[index],
+                      shopName: 'Shop Name $index',
+                      dateTime: DateTime.now(),
+                      address: 'Yokohama, kanagawa JAPAN',
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

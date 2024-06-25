@@ -76,6 +76,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       crossAxisSpacing: 8,
                       itemBuilder: (context, index) {
                         final photo = snapshot.data![index];
+                        final photoList =
+                            snapshot.data!.map((e) => File(e.path)).toList();
                         final size = sizeSnapshot.data![index];
 
                         return FutureBuilder<File>(
@@ -94,9 +96,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                               tag: photo.path,
                               child: GestureDetector(
                                 onTap: () {
-                                  context.go(
+                                  context.push(
                                     '/home_page/image_detail',
-                                    extra: photo.path,
+                                    extra: {
+                                      'heroImageFile': snapshot.data!,
+                                      'photoFileList': photoList,
+                                      'index': index,
+                                    },
                                   );
                                 },
                                 child: Container(

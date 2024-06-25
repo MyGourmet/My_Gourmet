@@ -24,6 +24,7 @@ dependencies:
   firebase_crashlytics: any
   firebase_remote_config: any
   firebase_storage: any
+  flip_card: ^0.7.0
   flutter:
     sdk: flutter
   flutter_dotenv: ^5.1.0

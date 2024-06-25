@@ -149,7 +149,11 @@ abstract final class Themes {
           fontWeight: FontWeight.bold,
         ),
       ),
-      dividerColor: Colors.transparent,
+      dividerTheme: DividerThemeData(
+        color: gray.shade400,
+        space: 4,
+        thickness: 1,
+      ),
       shadowColor: gray.shade700,
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
