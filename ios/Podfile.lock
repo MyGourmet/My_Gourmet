@@ -264,14 +264,14 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - sqlite3 (3.46.0):
-    - sqlite3/common (= 3.46.0)
-  - sqlite3/common (3.46.0)
-  - sqlite3/fts5 (3.46.0):
+  - "sqlite3 (3.46.0+1)":
+    - "sqlite3/common (= 3.46.0+1)"
+  - "sqlite3/common (3.46.0+1)"
+  - "sqlite3/fts5 (3.46.0+1)":
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.46.0):
+  - "sqlite3/perf-threadsafe (3.46.0+1)":
     - sqlite3/common
-  - sqlite3/rtree (3.46.0):
+  - "sqlite3/rtree (3.46.0+1)":
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
@@ -443,7 +443,7 @@ SPEC CHECKSUMS:
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sqlite3: 154b084339ede06960a5b3c8160066adc9176b7d
+  sqlite3: 292c3e1bfe89f64e51ea7fc7dab9182a017c8630
   sqlite3_flutter_libs: 0d611efdf6d1c9297d5ab03dab21b75aeebdae31
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 

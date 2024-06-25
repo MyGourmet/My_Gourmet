@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>864724760472-th626afl7esn4arfpsf1o3fanjajj063.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.864724760472-th626afl7esn4arfpsf1o3fanjajj063</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>864724760472-39gbrpa2r1mtf4sj999o7r6r6vpqqn62.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAvjs7T3O44p9l4PakgzsL8WO9HJbCOQyM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>864724760472</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.blue-waltz.my-gourmet.dev</string>
+	<key>PROJECT_ID</key>
+	<string>my-gourmet-dev-f5b45</string>
+	<key>STORAGE_BUCKET</key>
+	<string>my-gourmet-dev-f5b45.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:864724760472:ios:2439cefcac2686930edded</string>
+</dict>
+</plist>
