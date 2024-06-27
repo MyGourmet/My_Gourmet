@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/themes.dart';
 import 'image_detail/image_detail_card.dart';
@@ -13,8 +14,8 @@ class ImageDetailPage extends StatefulWidget {
     required this.index,
   });
 
-  static const String routeName = 'image_detail';
-  static const String routePath = 'image_detail';
+  static const String routeName = '/image_detail';
+  static const String routePath = '/image_detail';
 
   final File heroImageFile;
   final List<File> photoFileList;
@@ -37,16 +38,22 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+      ),
       body: Center(
         child: Stack(
           children: [
-            AppBar(),
             Positioned(
               bottom: 0,
               child: Container(
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.3,
-                ),
+                // padding: EdgeInsets.only(
+                //   top: MediaQuery.of(context).size.height * 0.3,
+                // ),
                 width: MediaQuery.of(context).size.width,
                 color: Themes.mainOrange[50],
               ),
@@ -58,7 +65,8 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.1,
+                      top: MediaQuery.of(context).size.height * 0.01,
+                      bottom: MediaQuery.of(context).size.height * 0.01,
                       left: 4,
                       right: 4,
                     ),

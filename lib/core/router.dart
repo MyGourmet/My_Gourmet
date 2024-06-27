@@ -24,20 +24,6 @@ final routerProvider = Provider(
             name: HomePage.routeName,
             path: HomePage.routePath,
             builder: (context, state) => const HomePage(),
-            routes: [
-              GoRoute(
-                name: ImageDetailPage.routeName,
-                path: ImageDetailPage.routePath,
-                builder: (context, state) {
-                  final data = state.extra! as Map<String, dynamic>;
-                  return ImageDetailPage(
-                    heroImageFile: data['heroImageFile'] as File,
-                    index: data['index'] as int,
-                    photoFileList: data['photoFileList'] as List<File>,
-                  );
-                },
-              ),
-            ],
           ),
           GoRoute(
             name: MyPage.routeName,
@@ -55,6 +41,18 @@ final routerProvider = Provider(
             builder: (context, state) => const SwipePhotoPage(),
           ),
         ],
+      ),
+      GoRoute(
+        name: ImageDetailPage.routeName,
+        path: ImageDetailPage.routePath,
+        builder: (context, state) {
+          final args = state.extra! as Map<String, dynamic>;
+          return ImageDetailPage(
+            heroImageFile: args['heroImageFile'] as File,
+            photoFileList: args['photoFileList'] as List<File>,
+            index: args['index'] as int,
+          );
+        },
       ),
     ],
     observers: [
