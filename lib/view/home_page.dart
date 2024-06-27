@@ -97,7 +97,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               child: GestureDetector(
                                 onTap: () {
                                   context.push(
-                                    '/home_page/image_detail',
+                                    '/image_detail',
                                     extra: {
                                       'heroImageFile': snapshot.data!,
                                       'photoFileList': photoList,
