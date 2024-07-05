@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
+import 'swipe_photo_page.dart';
 import 'widgets/custom_elevated_button.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
@@ -136,6 +138,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             ref
                                 .read(isOnBoardingCompletedProvider.notifier)
                                 .update((state) => true);
+                            context.go(SwipePhotoPage.routePath);
                           }
                         },
                         text: isLastPage ? 'やってみる' : 'つぎへ',

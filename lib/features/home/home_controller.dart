@@ -6,6 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/database/database.dart';
 import '../../core/local_photo_repository.dart';
+import '../../logger.dart';
 
 final homeControllerProvider = Provider<HomeController>((ref) {
   return HomeController(ref);
@@ -24,7 +25,7 @@ class HomeController {
       final photos = await _localPhotoRepository.getAllPhotos();
       return _removeInvalidPhotos(photos);
     } on Exception catch (e) {
-      debugPrint('Error fetching photos: $e');
+      logger.e('Error fetching photos: $e');
       return [];
     }
   }
@@ -43,11 +44,8 @@ class HomeController {
   Future<List<Size>> calculateSizes(List<Photo> photos) async {
     final sizes = <Size>[];
     for (final photo in photos) {
-      final file = await getFileByPhoto(photo);
-      final decodedImage = await decodeImageFromList(await file.readAsBytes());
-      final width = decodedImage.width.toDouble();
-      final height = decodedImage.height.toDouble();
-      if (width > height) {
+      if ((photo.width == 0 || photo.height == 0) ||
+          (photo.width > photo.height)) {
         sizes.add(const Size(172, 172));
       } else {
         sizes.add(const Size(172, 228));
@@ -60,7 +58,7 @@ class HomeController {
     try {
       await _localPhotoRepository.getAllPhotos();
     } on Exception catch (e) {
-      debugPrint('Error fetching photos: $e');
+      logger.e('Error fetching photos: $e');
     }
   }
 

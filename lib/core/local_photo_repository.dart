@@ -58,11 +58,18 @@ class LocalPhotoRepository {
     required bool isFood,
   }) async {
     final file = await photo.originFile;
+
+    final latLng = await photo.latlngAsync();
+
     // 飯の場合写真データ保存
     if (isFood && file != null) {
       final photoModel = PhotosCompanion(
         id: Value(photo.id),
         path: Value(file.path),
+        width: Value(photo.width),
+        height: Value(photo.height),
+        latitude: Value(latLng.latitude),
+        longitude: Value(latLng.longitude),
       );
       await db.into(db.photos).insert(
             photoModel,

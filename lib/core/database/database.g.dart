@@ -18,8 +18,35 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
   late final GeneratedColumn<String> path = GeneratedColumn<String>(
       'path', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _widthMeta = const VerificationMeta('width');
   @override
-  List<GeneratedColumn> get $columns => [id, path];
+  late final GeneratedColumn<int> width = GeneratedColumn<int>(
+      'width', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _heightMeta = const VerificationMeta('height');
+  @override
+  late final GeneratedColumn<int> height = GeneratedColumn<int>(
+      'height', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+      'latitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+      'longitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, path, width, height, latitude, longitude];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -41,6 +68,22 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
     } else if (isInserting) {
       context.missing(_pathMeta);
     }
+    if (data.containsKey('width')) {
+      context.handle(
+          _widthMeta, width.isAcceptableOrUnknown(data['width']!, _widthMeta));
+    }
+    if (data.containsKey('height')) {
+      context.handle(_heightMeta,
+          height.isAcceptableOrUnknown(data['height']!, _heightMeta));
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
     return context;
   }
 
@@ -54,6 +97,14 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       path: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}path'])!,
+      width: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}width'])!,
+      height: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}height'])!,
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude']),
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude']),
     );
   }
 
@@ -69,12 +120,38 @@ class Photo extends DataClass implements Insertable<Photo> {
 
   /// 写真のパス
   final String path;
-  const Photo({required this.id, required this.path});
+
+  /// 横サイズ
+  final int width;
+
+  /// 縦サイズ
+  final int height;
+
+  /// 緯度
+  final double? latitude;
+
+  /// 経度
+  final double? longitude;
+  const Photo(
+      {required this.id,
+      required this.path,
+      required this.width,
+      required this.height,
+      this.latitude,
+      this.longitude});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['path'] = Variable<String>(path);
+    map['width'] = Variable<int>(width);
+    map['height'] = Variable<int>(height);
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
     return map;
   }
 
@@ -82,6 +159,14 @@ class Photo extends DataClass implements Insertable<Photo> {
     return PhotosCompanion(
       id: Value(id),
       path: Value(path),
+      width: Value(width),
+      height: Value(height),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
     );
   }
 
@@ -91,6 +176,10 @@ class Photo extends DataClass implements Insertable<Photo> {
     return Photo(
       id: serializer.fromJson<String>(json['id']),
       path: serializer.fromJson<String>(json['path']),
+      width: serializer.fromJson<int>(json['width']),
+      height: serializer.fromJson<int>(json['height']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
     );
   }
   @override
@@ -99,62 +188,117 @@ class Photo extends DataClass implements Insertable<Photo> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'path': serializer.toJson<String>(path),
+      'width': serializer.toJson<int>(width),
+      'height': serializer.toJson<int>(height),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
     };
   }
 
-  Photo copyWith({String? id, String? path}) => Photo(
+  Photo copyWith(
+          {String? id,
+          String? path,
+          int? width,
+          int? height,
+          Value<double?> latitude = const Value.absent(),
+          Value<double?> longitude = const Value.absent()}) =>
+      Photo(
         id: id ?? this.id,
         path: path ?? this.path,
+        width: width ?? this.width,
+        height: height ?? this.height,
+        latitude: latitude.present ? latitude.value : this.latitude,
+        longitude: longitude.present ? longitude.value : this.longitude,
       );
   @override
   String toString() {
     return (StringBuffer('Photo(')
           ..write('id: $id, ')
-          ..write('path: $path')
+          ..write('path: $path, ')
+          ..write('width: $width, ')
+          ..write('height: $height, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, path);
+  int get hashCode => Object.hash(id, path, width, height, latitude, longitude);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Photo && other.id == this.id && other.path == this.path);
+      (other is Photo &&
+          other.id == this.id &&
+          other.path == this.path &&
+          other.width == this.width &&
+          other.height == this.height &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude);
 }
 
 class PhotosCompanion extends UpdateCompanion<Photo> {
   final Value<String> id;
   final Value<String> path;
+  final Value<int> width;
+  final Value<int> height;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
   final Value<int> rowid;
   const PhotosCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
+    this.width = const Value.absent(),
+    this.height = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PhotosCompanion.insert({
     required String id,
     required String path,
+    this.width = const Value.absent(),
+    this.height = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         path = Value(path);
   static Insertable<Photo> custom({
     Expression<String>? id,
     Expression<String>? path,
+    Expression<int>? width,
+    Expression<int>? height,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (path != null) 'path': path,
+      if (width != null) 'width': width,
+      if (height != null) 'height': height,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   PhotosCompanion copyWith(
-      {Value<String>? id, Value<String>? path, Value<int>? rowid}) {
+      {Value<String>? id,
+      Value<String>? path,
+      Value<int>? width,
+      Value<int>? height,
+      Value<double?>? latitude,
+      Value<double?>? longitude,
+      Value<int>? rowid}) {
     return PhotosCompanion(
       id: id ?? this.id,
       path: path ?? this.path,
+      width: width ?? this.width,
+      height: height ?? this.height,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -168,6 +312,18 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     if (path.present) {
       map['path'] = Variable<String>(path.value);
     }
+    if (width.present) {
+      map['width'] = Variable<int>(width.value);
+    }
+    if (height.present) {
+      map['height'] = Variable<int>(height.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -179,6 +335,10 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     return (StringBuffer('PhotosCompanion(')
           ..write('id: $id, ')
           ..write('path: $path, ')
+          ..write('width: $width, ')
+          ..write('height: $height, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -468,6 +628,7 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $PhotosTable photos = $PhotosTable(this);
   late final $PhotoDetailsTable photoDetails = $PhotoDetailsTable(this);
   @override
@@ -475,4 +636,296 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [photos, photoDetails];
+}
+
+typedef $$PhotosTableInsertCompanionBuilder = PhotosCompanion Function({
+  required String id,
+  required String path,
+  Value<int> width,
+  Value<int> height,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<int> rowid,
+});
+typedef $$PhotosTableUpdateCompanionBuilder = PhotosCompanion Function({
+  Value<String> id,
+  Value<String> path,
+  Value<int> width,
+  Value<int> height,
+  Value<double?> latitude,
+  Value<double?> longitude,
+  Value<int> rowid,
+});
+
+class $$PhotosTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PhotosTable,
+    Photo,
+    $$PhotosTableFilterComposer,
+    $$PhotosTableOrderingComposer,
+    $$PhotosTableProcessedTableManager,
+    $$PhotosTableInsertCompanionBuilder,
+    $$PhotosTableUpdateCompanionBuilder> {
+  $$PhotosTableTableManager(_$AppDatabase db, $PhotosTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PhotosTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PhotosTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$PhotosTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> id = const Value.absent(),
+            Value<String> path = const Value.absent(),
+            Value<int> width = const Value.absent(),
+            Value<int> height = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotosCompanion(
+            id: id,
+            path: path,
+            width: width,
+            height: height,
+            latitude: latitude,
+            longitude: longitude,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String id,
+            required String path,
+            Value<int> width = const Value.absent(),
+            Value<int> height = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotosCompanion.insert(
+            id: id,
+            path: path,
+            width: width,
+            height: height,
+            latitude: latitude,
+            longitude: longitude,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$PhotosTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $PhotosTable,
+    Photo,
+    $$PhotosTableFilterComposer,
+    $$PhotosTableOrderingComposer,
+    $$PhotosTableProcessedTableManager,
+    $$PhotosTableInsertCompanionBuilder,
+    $$PhotosTableUpdateCompanionBuilder> {
+  $$PhotosTableProcessedTableManager(super.$state);
+}
+
+class $$PhotosTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $PhotosTable> {
+  $$PhotosTableFilterComposer(super.$state);
+  ColumnFilters<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get path => $state.composableBuilder(
+      column: $state.table.path,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get width => $state.composableBuilder(
+      column: $state.table.width,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get height => $state.composableBuilder(
+      column: $state.table.height,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$PhotosTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $PhotosTable> {
+  $$PhotosTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get id => $state.composableBuilder(
+      column: $state.table.id,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get path => $state.composableBuilder(
+      column: $state.table.path,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get width => $state.composableBuilder(
+      column: $state.table.width,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get height => $state.composableBuilder(
+      column: $state.table.height,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get latitude => $state.composableBuilder(
+      column: $state.table.latitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<double> get longitude => $state.composableBuilder(
+      column: $state.table.longitude,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$PhotoDetailsTableInsertCompanionBuilder = PhotoDetailsCompanion
+    Function({
+  required String lastId,
+  required int lastCreateDateSecond,
+  required int currentCount,
+  required int pastFoodTotal,
+  Value<int> rowid,
+});
+typedef $$PhotoDetailsTableUpdateCompanionBuilder = PhotoDetailsCompanion
+    Function({
+  Value<String> lastId,
+  Value<int> lastCreateDateSecond,
+  Value<int> currentCount,
+  Value<int> pastFoodTotal,
+  Value<int> rowid,
+});
+
+class $$PhotoDetailsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PhotoDetailsTable,
+    PhotoDetail,
+    $$PhotoDetailsTableFilterComposer,
+    $$PhotoDetailsTableOrderingComposer,
+    $$PhotoDetailsTableProcessedTableManager,
+    $$PhotoDetailsTableInsertCompanionBuilder,
+    $$PhotoDetailsTableUpdateCompanionBuilder> {
+  $$PhotoDetailsTableTableManager(_$AppDatabase db, $PhotoDetailsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PhotoDetailsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PhotoDetailsTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$PhotoDetailsTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> lastId = const Value.absent(),
+            Value<int> lastCreateDateSecond = const Value.absent(),
+            Value<int> currentCount = const Value.absent(),
+            Value<int> pastFoodTotal = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotoDetailsCompanion(
+            lastId: lastId,
+            lastCreateDateSecond: lastCreateDateSecond,
+            currentCount: currentCount,
+            pastFoodTotal: pastFoodTotal,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            required String lastId,
+            required int lastCreateDateSecond,
+            required int currentCount,
+            required int pastFoodTotal,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotoDetailsCompanion.insert(
+            lastId: lastId,
+            lastCreateDateSecond: lastCreateDateSecond,
+            currentCount: currentCount,
+            pastFoodTotal: pastFoodTotal,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$PhotoDetailsTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $PhotoDetailsTable,
+    PhotoDetail,
+    $$PhotoDetailsTableFilterComposer,
+    $$PhotoDetailsTableOrderingComposer,
+    $$PhotoDetailsTableProcessedTableManager,
+    $$PhotoDetailsTableInsertCompanionBuilder,
+    $$PhotoDetailsTableUpdateCompanionBuilder> {
+  $$PhotoDetailsTableProcessedTableManager(super.$state);
+}
+
+class $$PhotoDetailsTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $PhotoDetailsTable> {
+  $$PhotoDetailsTableFilterComposer(super.$state);
+  ColumnFilters<String> get lastId => $state.composableBuilder(
+      column: $state.table.lastId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get lastCreateDateSecond => $state.composableBuilder(
+      column: $state.table.lastCreateDateSecond,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get currentCount => $state.composableBuilder(
+      column: $state.table.currentCount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get pastFoodTotal => $state.composableBuilder(
+      column: $state.table.pastFoodTotal,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+}
+
+class $$PhotoDetailsTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $PhotoDetailsTable> {
+  $$PhotoDetailsTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get lastId => $state.composableBuilder(
+      column: $state.table.lastId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get lastCreateDateSecond => $state.composableBuilder(
+      column: $state.table.lastCreateDateSecond,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get currentCount => $state.composableBuilder(
+      column: $state.table.currentCount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get pastFoodTotal => $state.composableBuilder(
+      column: $state.table.pastFoodTotal,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+class _$AppDatabaseManager {
+  final _$AppDatabase _db;
+  _$AppDatabaseManager(this._db);
+  $$PhotosTableTableManager get photos =>
+      $$PhotosTableTableManager(_db, _db.photos);
+  $$PhotoDetailsTableTableManager get photoDetails =>
+      $$PhotoDetailsTableTableManager(_db, _db.photoDetails);
 }

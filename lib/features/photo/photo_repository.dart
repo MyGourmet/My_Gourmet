@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
+import '../../logger.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
@@ -44,7 +45,13 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
-  Future<void> registerStoreInfo(String accessToken, String userId) async {
+  Future<void> registerStoreInfo({
+    required String photoId,
+    String? accessToken,
+    String? userId,
+    double? latitude,
+    double? longitude,
+  }) async {
     try {
       final response = await http.post(
         Uri.parse('$_apiUrl/findNearbyRestaurants'),
@@ -54,9 +61,9 @@ class PhotoRepository {
         },
         body: jsonEncode({
           'userId': userId,
-          'lat': 35.446841666666664,
-          'lon': 139.63788888888888,
-          'photo_id': 'QLi6rfxJQ1Y0Hx7QELnWLsjq11z2',
+          'lat': latitude,
+          'lon': longitude,
+          'photo_id': photoId,
         }),
       );
 
@@ -68,7 +75,7 @@ class PhotoRepository {
         debugPrint('API call failed: ${response.body}');
       }
     } on Exception catch (error) {
-      debugPrint(error.toString());
+      logger.e(error.toString());
     }
   }
 
@@ -101,7 +108,7 @@ class PhotoRepository {
           .cast<Photo>()
           .toList();
     } on Exception catch (e) {
-      debugPrint('An error occurred: $e');
+      logger.e('An error occurred: $e');
       return [];
     }
   }
