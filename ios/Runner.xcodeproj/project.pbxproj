@@ -17,7 +17,6 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		BEBCED8763699C4E26050690 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4539C0715193949094F0A291 /* Pods_Runner.framework */; };
 		DB5F98BEC1ECF9241F74DCDC /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34DF0FA2DF44B40E15751275 /* Pods_RunnerTests.framework */; };
-		// E9CF629276D4BAA2E11A91EF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D753387D6646073EE26B72D2 /* GoogleService-Info.plist */; }; // 削除
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -187,7 +186,6 @@
 			buildPhases = (
 				EF8B0F4DBBD42EF15751AA6F /* [CP] Check Pods Manifest.lock */,
 				331C807D294A63A400263BE5 /* Sources */,
-				331C807F294A63A400263BE5 /* Resources */,
 				B029453E5002E670E235579C /* Frameworks */,
 			);
 			buildRules = (
@@ -272,7 +270,6 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				// E9CF629276D4BAA2E11A91EF /* GoogleService-Info.plist in Resources */, // 削除
 				65C0E1172C2A547C005BA11C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -545,7 +542,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(appId)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blue-waltz.my-gourmet$(APP_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -724,7 +721,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.blue_waltz.myGourmet; // ここを確認
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blue-waltz.my-gourmet$(APP_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -747,7 +744,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.blue_waltz.myGourmet; // ここを確認
+				PRODUCT_BUNDLE_IDENTIFIER = "com.blue-waltz.my-gourmet$(APP_ID_SUFFIX)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
