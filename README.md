@@ -9,15 +9,16 @@ FVMが未インストールの場合、[こちらの記事](https://zenn.dev/alt
 
 ### セットアップ
 
-1. 本リポジトリをクローン後、プロジェクトのルートディレクトリにて以下のコマンドを実行する。
+#### 1. 本リポジトリをクローン後、プロジェクトのルートディレクトリにて以下のコマンドを実行する。
 
 ```bash
 make setup
 ```
 
-`.env.example`をコピーして`.env`を作成する。PROD_API_URLとDEV_API_URLをNotionを参照して変更する。
+#### 2. `.env.example`をコピーして`.env`を作成する。
+PROD_API_URLとDEV_API_URLをNotionを参照して変更する。
 
-```.env
+```.dotenv
 PROD_API_URL=https://dummy-prod-url
 DEV_API_URL=https://dummy-dev-url
 ```
@@ -25,10 +26,8 @@ DEV_API_URL=https://dummy-dev-url
 実際のURLは以下を参照：
 https://www.notion.so/masakisato/11a5050794ac414f8f0ef9525ae13809?pvs=4
 
-
-
-2. firebaseにsha1証明書を登録する。
-my-gourmetとmy-gourmet-devに下記で出力されたsha1証明書を登録する。
+#### 3. Firebaseにsha1証明書を登録する。
+   my-gourmetとmy-gourmet-devに下記で出力されたsha1証明書を登録する。
 ```
 keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 ```
