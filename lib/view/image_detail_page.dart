@@ -102,7 +102,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                       imageFile: widget.photoFileList[index],
                       shopName: shopNames[index],
                       dateTime: DateTime.now(),
-                      address: 'Yokohama, kanagawa JPN',
+                      address: 'Yokohama, kanagawa JAPAN',
                     ),
                   );
                 },
