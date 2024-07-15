@@ -34,4 +34,8 @@ class PhotoController {
   }) async {
     return _photoRepository.downloadPhotos(userId: userId);
   }
+
+  Future<String> getStoreNameFromStoreId(String storeId) async {
+    return await _photoRepository.fetchStoreNameFromStoreId(storeId);
+  }
 }

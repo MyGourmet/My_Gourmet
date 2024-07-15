@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/themes.dart';
+import '../features/photo/photo_controller.dart';
+import '../features/photo/photo_repository.dart';
 import 'image_detail/image_detail_card.dart';
 
 class ImageDetailPage extends StatefulWidget {
@@ -28,11 +32,32 @@ class ImageDetailPage extends StatefulWidget {
 class _ImageDetailPageState extends State<ImageDetailPage> {
   int get index => widget.index;
   late final PageController _pageController;
+  late List<String> shopNames;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: index, viewportFraction: 0.9);
+
+    shopNames = List<String>.filled(widget.photoFileList.length, 'Loading...');
+    _fetchShopNames();
+  }
+
+  void _fetchShopNames() async {
+    final container = ProviderContainer();
+    final photoController = container.read(photoControllerProvider);
+
+    for (var i = 0; i < widget.photoFileList.length; i++) {
+      final photo = await photoController.downloadPhotos(
+          userId: FirebaseAuth.instance.currentUser!.uid);
+
+      final storeName = await photoController
+          .getStoreNameFromStoreId('ChIJ38OBKhqMGGARv2PCpjtd6uI');
+      // photo.storeId
+      setState(() {
+        shopNames[i] = storeName;
+      });
+    }
   }
 
   @override
@@ -75,9 +100,9 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                       heroIndex: widget.index,
                       heroImageFile: widget.heroImageFile,
                       imageFile: widget.photoFileList[index],
-                      shopName: 'Shop Name $index',
+                      shopName: shopNames[index],
                       dateTime: DateTime.now(),
-                      address: 'Yokohama, kanagawa JAPAN',
+                      address: 'Yokohama, kanagawa JPN',
                     ),
                   );
                 },

@@ -40,6 +40,7 @@ mixin _$Photo {
   /// 写真の撮影日時
   @timestampConverter
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
+  String get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -57,7 +58,8 @@ abstract class $PhotoCopyWith<$Res> {
       @serverTimestampConverter UnionTimestamp updatedAt,
       String url,
       String userId,
-      @timestampConverter UnionTimestamp shotAt});
+      @timestampConverter UnionTimestamp shotAt,
+      String storeId});
 
   $UnionTimestampCopyWith<$Res> get createdAt;
   $UnionTimestampCopyWith<$Res> get updatedAt;
@@ -83,6 +85,7 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? url = null,
     Object? userId = null,
     Object? shotAt = null,
+    Object? storeId = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -109,6 +112,10 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      storeId: null == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -150,7 +157,8 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
       @serverTimestampConverter UnionTimestamp updatedAt,
       String url,
       String userId,
-      @timestampConverter UnionTimestamp shotAt});
+      @timestampConverter UnionTimestamp shotAt,
+      String storeId});
 
   @override
   $UnionTimestampCopyWith<$Res> get createdAt;
@@ -177,6 +185,7 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? url = null,
     Object? userId = null,
     Object? shotAt = null,
+    Object? storeId = null,
   }) {
     return _then(_$PhotoImpl(
       id: null == id
@@ -203,6 +212,10 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      storeId: null == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -218,7 +231,8 @@ class _$PhotoImpl extends _Photo {
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
       this.url = '',
       this.userId = '',
-      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp()})
+      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
+      this.storeId = ''})
       : super._();
 
   factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
@@ -256,10 +270,13 @@ class _$PhotoImpl extends _Photo {
   @JsonKey()
   @timestampConverter
   final UnionTimestamp shotAt;
+  @override
+  @JsonKey()
+  final String storeId;
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -274,13 +291,14 @@ class _$PhotoImpl extends _Photo {
                 other.updatedAt == updatedAt) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.shotAt, shotAt) || other.shotAt == shotAt));
+            (identical(other.shotAt, shotAt) || other.shotAt == shotAt) &&
+            (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, createdAt, updatedAt, url, userId, shotAt);
+  int get hashCode => Object.hash(
+      runtimeType, id, createdAt, updatedAt, url, userId, shotAt, storeId);
 
   @JsonKey(ignore: true)
   @override
@@ -303,7 +321,8 @@ abstract class _Photo extends Photo {
       @serverTimestampConverter final UnionTimestamp updatedAt,
       final String url,
       final String userId,
-      @timestampConverter final UnionTimestamp shotAt}) = _$PhotoImpl;
+      @timestampConverter final UnionTimestamp shotAt,
+      final String storeId}) = _$PhotoImpl;
   const _Photo._() : super._();
 
   factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
@@ -335,6 +354,8 @@ abstract class _Photo extends Photo {
   /// 写真の撮影日時
   @timestampConverter
   UnionTimestamp get shotAt;
+  @override
+  String get storeId;
   @override
   @JsonKey(ignore: true)
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>

@@ -89,6 +89,7 @@ class PhotoRepository {
           .collection('users')
           .doc(userId)
           .collection('photos')
+
           // ドキュメントIDで降順にソート
           .orderBy(FieldPath.documentId, descending: true)
           .get();
@@ -110,6 +111,24 @@ class PhotoRepository {
     } on Exception catch (e) {
       logger.e('An error occurred: $e');
       return [];
+    }
+  }
+
+  Future<String> fetchStoreNameFromStoreId(String storeId) async {
+    try {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('stores')
+          .doc(storeId)
+          .get();
+
+      if (docSnapshot.exists) {
+        return docSnapshot.data()?['name'] as String;
+      } else {
+        throw Exception('Store not found');
+      }
+    } on Exception catch (e) {
+      logger.e('Error fetching store name: $e');
+      return '';
     }
   }
 }
