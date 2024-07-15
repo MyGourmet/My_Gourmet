@@ -14,7 +14,7 @@
       "request": "launch",
       "type": "dart",
       "args": [
-        "--dart-define=FLAVOR=main"
+        "--dart-define=FLAVOR=prod"
       ]
     }
   ]
