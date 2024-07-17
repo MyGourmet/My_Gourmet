@@ -28,12 +28,15 @@ class PhotoController {
     await _authRepository.upsertClassifyPhotosStatus(userId);
   }
 
+  // todo delete
   /// 写真ダウンロード用メソッド
   Future<List<Photo>> downloadPhotos({
     required String userId,
   }) async {
     return _photoRepository.downloadPhotos(userId: userId);
   }
+
+  // todo 写真ダウンロード用メソッド作成
 
   Future<String> getStoreNameFromStoreId(String storeId) async {
     return await _photoRepository.fetchStoreNameFromStoreId(storeId);
