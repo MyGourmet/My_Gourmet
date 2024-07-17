@@ -15,7 +15,9 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>my_gourmet</string>
+	<string>MyGourmet$(APP_ID_SUFFIX)</string>
+	<key>CFBundleDisplayName</key>
+	<string>MyGourmet$(APP_ID_SUFFIX)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -31,7 +33,8 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.588802119789-oh11a15chog7l1dkq0q4ju5gh4gofcut</string>
+				<string>com.googleusercontent.apps.588802119789-km4v9n9eb5cc6j8jv8pqkocvs1lf9iat</string>
+				<string>com.googleusercontent.apps.864724760472-th626afl7esn4arfpsf1o3fanjajj063</string>
 			</array>
 		</dict>
 	</array>

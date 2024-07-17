@@ -11,11 +11,11 @@ clean:
 
 .PHONY: run-build-runner
 run-build-runner:
-	fvm flutter pub run build_runner build --delete-conflicting-outputs
+	fvm dart run build_runner build -d
 
 .PHONY: watch-build-runner
 watch-build-runner:
-	fvm flutter pub run build_runner watch --delete-conflicting-outputs
+	fvm dart run build_runner watch -d
 
 .PHONY: fix
 fix:

@@ -53,8 +53,10 @@ app.*.map.json
 /cloud_run/auth/
 
 # Dart Defines related
-**/android/app/google-services.json
+/android/app/google-services.json
 !.idea/runConfigurations/
+/ios/Flutter/DartDefines.xcconfig
+/ios/GoogleService-Info.plist
 
 # env
 .env
