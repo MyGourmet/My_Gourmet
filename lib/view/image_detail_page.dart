@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 
 import '../core/themes.dart';
 import '../features/photo/photo_controller.dart';
-import '../features/photo/photo_repository.dart';
 import 'image_detail/image_detail_card.dart';
 
 class ImageDetailPage extends StatefulWidget {
@@ -47,10 +46,17 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
     final container = ProviderContainer();
     final photoController = container.read(photoControllerProvider);
 
+    // todo widget.photoFileList（今回必要な写真を含めたhome_page.dartに表示されている写真全部）は不要なのでfor文を削除
     for (var i = 0; i < widget.photoFileList.length; i++) {
+      // todo photoIdを取得する
+      //  - home_page.dart内の`getPhotos`メソッドで取得しているPhotoクラスのidがfirestoreのidと同一であることを確認
+      //  ← 実際に動作確認してみる or 登録する際の処理を見る(swipe_photo_page.dartのスワイプ時の挙動を確認）
+      //  - 同一であれば、このページに渡して以下で利用する
+      // todo firestoreから特定の1枚の写真を取得する & storeIdを取得する
       final photo = await photoController.downloadPhotos(
           userId: FirebaseAuth.instance.currentUser!.uid);
 
+      // todo storeIdから店舗名を取得する
       final storeName = await photoController
           .getStoreNameFromStoreId('ChIJ38OBKhqMGGARv2PCpjtd6uI');
       // photo.storeId
@@ -100,6 +106,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                       heroIndex: widget.index,
                       heroImageFile: widget.heroImageFile,
                       imageFile: widget.photoFileList[index],
+                      // todo storeNameを渡す
                       shopName: shopNames[index],
                       dateTime: DateTime.now(),
                       address: 'Yokohama, kanagawa JAPAN',
