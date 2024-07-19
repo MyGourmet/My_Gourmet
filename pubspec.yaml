@@ -3,7 +3,7 @@ description: A new Flutter project.
 # 意図せず`flutter pub publish` によってpub.devに配信されることを防止する
 publish_to: 'none'
 
-version: 1.0.1+12
+version: 1.0.2+13
 
 environment:
   sdk: '>=3.4.1 <4.0.0'
