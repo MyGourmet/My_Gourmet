@@ -34,6 +34,7 @@ class CardFront extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Stack(
+        alignment: AlignmentDirectional.topEnd,
         children: [
           Container(
             padding: const EdgeInsets.only(
@@ -92,21 +93,17 @@ class CardFront extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              height: 36,
-              width: 36,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
-                ),
-                border: Border.all(),
-                color: Themes.gray[100],
+          Container(
+            height: 36,
+            width: 36,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(8),
               ),
-              child: const Icon(Icons.refresh),
+              border: Border.all(),
+              color: Themes.gray[100],
             ),
+            child: const Icon(Icons.refresh),
           ),
         ],
       ),
