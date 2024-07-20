@@ -114,6 +114,23 @@ class PhotoRepository {
     }
   }
 
+  Future<Photo?> getPhotoById({
+    required String userId,
+    required String photoId,
+  }) async {
+    try {
+      final docSnapshot = await photosRef(userId: userId).doc(photoId).get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+        return null;
+      }
+    } on Exception catch (e) {
+      logger.e('Error fetching photo: $e');
+      return null;
+    }
+  }
+
   Future<String> fetchStoreNameFromStoreId(String storeId) async {
     try {
       final docSnapshot = await FirebaseFirestore.instance

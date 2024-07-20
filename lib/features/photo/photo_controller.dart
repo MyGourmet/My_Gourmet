@@ -41,4 +41,14 @@ class PhotoController {
   Future<String> getStoreNameFromStoreId(String storeId) async {
     return await _photoRepository.fetchStoreNameFromStoreId(storeId);
   }
+
+  Future<Photo?> getPhotoById({
+    required String userId,
+    required String photoId,
+  }) async {
+    return await _photoRepository.getPhotoById(
+      userId: userId,
+      photoId: photoId,
+    );
+  }
 }

@@ -9,7 +9,7 @@ import '../core/themes.dart';
 import '../features/photo/photo_controller.dart';
 import 'image_detail/image_detail_card.dart';
 
-class ImageDetailPage extends StatefulWidget {
+class ImageDetailPage extends ConsumerStatefulWidget {
   const ImageDetailPage({
     super.key,
     required this.heroImageFile,
@@ -25,45 +25,38 @@ class ImageDetailPage extends StatefulWidget {
   final int index;
 
   @override
-  State<ImageDetailPage> createState() => _ImageDetailPageState();
+  ConsumerState<ImageDetailPage> createState() => _ImageDetailPageState();
 }
 
-class _ImageDetailPageState extends State<ImageDetailPage> {
-  int get index => widget.index;
+class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
   late final PageController _pageController;
-  late List<String> shopNames;
+  late Future<String> _storeNameFuture;
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: index, viewportFraction: 0.9);
-
-    shopNames = List<String>.filled(widget.photoFileList.length, 'Loading...');
-    _fetchShopNames();
+    _pageController =
+        PageController(initialPage: widget.index, viewportFraction: 0.9);
+    _storeNameFuture = _fetchStoreName();
   }
 
-  void _fetchShopNames() async {
-    final container = ProviderContainer();
-    final photoController = container.read(photoControllerProvider);
-
+  Future<String> _fetchStoreName() async {
+    final photoController = ref.read(photoControllerProvider);
     // todo widget.photoFileList（今回必要な写真を含めたhome_page.dartに表示されている写真全部）は不要なのでfor文を削除
-    for (var i = 0; i < widget.photoFileList.length; i++) {
-      // todo photoIdを取得する
-      //  - home_page.dart内の`getPhotos`メソッドで取得しているPhotoクラスのidがfirestoreのidと同一であることを確認
-      //  ← 実際に動作確認してみる or 登録する際の処理を見る(swipe_photo_page.dartのスワイプ時の挙動を確認）
-      //  - 同一であれば、このページに渡して以下で利用する
-      // todo firestoreから特定の1枚の写真を取得する & storeIdを取得する
-      final photo = await photoController.downloadPhotos(
-          userId: FirebaseAuth.instance.currentUser!.uid);
-
-      // todo storeIdから店舗名を取得する
-      final storeName = await photoController
-          .getStoreNameFromStoreId('ChIJ38OBKhqMGGARv2PCpjtd6uI');
-      // photo.storeId
-      setState(() {
-        shopNames[i] = storeName;
-      });
-    }
+    // ここでphotoIdを取得する必要があります。仮にphotoIdが既知であるとします。
+    // todo photoIdを取得する
+    //  - home_page.dart内の`getPhotos`メソッドで取得しているPhotoクラスのidがfirestoreのidと同一であることを確認
+    //  ← 実際に動作確認してみる or 登録する際の処理を見る(swipe_photo_page.dartのスワイプ時の挙動を確認）
+    //  - 同一であれば、このページに渡して以下で利用する
+    // todo firestoreから特定の1枚の写真を取得する & storeIdを取得する
+    const photoId = "example_photo_id"; // 実際には適切なIDを使用してください。
+    final photo = await photoController.getPhotoById(
+      userId: FirebaseAuth.instance.currentUser!.uid,
+      photoId: photoId,
+    );
+    // todo storeIdから店舗名を取得する
+    final storeId = photo?.storeId ?? '';
+    return await photoController.getStoreNameFromStoreId(storeId);
   }
 
   @override
@@ -82,36 +75,46 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
             Positioned(
               bottom: 0,
               child: Container(
-                // padding: EdgeInsets.only(
-                //   top: MediaQuery.of(context).size.height * 0.3,
-                // ),
                 width: MediaQuery.of(context).size.width,
                 color: Themes.mainOrange[50],
               ),
             ),
             Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: widget.photoFileList.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).size.height * 0.01,
-                      bottom: MediaQuery.of(context).size.height * 0.01,
-                      left: 4,
-                      right: 4,
-                    ),
-                    child: ImageDetailCard(
-                      index: index,
-                      heroIndex: widget.index,
-                      heroImageFile: widget.heroImageFile,
-                      imageFile: widget.photoFileList[index],
-                      // todo storeNameを渡す
-                      shopName: shopNames[index],
-                      dateTime: DateTime.now(),
-                      address: 'Yokohama, kanagawa JAPAN',
-                    ),
-                  );
+              child: FutureBuilder<String>(
+                future: _storeNameFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData) {
+                    return const Center(child: Text('No store name available'));
+                  } else {
+                    final storeName = snapshot.data!;
+                    return PageView.builder(
+                      controller: _pageController,
+                      itemCount: widget.photoFileList.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            top: MediaQuery.of(context).size.height * 0.01,
+                            bottom: MediaQuery.of(context).size.height * 0.01,
+                            left: 4,
+                            right: 4,
+                          ),
+                          child: ImageDetailCard(
+                            index: index,
+                            heroIndex: widget.index,
+                            heroImageFile: widget.heroImageFile,
+                            imageFile: widget.photoFileList[index],
+                            shopName: storeName,
+                            dateTime: DateTime.now(),
+                            address: 'Yokohama, kanagawa JAPAN',
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
