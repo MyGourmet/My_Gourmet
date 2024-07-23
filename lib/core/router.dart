@@ -12,6 +12,7 @@ import '../view/my_page.dart';
 import '../view/root_page.dart';
 import '../view/swipe_photo_page.dart';
 import 'analytics_repository.dart';
+import 'database/database.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(
@@ -51,6 +52,7 @@ final routerProvider = Provider(
             heroImageFile: args['heroImageFile'] as File,
             photoFileList: args['photoFileList'] as List<File>,
             index: args['index'] as int,
+            photo: args['photo'] as Photo,
           );
         },
       ),

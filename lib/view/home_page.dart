@@ -101,6 +101,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     extra: {
                                       'heroImageFile': snapshot.data!,
                                       'photoFileList': photoList,
+                                      'photo': photo,
                                       'index': index,
                                     },
                                   );
