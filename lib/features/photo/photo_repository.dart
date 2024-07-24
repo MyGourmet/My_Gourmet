@@ -110,7 +110,7 @@ class PhotoRepository {
     }
   }
 
-  // TODO: firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
+  // TODO(firestore): データ作成後に動作確認 & 全件取得ではない取得方法検討
   Future<List<Photo>> downloadPhotos({
     required String userId,
   }) async {
