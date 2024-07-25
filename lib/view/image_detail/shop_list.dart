@@ -12,15 +12,15 @@ Future<dynamic> showShopListDialog (
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          insetPadding: const EdgeInsets.all(20.0),
+          insetPadding: const EdgeInsets.all(20),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(10),
           ),
           content: Container(
             width: MediaQuery.of(context).size.width - 10.0,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 1),
-              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(color: Colors.white),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -35,7 +35,7 @@ Future<dynamic> showShopListDialog (
                     icon: const Icon(Icons.close),
                   ),
                 ), 
-                const SizedBox(height: 24.0,),
+                const SizedBox(height: 24),
                 const Text ('写真を撮った店舗を選んでください'),
                 const SizedBox(height:20),
                 Container(
@@ -111,6 +111,11 @@ Future<dynamic> showShopListDialog (
       },
     );
   }
+
+
+
+
+
 
 
 

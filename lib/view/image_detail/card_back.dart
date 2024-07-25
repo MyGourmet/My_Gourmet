@@ -203,7 +203,7 @@ class CardBack extends StatelessWidget {
                           onPressed: () {
                             showShopListDialog(
                               context,
-                              onApproved: () {}                            
+                              onApproved: () {},                           
                             );                            
                           },
                           child: Text(
