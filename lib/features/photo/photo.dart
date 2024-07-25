@@ -31,6 +31,7 @@ class Photo with _$Photo {
     @timestampConverter
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp shotAt,
+    @Default('') String storeId,
   }) = _Photo;
 
   const Photo._();

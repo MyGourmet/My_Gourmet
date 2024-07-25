@@ -19,6 +19,7 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
       shotAt: json['shotAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : timestampConverter.fromJson(json['shotAt'] as Object),
+      storeId: json['storeId'] as String? ?? '',
     );
 
 Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
       'url': instance.url,
       'userId': instance.userId,
       'shotAt': timestampConverter.toJson(instance.shotAt),
+      'storeId': instance.storeId,
     };
