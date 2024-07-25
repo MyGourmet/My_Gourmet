@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
 import '../widgets/scalable_image.dart';
+import 'shop_list.dart';
 
 class CardBack extends StatelessWidget {
   const CardBack({
@@ -199,7 +200,12 @@ class CardBack extends StatelessWidget {
                           ),
                         ),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showShopListDialog(
+                              context,
+                              onApproved: () {}                            
+                            );                            
+                          },
                           child: Text(
                             '店舗を選び直す',
                             style: Theme.of(context).textTheme.labelMedium,
