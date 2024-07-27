@@ -1,11 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
+import '../../core/themes.dart';
 import '../widgets/custom_elevated_button.dart';
+import '../widgets/scalable_image.dart';
+
+
+List<File> shopList = [];
+int shopNo = 0;
+int shopNoSelected = 0;
+
 
 Future<dynamic> showShopListDialog (
-  BuildContext context, { required dynamic onApproved,})
+  BuildContext context, { 
+    required String shopName,
+    required List<File> imageFileList,
+    required void Function() onSelected,
   
-async { 
+}) async { 
   await showDialog<dynamic>(
     context: context,
     barrierDismissible: false,
@@ -34,54 +47,66 @@ async {
                   icon: const Icon(Icons.close),
                 ),
               ), 
-              const SizedBox(height: 24),
+              const SizedBox(height: 8),
               const Text ('写真を撮った店舗を選んでください'),
               const SizedBox(height:20),
-              Container(
-                padding: const EdgeInsets.only(
-                  top: 40,
-                  bottom: 100,
-                ),
-                margin: const EdgeInsets.only(
-                  left: 10,
-                  right:10,
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              const SizedBox(height:15),
-            Container(
-              padding: const EdgeInsets.only(
-                top: 40,
-                bottom: 100,
-              ),
-              margin: const EdgeInsets.only(
-                left: 10,
-                right:10,
-              ),   
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            const SizedBox(height:15),
-            Container(
-              padding: const EdgeInsets.only(
-                top: 40,
-                bottom: 100,
-              ),
-              margin: const EdgeInsets.only(
-                left: 10,
-                right:10,
-              ),
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            const SizedBox(height: 15),
+
+              for(shopNo=0; shopNo < 3; shopNo++) ... {
+                  Container(
+                    padding: const EdgeInsets.only(
+                      top: 10,
+                      bottom: 10,
+                    ),
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                      right:10,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        width: shopNoSelected == shopNo ? 2 : 1,
+                        color: shopNoSelected == shopNo 
+                         ? Themes.mainOrange
+                         : Colors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ), 
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10, bottom: 5),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(shopName),
+                          ),
+                        ),
+    
+                        SizedBox(
+                          height: 110,
+                          child: Scrollbar(
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: imageFileList.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(0),
+                                    child: ScalableImage(
+                                      imageFile: imageFileList[index],
+                                      //height: 150,
+                                      width: 125,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ]
+                    ),
+                  ),
+                const SizedBox(height:15),
+              },
 
             const Align(
               alignment: Alignment.centerRight,
@@ -96,8 +121,7 @@ async {
               child: SizedBox(
                 height: 60,
                 child: CustomElevatedButton(
-                  //onPressed: onApproved,
-                  onPressed: () {},
+                  onPressed: onSelected,
                   text: '決定',
                 ),
               ),
@@ -110,3 +134,5 @@ async {
     },
   );
 }
+
+

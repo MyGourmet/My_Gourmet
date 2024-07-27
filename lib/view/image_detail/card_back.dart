@@ -203,7 +203,12 @@ class CardBack extends StatelessWidget {
                           onPressed: () {
                             showShopListDialog(
                               context,
-                              onApproved: () {},                           
+                              shopName: shopName!,             // 別途 null safe化要
+                              imageFileList: imageFileList!,   // 別途 null safe化要
+                              onSelected: () {
+                                print('Selected');
+                                Navigator.of(context).pop();
+                              },                       
                             );                            
                           },
                           child: Text(
