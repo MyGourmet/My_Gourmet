@@ -130,7 +130,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         unawaited(
           photo.file.then((value) async {
             // 画像を圧縮
-            final compressedData = await compressImage(value!);
+            final compressedData = await _compressImage(value!);
             if (compressedData != null) {
               await ref.read(photoRepositoryProvider).categorizeFood(
                     userId: result.userId,
@@ -221,12 +221,13 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   }
 
   /// 画像を圧縮するメソッド
-  Future<Uint8List?> compressImage(File file) async {
+  Future<Uint8List?> _compressImage(File file) async {
     final result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
       minWidth: 256,
       minHeight: 256,
       quality: 85,
+      keepExif: true,
     );
     return result;
   }
