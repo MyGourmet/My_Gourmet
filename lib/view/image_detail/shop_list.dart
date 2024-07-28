@@ -109,7 +109,7 @@ Future<dynamic> showShopListDialog (
                             ),
                           ),
                         ),
-                      ]
+                      ],
                     ),
                   ),
                 const SizedBox(height:15),
@@ -141,5 +141,3 @@ Future<dynamic> showShopListDialog (
     },
   );
 }
-
-

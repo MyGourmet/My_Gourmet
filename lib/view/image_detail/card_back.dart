@@ -206,7 +206,6 @@ class CardBack extends StatelessWidget {
                               shopName: shopName!,             // 別途 null safe化要
                               imageFileList: imageFileList!,   // 別途 null safe化要
                               onSelected: () {
-                                print('Selected');
                                 Navigator.of(context).pop();
                               },                       
                             );                            
