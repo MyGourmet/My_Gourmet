@@ -39,12 +39,19 @@ Future<dynamic> showShopListDialog (
             children:[
               Align(
                 alignment: Alignment.topRight,
-                child: IconButton(
-                  highlightColor: Colors.red,     
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },    
-                  icon: const Icon(Icons.close),
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFfff4eb),
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(  
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },    
+                    icon: const Icon(Icons.close),
+                  ),
                 ),
               ), 
               const SizedBox(height: 8),
