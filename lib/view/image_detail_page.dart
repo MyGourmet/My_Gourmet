@@ -53,7 +53,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     final photoId = widget.photo.id; // photo.id が null または空でないことを確認
     print('prevphotoId ${photoId}');
     print('prevphotoId ${widget.photoFileList[0]}');
-    if (photoId == null || photoId.isEmpty) {
+    if (photoId.isEmpty) {
       throw Exception('Photo ID is null or empty');
     }
 
