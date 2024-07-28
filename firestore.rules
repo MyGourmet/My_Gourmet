@@ -20,5 +20,8 @@ service cloud.firestore {
     match /users/{userId}/photos/{id} {
       allow read, write: if isCurrentUser(userId);
     }
+    match /stores/{storeId}{
+          allow read, write: if isAuthenticated();
+    }
   }
 }
