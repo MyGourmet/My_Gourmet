@@ -131,19 +131,29 @@ class PhotoRepository {
     }
   }
 
-  Future<String> fetchStoreNameFromStoreId(String storeId) async {
+  Future<String> getStoreNameByStoreId(
+      {required String userId, required String storeId}) async {
     try {
-      final docSnapshot = await FirebaseFirestore.instance
+      // Fetching the document snapshot from Firestore
+      DocumentSnapshot doc = await FirebaseFirestore.instance
           .collection('stores')
           .doc(storeId)
           .get();
 
-      if (docSnapshot.exists) {
-        return docSnapshot.data()?['name'] as String;
+      // Checking if the document exists
+      if (doc.exists) {
+        // Extracting data from the document snapshot
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('name')) {
+          return data['name'] as String;
+        } else {
+          throw Exception('Name field not found in the document');
+        }
       } else {
         throw Exception('Store not found');
       }
-    } on Exception catch (e) {
+    } catch (e) {
+      // Logging the error and returning an empty string
       logger.e('Error fetching store name: $e');
       return '';
     }

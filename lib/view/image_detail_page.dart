@@ -69,7 +69,10 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
       throw Exception('Store ID is null or empty');
     }
 
-    return await photoController.getStoreNameFromStoreId(storeId);
+    return await photoController.getStoreNameByStoreId(
+      userId: userId,
+      storeId: storeId,
+    );
   }
 
   @override

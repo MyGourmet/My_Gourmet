@@ -38,8 +38,14 @@ class PhotoController {
 
   // todo 写真ダウンロード用メソッド作成
 
-  Future<String> getStoreNameFromStoreId(String storeId) async {
-    return await _photoRepository.fetchStoreNameFromStoreId(storeId);
+  Future<String> getStoreNameByStoreId({
+    required String userId,
+    required String storeId,
+  }) async {
+    return await _photoRepository.getStoreNameByStoreId(
+      userId: userId,
+      storeId: storeId,
+    );
   }
 
   Future<Photo?> getPhotoById({
