@@ -94,7 +94,9 @@ Future<dynamic> showShopListDialog (
                         child: Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: 10, bottom: 5),
+                              padding: const EdgeInsets.only(
+                                left: 10, bottom: 5
+                              ),
                               child: Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
