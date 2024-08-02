@@ -39,8 +39,8 @@ Future<void> showShopListDialog(
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
-                  width: 35,
-                  height: 35,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                     color: Themes.gray[50],
                     shape: BoxShape.circle,
@@ -53,7 +53,7 @@ Future<void> showShopListDialog(
                   ),
                 ),
               ),
-              const Gap(8),
+              const Gap(24),
               Text(
                 '写真を撮った店舗を選んでください',
                 style: context.textTheme.titleSmall,
@@ -156,7 +156,7 @@ Future<void> showShopListDialog(
                 alignment: Alignment.centerRight,
                 child: Text('次の３店鋪'),
               ),
-              const Gap(15),
+              const Gap(16),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: context.screenWidth * 0.05,
@@ -169,7 +169,7 @@ Future<void> showShopListDialog(
                   ),
                 ),
               ),
-              const Gap(15),
+              const Gap(24),
             ],
           ),
         ),
