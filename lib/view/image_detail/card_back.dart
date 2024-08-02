@@ -212,6 +212,18 @@ class CardBack extends StatelessWidget {
               ],
             ),
           ),
+          Container(
+            height: 36,
+            width: 36,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(8),
+              ),
+              border: Border.all(),
+              color: Themes.gray[100],
+            ),
+            child: const Icon(Icons.refresh),
+          ),
         ],
       ),
     );

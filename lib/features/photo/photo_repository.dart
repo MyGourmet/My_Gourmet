@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,37 @@ class PhotoRepository {
     }
   }
 
-  // TODO(masaki): firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
+  Future<void> categorizeFood({
+    required String userId,
+    required String photoId,
+    required Uint8List photoData,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_apiUrl/categorizeFood'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'userId': userId,
+          'photoId': photoId,
+          'photo': base64Encode(photoData),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // 成功した場合の処理
+        debugPrint('API call successful: ${response.body}');
+      } else {
+        // エラーが返された場合の処理
+        debugPrint('API call failed: ${response.body}');
+      }
+    } on Exception catch (error) {
+      logger.e(error.toString());
+    }
+  }
+
+  // TODO(firestore): データ作成後に動作確認 & 全件取得ではない取得方法検討
   Future<List<Photo>> downloadPhotos({
     required String userId,
   }) async {

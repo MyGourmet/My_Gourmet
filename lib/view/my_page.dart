@@ -12,30 +12,6 @@ class MyPage extends ConsumerWidget {
   static const routeName = 'my_page';
   static const routePath = '/my_page';
 
-  // この後のプルリクで、下記のようにメソッドを切り出して呼び出す。
-  // Future<void> _onButtonPressed() async {
-  //   try {
-  //     final result =
-  //     await ref
-  //        .read(authControllerProvider).signInWithGoogle();
-  //     await ref
-  //         .read(photoControllerProvider)
-  //         .upsertClassifyPhotosStatus(userId: result.userId);
-  //     });
-  //     await ref.read(photoControllerProvider).uploadPhotos(
-  //           accessToken: result.accessToken,
-  //           userId: result.userId,
-  //         );
-  //   } on Exception catch (e) {
-  //     // 例外が発生した場合、エラーメッセージを表示
-  //     if (context.mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text(e.toString())),
-  //       );
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(

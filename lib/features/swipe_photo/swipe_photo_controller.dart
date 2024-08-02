@@ -1,14 +1,18 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/exception.dart';
 import '../../core/local_photo_repository.dart';
 import '../../core/photo_manager_service.dart';
+import '../../logger.dart';
 import '../auth/auth_controller.dart';
 import '../photo/photo_repository.dart';
 import 'photo_count.dart';
@@ -122,12 +126,27 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
             }
           }),
         );
+
+        unawaited(
+          photo.file.then((value) async {
+            // 画像を圧縮
+            final compressedData = await _compressImage(value!);
+            if (compressedData != null) {
+              await ref.read(photoRepositoryProvider).categorizeFood(
+                    userId: result.userId,
+                    photoId: photo.id,
+                    photoData: compressedData,
+                  );
+            }
+          }),
+        );
       }
 
       // カウント更新
       ref.read(photoCountProvider.notifier).updateCurrentCount();
     } on Exception catch (e, stacktrace) {
       state = AsyncValue.error(e, stacktrace);
+      logger.e('Error loading next: $e');
       return;
     }
 
@@ -156,7 +175,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
   }
 
-  ///　強制リフレッシュ
+  /// 強制リフレッシュ
   void forceRefresh() {
     state = const AsyncLoading<List<AssetEntity>>();
     ref.invalidateSelf();
@@ -199,6 +218,18 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     } on Exception catch (_) {
       return null;
     }
+  }
+
+  /// 画像を圧縮するメソッド
+  Future<Uint8List?> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      minWidth: 256,
+      minHeight: 256,
+      quality: 85,
+      keepExif: true,
+    );
+    return result;
   }
 }
 
