@@ -53,7 +53,7 @@ Future<void> showShopListDialog(
                   ),
                 ),
               ),
-              const Gap(24),
+              const Spacer(),
               Text(
                 '写真を撮った店舗を選んでください',
                 style: context.textTheme.titleSmall,
@@ -162,14 +162,14 @@ Future<void> showShopListDialog(
                   horizontal: context.screenWidth * 0.05,
                 ),
                 child: SizedBox(
-                  height: 60,
+                  height: 44,
                   child: CustomElevatedButton(
                     onPressed: onSelected,
                     text: '決定',
                   ),
                 ),
               ),
-              const Gap(24),
+              const Spacer(),
             ],
           ),
         ),
