@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
@@ -52,12 +53,12 @@ Future<void> showShopListDialog(
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const Gap(8),
               Text(
                 '写真を撮った店舗を選んでください',
                 style: context.textTheme.titleSmall,
               ),
-              const SizedBox(height: 10),
+              const Gap(10),
               for (shopNo = 0; shopNo < 3; shopNo++) ...{
                 Stack(
                   children: [
@@ -150,12 +151,12 @@ Future<void> showShopListDialog(
                   ],
                 ),
               },
-              const SizedBox(height: 10),
+              const Gap(10),
               const Align(
                 alignment: Alignment.centerRight,
                 child: Text('次の３店鋪'),
               ),
-              const SizedBox(height: 15),
+              const Gap(15),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: context.screenWidth * 0.05,
@@ -168,9 +169,7 @@ Future<void> showShopListDialog(
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
+              const Gap(15),
             ],
           ),
         ),
