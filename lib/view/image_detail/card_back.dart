@@ -74,27 +74,27 @@ class CardBack extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  shopName ?? '',
+                  shopName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
                 ),
-                (imageFileList != null && imageFileList!.isNotEmpty)
+                (imageFileList.isNotEmpty)
                     ? SizedBox(
                         height: 220,
                         child: Scrollbar(
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: imageFileList!.length,
+                            itemCount: imageFileList.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(right: 8),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: ScalableImage(
-                                    imageFile: imageFileList![index],
+                                    imageFile: imageFileList[index],
                                     height: 200,
                                     width: 200,
                                   ),

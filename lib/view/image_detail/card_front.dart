@@ -70,7 +70,7 @@ class CardFront extends StatelessWidget {
                             ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
                       Text(
-                        shopName ?? '???',
+                        shopName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.titleMedium,
