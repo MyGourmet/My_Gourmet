@@ -12,14 +12,14 @@ class CardFront extends StatelessWidget {
     super.key,
     this.heroImageFile,
     required this.imageFile,
-    this.shopName,
+    required this.shopName,
     required this.dateTime,
     required this.address,
   });
 
   final File? heroImageFile;
   final File imageFile;
-  final String? shopName;
+  final String shopName;
   final DateTime dateTime;
   final String address;
 

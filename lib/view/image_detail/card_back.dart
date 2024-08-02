@@ -10,8 +10,8 @@ import 'shop_list.dart';
 class CardBack extends StatelessWidget {
   const CardBack({
     required this.isLinked,
-    this.shopName,
-    this.imageFileList,
+    required this.shopName,
+    required this.imageFileList,
     this.openTime,
     this.holiday,
     this.address,
@@ -20,8 +20,8 @@ class CardBack extends StatelessWidget {
   });
 
   final bool isLinked;
-  final String? shopName;
-  final List<File>? imageFileList;
+  final String shopName;
+  final List<File> imageFileList;
   final String? openTime;
   final String? holiday;
   final String? address;
@@ -203,12 +203,12 @@ class CardBack extends StatelessWidget {
                           onPressed: () {
                             showShopListDialog(
                               context,
-                              shopName: shopName!,             // 別途 null safe化要
-                              imageFileList: imageFileList!,   // 別途 null safe化要
+                              shopName: shopName,
+                              imageFileList: imageFileList,
                               onSelected: () {
                                 Navigator.of(context).pop();
-                              },                       
-                            );                            
+                              },
+                            );
                           },
                           child: Text(
                             '店舗を選び直す',
