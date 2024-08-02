@@ -41,15 +41,15 @@ Future<void> showShopListDialog(
                 child: Container(
                   width: 35,
                   height: 35,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFfff4eb),
+                  decoration: BoxDecoration(
+                    color: Themes.gray[50],
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    icon: Icon(Icons.close, size: 20, color: Colors.grey[800]),
+                    icon: Icon(Icons.close, size: 20, color: Themes.gray[800]),
                   ),
                 ),
               ),
@@ -78,7 +78,7 @@ Future<void> showShopListDialog(
                           width: 2,
                           color: shopNoSelected == shopNo
                               ? Themes.mainOrange
-                              : const Color(0xFFd8cac1),
+                              : Themes.gray.shade300,
                         ),
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
