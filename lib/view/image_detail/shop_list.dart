@@ -27,7 +27,7 @@ Future<void> showShopListDialog(
           borderRadius: BorderRadius.circular(10),
         ),
         content: Container(
-          width: MediaQuery.of(context).size.width,
+          width: context.screenWidth,
           decoration: BoxDecoration(
             border: Border.all(color: Colors.white),
             borderRadius: BorderRadius.circular(10),
@@ -158,7 +158,7 @@ Future<void> showShopListDialog(
               const SizedBox(height: 15),
               Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.05,
+                  horizontal: context.screenWidth * 0.05,
                 ),
                 child: SizedBox(
                   height: 60,
