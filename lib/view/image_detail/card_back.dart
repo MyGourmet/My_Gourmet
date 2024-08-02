@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
 import '../widgets/scalable_image.dart';
-import 'shop_list.dart';
+import 'shop_list_dialog.dart';
 
 class CardBack extends StatelessWidget {
   const CardBack({
