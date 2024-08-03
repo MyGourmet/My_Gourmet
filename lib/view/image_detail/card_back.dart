@@ -94,7 +94,6 @@ class CardBack extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: ScalableImage(
-                                    imageFile: imageFileList[index],
                                     height: 200,
                                     width: 200,
                                   ),

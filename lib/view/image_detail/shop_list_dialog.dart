@@ -117,7 +117,6 @@ Future<void> showShopListDialog(
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(0),
                                       child: ScalableImage(
-                                        imageFile: imageFileList[index],
                                         height: 100,
                                         width: 125,
                                       ),

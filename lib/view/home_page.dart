@@ -59,7 +59,7 @@ class _HomePageState extends ConsumerState<HomePage>
     });
   }
 
-  List<String>? photoUrls; // Firebaseからダウンロードした写真のURLを保持
+  List<Map<String, String>>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
     debugPrint('_downloadPhotos start!!!');
@@ -75,9 +75,12 @@ class _HomePageState extends ConsumerState<HomePage>
         );
 
     setState(() {
-      photoUrls =
-          result.map((e) => e.url).where((url) => url.isNotEmpty).toList();
+      photoUrls = result
+          .map((e) => {'url': e.url, 'category': e.category})
+          .where((e) => e['url']!.isNotEmpty)
+          .toList();
       debugPrint('photoUrls: $photoUrls');
+      debugPrint('result: $result');
     });
   }
 
@@ -116,21 +119,29 @@ class _HomePageState extends ConsumerState<HomePage>
         child: TabBarView(
           controller: _tabController,
           children: [
-            _buildPhotoGrid(context),
-            Container(child: Text('ラーメン')),
-            Container(child: Text('カフェ')),
-            Container(child: Text('和食')),
-            Container(child: Text('洋食')),
-            Container(child: Text('エスニック')),
+            _buildPhotoGrid(context, 'すべて'),
+            _buildPhotoGrid(context, 'ramen'),
+            _buildPhotoGrid(context, 'cafe'),
+            _buildPhotoGrid(context, 'japanese_food'),
+            _buildPhotoGrid(context, 'western_food'),
+            _buildPhotoGrid(context, 'ethnic'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPhotoGrid(BuildContext context) {
+  Widget _buildPhotoGrid(BuildContext context, String category) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
+    }
+
+    List<Map<String, String>> filteredPhotos;
+    if (category == 'すべて') {
+      filteredPhotos = photoUrls!;
+    } else {
+      filteredPhotos =
+          photoUrls!.where((photo) => photo['category'] == category).toList();
     }
 
     return Padding(
@@ -140,7 +151,7 @@ class _HomePageState extends ConsumerState<HomePage>
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
-          final photoUrl = photoUrls![index];
+          final photoUrl = filteredPhotos[index]['url']!;
           return Hero(
             tag: photoUrl,
             child: GestureDetector(
@@ -148,8 +159,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 context.push(
                   '/image_detail',
                   extra: {
-                    'heroImageFile': photoUrl,
-                    'photoFileList': photoUrls,
+                    'photoUrl': photoUrl,
                     'index': index,
                   },
                 );
@@ -173,7 +183,7 @@ class _HomePageState extends ConsumerState<HomePage>
             ),
           );
         },
-        itemCount: photoUrls!.length,
+        itemCount: filteredPhotos.length,
       ),
     );
   }

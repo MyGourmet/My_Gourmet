@@ -24,6 +24,9 @@ class Photo with _$Photo {
     /// FirebaseStorageに保存された写真のURL
     @Default('') String url,
 
+    /// geminiで推論した写真のカテゴリ
+    @Default('') String category,
+
     /// FirebaseStorageのドキュメントID
     @Default('') String userId,
 

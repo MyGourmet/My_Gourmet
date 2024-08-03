@@ -34,6 +34,9 @@ mixin _$Photo {
   /// FirebaseStorageに保存された写真のURL
   String get url => throw _privateConstructorUsedError;
 
+  /// geminiで推論した写真のカテゴリ
+  String get category => throw _privateConstructorUsedError;
+
   /// FirebaseStorageのドキュメントID
   String get userId => throw _privateConstructorUsedError;
 
@@ -56,6 +59,7 @@ abstract class $PhotoCopyWith<$Res> {
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
       String url,
+      String category,
       String userId,
       @timestampConverter UnionTimestamp shotAt});
 
@@ -81,6 +85,7 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? url = null,
+    Object? category = null,
     Object? userId = null,
     Object? shotAt = null,
   }) {
@@ -100,6 +105,10 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -149,6 +158,7 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
       String url,
+      String category,
       String userId,
       @timestampConverter UnionTimestamp shotAt});
 
@@ -175,6 +185,7 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
     Object? url = null,
+    Object? category = null,
     Object? userId = null,
     Object? shotAt = null,
   }) {
@@ -194,6 +205,10 @@ class __$$PhotoImplCopyWithImpl<$Res>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -217,6 +232,7 @@ class _$PhotoImpl extends _Photo {
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
       this.url = '',
+      this.category = '',
       this.userId = '',
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp()})
       : super._();
@@ -246,6 +262,11 @@ class _$PhotoImpl extends _Photo {
   @JsonKey()
   final String url;
 
+  /// FirebaseStorageに保存された写真のURL
+  @override
+  @JsonKey()
+  final String category;
+
   /// FirebaseStorageのドキュメントID
   @override
   @JsonKey()
@@ -259,7 +280,7 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, category: $category, userId: $userId, shotAt: $shotAt)';
   }
 
   @override
@@ -273,14 +294,16 @@ class _$PhotoImpl extends _Photo {
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             (identical(other.url, url) || other.url == url) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.shotAt, shotAt) || other.shotAt == shotAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, createdAt, updatedAt, url, userId, shotAt);
+  int get hashCode => Object.hash(
+      runtimeType, id, createdAt, updatedAt, url, category, userId, shotAt);
 
   @JsonKey(ignore: true)
   @override
@@ -302,6 +325,7 @@ abstract class _Photo extends Photo {
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
       final String url,
+      final String category,
       final String userId,
       @timestampConverter final UnionTimestamp shotAt}) = _$PhotoImpl;
   const _Photo._() : super._();
@@ -326,6 +350,10 @@ abstract class _Photo extends Photo {
 
   /// FirebaseStorageに保存された写真のURL
   String get url;
+  @override
+
+  /// geminiで推論した写真のカテゴリ
+  String get category;
   @override
 
   /// FirebaseStorageのドキュメントID

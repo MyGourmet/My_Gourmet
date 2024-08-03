@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -7,26 +5,18 @@ import 'package:flutter/material.dart';
 class ScalableImage extends StatefulWidget {
   const ScalableImage({
     // TODO(anyone): 不要になったタイミングで削除
-    this.imageFile,
     this.photoUrl,
     this.height,
     this.width,
     super.key,
-  }) : assert(imageFile != null || photoUrl != null);
+  }) : assert(photoUrl != null);
 
-  final File? imageFile;
   final double? height;
   final double? width;
   final String? photoUrl;
 
   // TODO(anyone): このメソッドは不要になったタイミングで削除
   Widget get photoWidget {
-    if (imageFile != null) {
-      return Image.file(
-        imageFile!,
-        fit: BoxFit.cover,
-      );
-    }
     return CachedNetworkImage(
       imageUrl: photoUrl!,
       fit: BoxFit.cover,
