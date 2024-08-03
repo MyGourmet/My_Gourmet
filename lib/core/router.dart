@@ -51,6 +51,7 @@ final routerProvider = Provider(
             heroImageFile: args['heroImageFile'] as File,
             photoFileList: args['photoFileList'] as List<File>,
             index: args['index'] as int,
+            photoUrl: args['photoUrl'] as String,
           );
         },
       ),

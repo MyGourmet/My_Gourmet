@@ -16,6 +16,7 @@ class ImageDetailCard extends StatefulWidget {
     required this.shopName,
     required this.dateTime,
     required this.address,
+    required this.photoUrl,
   });
 
   final int index;
@@ -25,6 +26,7 @@ class ImageDetailCard extends StatefulWidget {
   final String shopName;
   final DateTime dateTime;
   final String address;
+  final String photoUrl;
 
   @override
   State<ImageDetailCard> createState() => _ImageDetailCardState();

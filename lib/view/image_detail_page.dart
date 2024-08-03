@@ -9,9 +9,12 @@ import 'image_detail/image_detail_card.dart';
 class ImageDetailPage extends StatefulWidget {
   const ImageDetailPage({
     super.key,
+    // TODO(anyone): 不要なタイミングで削除
     required this.heroImageFile,
     required this.photoFileList,
     required this.index,
+    // TODO(anyone): 不要なタイミングで削除
+    required this.photoUrl,
   });
 
   static const String routeName = '/image_detail';
@@ -20,6 +23,7 @@ class ImageDetailPage extends StatefulWidget {
   final File heroImageFile;
   final List<File> photoFileList;
   final int index;
+  final String photoUrl;
 
   @override
   State<ImageDetailPage> createState() => _ImageDetailPageState();
@@ -74,6 +78,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                       index: index,
                       heroIndex: widget.index,
                       heroImageFile: widget.heroImageFile,
+                      photoUrl: widget.photoUrl,
                       imageFile: widget.photoFileList[index],
                       shopName: 'Shop Name $index',
                       dateTime: DateTime.now(),

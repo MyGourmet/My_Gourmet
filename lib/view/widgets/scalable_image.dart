@@ -1,18 +1,37 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+// TODO(anyone): 全体的にImageをphotoの名称に変更
 class ScalableImage extends StatefulWidget {
   const ScalableImage({
-    required this.imageFile,
+    // TODO(anyone): 不要になったタイミングで削除
+    this.imageFile,
+    this.photoUrl,
     this.height,
     this.width,
     super.key,
-  });
+  }) : assert(imageFile != null || photoUrl != null);
 
-  final File imageFile;
+  final File? imageFile;
   final double? height;
   final double? width;
+  final String? photoUrl;
+
+  // TODO(anyone): このメソッドは不要になったタイミングで削除
+  Widget get photoWidget {
+    if (imageFile != null) {
+      return Image.file(
+        imageFile!,
+        fit: BoxFit.cover,
+      );
+    }
+    return CachedNetworkImage(
+      imageUrl: photoUrl!,
+      fit: BoxFit.cover,
+    );
+  }
 
   @override
   State<ScalableImage> createState() => ScalableImageState();
@@ -41,10 +60,7 @@ class ScalableImageState extends State<ScalableImage> {
           child: SizedBox(
             height: widget.height,
             width: widget.width,
-            child: Image.file(
-              widget.imageFile,
-              fit: BoxFit.cover,
-            ),
+            child: widget.photoWidget,
           ),
         ),
         Positioned(
@@ -58,10 +74,7 @@ class ScalableImageState extends State<ScalableImage> {
             ),
             onPressed: () {
               showImageDialog(
-                Image.file(
-                  widget.imageFile,
-                  fit: BoxFit.cover,
-                ),
+                widget.photoWidget,
               );
             },
           ),
