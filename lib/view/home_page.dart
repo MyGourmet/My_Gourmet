@@ -4,10 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/database/database.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
-import '../features/home/home_controller.dart';
 import '../features/photo/photo_controller.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -22,8 +20,6 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
-  late Future<List<Photo>> _photos;
-  late Future<List<Size>> _sizes;
   late TabController _tabController;
   bool isLoading = false;
   bool isReady = false;
@@ -31,7 +27,6 @@ class _HomePageState extends ConsumerState<HomePage>
   @override
   void initState() {
     super.initState();
-    _photos = ref.read(homeControllerProvider).getPhotos();
     _tabController = TabController(length: 6, vsync: this);
     _initDownloadPhotos();
   }
