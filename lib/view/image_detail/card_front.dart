@@ -12,14 +12,14 @@ class CardFront extends StatelessWidget {
     super.key,
     this.heroImageFile,
     required this.imageFile,
-    this.shopName,
+    required this.shopName,
     required this.dateTime,
     required this.address,
   });
 
   final File? heroImageFile;
   final File imageFile;
-  final String? shopName;
+  final String shopName;
   final DateTime dateTime;
   final String address;
 
@@ -70,7 +70,7 @@ class CardFront extends StatelessWidget {
                             ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
                       Text(
-                        shopName ?? '???',
+                        shopName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.titleMedium,

@@ -5,12 +5,13 @@ import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
 import '../widgets/scalable_image.dart';
+import 'shop_list_dialog.dart';
 
 class CardBack extends StatelessWidget {
   const CardBack({
     required this.isLinked,
-    this.shopName,
-    this.imageFileList,
+    required this.shopName,
+    required this.imageFileList,
     this.openTime,
     this.holiday,
     this.address,
@@ -19,8 +20,8 @@ class CardBack extends StatelessWidget {
   });
 
   final bool isLinked;
-  final String? shopName;
-  final List<File>? imageFileList;
+  final String shopName;
+  final List<File> imageFileList;
   final String? openTime;
   final String? holiday;
   final String? address;
@@ -73,27 +74,27 @@ class CardBack extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  shopName ?? '',
+                  shopName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
                 ),
-                (imageFileList != null && imageFileList!.isNotEmpty)
+                (imageFileList.isNotEmpty)
                     ? SizedBox(
                         height: 220,
                         child: Scrollbar(
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: imageFileList!.length,
+                            itemCount: imageFileList.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(right: 8),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: ScalableImage(
-                                    imageFile: imageFileList![index],
+                                    imageFile: imageFileList[index],
                                     height: 200,
                                     width: 200,
                                   ),
@@ -199,7 +200,16 @@ class CardBack extends StatelessWidget {
                           ),
                         ),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            showShopListDialog(
+                              context,
+                              shopName: shopName,
+                              imageFileList: imageFileList,
+                              onSelected: () {
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          },
                           child: Text(
                             '店舗を選び直す',
                             style: Theme.of(context).textTheme.labelMedium,
