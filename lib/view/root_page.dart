@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../core/database/database.dart';
 import '../core/shared_preferences_service.dart';
 import '../features/auth/auth_repository.dart';
 import 'classify_start_page.dart';
@@ -28,8 +29,10 @@ class RootPage extends ConsumerStatefulWidget {
   ConsumerState<RootPage> createState() => _RootPageState();
 }
 
-class _RootPageState extends ConsumerState<RootPage> {
+class _RootPageState extends ConsumerState<RootPage>
+    with SingleTickerProviderStateMixin {
   bool isLoading = true;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -41,6 +44,7 @@ class _RootPageState extends ConsumerState<RootPage> {
         }),
       );
     });
+    _tabController = TabController(length: 6, vsync: this);
   }
 
   Future<void> _init() async {
@@ -206,3 +210,88 @@ class _NavigationFrame extends ConsumerWidget {
     }
   }
 }
+
+class CategoryFilterBar extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final selectedCategory = ref.watch(selectedCategoryProvider).state;
+    final selectedCategory = "";
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CategoryButton(category: 'すべて', selectedCategory: selectedCategory),
+            CategoryButton(
+                category: 'ラーメン', selectedCategory: selectedCategory),
+            CategoryButton(category: 'カフェ', selectedCategory: selectedCategory),
+            CategoryButton(category: '和食', selectedCategory: selectedCategory),
+            CategoryButton(category: '洋食', selectedCategory: selectedCategory),
+            CategoryButton(
+                category: 'エスニック', selectedCategory: selectedCategory),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CategoryButton extends ConsumerWidget {
+  final String category;
+  final String selectedCategory;
+
+  const CategoryButton(
+      {required this.category, required this.selectedCategory});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isSelected = selectedCategory == category;
+
+    return GestureDetector(
+      onTap: () {
+        // ref.read(selectedCategoryProvider).state = category;
+        // ref.read(photoListProvider.notifier).filterByCategory(category);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        margin: EdgeInsets.symmetric(horizontal: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.orange : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          category,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+final selectedCategoryProvider = StateProvider<String>((ref) => 'すべて');
+
+class PhotoListNotifier extends StateNotifier<List<Photo>> {
+  PhotoListNotifier() : super([]);
+
+  void filterByCategory(String category) {
+    if (category == 'すべて') {
+      state = allPhotos;
+    } else {
+      state = allPhotos.where((photo) => photo.latitude == category).toList();
+    }
+  }
+
+  List<Photo> get allPhotos => [
+        // 全ての写真データを返すロジック
+      ];
+}
+
+final photoListProvider =
+    StateNotifierProvider<PhotoListNotifier, List<Photo>>((ref) {
+  return PhotoListNotifier();
+});
