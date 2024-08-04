@@ -7,16 +7,12 @@ import 'card_front.dart';
 class ImageDetailCard extends StatefulWidget {
   const ImageDetailCard({
     super.key,
-    required this.index,
-    required this.heroIndex,
     required this.shopName,
     required this.dateTime,
     required this.address,
     required this.photoUrl,
   });
 
-  final int index;
-  final int heroIndex;
   final String shopName;
   final DateTime dateTime;
   final String address;

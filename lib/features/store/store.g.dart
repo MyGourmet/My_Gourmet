@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'photo.dart';
+part of 'store.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
+_$StoreImpl _$$StoreImplFromJson(Map<String, dynamic> json) => _$StoreImpl(
       id: json['id'] as String? ?? '',
       createdAt: json['createdAt'] == null
           ? const UnionTimestamp.serverTimestamp()
@@ -14,23 +14,28 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
       updatedAt: json['updatedAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : serverTimestampConverter.fromJson(json['updatedAt'] as Object),
-      url: json['url'] as String? ?? '',
-      category: json['category'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
+      imageUrls: (json['imageUrls'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      name: json['name'] as String? ?? '',
+      phoneNumber: json['phoneNumber'] as String? ?? '',
+      website: json['website'] as String? ?? '',
       shotAt: json['shotAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : timestampConverter.fromJson(json['shotAt'] as Object),
       storeId: json['storeId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
+Map<String, dynamic> _$$StoreImplToJson(_$StoreImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'createdAt': timestampConverter.toJson(instance.createdAt),
       'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
-      'url': instance.url,
-      'category': instance.category,
-      'userId': instance.userId,
+      'imageUrls': instance.imageUrls,
+      'name': instance.name,
+      'phoneNumber': instance.phoneNumber,
+      'website': instance.website,
       'shotAt': timestampConverter.toJson(instance.shotAt),
       'storeId': instance.storeId,
     };

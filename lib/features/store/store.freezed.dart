@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'photo.dart';
+part of 'store.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Photo _$PhotoFromJson(Map<String, dynamic> json) {
-  return _Photo.fromJson(json);
+Store _$StoreFromJson(Map<String, dynamic> json) {
+  return _Store.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Photo {
+mixin _$Store {
   /// firestore上のドキュメントID
   String get id => throw _privateConstructorUsedError;
 
@@ -31,16 +31,17 @@ mixin _$Photo {
   @serverTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
-  /// FirebaseStorageに保存された写真のURL
-  String get url => throw _privateConstructorUsedError;
+  /// FirebaseStorageに保存された（ストアの）写真のURL
+  List<String> get imageUrls => throw _privateConstructorUsedError;
 
-  /// geminiで推論した写真のカテゴリ
-  /// ここをstringではなくてenumに変換して格納しておくと、
-  /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
-  String get category => throw _privateConstructorUsedError;
+  /// FirebaseStorageの(ストアの)name
+  String get name => throw _privateConstructorUsedError;
 
-  /// FirebaseStorageのドキュメントID
-  String get userId => throw _privateConstructorUsedError;
+  /// FirebaseStorageの（ストアの）電話番号
+  String get phoneNumber => throw _privateConstructorUsedError;
+
+  /// FirebaseStorageの（ストアの）URL
+  String get website => throw _privateConstructorUsedError;
 
   /// 写真の撮影日時
   @timestampConverter
@@ -49,21 +50,22 @@ mixin _$Photo {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $PhotoCopyWith<Photo> get copyWith => throw _privateConstructorUsedError;
+  $StoreCopyWith<Store> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $PhotoCopyWith<$Res> {
-  factory $PhotoCopyWith(Photo value, $Res Function(Photo) then) =
-      _$PhotoCopyWithImpl<$Res, Photo>;
+abstract class $StoreCopyWith<$Res> {
+  factory $StoreCopyWith(Store value, $Res Function(Store) then) =
+      _$StoreCopyWithImpl<$Res, Store>;
   @useResult
   $Res call(
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
-      String url,
-      String category,
-      String userId,
+      List<String> imageUrls,
+      String name,
+      String phoneNumber,
+      String website,
       @timestampConverter UnionTimestamp shotAt,
       String storeId});
 
@@ -73,9 +75,9 @@ abstract class $PhotoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
-    implements $PhotoCopyWith<$Res> {
-  _$PhotoCopyWithImpl(this._value, this._then);
+class _$StoreCopyWithImpl<$Res, $Val extends Store>
+    implements $StoreCopyWith<$Res> {
+  _$StoreCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -88,9 +90,10 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? url = null,
-    Object? category = null,
-    Object? userId = null,
+    Object? imageUrls = null,
+    Object? name = null,
+    Object? phoneNumber = null,
+    Object? website = null,
     Object? shotAt = null,
     Object? storeId = null,
   }) {
@@ -107,17 +110,21 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      url: null == url
-          ? _value.url
-          : url // ignore: cast_nullable_to_non_nullable
+      imageUrls: null == imageUrls
+          ? _value.imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      website: null == website
+          ? _value.website
+          : website // ignore: cast_nullable_to_non_nullable
               as String,
       shotAt: null == shotAt
           ? _value.shotAt
@@ -156,19 +163,20 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
 }
 
 /// @nodoc
-abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
-  factory _$$PhotoImplCopyWith(
-          _$PhotoImpl value, $Res Function(_$PhotoImpl) then) =
-      __$$PhotoImplCopyWithImpl<$Res>;
+abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
+  factory _$$StoreImplCopyWith(
+          _$StoreImpl value, $Res Function(_$StoreImpl) then) =
+      __$$StoreImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
-      String url,
-      String category,
-      String userId,
+      List<String> imageUrls,
+      String name,
+      String phoneNumber,
+      String website,
       @timestampConverter UnionTimestamp shotAt,
       String storeId});
 
@@ -181,11 +189,11 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$PhotoImplCopyWithImpl<$Res>
-    extends _$PhotoCopyWithImpl<$Res, _$PhotoImpl>
-    implements _$$PhotoImplCopyWith<$Res> {
-  __$$PhotoImplCopyWithImpl(
-      _$PhotoImpl _value, $Res Function(_$PhotoImpl) _then)
+class __$$StoreImplCopyWithImpl<$Res>
+    extends _$StoreCopyWithImpl<$Res, _$StoreImpl>
+    implements _$$StoreImplCopyWith<$Res> {
+  __$$StoreImplCopyWithImpl(
+      _$StoreImpl _value, $Res Function(_$StoreImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -194,13 +202,14 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? url = null,
-    Object? category = null,
-    Object? userId = null,
+    Object? imageUrls = null,
+    Object? name = null,
+    Object? phoneNumber = null,
+    Object? website = null,
     Object? shotAt = null,
     Object? storeId = null,
   }) {
-    return _then(_$PhotoImpl(
+    return _then(_$StoreImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -213,17 +222,21 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      url: null == url
-          ? _value.url
-          : url // ignore: cast_nullable_to_non_nullable
+      imageUrls: null == imageUrls
+          ? _value._imageUrls
+          : imageUrls // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
               as String,
-      userId: null == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
+      website: null == website
+          ? _value.website
+          : website // ignore: cast_nullable_to_non_nullable
               as String,
       shotAt: null == shotAt
           ? _value.shotAt
@@ -239,22 +252,24 @@ class __$$PhotoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PhotoImpl extends _Photo {
-  const _$PhotoImpl(
+class _$StoreImpl extends _Store {
+  const _$StoreImpl(
       {this.id = '',
       @timestampConverter
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      this.url = '',
-      this.category = '',
-      this.userId = '',
+      final List<String> imageUrls = const [],
+      this.name = '',
+      this.phoneNumber = '',
+      this.website = '',
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
       this.storeId = ''})
-      : super._();
+      : _imageUrls = imageUrls,
+        super._();
 
-  factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PhotoImplFromJson(json);
+  factory _$StoreImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StoreImplFromJson(json);
 
   /// firestore上のドキュメントID
   @override
@@ -273,22 +288,32 @@ class _$PhotoImpl extends _Photo {
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
 
-  /// FirebaseStorageに保存された写真のURL
-  @override
-  @JsonKey()
-  final String url;
+  /// FirebaseStorageに保存された（ストアの）写真のURL
+  final List<String> _imageUrls;
 
-  /// geminiで推論した写真のカテゴリ
-  /// ここをstringではなくてenumに変換して格納しておくと、
-  /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
+  /// FirebaseStorageに保存された（ストアの）写真のURL
   @override
   @JsonKey()
-  final String category;
+  List<String> get imageUrls {
+    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_imageUrls);
+  }
 
-  /// FirebaseStorageのドキュメントID
+  /// FirebaseStorageの(ストアの)name
   @override
   @JsonKey()
-  final String userId;
+  final String name;
+
+  /// FirebaseStorageの（ストアの）電話番号
+  @override
+  @JsonKey()
+  final String phoneNumber;
+
+  /// FirebaseStorageの（ストアの）URL
+  @override
+  @JsonKey()
+  final String website;
 
   /// 写真の撮影日時
   @override
@@ -301,59 +326,71 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
+    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, imageUrls: $imageUrls, name: $name, phoneNumber: $phoneNumber, website: $website, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PhotoImpl &&
+            other is _$StoreImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.url, url) || other.url == url) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
-            (identical(other.userId, userId) || other.userId == userId) &&
+            const DeepCollectionEquality()
+                .equals(other._imageUrls, _imageUrls) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.website, website) || other.website == website) &&
             (identical(other.shotAt, shotAt) || other.shotAt == shotAt) &&
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt, url,
-      category, userId, shotAt, storeId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updatedAt,
+      const DeepCollectionEquality().hash(_imageUrls),
+      name,
+      phoneNumber,
+      website,
+      shotAt,
+      storeId);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
-      __$$PhotoImplCopyWithImpl<_$PhotoImpl>(this, _$identity);
+  _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>
+      __$$StoreImplCopyWithImpl<_$StoreImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PhotoImplToJson(
+    return _$$StoreImplToJson(
       this,
     );
   }
 }
 
-abstract class _Photo extends Photo {
-  const factory _Photo(
+abstract class _Store extends Store {
+  const factory _Store(
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
-      final String url,
-      final String category,
-      final String userId,
+      final List<String> imageUrls,
+      final String name,
+      final String phoneNumber,
+      final String website,
       @timestampConverter final UnionTimestamp shotAt,
-      final String storeId}) = _$PhotoImpl;
-  const _Photo._() : super._();
+      final String storeId}) = _$StoreImpl;
+  const _Store._() : super._();
 
-  factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
+  factory _Store.fromJson(Map<String, dynamic> json) = _$StoreImpl.fromJson;
 
   @override
 
@@ -371,18 +408,20 @@ abstract class _Photo extends Photo {
   UnionTimestamp get updatedAt;
   @override
 
-  /// FirebaseStorageに保存された写真のURL
-  String get url;
+  /// FirebaseStorageに保存された（ストアの）写真のURL
+  List<String> get imageUrls;
   @override
 
-  /// geminiで推論した写真のカテゴリ
-  /// ここをstringではなくてenumに変換して格納しておくと、
-  /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
-  String get category;
+  /// FirebaseStorageの(ストアの)name
+  String get name;
   @override
 
-  /// FirebaseStorageのドキュメントID
-  String get userId;
+  /// FirebaseStorageの（ストアの）電話番号
+  String get phoneNumber;
+  @override
+
+  /// FirebaseStorageの（ストアの）URL
+  String get website;
   @override
 
   /// 写真の撮影日時
@@ -392,6 +431,6 @@ abstract class _Photo extends Photo {
   String get storeId;
   @override
   @JsonKey(ignore: true)
-  _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
+  _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

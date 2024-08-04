@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/photo/photo.dart';
 import '../view/classify_start_page.dart';
 import '../view/home_page.dart';
 import '../view/image_detail_page.dart';
@@ -47,7 +48,7 @@ final routerProvider = Provider(
           final args = state.extra! as Map<String, dynamic>;
           return ImageDetailPage(
             index: args['index'] as int,
-            photoUrl: args['photoUrl'] as String,
+            photo: args['photo'] as Photo,
           );
         },
       ),

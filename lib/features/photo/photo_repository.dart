@@ -120,6 +120,7 @@ class PhotoRepository {
           .collection('users')
           .doc(userId)
           .collection('photos')
+
           // ドキュメントIDで降順にソート
           .orderBy(FieldPath.documentId, descending: true)
           .get();
@@ -141,6 +142,53 @@ class PhotoRepository {
     } on Exception catch (e) {
       logger.e('An error occurred: $e');
       return [];
+    }
+  }
+
+  Future<Photo?> getPhotoById({
+    required String userId,
+    required String photoId,
+  }) async {
+    try {
+      final docSnapshot = await photosRef(userId: userId).doc(photoId).get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+        return null;
+      }
+    } on Exception catch (e) {
+      logger.e('Error fetching photo: $e');
+      return null;
+    }
+  }
+
+  Future<String> getStoreNameByStoreId({
+    required String userId,
+    required String storeId,
+  }) async {
+    try {
+      // Fetching the document snapshot from Firestore
+      final DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('stores')
+          .doc(storeId)
+          .get();
+
+      // Checking if the document exists
+      if (doc.exists) {
+        // Extracting data from the document snapshot
+        final data = doc.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('name')) {
+          return data['name'] as String;
+        } else {
+          throw Exception('Name field not found in the document');
+        }
+      } else {
+        throw Exception('Store not found');
+      }
+    } on Exception catch (e) {
+      // Logging the error and returning an empty string
+      logger.e('Error fetching store name: $e');
+      return '';
     }
   }
 }
