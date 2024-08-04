@@ -96,7 +96,9 @@ class _HomePageState extends ConsumerState<HomePage>
                 // padding: const EdgeInsets.only(left: 0, right: 0), //,
                 tabAlignment: TabAlignment.start,
                 labelPadding: const EdgeInsets.only(
-                    left: 12.0, right: 12.0), // ここでラベルの左側のパディングを調整
+                  left: 12,
+                  right: 12,
+                ), // ここでラベルの左側のパディングを調整
                 tabs: const [
                   Tab(text: 'すべて'),
                   Tab(text: 'ラーメン'),
@@ -160,7 +162,7 @@ class _HomePageState extends ConsumerState<HomePage>
                   },
                 );
               },
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.grey,

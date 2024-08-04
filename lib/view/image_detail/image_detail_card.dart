@@ -51,7 +51,7 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
       back: CardBack(
         isLinked: true,
         shopName: shopName,
-        imageFileList: [],
+        imageFileList: const [],
         holiday: '土曜',
         address: address,
         url: 'https://example.com',
