@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,17 +7,17 @@ import 'image_detail/image_detail_card.dart';
 class ImageDetailPage extends StatefulWidget {
   const ImageDetailPage({
     super.key,
-    required this.heroImageFile,
-    required this.photoFileList,
+    // TODO(anyone): 不要なタイミングで削除
     required this.index,
+    // TODO(anyone): 不要なタイミングで削除
+    required this.photoUrl,
   });
 
   static const String routeName = '/image_detail';
   static const String routePath = '/image_detail';
 
-  final File heroImageFile;
-  final List<File> photoFileList;
   final int index;
+  final String photoUrl;
 
   @override
   State<ImageDetailPage> createState() => _ImageDetailPageState();
@@ -61,7 +59,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: widget.photoFileList.length,
+                itemCount: 1,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: EdgeInsets.only(
@@ -73,8 +71,7 @@ class _ImageDetailPageState extends State<ImageDetailPage> {
                     child: ImageDetailCard(
                       index: index,
                       heroIndex: widget.index,
-                      heroImageFile: widget.heroImageFile,
-                      imageFile: widget.photoFileList[index],
+                      photoUrl: widget.photoUrl,
                       shopName: 'Shop Name $index',
                       dateTime: DateTime.now(),
                       address: 'Yokohama, kanagawa JAPAN',
