@@ -163,10 +163,10 @@ class PhotoRepository {
   }
 
   Future<String> getStoreNameByStoreId(
-      {required String userId, required String storeId}) async {
+      {required String userId, required String storeId,}) async {
     try {
       // Fetching the document snapshot from Firestore
-      DocumentSnapshot doc = await FirebaseFirestore.instance
+      final DocumentSnapshot doc = await FirebaseFirestore.instance
           .collection('stores')
           .doc(storeId)
           .get();
@@ -174,7 +174,7 @@ class PhotoRepository {
       // Checking if the document exists
       if (doc.exists) {
         // Extracting data from the document snapshot
-        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        final data = doc.data() as Map<String, dynamic>?;
         if (data != null && data.containsKey('name')) {
           return data['name'] as String;
         } else {

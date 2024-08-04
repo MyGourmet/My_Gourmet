@@ -49,7 +49,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     print('User ID: $userId');
 
     final photoId = widget.photo.id; // photo.id が null または空でないことを確認
-    print('prevphotoId ${photoId}');
+    print('prevphotoId $photoId');
     if (photoId.isEmpty) {
       throw Exception('Photo ID is null or empty');
     }
@@ -59,7 +59,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
       photoId: photoId,
     );
 
-    print('Photo ID: ${photoId}');
+    print('Photo ID: $photoId');
 
     final storeId = photo?.storeId ?? '';
 
@@ -102,7 +102,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data == null) {
                   return const Center(
-                      child: Text('No store information available'));
+                      child: Text('No store information available'),);
                 } else {
                   final store = snapshot.data!;
                   return PageView.builder(
