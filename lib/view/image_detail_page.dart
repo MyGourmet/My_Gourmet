@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import '../core/database/database.dart';
 import '../core/themes.dart';
 import '../features/photo/photo_controller.dart';
+import '../features/store/store.dart';
+import '../features/store/store_controller.dart';
 import 'image_detail/image_detail_card.dart';
 
 class ImageDetailPage extends ConsumerStatefulWidget {
@@ -33,18 +35,19 @@ class ImageDetailPage extends ConsumerStatefulWidget {
 
 class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
   late final PageController _pageController;
-  late Future<String> _storeNameFuture;
+  late Future<Store?> _storeFuture;
 
   @override
   void initState() {
     super.initState();
     _pageController =
         PageController(initialPage: widget.index, viewportFraction: 0.9);
-    _storeNameFuture = _fetchStoreName();
+    _storeFuture = _fetchStore();
   }
 
-  Future<String> _fetchStoreName() async {
+  Future<Store?> _fetchStore() async {
     final photoController = ref.read(photoControllerProvider);
+    final storeController = ref.read(storeControllerProvider);
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
     // userIdをコンソールに表示
@@ -65,11 +68,12 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     print('Photo ID: ${photoId}');
 
     final storeId = photo?.storeId ?? '';
+
     if (storeId.isEmpty) {
       throw Exception('Store ID is null or empty');
     }
 
-    return await photoController.getStoreNameByStoreId(
+    return await storeController.getStoreById(
       userId: userId,
       storeId: storeId,
     );
@@ -95,17 +99,18 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                 color: Themes.mainOrange[50],
               ),
             ),
-            FutureBuilder<String>(
-              future: _storeNameFuture,
+            FutureBuilder<Store?>(
+              future: _storeFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData) {
-                  return const Center(child: Text('No store name available'));
+                } else if (!snapshot.hasData || snapshot.data == null) {
+                  return const Center(
+                      child: Text('No store information available'));
                 } else {
-                  final storeName = snapshot.data!;
+                  final store = snapshot.data!;
                   return PageView.builder(
                     controller: _pageController,
                     itemCount: widget.photoFileList.length,
@@ -122,7 +127,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                           heroIndex: widget.index,
                           heroImageFile: widget.heroImageFile,
                           imageFile: widget.photoFileList[index],
-                          shopName: storeName,
+                          shopName: store.name,
                           dateTime: DateTime.now(),
                           address: 'Yokohama, kanagawa JAPAN',
                         ),
