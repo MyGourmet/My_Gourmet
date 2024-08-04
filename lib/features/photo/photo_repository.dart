@@ -162,8 +162,10 @@ class PhotoRepository {
     }
   }
 
-  Future<String> getStoreNameByStoreId(
-      {required String userId, required String storeId,}) async {
+  Future<String> getStoreNameByStoreId({
+    required String userId,
+    required String storeId,
+  }) async {
     try {
       // Fetching the document snapshot from Firestore
       final DocumentSnapshot doc = await FirebaseFirestore.instance
@@ -183,7 +185,7 @@ class PhotoRepository {
       } else {
         throw Exception('Store not found');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       // Logging the error and returning an empty string
       logger.e('Error fetching store name: $e');
       return '';

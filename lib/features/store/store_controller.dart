@@ -32,7 +32,7 @@ class StoreController {
     required String userId,
     required String storeId,
   }) async {
-    return await _storeRepository.getStoreById(
+    return _storeRepository.getStoreById(
       userId: userId,
       storeId: storeId,
     );

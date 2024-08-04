@@ -67,7 +67,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
       throw Exception('Store ID is null or empty');
     }
 
-    return await storeController.getStoreById(
+    return storeController.getStoreById(
       userId: userId,
       storeId: storeId,
     );
@@ -102,7 +102,8 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data == null) {
                   return const Center(
-                      child: Text('No store information available'),);
+                    child: Text('No store information available'),
+                  );
                 } else {
                   final store = snapshot.data!;
                   return PageView.builder(
