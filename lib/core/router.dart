@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,9 +47,8 @@ final routerProvider = Provider(
         builder: (context, state) {
           final args = state.extra! as Map<String, dynamic>;
           return ImageDetailPage(
-            heroImageFile: args['heroImageFile'] as File,
-            photoFileList: args['photoFileList'] as List<File>,
             index: args['index'] as int,
+            photoUrl: args['photoUrl'] as String,
             photo: args['photo'] as Photo,
           );
         },

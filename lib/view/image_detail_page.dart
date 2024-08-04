@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,18 +12,18 @@ import 'image_detail/image_detail_card.dart';
 class ImageDetailPage extends ConsumerStatefulWidget {
   const ImageDetailPage({
     super.key,
-    required this.heroImageFile,
-    required this.photoFileList,
+    // TODO(anyone): 不要なタイミングで削除
     required this.index,
+    // TODO(anyone): 不要なタイミングで削除
+    required this.photoUrl,
     required this.photo,
   });
 
   static const String routeName = '/image_detail';
   static const String routePath = '/image_detail';
 
-  final File heroImageFile;
-  final List<File> photoFileList;
   final int index;
+  final String photoUrl;
   final Photo photo;
 
   @override

@@ -15,6 +15,7 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
           ? const UnionTimestamp.serverTimestamp()
           : serverTimestampConverter.fromJson(json['updatedAt'] as Object),
       url: json['url'] as String? ?? '',
+      category: json['category'] as String? ?? '',
       userId: json['userId'] as String? ?? '',
       shotAt: json['shotAt'] == null
           ? const UnionTimestamp.serverTimestamp()
@@ -28,6 +29,7 @@ Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
       'createdAt': timestampConverter.toJson(instance.createdAt),
       'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
       'url': instance.url,
+      'category': instance.category,
       'userId': instance.userId,
       'shotAt': timestampConverter.toJson(instance.shotAt),
       'storeId': instance.storeId,
