@@ -15,7 +15,7 @@ int shopNoSelected = 0;
 Future<void> showShopListDialog(
   BuildContext context, {
   required String shopName,
-  required List<File> imageFileList,
+  required List<String> imageFileList,
   required void Function() onSelected,
 }) async {
   await showDialog<void>(

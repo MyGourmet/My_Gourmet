@@ -43,6 +43,12 @@ mixin _$Store {
   /// FirebaseStorageの（ストアの）URL
   String get website => throw _privateConstructorUsedError;
 
+  /// FirebaseStorageの（ストアの）住所
+  String get address => throw _privateConstructorUsedError;
+
+  /// FirebaseStorageの（ストアの）休日
+  String get holiday => throw _privateConstructorUsedError;
+
   /// 写真の撮影日時
   @timestampConverter
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
@@ -66,6 +72,8 @@ abstract class $StoreCopyWith<$Res> {
       String name,
       String phoneNumber,
       String website,
+      String address,
+      String holiday,
       @timestampConverter UnionTimestamp shotAt,
       String storeId});
 
@@ -94,6 +102,8 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     Object? name = null,
     Object? phoneNumber = null,
     Object? website = null,
+    Object? address = null,
+    Object? holiday = null,
     Object? shotAt = null,
     Object? storeId = null,
   }) {
@@ -125,6 +135,14 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
       website: null == website
           ? _value.website
           : website // ignore: cast_nullable_to_non_nullable
+              as String,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      holiday: null == holiday
+          ? _value.holiday
+          : holiday // ignore: cast_nullable_to_non_nullable
               as String,
       shotAt: null == shotAt
           ? _value.shotAt
@@ -177,6 +195,8 @@ abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
       String name,
       String phoneNumber,
       String website,
+      String address,
+      String holiday,
       @timestampConverter UnionTimestamp shotAt,
       String storeId});
 
@@ -206,6 +226,8 @@ class __$$StoreImplCopyWithImpl<$Res>
     Object? name = null,
     Object? phoneNumber = null,
     Object? website = null,
+    Object? address = null,
+    Object? holiday = null,
     Object? shotAt = null,
     Object? storeId = null,
   }) {
@@ -238,6 +260,14 @@ class __$$StoreImplCopyWithImpl<$Res>
           ? _value.website
           : website // ignore: cast_nullable_to_non_nullable
               as String,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+      holiday: null == holiday
+          ? _value.holiday
+          : holiday // ignore: cast_nullable_to_non_nullable
+              as String,
       shotAt: null == shotAt
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
@@ -263,6 +293,8 @@ class _$StoreImpl extends _Store {
       this.name = '',
       this.phoneNumber = '',
       this.website = '',
+      this.address = '',
+      this.holiday = '',
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
       this.storeId = ''})
       : _imageUrls = imageUrls,
@@ -315,6 +347,16 @@ class _$StoreImpl extends _Store {
   @JsonKey()
   final String website;
 
+  /// FirebaseStorageの（ストアの）住所
+  @override
+  @JsonKey()
+  final String address;
+
+  /// FirebaseStorageの（ストアの）休日
+  @override
+  @JsonKey()
+  final String holiday;
+
   /// 写真の撮影日時
   @override
   @JsonKey()
@@ -326,7 +368,7 @@ class _$StoreImpl extends _Store {
 
   @override
   String toString() {
-    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, imageUrls: $imageUrls, name: $name, phoneNumber: $phoneNumber, website: $website, shotAt: $shotAt, storeId: $storeId)';
+    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, imageUrls: $imageUrls, name: $name, phoneNumber: $phoneNumber, website: $website, address: $address, holiday: $holiday, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -345,6 +387,8 @@ class _$StoreImpl extends _Store {
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
             (identical(other.website, website) || other.website == website) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.holiday, holiday) || other.holiday == holiday) &&
             (identical(other.shotAt, shotAt) || other.shotAt == shotAt) &&
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
@@ -360,6 +404,8 @@ class _$StoreImpl extends _Store {
       name,
       phoneNumber,
       website,
+      address,
+      holiday,
       shotAt,
       storeId);
 
@@ -386,6 +432,8 @@ abstract class _Store extends Store {
       final String name,
       final String phoneNumber,
       final String website,
+      final String address,
+      final String holiday,
       @timestampConverter final UnionTimestamp shotAt,
       final String storeId}) = _$StoreImpl;
   const _Store._() : super._();
@@ -422,6 +470,14 @@ abstract class _Store extends Store {
 
   /// FirebaseStorageの（ストアの）URL
   String get website;
+  @override
+
+  /// FirebaseStorageの（ストアの）住所
+  String get address;
+  @override
+
+  /// FirebaseStorageの（ストアの）休日
+  String get holiday;
   @override
 
   /// 写真の撮影日時

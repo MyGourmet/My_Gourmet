@@ -210,17 +210,6 @@ class Photo extends DataClass implements Insertable<Photo> {
         latitude: latitude.present ? latitude.value : this.latitude,
         longitude: longitude.present ? longitude.value : this.longitude,
       );
-  Photo copyWithCompanion(PhotosCompanion data) {
-    return Photo(
-      id: data.id.present ? data.id.value : this.id,
-      path: data.path.present ? data.path.value : this.path,
-      width: data.width.present ? data.width.value : this.width,
-      height: data.height.present ? data.height.value : this.height,
-      latitude: data.latitude.present ? data.latitude.value : this.latitude,
-      longitude: data.longitude.present ? data.longitude.value : this.longitude,
-    );
-  }
-
   @override
   String toString() {
     return (StringBuffer('Photo(')

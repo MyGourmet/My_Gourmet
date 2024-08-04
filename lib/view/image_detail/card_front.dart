@@ -68,9 +68,12 @@ class CardFront extends StatelessWidget {
                         children: [
                           const Icon(Icons.pin_drop_outlined, size: 18),
                           const Gap(4),
-                          Text(
-                            address,
-                            style: context.textTheme.bodySmall,
+                          Expanded(
+                            child: Text(
+                              address,
+                              style: context.textTheme.bodySmall,
+                              softWrap: true,
+                            ),
                           ),
                         ],
                       ),

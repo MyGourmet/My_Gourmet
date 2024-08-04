@@ -5,18 +5,21 @@ import 'card_back.dart';
 import 'card_front.dart';
 
 class ImageDetailCard extends StatefulWidget {
-  const ImageDetailCard({
-    super.key,
-    required this.shopName,
-    required this.dateTime,
-    required this.address,
-    required this.photoUrl,
-  });
+  const ImageDetailCard(
+      {super.key,
+      required this.shopName,
+      required this.dateTime,
+      required this.address,
+      required this.photoUrl,
+      required this.shopUrl,
+      required this.imageFileList});
 
   final String shopName;
   final DateTime dateTime;
   final String address;
   final String photoUrl;
+  final String shopUrl;
+  final List<String> imageFileList;
 
   @override
   State<ImageDetailCard> createState() => _ImageDetailCardState();
@@ -34,6 +37,10 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
 
   String get photoUrl => widget.photoUrl;
 
+  String get shopUrl => widget.shopUrl;
+
+  List<String> get imageFileList => widget.imageFileList;
+
   @override
   Widget build(BuildContext context) {
     return FlipCard(
@@ -47,10 +54,10 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
       back: CardBack(
         isLinked: true,
         shopName: shopName,
-        imageFileList: const [],
+        imageFileList: imageFileList,
         holiday: '土曜',
         address: address,
-        url: 'https://example.com',
+        url: shopUrl,
       ),
     );
   }

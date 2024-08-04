@@ -33,6 +33,12 @@ class Store with _$Store {
     /// FirebaseStorageの（ストアの）URL
     @Default('') String website,
 
+    /// FirebaseStorageの（ストアの）住所
+    @Default('') String address,
+
+    /// FirebaseStorageの（ストアの）休日
+    @Default('') String holiday,
+
     /// 写真の撮影日時
     @timestampConverter
     @Default(UnionTimestamp.serverTimestamp())

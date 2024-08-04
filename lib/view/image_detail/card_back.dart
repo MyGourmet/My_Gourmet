@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -21,7 +19,7 @@ class CardBack extends StatelessWidget {
 
   final bool isLinked;
   final String shopName;
-  final List<File> imageFileList;
+  final List<String> imageFileList;
   final String? openTime;
   final String? holiday;
   final String? address;
@@ -81,46 +79,47 @@ class CardBack extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
                 ),
-                (imageFileList.isNotEmpty)
-                    ? SizedBox(
-                        height: 220,
-                        child: Scrollbar(
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: imageFileList.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: const ScalableImage(
-                                    height: 200,
-                                    width: 200,
-                                    // TODO(SHO): firestoreのStoreのurlを渡す
-                                    photoUrl: '',
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      )
-                    : Container(
-                        height: 200,
-                        width: 300,
-                        color: Themes.gray[200],
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.image_outlined),
-                            const Gap(4),
-                            Text(
-                              '画像がありません',
-                              style: Theme.of(context).textTheme.bodySmall,
+                if (imageFileList.isNotEmpty)
+                  SizedBox(
+                    height: 220,
+                    child: Scrollbar(
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: imageFileList.length,
+                        itemBuilder: (context, index) {
+                          final photoUrl = imageFileList[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: ScalableImage(
+                                height: 200,
+                                width: 200,
+                                photoUrl: photoUrl,
+                              ),
                             ),
-                          ],
-                        ),
+                          );
+                        },
                       ),
+                    ),
+                  )
+                else
+                  Container(
+                    height: 200,
+                    width: 300,
+                    color: Themes.gray[200],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.image_outlined),
+                        const Gap(4),
+                        Text(
+                          '画像がありません',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
