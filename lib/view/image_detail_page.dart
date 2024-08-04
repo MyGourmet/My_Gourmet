@@ -47,10 +47,10 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
 
     // TODO(sho): 最後に以下諸々削除
     // userIdをコンソールに表示
-    print('User ID: $userId');
+    debugPrint('User ID: $userId');
 
     final photoId = widget.photo.id; // photo.id が null または空でないことを確認
-    print('prevphotoId $photoId');
+    debugPrint('prevphotoId $photoId');
     if (photoId.isEmpty) {
       throw Exception('Photo ID is null or empty');
     }
@@ -60,7 +60,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
       photoId: photoId,
     );
 
-    print('Photo ID: $photoId');
+    debugPrint('Photo ID: $photoId');
 
     final storeId = photo?.storeId ?? '';
 
