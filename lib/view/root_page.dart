@@ -28,8 +28,7 @@ class RootPage extends ConsumerStatefulWidget {
   ConsumerState<RootPage> createState() => _RootPageState();
 }
 
-class _RootPageState extends ConsumerState<RootPage>
-    with SingleTickerProviderStateMixin {
+class _RootPageState extends ConsumerState<RootPage> {
   bool isLoading = true;
 
   @override
@@ -205,72 +204,5 @@ class _NavigationFrame extends ConsumerWidget {
       case 2:
         context.go(MyPage.routePath);
     }
-  }
-}
-
-class CategoryFilterBar extends ConsumerWidget {
-  const CategoryFilterBar({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // final selectedCategory = ref.watch(selectedCategoryProvider).state;
-    const selectedCategory = '';
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: const SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CategoryButton(category: 'すべて', selectedCategory: selectedCategory),
-            CategoryButton(
-              category: 'ラーメン',
-              selectedCategory: selectedCategory,
-            ),
-            CategoryButton(category: 'カフェ', selectedCategory: selectedCategory),
-            CategoryButton(category: '和食', selectedCategory: selectedCategory),
-            CategoryButton(category: '洋食', selectedCategory: selectedCategory),
-            CategoryButton(
-              category: 'エスニック',
-              selectedCategory: selectedCategory,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CategoryButton extends ConsumerWidget {
-  const CategoryButton({
-    super.key,
-    required this.category,
-    required this.selectedCategory,
-  });
-  final String category;
-  final String selectedCategory;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isSelected = selectedCategory == category;
-
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.orange : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          category,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
-          ),
-        ),
-      ),
-    );
   }
 }
