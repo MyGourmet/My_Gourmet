@@ -25,6 +25,8 @@ class Photo with _$Photo {
     @Default('') String url,
 
     /// geminiで推論した写真のカテゴリ
+    /// ここをstringではなくてenumに変換して格納しておくと、
+    /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
     @Default('') String category,
 
     /// FirebaseStorageのドキュメントID

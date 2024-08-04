@@ -51,16 +51,6 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // (heroImageFile != null)
-                      //     ? Hero(
-                      //         tag: heroImageFile!,
-                      //         child: ScalableImage(
-                      //           imageFile: heroImageFile!,
-                      //           height:
-                      //               MediaQuery.of(context).size.height * 0.5,
-                      //         ),
-                      //       )
-                      //     :
                       ScalableImage(
                         photoUrl: photoUrl,
                         height: MediaQuery.of(context).size.height * 0.5,

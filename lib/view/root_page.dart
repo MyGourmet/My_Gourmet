@@ -251,10 +251,7 @@ class CategoryButton extends ConsumerWidget {
     final isSelected = selectedCategory == category;
 
     return GestureDetector(
-      onTap: () {
-        // ref.read(selectedCategoryProvider).state = category;
-        // ref.read(photoListProvider.notifier).filterByCategory(category);
-      },
+      onTap: () {},
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         margin: EdgeInsets.symmetric(horizontal: 4),
@@ -286,9 +283,7 @@ class PhotoListNotifier extends StateNotifier<List<Photo>> {
     }
   }
 
-  List<Photo> get allPhotos => [
-        // 全ての写真データを返すロジック
-      ];
+  List<Photo> get allPhotos => [];
 }
 
 final photoListProvider =

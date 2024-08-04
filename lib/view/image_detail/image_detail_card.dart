@@ -40,9 +40,6 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
 
   @override
   Widget build(BuildContext context) {
-    // final heroImageFile =
-    //     (widget.index == widget.heroIndex) ? widget.heroImageFile : null;
-
     return FlipCard(
       fill: Fill.fillBack,
       front: CardFront(

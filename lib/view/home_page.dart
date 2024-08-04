@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
 import '../features/photo/photo_controller.dart';
+import 'image_detail_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -92,10 +93,10 @@ class _HomePageState extends ConsumerState<HomePage>
               child: TabBar(
                 controller: _tabController,
                 isScrollable: true,
+                // padding: const EdgeInsets.only(left: 0, right: 0), //,
+                tabAlignment: TabAlignment.start,
                 labelPadding: const EdgeInsets.only(
-                    left: 0.0, right: 20.0), // ここでラベルの左側のパディングを調整
-                indicatorPadding: const EdgeInsets.only(
-                    left: 0.0, right: 20.0), // インジケーターの左側のパディングを調整
+                    left: 12.0, right: 12.0), // ここでラベルの左側のパディングを調整
                 tabs: const [
                   Tab(text: 'すべて'),
                   Tab(text: 'ラーメン'),
@@ -152,7 +153,7 @@ class _HomePageState extends ConsumerState<HomePage>
             child: GestureDetector(
               onTap: () {
                 context.push(
-                  '/image_detail',
+                  ImageDetailPage.routePath,
                   extra: {
                     'photoUrl': photoUrl,
                     'index': index,
