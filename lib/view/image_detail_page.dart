@@ -129,7 +129,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                           imageFile: widget.photoFileList[index],
                           shopName: store.name,
                           dateTime: DateTime.now(),
-                          address: 'Yokohama, kanagawa JAPAN',
+                          address: store.website,
                         ),
                       );
                     },
