@@ -119,6 +119,8 @@ Future<void> showShopListDialog(
                                       child: const ScalableImage(
                                         height: 100,
                                         width: 125,
+                                        // TODO(Kim): 各ストアのURLを表示する
+                                        photoUrl: '',
                                       ),
                                     ),
                                   );

@@ -96,6 +96,8 @@ class CardBack extends StatelessWidget {
                                   child: const ScalableImage(
                                     height: 200,
                                     width: 200,
+                                    // TODO(SHO): firestoreのStoreのurlを渡す
+                                    photoUrl: '',
                                   ),
                                 ),
                               );

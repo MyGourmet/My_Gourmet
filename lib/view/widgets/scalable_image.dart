@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 // TODO(anyone): 全体的にImageをphotoの名称に変更
 class ScalableImage extends StatefulWidget {
   const ScalableImage({
-    // TODO(anyone): 不要になったタイミングで削除
-    this.photoUrl,
+    required this.photoUrl,
     this.height,
     this.width,
     super.key,
@@ -13,12 +12,11 @@ class ScalableImage extends StatefulWidget {
 
   final double? height;
   final double? width;
-  final String? photoUrl;
+  final String photoUrl;
 
-  // TODO(anyone): このメソッドは不要になったタイミングで削除
   Widget get photoWidget {
     return CachedNetworkImage(
-      imageUrl: photoUrl!,
+      imageUrl: photoUrl,
       fit: BoxFit.cover,
     );
   }
