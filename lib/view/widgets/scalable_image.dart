@@ -9,7 +9,7 @@ class ScalableImage extends StatefulWidget {
     this.height,
     this.width,
     super.key,
-  }) : assert(photoUrl != null);
+  });
 
   final double? height;
   final double? width;
