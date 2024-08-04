@@ -149,16 +149,15 @@ class _HomePageState extends ConsumerState<HomePage>
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
-          final photoUrl = filteredPhotos[index]['url']!;
+          final photo = filteredPhotos[index];
           return Hero(
-            tag: photoUrl,
+            tag: photo,
             child: GestureDetector(
               onTap: () {
                 context.push(
                   ImageDetailPage.routePath,
                   extra: {
                     'photo': photo,
-                    'photoUrl': photoUrl,
                     'index': index,
                   },
                 );
@@ -174,7 +173,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Image.network(
-                    photoUrl,
+                    photo['url']!,
                     fit: BoxFit.cover,
                   ),
                 ),

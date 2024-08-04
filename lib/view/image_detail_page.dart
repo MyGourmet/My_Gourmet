@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/database/database.dart';
 import '../core/themes.dart';
+import '../features/photo/photo.dart';
 import '../features/photo/photo_controller.dart';
 import '../features/store/store.dart';
 import '../features/store/store_controller.dart';
@@ -14,8 +15,6 @@ class ImageDetailPage extends ConsumerStatefulWidget {
     super.key,
     // TODO(anyone): 不要なタイミングで削除
     required this.index,
-    // TODO(anyone): 不要なタイミングで削除
-    required this.photoUrl,
     required this.photo,
   });
 
@@ -23,7 +22,6 @@ class ImageDetailPage extends ConsumerStatefulWidget {
   static const String routePath = '/image_detail';
 
   final int index;
-  final String photoUrl;
   final Photo photo;
 
   @override
@@ -52,7 +50,6 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
 
     final photoId = widget.photo.id; // photo.id が null または空でないことを確認
     print('prevphotoId ${photoId}');
-    print('prevphotoId ${widget.photoFileList[0]}');
     if (photoId.isEmpty) {
       throw Exception('Photo ID is null or empty');
     }
@@ -110,7 +107,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   final store = snapshot.data!;
                   return PageView.builder(
                     controller: _pageController,
-                    itemCount: widget.photoFileList.length,
+                    itemCount: 1,
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: EdgeInsets.only(
@@ -120,10 +117,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                           right: 4,
                         ),
                         child: ImageDetailCard(
-                          index: index,
-                          heroIndex: widget.index,
-                          heroImageFile: widget.heroImageFile,
-                          imageFile: widget.photoFileList[index],
+                          photoUrl: widget.photo.url,
                           shopName: store.name,
                           dateTime: DateTime.now(),
                           address: store.website,
