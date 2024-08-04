@@ -1,9 +1,6 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/flavor.dart';
 import '../../logger.dart';
 import 'store.dart';
 
@@ -33,10 +30,6 @@ final storeRepositoryProvider = Provider((ref) => StoreRepository._());
 
 class StoreRepository {
   StoreRepository._();
-
-  // OAuth 2.0 REST APIエンドポイント
-  final String _apiUrl =
-      flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
   Future<Store?> getStoreById({
     required String userId,

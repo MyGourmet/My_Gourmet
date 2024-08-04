@@ -45,6 +45,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     final storeController = ref.read(storeControllerProvider);
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
+    // TODO(sho): 最後に以下諸々削除
     // userIdをコンソールに表示
     print('User ID: $userId');
 
