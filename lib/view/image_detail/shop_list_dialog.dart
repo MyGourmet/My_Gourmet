@@ -15,7 +15,7 @@ int shopNoSelected = 0;
 Future<void> showShopListDialog(
   BuildContext context, {
   required String shopName,
-  required List<File> imageFileList,
+  required List<String> storeImageUrls,
   required void Function() onSelected,
 }) async {
   await showDialog<void>(
@@ -110,7 +110,7 @@ Future<void> showShopListDialog(
                             child: Scrollbar(
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemCount: imageFileList.length,
+                                itemCount: storeImageUrls.length,
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: const EdgeInsets.only(left: 10),

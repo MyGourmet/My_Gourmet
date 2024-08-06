@@ -9,13 +9,13 @@ class CardFront extends StatelessWidget {
   const CardFront({
     super.key,
     required this.photoUrl,
-    required this.shopName,
+    required this.storeName,
     required this.dateTime,
     required this.address,
   });
 
   final String photoUrl;
-  final String shopName;
+  final String storeName;
   final DateTime dateTime;
   final String address;
 
@@ -57,7 +57,7 @@ class CardFront extends StatelessWidget {
                       ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
                       Text(
-                        shopName,
+                        storeName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.titleMedium,
@@ -68,9 +68,12 @@ class CardFront extends StatelessWidget {
                         children: [
                           const Icon(Icons.pin_drop_outlined, size: 18),
                           const Gap(4),
-                          Text(
-                            address,
-                            style: context.textTheme.bodySmall,
+                          Expanded(
+                            child: Text(
+                              address,
+                              style: context.textTheme.bodySmall,
+                              softWrap: true,
+                            ),
                           ),
                         ],
                       ),

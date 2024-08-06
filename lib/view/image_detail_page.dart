@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../core/themes.dart';
 import '../features/photo/photo.dart';
-import '../features/photo/photo_controller.dart';
 import '../features/store/store.dart';
 import '../features/store/store_controller.dart';
 import 'image_detail/image_detail_card.dart';
@@ -41,28 +40,10 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
   }
 
   Future<Store?> _fetchStore() async {
-    final photoController = ref.read(photoControllerProvider);
     final storeController = ref.read(storeControllerProvider);
     final userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // TODO(sho): 最後に以下諸々削除
-    // userIdをコンソールに表示
-    debugPrint('User ID: $userId');
-
-    final photoId = widget.photo.id; // photo.id が null または空でないことを確認
-    debugPrint('prevphotoId $photoId');
-    if (photoId.isEmpty) {
-      throw Exception('Photo ID is null or empty');
-    }
-
-    final photo = await photoController.getPhotoById(
-      userId: userId,
-      photoId: photoId,
-    );
-
-    debugPrint('Photo ID: $photoId');
-
-    final storeId = photo?.storeId ?? '';
+    final storeId = widget.photo.storeId;
 
     if (storeId.isEmpty) {
       throw Exception('Store ID is null or empty');
@@ -119,11 +100,12 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                           right: 4,
                         ),
                         child: ImageDetailCard(
-                          photoUrl: widget.photo.url,
-                          shopName: store.name,
-                          dateTime: DateTime.now(),
-                          address: store.website,
-                        ),
+                            photoUrl: widget.photo.url,
+                            storeName: store.name,
+                            dateTime: DateTime.now(),
+                            address: store.address,
+                            storeUrl: store.website,
+                            storeImageUrls: store.imageUrls,),
                       );
                     },
                   );

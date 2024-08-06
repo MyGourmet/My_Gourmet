@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_controller.dart';
 import '../features/auth/authed_user.dart';
+import '../features/photo/photo.dart';
 import '../features/photo/photo_controller.dart';
 import 'image_detail_page.dart';
 
@@ -72,7 +73,8 @@ class _HomePageState extends ConsumerState<HomePage>
 
     setState(() {
       photoUrls = result
-          .map((e) => {'url': e.url, 'category': e.category})
+          .map((e) =>
+              {'url': e.url, 'category': e.category, 'storeId': e.storeId},)
           .where((e) => e['url']!.isNotEmpty)
           .toList();
       debugPrint('photoUrls: $photoUrls');
@@ -149,7 +151,13 @@ class _HomePageState extends ConsumerState<HomePage>
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
-          final photo = filteredPhotos[index];
+          final photoMap = filteredPhotos[index];
+          final photo = Photo(
+            url: photoMap['url']!,
+            category: photoMap['category']!,
+            storeId: photoMap['storeId']!,
+          );
+
           return Hero(
             tag: photo,
             child: GestureDetector(
@@ -173,7 +181,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(14),
                   child: Image.network(
-                    photo['url']!,
+                    photo.url,
                     fit: BoxFit.cover,
                   ),
                 ),
