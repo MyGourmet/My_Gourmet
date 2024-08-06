@@ -74,7 +74,7 @@ class _HomePageState extends ConsumerState<HomePage>
     setState(() {
       photoUrls = result
           .map((e) =>
-              {'url': e.url, 'category': e.category, 'storeId': e.storeId})
+              {'url': e.url, 'category': e.category, 'storeId': e.storeId},)
           .where((e) => e['url']!.isNotEmpty)
           .toList();
       debugPrint('photoUrls: $photoUrls');

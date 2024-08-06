@@ -12,7 +12,7 @@ class ImageDetailCard extends StatefulWidget {
       required this.address,
       required this.photoUrl,
       required this.storeUrl,
-      required this.storeImageUrls});
+      required this.storeImageUrls,});
 
   final String storeName;
   final DateTime dateTime;

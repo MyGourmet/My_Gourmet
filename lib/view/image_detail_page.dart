@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../core/themes.dart';
 import '../features/photo/photo.dart';
-import '../features/photo/photo_controller.dart';
 import '../features/store/store.dart';
 import '../features/store/store_controller.dart';
 import 'image_detail/image_detail_card.dart';
@@ -106,7 +105,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                             dateTime: DateTime.now(),
                             address: store.address,
                             storeUrl: store.website,
-                            storeImageUrls: store.imageUrls),
+                            storeImageUrls: store.imageUrls,),
                       );
                     },
                   );
