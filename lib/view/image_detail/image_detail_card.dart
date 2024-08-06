@@ -7,26 +7,26 @@ import 'card_front.dart';
 class ImageDetailCard extends StatefulWidget {
   const ImageDetailCard(
       {super.key,
-      required this.shopName,
+      required this.storeName,
       required this.dateTime,
       required this.address,
       required this.photoUrl,
-      required this.shopUrl,
-      required this.imageFileList});
+      required this.storeUrl,
+      required this.storeImageUrls});
 
-  final String shopName;
+  final String storeName;
   final DateTime dateTime;
   final String address;
   final String photoUrl;
-  final String shopUrl;
-  final List<String> imageFileList;
+  final String storeUrl;
+  final List<String> storeImageUrls;
 
   @override
   State<ImageDetailCard> createState() => _ImageDetailCardState();
 }
 
 class _ImageDetailCardState extends State<ImageDetailCard> {
-  String get shopName => widget.shopName;
+  String get storeName => widget.storeName;
 
   DateTime get dateTime => widget.dateTime;
 
@@ -37,9 +37,9 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
 
   String get photoUrl => widget.photoUrl;
 
-  String get shopUrl => widget.shopUrl;
+  String get storeUrl => widget.storeUrl;
 
-  List<String> get imageFileList => widget.imageFileList;
+  List<String> get storeImageUrls => widget.storeImageUrls;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +47,17 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
       fill: Fill.fillBack,
       front: CardFront(
         photoUrl: photoUrl,
-        shopName: shopName,
+        storeName: storeName,
         dateTime: dateTime,
         address: address,
       ),
       back: CardBack(
         isLinked: true,
-        shopName: shopName,
-        imageFileList: imageFileList,
+        storeName: storeName,
+        storeImageUrls: storeImageUrls,
         holiday: '土曜',
         address: address,
-        url: shopUrl,
+        storeUrl: storeUrl,
       ),
     );
   }

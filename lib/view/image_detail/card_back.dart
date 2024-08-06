@@ -8,22 +8,22 @@ import 'shop_list_dialog.dart';
 class CardBack extends StatelessWidget {
   const CardBack({
     required this.isLinked,
-    required this.shopName,
-    required this.imageFileList,
+    required this.storeName,
+    required this.storeImageUrls,
     this.openTime,
     this.holiday,
     this.address,
-    this.url,
+    this.storeUrl,
     super.key,
   });
 
   final bool isLinked;
-  final String shopName;
-  final List<String> imageFileList;
+  final String storeName;
+  final List<String> storeImageUrls;
   final String? openTime;
   final String? holiday;
   final String? address;
-  final String? url;
+  final String? storeUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -72,22 +72,22 @@ class CardBack extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  shopName,
+                  storeName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
                 ),
-                if (imageFileList.isNotEmpty)
+                if (storeImageUrls.isNotEmpty)
                   SizedBox(
                     height: 220,
                     child: Scrollbar(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: imageFileList.length,
+                        itemCount: storeImageUrls.length,
                         itemBuilder: (context, index) {
-                          final photoUrl = imageFileList[index];
+                          final photoUrl = storeImageUrls[index];
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
@@ -159,7 +159,7 @@ class CardBack extends StatelessWidget {
                       ),
                     ],
                   ),
-                if (url != null)
+                if (storeUrl != null)
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -169,7 +169,7 @@ class CardBack extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          url!,
+                          storeUrl!,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
@@ -203,8 +203,8 @@ class CardBack extends StatelessWidget {
                           onPressed: () {
                             showShopListDialog(
                               context,
-                              shopName: shopName,
-                              imageFileList: imageFileList,
+                              shopName: storeName,
+                              storeImageUrls: storeImageUrls,
                               onSelected: () {
                                 Navigator.of(context).pop();
                               },

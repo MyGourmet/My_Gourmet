@@ -101,11 +101,11 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                         ),
                         child: ImageDetailCard(
                             photoUrl: widget.photo.url,
-                            shopName: store.name,
+                            storeName: store.name,
                             dateTime: DateTime.now(),
                             address: store.address,
-                            shopUrl: store.website,
-                            imageFileList: store.imageUrls),
+                            storeUrl: store.website,
+                            storeImageUrls: store.imageUrls),
                       );
                     },
                   );
