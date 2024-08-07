@@ -55,6 +55,15 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     );
   }
 
+  String formatAddress(String fullAddress) {
+    final int postalCodeIndex = fullAddress.indexOf('〒');
+    final String postalCode = fullAddress.substring(
+        postalCodeIndex, fullAddress.indexOf(' ', postalCodeIndex));
+    final String address =
+        fullAddress.substring(fullAddress.indexOf(' ', postalCodeIndex) + 1);
+    return postalCode + '\n' + address;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,12 +109,13 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                           right: 4,
                         ),
                         child: ImageDetailCard(
-                            photoUrl: widget.photo.url,
-                            storeName: store.name,
-                            dateTime: DateTime.now(),
-                            address: store.address,
-                            storeUrl: store.website,
-                            storeImageUrls: store.imageUrls,),
+                          photoUrl: widget.photo.url,
+                          storeName: store.name,
+                          dateTime: DateTime.now(),
+                          address: formatAddress(store.address),
+                          storeUrl: store.website,
+                          storeImageUrls: store.imageUrls,
+                        ),
                       );
                     },
                   );
