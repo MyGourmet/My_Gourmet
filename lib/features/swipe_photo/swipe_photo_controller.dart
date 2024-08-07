@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -77,8 +76,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     return ref.read(photoManagerServiceProvider).getAllPhotos();
   }
 
-  /// 次の写真を取得する
-  /// [isFood] 食べ物かどうか
   Future<void> loadNext({bool isFood = false, required int index}) async {
     // データがない時は何もしない
     final value = state.valueOrNull;
@@ -95,6 +92,9 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     final photo = photos[index];
     final length = photos.length;
 
+    // IDのスラッシュをハイフンに置換
+    final modifiedPhotoId = photo.id.replaceAll('/', '-');
+
     try {
       // 写真登録
       await ref.read(localPhotoRepositoryProvider).savePhoto(
@@ -107,6 +107,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         final result =
             await ref.read(authControllerProvider).signInWithGoogle();
 
+        debugPrint('photo_managerパッケージ modifiedPhotoId: $modifiedPhotoId');
+        debugPrint('photo_managerパッケージ photo: $photo');
         debugPrint('photo_managerパッケージ latitude: ${photo.latitude}');
         debugPrint('photo_managerパッケージ longitude: ${photo.longitude}');
         unawaited(
@@ -114,14 +116,13 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
             final data = await readExifFromFile(value!);
             debugPrint('exifパッケージ exif: $data');
 
-            final geoPoint = exifGPSToGeoPoint(data);
-            if (geoPoint != null) {
+            if (photo.longitude != null && photo.latitude != null) {
               // 写真情報をサーバーに登録
               await ref.read(photoRepositoryProvider).registerStoreInfo(
-                    photoId: photo.id,
+                    photoId: modifiedPhotoId,
                     userId: result.userId,
-                    latitude: geoPoint.latitude,
-                    longitude: geoPoint.longitude,
+                    latitude: photo.latitude,
+                    longitude: photo.longitude,
                   );
             }
           }),
@@ -134,7 +135,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
             if (compressedData != null) {
               await ref.read(photoRepositoryProvider).categorizeFood(
                     userId: result.userId,
-                    photoId: photo.id,
+                    photoId: modifiedPhotoId,
                     photoData: compressedData,
                   );
             }
@@ -179,45 +180,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   void forceRefresh() {
     state = const AsyncLoading<List<AssetEntity>>();
     ref.invalidateSelf();
-  }
-
-  /// exifの位置情報を変換する
-  GeoPoint? exifGPSToGeoPoint(Map<String, IfdTag> data) {
-    try {
-      if (!data.containsKey('GPS GPSLongitude')) {
-        return null;
-      }
-
-      final gpsLatitude = data['GPS GPSLatitude'];
-      final latitudeSignal = data['GPS GPSLatitudeRef']!.printable;
-      final latitudeRation = gpsLatitude!.values.toList().cast<Ratio>();
-      final latitudeValue = latitudeRation.map((item) {
-        return item.numerator.toDouble() / item.denominator.toDouble();
-      }).toList();
-      var latitude = latitudeValue[0] +
-          (latitudeValue[1] / 60) +
-          (latitudeValue[2] / 3600);
-      if (latitudeSignal == 'S') {
-        latitude = -latitude;
-      }
-
-      final gpsLongitude = data['GPS GPSLongitude'];
-      final longitudeSignal = data['GPS GPSLongitude']!.printable;
-      final longitudeRation = gpsLongitude!.values.toList().cast<Ratio>();
-      final longitudeValue = longitudeRation.map((item) {
-        return item.numerator.toDouble() / item.denominator.toDouble();
-      }).toList();
-      var longitude = longitudeValue[0] +
-          (longitudeValue[1] / 60) +
-          (longitudeValue[2] / 3600);
-      if (longitudeSignal == 'W') {
-        longitude = -longitude;
-      }
-
-      return GeoPoint(latitude, longitude);
-    } on Exception catch (_) {
-      return null;
-    }
   }
 
   /// 画像を圧縮するメソッド
