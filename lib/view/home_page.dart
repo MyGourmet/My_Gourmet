@@ -34,8 +34,6 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   Future<void> _initDownloadPhotos() async {
-    debugPrint('_initDownloadPhotos start!!!');
-
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       final isSignedIn = ref.watch(userIdProvider) != null;
       if (!isSignedIn) {
@@ -59,11 +57,9 @@ class _HomePageState extends ConsumerState<HomePage>
   List<Map<String, String>>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
-    debugPrint('_downloadPhotos start!!!');
     final userId = ref.watch(userIdProvider);
 
     if (userId == null) {
-      debugPrint('User is not signed in');
       return;
     }
 

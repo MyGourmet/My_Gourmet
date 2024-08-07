@@ -111,17 +111,14 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         debugPrint('photo_managerパッケージ longitude: ${photo.longitude}');
         unawaited(
           photo.file.then((value) async {
-            final data = await readExifFromFile(value!);
-            debugPrint('exifパッケージ exif: $data');
-
-            final geoPoint = exifGPSToGeoPoint(data);
-            if (geoPoint != null) {
+            if (photo.longitude != null && photo.latitude != null) {
               // 写真情報をサーバーに登録
+              debugPrint('registerStoreInfo start!!!');
               await ref.read(photoRepositoryProvider).registerStoreInfo(
                     photoId: photo.id,
                     userId: result.userId,
-                    latitude: geoPoint.latitude,
-                    longitude: geoPoint.longitude,
+                    latitude: photo.latitude,
+                    longitude: photo.longitude,
                   );
             }
           }),
