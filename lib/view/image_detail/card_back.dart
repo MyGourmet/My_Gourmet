@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 import 'shop_list_dialog.dart';
 
 class CardBack extends StatelessWidget {

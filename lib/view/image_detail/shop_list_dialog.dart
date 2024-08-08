@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
 import '../widgets/custom_elevated_button.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 
 List<File> shopList = [];
 int shopNo = 0;
