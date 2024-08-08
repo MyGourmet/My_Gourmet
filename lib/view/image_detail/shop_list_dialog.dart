@@ -90,6 +90,7 @@ Future<void> showShopListDialog(
                                           width: 125,
                                           // TODO(Kim): 各ストアのURLを表示する
                                           photoUrl: '',
+                                          zoomButtonSize: 32,
                                         ),
                                       );
                                     },

@@ -7,11 +7,13 @@ class ScalableImage extends StatefulWidget {
     required this.photoUrl,
     this.height,
     this.width,
+    this.zoomButtonSize,
     super.key,
   });
 
   final double? height;
   final double? width;
+  final double? zoomButtonSize;
   final String photoUrl;
 
   Widget get photoWidget {
@@ -53,18 +55,24 @@ class ScalableImageState extends State<ScalableImage> {
         ),
         Positioned(
           left: 0,
-          child: IconButton(
-            icon: const Icon(Icons.zoom_out_map, size: 18),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.black.withOpacity(0.5),
-              shape: const CircleBorder(),
+          child: Container(
+            height: widget.zoomButtonSize ?? 48,
+            width: widget.zoomButtonSize ?? 48,
+            padding: const EdgeInsets.all(4),
+            child: IconButton(
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.zoom_out_map, size: 16),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.black.withOpacity(0.5),
+                shape: const CircleBorder(),
+              ),
+              onPressed: () {
+                showImageDialog(
+                  widget.photoWidget,
+                );
+              },
             ),
-            onPressed: () {
-              showImageDialog(
-                widget.photoWidget,
-              );
-            },
           ),
         ),
       ],
