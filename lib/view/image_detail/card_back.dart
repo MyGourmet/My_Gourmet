@@ -92,7 +92,7 @@ class CardBack extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: ScalableImage(
+                              child: ScalablePhoto(
                                 height: 200,
                                 width: 200,
                                 photoUrl: photoUrl,

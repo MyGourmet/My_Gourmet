@@ -85,7 +85,7 @@ Future<void> showShopListDialog(
                                     itemBuilder: (context, index) {
                                       return ClipRRect(
                                         borderRadius: BorderRadius.circular(0),
-                                        child: const ScalableImage(
+                                        child: const ScalablePhoto(
                                           height: 100,
                                           width: 125,
                                           // TODO(Kim): 各ストアのURLを表示する

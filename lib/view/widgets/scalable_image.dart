@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-// TODO(anyone): 全体的にImageをphotoの名称に変更
-class ScalableImage extends StatefulWidget {
-  const ScalableImage({
+class ScalablePhoto extends StatefulWidget {
+  const ScalablePhoto({
     required this.photoUrl,
     this.height,
     this.width,
@@ -24,17 +23,17 @@ class ScalableImage extends StatefulWidget {
   }
 
   @override
-  State<ScalableImage> createState() => ScalableImageState();
+  State<ScalablePhoto> createState() => ScalablePhotoState();
 }
 
-class ScalableImageState extends State<ScalableImage> {
-  void showImageDialog(Widget image) {
+class ScalablePhotoState extends State<ScalablePhoto> {
+  void showImageDialog(Widget photo) {
     showDialog<void>(
       context: context,
       builder: (_) {
         return AlertDialog(
           insetPadding: const EdgeInsets.all(8),
-          content: image,
+          content: photo,
           contentPadding: EdgeInsets.zero,
         );
       },
