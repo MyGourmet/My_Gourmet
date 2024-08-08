@@ -46,7 +46,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     final storeId = widget.photo.storeId;
 
     if (storeId.isEmpty) {
-      throw Exception('Store ID is null or empty');
+      return null;
     }
 
     return storeController.getStoreById(
@@ -55,7 +55,10 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     );
   }
 
-  String formatAddress(String fullAddress) {
+  String? formatAddress(String? fullAddress) {
+    if (fullAddress == null || fullAddress.isEmpty) {
+      return null;
+    }
     final int postalCodeIndex = fullAddress.indexOf('〒');
     final String postalCode = fullAddress.substring(
         postalCodeIndex, fullAddress.indexOf(' ', postalCodeIndex));
@@ -91,12 +94,14 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data == null) {
-                  return const Center(
-                    child: Text('No store information available'),
-                  );
-                } else {
-                  final store = snapshot.data!;
+                }
+                // else if (!snapshot.hasData || snapshot.data == null) {
+                //   return const Center(
+                //     child: Text('No store information available'),
+                //   );
+                // }
+                else {
+                  final store = snapshot.data;
                   return PageView.builder(
                     controller: _pageController,
                     itemCount: 1,
@@ -110,11 +115,12 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                         ),
                         child: ImageDetailCard(
                           photoUrl: widget.photo.url,
-                          storeName: store.name,
+                          storeName: store?.name,
                           dateTime: DateTime.now(),
-                          address: formatAddress(store.address),
-                          storeUrl: store.website,
-                          storeImageUrls: store.imageUrls,
+                          address: formatAddress(store?.address),
+                          storeUrl: store?.website,
+                          storeImageUrls: store?.imageUrls,
+                          showCardBack: widget.photo.storeId.isNotEmpty,
                         ),
                       );
                     },

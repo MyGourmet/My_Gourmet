@@ -12,16 +12,20 @@ class CardFront extends StatelessWidget {
     required this.storeName,
     required this.dateTime,
     required this.address,
+    required this.showCardBack,
   });
 
   final String photoUrl;
   final String storeName;
   final DateTime dateTime;
   final String address;
+  final bool showCardBack;
 
   @override
   Widget build(BuildContext context) {
     final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
+
+    print('showCardBack: $showCardBack');
 
     return Card(
       color: Colors.white,
@@ -83,18 +87,19 @@ class CardFront extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(8),
+          if (showCardBack)
+            Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(8),
+                ),
+                border: Border.all(),
+                color: Themes.gray[100],
               ),
-              border: Border.all(),
-              color: Themes.gray[100],
+              child: const Icon(Icons.refresh),
             ),
-            child: const Icon(Icons.refresh),
-          ),
         ],
       ),
     );
