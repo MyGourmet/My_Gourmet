@@ -25,8 +25,6 @@ class CardFront extends StatelessWidget {
   Widget build(BuildContext context) {
     final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
 
-    print('showCardBack: $showCardBack');
-
     return Card(
       color: Colors.white,
       elevation: 5,
@@ -66,21 +64,22 @@ class CardFront extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.titleMedium,
                       ),
-                      const Divider(),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.pin_drop_outlined, size: 18),
-                          const Gap(4),
-                          Expanded(
-                            child: Text(
-                              address,
-                              style: context.textTheme.bodySmall,
-                              softWrap: true,
+                      if (showCardBack) const Divider(),
+                      if (showCardBack)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.pin_drop_outlined, size: 18),
+                            const Gap(4),
+                            Expanded(
+                              child: Text(
+                                address,
+                                style: context.textTheme.bodySmall,
+                                softWrap: true,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                     ],
                   ),
                 ),

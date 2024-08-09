@@ -59,12 +59,12 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     if (fullAddress == null || fullAddress.isEmpty) {
       return null;
     }
-    final int postalCodeIndex = fullAddress.indexOf('〒');
-    final String postalCode = fullAddress.substring(
-        postalCodeIndex, fullAddress.indexOf(' ', postalCodeIndex));
-    final String address =
+    final postalCodeIndex = fullAddress.indexOf('〒');
+    final postalCode = fullAddress.substring(
+        postalCodeIndex, fullAddress.indexOf(' ', postalCodeIndex),);
+    final address =
         fullAddress.substring(fullAddress.indexOf(' ', postalCodeIndex) + 1);
-    return postalCode + '\n' + address;
+    return '$postalCode\n$address';
   }
 
   @override
@@ -94,13 +94,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                }
-                // else if (!snapshot.hasData || snapshot.data == null) {
-                //   return const Center(
-                //     child: Text('No store information available'),
-                //   );
-                // }
-                else {
+                } else {
                   final store = snapshot.data;
                   return PageView.builder(
                     controller: _pageController,
