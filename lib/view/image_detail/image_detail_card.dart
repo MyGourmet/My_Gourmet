@@ -5,15 +5,23 @@ import 'card_back.dart';
 import 'card_front.dart';
 
 class ImageDetailCard extends StatefulWidget {
-  const ImageDetailCard(
-      {super.key,
-      required this.storeName,
-      required this.dateTime,
-      required this.address,
-      required this.photoUrl,
-      required this.storeUrl,
-      required this.storeImageUrls,});
+  const ImageDetailCard({
+    super.key,
+    required this.onSelected,
+    required this.userId,
+    required this.photoId,
+    required this.areaStoreIds,
+    required this.storeName,
+    required this.dateTime,
+    required this.address,
+    required this.photoUrl,
+    required this.storeUrl,
+    required this.storeImageUrls,
+  });
 
+  final String userId;
+  final String photoId;
+  final List<String> areaStoreIds;
   final String storeName;
   final DateTime dateTime;
   final String address;
@@ -21,11 +29,19 @@ class ImageDetailCard extends StatefulWidget {
   final String storeUrl;
   final List<String> storeImageUrls;
 
+  final void Function() onSelected;
+
   @override
   State<ImageDetailCard> createState() => _ImageDetailCardState();
 }
 
 class _ImageDetailCardState extends State<ImageDetailCard> {
+  String get userId => widget.userId;
+
+  String get photoId => widget.photoId;
+
+  List<String> get areaStoreIds => widget.areaStoreIds;
+
   String get storeName => widget.storeName;
 
   DateTime get dateTime => widget.dateTime;
@@ -52,6 +68,10 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
         address: address,
       ),
       back: CardBack(
+        onSelected: widget.onSelected,
+        userId: userId,
+        photoId: photoId,
+        areaStoreIds: areaStoreIds,
         isLinked: true,
         storeName: storeName,
         storeImageUrls: storeImageUrls,

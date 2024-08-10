@@ -107,10 +107,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         final result =
             await ref.read(authControllerProvider).signInWithGoogle();
 
-        debugPrint('photo_managerパッケージ modifiedPhotoId: $modifiedPhotoId');
-        debugPrint('photo_managerパッケージ photo: $photo');
-        debugPrint('photo_managerパッケージ latitude: ${photo.latitude}');
-        debugPrint('photo_managerパッケージ longitude: ${photo.longitude}');
         unawaited(
           photo.file.then((value) async {
             final data = await readExifFromFile(value!);

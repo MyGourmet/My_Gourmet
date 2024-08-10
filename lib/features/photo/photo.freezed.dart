@@ -31,6 +31,9 @@ mixin _$Photo {
   @serverTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  List<String> get areaStoreIds => throw _privateConstructorUsedError;
+
   /// FirebaseStorageに保存された写真のURL
   String get url => throw _privateConstructorUsedError;
 
@@ -61,6 +64,7 @@ abstract class $PhotoCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
+      List<String> areaStoreIds,
       String url,
       String category,
       String userId,
@@ -88,6 +92,7 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? areaStoreIds = null,
     Object? url = null,
     Object? category = null,
     Object? userId = null,
@@ -107,6 +112,10 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      areaStoreIds: null == areaStoreIds
+          ? _value.areaStoreIds
+          : areaStoreIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
@@ -166,6 +175,7 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
+      List<String> areaStoreIds,
       String url,
       String category,
       String userId,
@@ -194,6 +204,7 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? areaStoreIds = null,
     Object? url = null,
     Object? category = null,
     Object? userId = null,
@@ -246,6 +257,7 @@ class _$PhotoImpl extends _Photo {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
+      this.areaStoreIds = const <String>[],
       this.url = '',
       this.category = '',
       this.userId = '',
@@ -272,6 +284,11 @@ class _$PhotoImpl extends _Photo {
   @JsonKey()
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
+
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  @override
+  @JsonKey()
+  final List<String> areaStoreIds;
 
   /// FirebaseStorageに保存された写真のURL
   @override
@@ -301,7 +318,7 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, areaStoreIds:$areaStoreIds ,category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -314,6 +331,8 @@ class _$PhotoImpl extends _Photo {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            (identical(other.areaStoreIds, areaStoreIds) ||
+                other.areaStoreIds == areaStoreIds) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.category, category) ||
                 other.category == category) &&
@@ -324,8 +343,8 @@ class _$PhotoImpl extends _Photo {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt, url,
-      category, userId, shotAt, storeId);
+  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt,
+      areaStoreIds, url, category, userId, shotAt, storeId);
 
   @JsonKey(ignore: true)
   @override
@@ -346,6 +365,7 @@ abstract class _Photo extends Photo {
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
+      final List<String> areaStoreIds,
       final String url,
       final String category,
       final String userId,
@@ -369,6 +389,10 @@ abstract class _Photo extends Photo {
   /// 更新日時
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
+  @override
+
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  List<String> get areaStoreIds;
   @override
 
   /// FirebaseStorageに保存された写真のURL

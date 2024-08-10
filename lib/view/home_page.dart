@@ -57,6 +57,7 @@ class _HomePageState extends ConsumerState<HomePage>
   List<Map<String, String>>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
+    // controller内に組み込む
     final userId = ref.watch(userIdProvider);
 
     if (userId == null) {
@@ -66,15 +67,23 @@ class _HomePageState extends ConsumerState<HomePage>
     final result = await ref.read(photoControllerProvider).downloadPhotos(
           userId: userId,
         );
+    // controller内に組み込む
+    // controller内にwidgetに必要な要素を取得する処理を実装して、それを呼び出すようにする。
 
     setState(() {
       photoUrls = result
-          .map((e) =>
-              {'url': e.url, 'category': e.category, 'storeId': e.storeId},)
+          .map(
+            (e) => {
+              'id': e.id,
+              'userId': e.userId,
+              'url': e.url,
+              'category': e.category,
+              'storeId': e.storeId,
+              'areaStoreIds': e.areaStoreIds.join(','), // areaStoreIdsを文字列として保存
+            },
+          )
           .where((e) => e['url']!.isNotEmpty)
           .toList();
-      debugPrint('photoUrls: $photoUrls');
-      debugPrint('result: $result');
     });
   }
 
@@ -148,11 +157,26 @@ class _HomePageState extends ConsumerState<HomePage>
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
           final photoMap = filteredPhotos[index];
+          final areaStoreIdsString = photoMap['areaStoreIds']!;
+          final areaStoreIds = areaStoreIdsString.isNotEmpty
+              ? areaStoreIdsString.split(',').toList()
+              : <String>[];
+          debugPrint('homePage areaStoreIdsString: $areaStoreIdsString');
+          debugPrint('homePage areaStoreIds: $areaStoreIds');
+
           final photo = Photo(
+            id: photoMap['id']!,
+            userId: photoMap['userId']!,
+            areaStoreIds: areaStoreIds,
             url: photoMap['url']!,
             category: photoMap['category']!,
             storeId: photoMap['storeId']!,
           );
+
+          // debugPrint('homePage userId: ${photo.userId}');
+          // debugPrint('homePage photoId: ${photo.id}');
+          debugPrint('homePage photo.areaStoreIds: ${photo.areaStoreIds}');
+          debugPrint('homePage photo: $photo');
 
           return Hero(
             tag: photo,
@@ -161,7 +185,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 context.push(
                   ImageDetailPage.routePath,
                   extra: {
-                    'photo': photo,
+                    'photoId': photo.id,
                     'index': index,
                   },
                 );

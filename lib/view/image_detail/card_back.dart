@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
+import '../../features/store/store_controller.dart';
 import '../widgets/scalable_image.dart';
 import 'shop_list_dialog.dart';
 
-class CardBack extends StatelessWidget {
+class CardBack extends ConsumerWidget {
   const CardBack({
+    required this.onSelected,
+    required this.userId,
+    required this.photoId,
+    required this.areaStoreIds,
     required this.isLinked,
     required this.storeName,
     required this.storeImageUrls,
@@ -17,6 +23,9 @@ class CardBack extends StatelessWidget {
     super.key,
   });
 
+  final String userId;
+  final String photoId;
+  final List<String> areaStoreIds;
   final bool isLinked;
   final String storeName;
   final List<String> storeImageUrls;
@@ -25,8 +34,35 @@ class CardBack extends StatelessWidget {
   final String? address;
   final String? storeUrl;
 
+  final void Function() onSelected;
+
+  Future<void> _fetchAndShowStoresInfo(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    // Firestoreから店舗情報を取得する
+    final stores = await ref
+        .read(storeControllerProvider)
+        .getStoresInfo(areaStoreIds: areaStoreIds);
+
+    // コンテキストがまだ有効かどうかを確認する
+    if (context.mounted) {
+      await showShopListDialog(
+        context,
+        ref: ref,
+        stores: stores,
+        userId: userId,
+        photoId: photoId,
+        onSelected: () {
+          onSelected();
+          Navigator.of(context).pop();
+        },
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (!isLinked) {
       return Card(
         color: Colors.white,
@@ -201,14 +237,8 @@ class CardBack extends StatelessWidget {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            showShopListDialog(
-                              context,
-                              shopName: storeName,
-                              storeImageUrls: storeImageUrls,
-                              onSelected: () {
-                                Navigator.of(context).pop();
-                              },
-                            );
+                            //　発火するリクエストのメソッドの処理を追加する
+                            _fetchAndShowStoresInfo(context, ref);
                           },
                           child: Text(
                             '店舗を選び直す',

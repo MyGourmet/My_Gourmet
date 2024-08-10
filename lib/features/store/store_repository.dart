@@ -47,4 +47,31 @@ class StoreRepository {
       return null;
     }
   }
+
+  // areaStoreIdsのリストを引数に、Storesのリストを受け取る処理を追加
+  Future<List<Store>> getStoresInfo({
+    required List<String> areaStoreIds,
+  }) async {
+    try {
+      // `in` クエリを使用して、複数の storeId に一致するドキュメントを一度に取得する
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('stores')
+          .where(FieldPath.documentId, whereIn: areaStoreIds)
+          .get();
+
+      // ドキュメントを Store オブジェクトに変換してリストにする
+      final stores = querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return Store.fromJson({
+          ...data,
+          'id': doc.id, // ドキュメントIDをセット
+        });
+      }).toList();
+
+      return stores;
+    } on Exception catch (e) {
+      logger.e('An error occurred while fetching stores: $e');
+      return [];
+    }
+  }
 }

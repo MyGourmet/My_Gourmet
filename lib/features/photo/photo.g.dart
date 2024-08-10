@@ -15,19 +15,23 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
           ? const UnionTimestamp.serverTimestamp()
           : serverTimestampConverter.fromJson(json['updatedAt'] as Object),
       url: json['url'] as String? ?? '',
+      areaStoreIds: (json['areaStoreIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ?? const <String>[],
       category: json['category'] as String? ?? '',
       userId: json['userId'] as String? ?? '',
       shotAt: json['shotAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : timestampConverter.fromJson(json['shotAt'] as Object),
       storeId: json['storeId'] as String? ?? '',
-    );
+);
 
 Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'createdAt': timestampConverter.toJson(instance.createdAt),
       'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
+      'areaStoreIds': instance.areaStoreIds,
       'url': instance.url,
       'category': instance.category,
       'userId': instance.userId,
