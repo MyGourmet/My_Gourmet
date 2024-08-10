@@ -133,20 +133,6 @@ abstract final class Themes {
               states.contains(WidgetState.selected) ? mainOrange : Colors.white,
         ),
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Colors.white,
-        selectedItemColor: mainOrange,
-        unselectedItemColor: gray.shade700,
-        showUnselectedLabels: true,
-        elevation: 4,
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-      ),
       dividerTheme: DividerThemeData(
         color: gray.shade400,
         space: 4,
