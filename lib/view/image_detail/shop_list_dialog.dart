@@ -30,6 +30,7 @@ Future<void> showShopListDialog(
       if (currentIndex >= stores.length) {
         currentIndex = 0; // 最後まで行ったら最初に戻る
       }
+      shopNoSelected = 0; // ページを変更するたびにリセット
     });
   }
 
@@ -41,10 +42,6 @@ Future<void> showShopListDialog(
         builder: (context, setState) {
           final selectedStores =
               stores.skip(currentIndex).take(3).toList(); // 現在のインデックスから3件を取得
-          final storeNames = selectedStores.map((store) => store.name).toList();
-          final storeImagesList =
-              selectedStores.map((store) => store.imageUrls).toList();
-          final selectedStoreId = selectedStores[shopNoSelected].id;
 
           return AlertDialog(
             insetPadding: const EdgeInsets.all(20),
@@ -136,7 +133,7 @@ Future<void> showShopListDialog(
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      storeNames[shopNo],
+                                      selectedStores[shopNo].name,
                                       style: context.textTheme.bodySmall,
                                     ),
                                   ),
@@ -146,10 +143,12 @@ Future<void> showShopListDialog(
                                   child: Scrollbar(
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: storeImagesList[shopNo].length,
+                                      itemCount: selectedStores[shopNo]
+                                          .imageUrls
+                                          .length,
                                       itemBuilder: (context, index) {
-                                        final photoUrl =
-                                            storeImagesList[shopNo][index];
+                                        final photoUrl = selectedStores[shopNo]
+                                            .imageUrls[index];
                                         return Padding(
                                           padding:
                                               const EdgeInsets.only(left: 10),
@@ -221,9 +220,10 @@ Future<void> showShopListDialog(
                               .updateStoreIdForPhoto(
                                 userId: userId,
                                 photoId: photoId,
-                                storeId: selectedStoreId,
+                                storeId: selectedStores[shopNoSelected].id,
                               );
                           onSelected();
+                          shopNoSelected = 0;
                         },
                         text: '決定',
                       ),
