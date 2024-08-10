@@ -84,6 +84,10 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(36),
                             color: Themes.mainOrange,
+                            border: Border.all(
+                              color: Themes.gray.shade900,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
@@ -169,14 +173,14 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                     child: Icon(
                       icon,
                       key: ValueKey<bool>(isSelected),
-                      color: Themes.gray[900],
+                      color: isSelected ? Colors.white : Themes.gray[900],
                     ),
                   ),
                   const Gap(4),
                   AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 300),
                     style: TextStyle(
-                      color: Themes.gray[900],
+                      color: isSelected ? Colors.white : Themes.gray[900],
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),

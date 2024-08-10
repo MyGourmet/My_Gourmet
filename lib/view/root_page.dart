@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_gourmet/view/widgets/navigation_frame.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,10 +10,11 @@ import '../core/shared_preferences_service.dart';
 import '../features/auth/auth_repository.dart';
 import 'onboarding_page.dart';
 import 'widgets/confirm_dialog.dart';
+import 'widgets/navigation_frame.dart';
 
 /// 全てのページの基盤となるページ
 ///
-/// 初期化処理が終わり次第、[_NavigationFrame]を描画する。
+/// 初期化処理が終わり次第、[NavigationFrame]を描画する。
 class RootPage extends ConsumerStatefulWidget {
   const RootPage({super.key, required this.child});
 
