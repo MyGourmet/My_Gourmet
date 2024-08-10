@@ -18,6 +18,7 @@ abstract final class Themes {
       scaffoldBackgroundColor: Colors.white,
       appBarTheme: AppBarTheme(
         surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
         elevation: 0,
         titleTextStyle: TextStyle(
           color: gray[900],
@@ -122,17 +123,14 @@ abstract final class Themes {
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
-          (states) =>
-              states.contains(WidgetState.selected) ? gray[900] : gray,
+          (states) => states.contains(WidgetState.selected) ? gray[900] : gray,
         ),
         trackOutlineColor: WidgetStateProperty.resolveWith(
-          (states) =>
-              states.contains(WidgetState.selected) ? mainOrange : gray,
+          (states) => states.contains(WidgetState.selected) ? mainOrange : gray,
         ),
         trackColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected)
-              ? mainOrange
-              : Colors.white,
+          (states) =>
+              states.contains(WidgetState.selected) ? mainOrange : Colors.white,
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -223,6 +221,32 @@ abstract final class Themes {
         bodySmall: theme.textTheme.bodySmall!.copyWith(
           fontSize: 12,
         ),
+      ),
+      tabBarTheme: TabBarTheme(
+        labelColor: Colors.white,
+        unselectedLabelColor: gray.shade700,
+        labelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
+        indicator: BoxDecoration(
+          color: Themes.mainOrange,
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(
+            color: Themes.gray.shade900,
+            width: 2,
+          ),
+        ),
+        indicatorSize: TabBarIndicatorSize.tab,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+        tabAlignment: TabAlignment.start,
+        splashFactory: NoSplash.splashFactory,
+        dividerColor: Themes.gray.shade900,
+        dividerHeight: 2,
       ),
     );
   }
