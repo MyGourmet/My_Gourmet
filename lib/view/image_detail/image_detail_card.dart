@@ -14,6 +14,7 @@ class ImageDetailCard extends StatefulWidget {
     this.storeUrl = '',
     this.storeImageUrls = const [],
     this.showCardBack = true,
+    required this.storeOpeningHours,
   });
 
   final String? storeName;
@@ -23,6 +24,7 @@ class ImageDetailCard extends StatefulWidget {
   final String? storeUrl;
   final List<String>? storeImageUrls;
   final bool showCardBack;
+  final Map<String, String>? storeOpeningHours;
 
   @override
   State<ImageDetailCard> createState() => _ImageDetailCardState();
@@ -43,6 +45,8 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
   String get storeUrl => widget.storeUrl ?? '';
 
   List<String> get storeImageUrls => widget.storeImageUrls ?? [];
+
+  Map<String, String> get storeOpeningHours => widget.storeOpeningHours ?? {};
 
   bool get showCardBack => widget.showCardBack;
 
@@ -65,6 +69,7 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
               holiday: '土曜',
               address: address,
               storeUrl: storeUrl,
+              storeOpeningHours: storeOpeningHours,
             ),
           )
         : CardFront(

@@ -61,7 +61,9 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     }
     final postalCodeIndex = fullAddress.indexOf('〒');
     final postalCode = fullAddress.substring(
-        postalCodeIndex, fullAddress.indexOf(' ', postalCodeIndex),);
+      postalCodeIndex,
+      fullAddress.indexOf(' ', postalCodeIndex),
+    );
     final address =
         fullAddress.substring(fullAddress.indexOf(' ', postalCodeIndex) + 1);
     return '$postalCode\n$address';
@@ -113,6 +115,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                           dateTime: DateTime.now(),
                           address: formatAddress(store?.address),
                           storeUrl: store?.website,
+                          storeOpeningHours: store?.openingHours,
                           storeImageUrls: store?.imageUrls,
                           showCardBack: widget.photo.storeId.isNotEmpty,
                         ),

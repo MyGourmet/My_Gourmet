@@ -36,8 +36,8 @@ class Store with _$Store {
     /// FirebaseStorageの（ストアの）住所
     @Default('') String address,
 
-    /// FirebaseStorageの（ストアの）休日
-    @Default('') String holiday,
+    /// FirebaseStorageの（ストアの）営業時間
+    @Default(<String, String>{}) Map<String, String> openingHours,
 
     /// 写真の撮影日時
     @timestampConverter
