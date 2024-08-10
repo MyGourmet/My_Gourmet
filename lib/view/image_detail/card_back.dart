@@ -63,9 +63,14 @@ class CardBack extends StatelessWidget {
 
     final Map<String, String> sortedOpeningHours;
     if (storeOpeningHours != null) {
-      sortedOpeningHours = Map.fromEntries(storeOpeningHours!.entries.toList()
-        ..sort((a, b) =>
-            orderedKeys.indexOf(a.key).compareTo(orderedKeys.indexOf(b.key)),),);
+      sortedOpeningHours = Map.fromEntries(
+        storeOpeningHours!.entries.toList()
+          ..sort(
+            (a, b) => orderedKeys
+                .indexOf(a.key)
+                .compareTo(orderedKeys.indexOf(b.key)),
+          ),
+      );
     } else {
       sortedOpeningHours = {};
     }
@@ -204,7 +209,8 @@ class CardBack extends StatelessWidget {
                                     ),
                                   ] else ...[
                                     const Padding(
-                                        padding: EdgeInsets.only(left: 32),),
+                                      padding: EdgeInsets.only(left: 32),
+                                    ),
                                   ],
                                   Text(
                                     _getWeekday(entry.key),
