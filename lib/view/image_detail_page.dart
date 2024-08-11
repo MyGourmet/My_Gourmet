@@ -14,7 +14,6 @@ import 'image_detail/image_detail_card.dart';
 class ImageDetailPage extends ConsumerStatefulWidget {
   const ImageDetailPage({
     super.key,
-    // TODO: 不要なタイミングで削除
     required this.index,
     required this.photoId,
   });

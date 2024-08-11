@@ -25,7 +25,7 @@ class PhotoController {
     return _photoRepository.downloadPhotos(userId: userId);
   }
 
-  // TODO: Photo?の部分はあとで書き換える。
+  // TODO(kim): Photo?の部分はあとで書き換える。
   Future<Photo?> downloadPhoto({
     required String userId,
     required String photoId,

@@ -146,7 +146,7 @@ class PhotoRepository {
     }
   }
 
-  // TODO: Photo?の部分はあとで書き換える。
+  // TODO(kim): Photo?の部分はあとで書き換える。
   Future<Photo?> downloadPhoto({
     required String userId,
     required String photoId,
