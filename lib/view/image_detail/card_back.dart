@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 import 'shop_list_dialog.dart';
 
 class CardBack extends StatelessWidget {
@@ -118,7 +118,7 @@ class CardBack extends StatelessWidget {
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: ScalableImage(
+                              child: ScalablePhoto(
                                 height: 200,
                                 width: 200,
                                 photoUrl: photoUrl,

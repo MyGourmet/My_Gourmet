@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 
 class CardFront extends StatelessWidget {
   const CardFront({
@@ -53,7 +53,7 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ScalableImage(
+                      ScalablePhoto(
                         photoUrl: photoUrl,
                         height: MediaQuery.of(context).size.height * 0.5,
                       ),

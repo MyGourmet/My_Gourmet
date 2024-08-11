@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
 import '../widgets/custom_elevated_button.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 
 List<File> shopList = [];
 int shopNo = 0;
@@ -22,157 +22,146 @@ Future<void> showShopListDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
-      return AlertDialog(
-        insetPadding: const EdgeInsets.all(20),
+      return Dialog(
+        insetPadding: const EdgeInsets.all(16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        content: Container(
-          width: context.screenWidth,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.white),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: Themes.gray[50],
-                    shape: BoxShape.circle,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Gap(56),
+                  Text(
+                    '写真を撮った店舗を選んでください',
+                    style: context.textTheme.titleSmall,
                   ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    icon: Icon(Icons.close, size: 20, color: Themes.gray[800]),
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '写真を撮った店舗を選んでください',
-                style: context.textTheme.titleSmall,
-              ),
-              const Gap(10),
-              for (shopNo = 0; shopNo < 3; shopNo++) ...{
-                Stack(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                        top: 7,
-                        bottom: 7,
-                        left: 10,
-                        right: 10,
-                      ),
-                      padding: const EdgeInsets.only(
-                        top: 5,
-                        bottom: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 2,
-                          color: shopNoSelected == shopNo
-                              ? Themes.mainOrange
-                              : Themes.gray.shade300,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            blurRadius: 3,
-                            offset: const Offset(0, 5),
+                  const Gap(24),
+                  for (shopNo = 0; shopNo < 3; shopNo++) ...{
+                    Stack(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(
+                            top: 8,
+                            right: 8,
+                            bottom: 8,
                           ),
-                        ],
-                        color: Colors.white,
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 10,
-                              bottom: 5,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: shopNoSelected == shopNo
+                                  ? Themes.mainOrange
+                                  : Themes.gray.shade300,
+                              strokeAlign: BorderSide.strokeAlignOutside,
                             ),
-                            child: Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(4, 4),
+                              ),
+                            ],
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
                                 shopName,
                                 style: context.textTheme.bodySmall,
                               ),
-                            ),
+                              const Gap(8),
+                              SizedBox(
+                                height: 110,
+                                child: Scrollbar(
+                                  child: ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: storeImageUrls.length,
+                                    itemBuilder: (context, index) {
+                                      return ClipRRect(
+                                        borderRadius: BorderRadius.circular(0),
+                                        child: const ScalablePhoto(
+                                          height: 100,
+                                          width: 125,
+                                          // TODO(Kim): 各ストアのURLを表示する
+                                          photoUrl: '',
+                                          zoomButtonSize: 32,
+                                        ),
+                                      );
+                                    },
+                                    separatorBuilder:
+                                        (BuildContext context, int index) {
+                                      return const Gap(8);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          SizedBox(
-                            height: 110,
-                            child: Scrollbar(
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: storeImageUrls.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(0),
-                                      child: const ScalableImage(
-                                        height: 100,
-                                        width: 125,
-                                        // TODO(Kim): 各ストアのURLを表示する
-                                        photoUrl: '',
-                                      ),
-                                    ),
-                                  );
-                                },
+                        ),
+                        if (shopNo == shopNoSelected)
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: Container(
+                              width: 28,
+                              height: 28,
+                              decoration: const BoxDecoration(
+                                color: Themes.mainOrange,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                      ],
                     ),
-                    if (shopNo == shopNoSelected)
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: const BoxDecoration(
-                            color: Themes.mainOrange,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.check,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
+                  },
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Themes.gray,
                       ),
-                  ],
-                ),
-              },
-              const Gap(10),
-              const Align(
-                alignment: Alignment.centerRight,
-                child: Text('次の３店鋪'),
-              ),
-              const Gap(16),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.screenWidth * 0.05,
-                ),
-                child: SizedBox(
-                  height: 44,
-                  child: CustomElevatedButton(
+                      onPressed: () {
+                        // TODO(Kim): 各ストアのURLを表示する
+                      },
+                      child: const Text('次の３店鋪'),
+                    ),
+                  ),
+                  const Gap(16),
+                  CustomElevatedButton(
                     onPressed: onSelected,
                     text: '決定',
                   ),
-                ),
+                  const Gap(56),
+                ],
               ),
-              const Spacer(),
-            ],
-          ),
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Themes.gray[50],
+                  shape: const CircleBorder(),
+                ),
+                icon: Icon(Icons.close, color: Themes.gray[800]),
+              ),
+            ),
+          ],
         ),
       );
     },
