@@ -54,7 +54,7 @@ class _HomePageState extends ConsumerState<HomePage>
     });
   }
 
-  List<Map<String, String>>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
+  List<Photo>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
     final userId = ref.watch(userIdProvider);
@@ -68,11 +68,7 @@ class _HomePageState extends ConsumerState<HomePage>
         );
 
     setState(() {
-      photoUrls = result
-          .map((e) =>
-              {'url': e.url, 'category': e.category, 'storeId': e.storeId},)
-          .where((e) => e['url']!.isNotEmpty)
-          .toList();
+      photoUrls = result.where((e) => e.url.isNotEmpty).toList();
       debugPrint('photoUrls: $photoUrls');
       debugPrint('result: $result');
     });
@@ -132,12 +128,12 @@ class _HomePageState extends ConsumerState<HomePage>
       return const Center(child: CircularProgressIndicator());
     }
 
-    List<Map<String, String>> filteredPhotos;
+    List<Photo> filteredPhotos;
     if (category == 'すべて') {
       filteredPhotos = photoUrls!;
     } else {
       filteredPhotos =
-          photoUrls!.where((photo) => photo['category'] == category).toList();
+          photoUrls!.where((photo) => photo.category == category).toList();
     }
 
     return Padding(
@@ -147,12 +143,7 @@ class _HomePageState extends ConsumerState<HomePage>
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
-          final photoMap = filteredPhotos[index];
-          final photo = Photo(
-            url: photoMap['url']!,
-            category: photoMap['category']!,
-            storeId: photoMap['storeId']!,
-          );
+          final photo = filteredPhotos[index];
 
           return Hero(
             tag: photo,

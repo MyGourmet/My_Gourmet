@@ -46,8 +46,8 @@ mixin _$Store {
   /// FirebaseStorageの（ストアの）住所
   String get address => throw _privateConstructorUsedError;
 
-  /// FirebaseStorageの（ストアの）休日
-  String get holiday => throw _privateConstructorUsedError;
+  /// FirebaseStorageの（ストアの）営業時間
+  Map<String, String> get openingHours => throw _privateConstructorUsedError;
 
   /// 写真の撮影日時
   @timestampConverter
@@ -73,7 +73,7 @@ abstract class $StoreCopyWith<$Res> {
       String phoneNumber,
       String website,
       String address,
-      String holiday,
+      Map<String, String> openingHours,
       @timestampConverter UnionTimestamp shotAt,
       String storeId});
 
@@ -103,7 +103,7 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     Object? phoneNumber = null,
     Object? website = null,
     Object? address = null,
-    Object? holiday = null,
+    Object? openingHours = null,
     Object? shotAt = null,
     Object? storeId = null,
   }) {
@@ -140,10 +140,10 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      holiday: null == holiday
-          ? _value.holiday
-          : holiday // ignore: cast_nullable_to_non_nullable
-              as String,
+      openingHours: null == openingHours
+          ? _value.openingHours
+          : openingHours // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>,
       shotAt: null == shotAt
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
@@ -196,7 +196,7 @@ abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
       String phoneNumber,
       String website,
       String address,
-      String holiday,
+      Map<String, String> openingHours,
       @timestampConverter UnionTimestamp shotAt,
       String storeId});
 
@@ -227,7 +227,7 @@ class __$$StoreImplCopyWithImpl<$Res>
     Object? phoneNumber = null,
     Object? website = null,
     Object? address = null,
-    Object? holiday = null,
+    Object? openingHours = null,
     Object? shotAt = null,
     Object? storeId = null,
   }) {
@@ -264,10 +264,10 @@ class __$$StoreImplCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      holiday: null == holiday
-          ? _value.holiday
-          : holiday // ignore: cast_nullable_to_non_nullable
-              as String,
+      openingHours: null == openingHours
+          ? _value._openingHours
+          : openingHours // ignore: cast_nullable_to_non_nullable
+              as Map<String, String>,
       shotAt: null == shotAt
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
@@ -294,10 +294,11 @@ class _$StoreImpl extends _Store {
       this.phoneNumber = '',
       this.website = '',
       this.address = '',
-      this.holiday = '',
+      final Map<String, String> openingHours = const <String, String>{},
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
       this.storeId = ''})
       : _imageUrls = imageUrls,
+        _openingHours = openingHours,
         super._();
 
   factory _$StoreImpl.fromJson(Map<String, dynamic> json) =>
@@ -352,10 +353,17 @@ class _$StoreImpl extends _Store {
   @JsonKey()
   final String address;
 
-  /// FirebaseStorageの（ストアの）休日
+  /// FirebaseStorageの（ストアの）営業時間
+  final Map<String, String> _openingHours;
+
+  /// FirebaseStorageの（ストアの）営業時間
   @override
   @JsonKey()
-  final String holiday;
+  Map<String, String> get openingHours {
+    if (_openingHours is EqualUnmodifiableMapView) return _openingHours;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_openingHours);
+  }
 
   /// 写真の撮影日時
   @override
@@ -368,7 +376,7 @@ class _$StoreImpl extends _Store {
 
   @override
   String toString() {
-    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, imageUrls: $imageUrls, name: $name, phoneNumber: $phoneNumber, website: $website, address: $address, holiday: $holiday, shotAt: $shotAt, storeId: $storeId)';
+    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, imageUrls: $imageUrls, name: $name, phoneNumber: $phoneNumber, website: $website, address: $address, openingHours: $openingHours, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -388,7 +396,8 @@ class _$StoreImpl extends _Store {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.website, website) || other.website == website) &&
             (identical(other.address, address) || other.address == address) &&
-            (identical(other.holiday, holiday) || other.holiday == holiday) &&
+            const DeepCollectionEquality()
+                .equals(other._openingHours, _openingHours) &&
             (identical(other.shotAt, shotAt) || other.shotAt == shotAt) &&
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
@@ -405,7 +414,7 @@ class _$StoreImpl extends _Store {
       phoneNumber,
       website,
       address,
-      holiday,
+      const DeepCollectionEquality().hash(_openingHours),
       shotAt,
       storeId);
 
@@ -433,7 +442,7 @@ abstract class _Store extends Store {
       final String phoneNumber,
       final String website,
       final String address,
-      final String holiday,
+      final Map<String, String> openingHours,
       @timestampConverter final UnionTimestamp shotAt,
       final String storeId}) = _$StoreImpl;
   const _Store._() : super._();
@@ -476,8 +485,8 @@ abstract class _Store extends Store {
   String get address;
   @override
 
-  /// FirebaseStorageの（ストアの）休日
-  String get holiday;
+  /// FirebaseStorageの（ストアの）営業時間
+  Map<String, String> get openingHours;
   @override
 
   /// 写真の撮影日時

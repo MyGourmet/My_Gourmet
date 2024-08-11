@@ -12,12 +12,14 @@ class CardFront extends StatelessWidget {
     required this.storeName,
     required this.dateTime,
     required this.address,
+    required this.showCardBack,
   });
 
   final String photoUrl;
   final String storeName;
   final DateTime dateTime;
   final String address;
+  final bool showCardBack;
 
   @override
   Widget build(BuildContext context) {
@@ -62,39 +64,41 @@ class CardFront extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.titleMedium,
                       ),
-                      const Divider(),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(Icons.pin_drop_outlined, size: 18),
-                          const Gap(4),
-                          Expanded(
-                            child: Text(
-                              address,
-                              style: context.textTheme.bodySmall,
-                              softWrap: true,
+                      if (showCardBack) const Divider(),
+                      if (showCardBack)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.pin_drop_outlined, size: 18),
+                            const Gap(4),
+                            Expanded(
+                              child: Text(
+                                address,
+                                style: context.textTheme.bodySmall,
+                                softWrap: true,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          Container(
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(8),
+          if (showCardBack)
+            Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(8),
+                ),
+                border: Border.all(),
+                color: Themes.gray[100],
               ),
-              border: Border.all(),
-              color: Themes.gray[100],
+              child: const Icon(Icons.refresh),
             ),
-            child: const Icon(Icons.refresh),
-          ),
         ],
       ),
     );
