@@ -78,7 +78,10 @@ class CardBack extends ConsumerWidget {
             right: 16,
           ),
           decoration: BoxDecoration(
-            border: Border.all(),
+            border: Border.all(
+              color: Themes.gray[900]!,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
         ),
@@ -127,6 +130,7 @@ class CardBack extends ConsumerWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color: Themes.gray[900]!,
+                width: 2,
               ),
               borderRadius: BorderRadius.circular(8),
             ),
