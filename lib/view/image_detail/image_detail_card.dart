@@ -85,7 +85,6 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
               isLinked: true,
               storeName: storeName,
               storeImageUrls: storeImageUrls,
-              holiday: '土曜',
               address: address,
               storeUrl: storeUrl,
               storeOpeningHours: storeOpeningHours,

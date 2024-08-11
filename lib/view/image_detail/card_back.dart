@@ -17,7 +17,6 @@ class CardBack extends ConsumerWidget {
     required this.storeName,
     required this.storeImageUrls,
     this.openTime,
-    this.holiday,
     this.address,
     this.storeUrl,
     this.storeOpeningHours,
@@ -31,7 +30,6 @@ class CardBack extends ConsumerWidget {
   final String storeName;
   final List<String> storeImageUrls;
   final String? openTime;
-  final String? holiday;
   final String? address;
   final String? storeUrl;
   final Map<String, String>? storeOpeningHours;
