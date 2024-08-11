@@ -77,12 +77,21 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
 
   String formatAddress(String fullAddress) {
     final postalCodeIndex = fullAddress.indexOf('〒');
-    final postalCode = fullAddress.substring(
-      postalCodeIndex,
-      fullAddress.indexOf(' ', postalCodeIndex),
-    );
-    final address =
-        fullAddress.substring(fullAddress.indexOf(' ', postalCodeIndex) + 1);
+
+    // もし '〒' が見つからない場合、そのまま fullAddress を返す
+    if (postalCodeIndex == -1) {
+      return fullAddress;
+    }
+
+    // '〒' の次のスペースが見つからない場合、そのまま fullAddress を返す
+    final spaceIndex = fullAddress.indexOf(' ', postalCodeIndex);
+    if (spaceIndex == -1) {
+      return fullAddress;
+    }
+
+    final postalCode = fullAddress.substring(postalCodeIndex, spaceIndex);
+    final address = fullAddress.substring(spaceIndex + 1);
+
     return '$postalCode\n$address';
   }
 
@@ -127,13 +136,8 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                         return Center(
                           child: Text('Error: ${storeSnapshot.error}'),
                         );
-                      } else if (!storeSnapshot.hasData ||
-                          storeSnapshot.data == null) {
-                        return const Center(
-                          child: Text('No store information available'),
-                        );
                       } else {
-                        final store = storeSnapshot.data!;
+                        final store = storeSnapshot.data;
                         return PageView.builder(
                           controller: _pageController,
                           itemCount: 1,
@@ -151,12 +155,12 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                                 photoId: photo.id,
                                 areaStoreIds: photo.areaStoreIds,
                                 photoUrl: photo.url,
-                                storeName: store.name,
+                                storeName: store?.name ?? '',
                                 dateTime: DateTime.now(),
-                                address: formatAddress(store.address),
-                                storeUrl: store.website,
-                                storeImageUrls: store.imageUrls,
-                                storeOpeningHours: store.openingHours,
+                                address: formatAddress(store?.address ?? ''),
+                                storeUrl: store?.website ?? '',
+                                storeImageUrls: store?.imageUrls ?? [],
+                                storeOpeningHours: store?.openingHours ?? {},
                                 showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {
                                   _downloadPhoto(ref);

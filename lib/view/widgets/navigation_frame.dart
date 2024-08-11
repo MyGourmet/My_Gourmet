@@ -23,7 +23,8 @@ class NavigationFrame extends ConsumerStatefulWidget {
 }
 
 class _NavigationFrameState extends ConsumerState<NavigationFrame> {
-  late int _selectedIndex;
+  // ギャラリーページから起動させる。
+  int _selectedIndex = 1;
 
   @override
   void initState() {
