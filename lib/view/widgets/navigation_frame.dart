@@ -23,7 +23,7 @@ class NavigationFrame extends ConsumerStatefulWidget {
 }
 
 class _NavigationFrameState extends ConsumerState<NavigationFrame> {
-  late int _selectedIndex;
+  late int _selectedIndex = 1;
 
   @override
   void initState() {
