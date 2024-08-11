@@ -42,7 +42,10 @@ class CardFront extends StatelessWidget {
               right: 16,
             ),
             decoration: BoxDecoration(
-              border: Border.all(),
+              border: Border.all(
+                color: Themes.gray[900]!,
+                width: 2,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -64,7 +67,10 @@ class CardFront extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: context.textTheme.titleMedium,
                       ),
-                      if (showCardBack) const Divider(),
+                      if (showCardBack)
+                        Divider(
+                          color: Themes.gray[900],
+                        ),
                       if (showCardBack)
                         Row(
                           mainAxisSize: MainAxisSize.min,
@@ -94,7 +100,10 @@ class CardFront extends StatelessWidget {
                 borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(8),
                 ),
-                border: Border.all(),
+                border: Border.all(
+                  color: Themes.gray[900]!,
+                  width: 2,
+                ),
                 color: Themes.gray[100],
               ),
               child: const Icon(Icons.refresh),

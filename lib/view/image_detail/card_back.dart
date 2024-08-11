@@ -127,7 +127,9 @@ class CardBack extends ConsumerWidget {
               right: 16,
             ),
             decoration: BoxDecoration(
-              border: Border.all(),
+              border: Border.all(
+                color: Themes.gray[900]!,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -137,9 +139,11 @@ class CardBack extends ConsumerWidget {
                   storeName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(
+                    color: Themes.gray[900],
+                  ),
                 ),
                 if (storeImageUrls.isNotEmpty)
                   SizedBox(
@@ -182,9 +186,11 @@ class CardBack extends ConsumerWidget {
                       ],
                     ),
                   ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(
+                    color: Themes.gray[900],
+                  ),
                 ),
                 if (address != null)
                   Row(
@@ -218,9 +224,11 @@ class CardBack extends ConsumerWidget {
                       ),
                     ],
                   ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 18),
-                  child: Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(
+                    color: Themes.gray[900],
+                  ),
                 ),
                 if (storeOpeningHours != null)
                   Expanded(
@@ -283,7 +291,10 @@ class CardBack extends ConsumerWidget {
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           color: Themes.gray[200],
-                          border: Border.all(),
+                          border: Border.all(
+                            color: Themes.gray[900]!,
+                            width: 2,
+                          ),
                           borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(8),
                             bottomLeft: Radius.circular(8),
@@ -313,7 +324,10 @@ class CardBack extends ConsumerWidget {
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
               ),
-              border: Border.all(),
+              border: Border.all(
+                color: Themes.gray[900]!,
+                width: 2,
+              ),
               color: Themes.gray[100],
             ),
             child: const Icon(Icons.refresh),

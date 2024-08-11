@@ -53,6 +53,7 @@ Future<void> showShopListDialog(
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
+                        padding: EdgeInsets.zero,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -128,7 +129,8 @@ Future<void> showShopListDialog(
                                                 stores[shopNo].imageUrls[index];
                                             return Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 10,),
+                                                left: 10,
+                                              ),
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
