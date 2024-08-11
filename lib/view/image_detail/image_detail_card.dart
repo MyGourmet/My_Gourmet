@@ -17,6 +17,8 @@ class ImageDetailCard extends StatefulWidget {
     required this.photoUrl,
     required this.storeUrl,
     required this.storeImageUrls,
+    this.showCardBack = true,
+    required this.storeOpeningHours,
   });
 
   final String userId;
@@ -28,6 +30,8 @@ class ImageDetailCard extends StatefulWidget {
   final String photoUrl;
   final String storeUrl;
   final List<String> storeImageUrls;
+  final bool showCardBack;
+  final Map<String, String> storeOpeningHours;
 
   final void Function() onSelected;
 
@@ -57,28 +61,42 @@ class _ImageDetailCardState extends State<ImageDetailCard> {
 
   List<String> get storeImageUrls => widget.storeImageUrls;
 
+  Map<String, String> get storeOpeningHours => widget.storeOpeningHours;
+
+  bool get showCardBack => widget.showCardBack;
+
   @override
   Widget build(BuildContext context) {
-    return FlipCard(
-      fill: Fill.fillBack,
-      front: CardFront(
-        photoUrl: photoUrl,
-        storeName: storeName,
-        dateTime: dateTime,
-        address: address,
-      ),
-      back: CardBack(
-        onSelected: widget.onSelected,
-        userId: userId,
-        photoId: photoId,
-        areaStoreIds: areaStoreIds,
-        isLinked: true,
-        storeName: storeName,
-        storeImageUrls: storeImageUrls,
-        holiday: '土曜',
-        address: address,
-        storeUrl: storeUrl,
-      ),
-    );
+    return showCardBack
+        ? FlipCard(
+            fill: Fill.fillBack,
+            front: CardFront(
+              photoUrl: photoUrl,
+              storeName: storeName,
+              dateTime: dateTime,
+              address: address,
+              showCardBack: showCardBack,
+            ),
+            back: CardBack(
+              onSelected: widget.onSelected,
+              userId: userId,
+              photoId: photoId,
+              areaStoreIds: areaStoreIds,
+              isLinked: true,
+              storeName: storeName,
+              storeImageUrls: storeImageUrls,
+              holiday: '土曜',
+              address: address,
+              storeUrl: storeUrl,
+              storeOpeningHours: storeOpeningHours,
+            ),
+          )
+        : CardFront(
+            photoUrl: photoUrl,
+            storeName: storeName,
+            dateTime: dateTime,
+            address: address,
+            showCardBack: showCardBack,
+          );
   }
 }

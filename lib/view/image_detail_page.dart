@@ -14,9 +14,8 @@ import 'image_detail/image_detail_card.dart';
 class ImageDetailPage extends ConsumerStatefulWidget {
   const ImageDetailPage({
     super.key,
-    // TODO(anyone): 不要なタイミングで削除
+    // TODO: 不要なタイミングで削除
     required this.index,
-    // required this.photo,
     required this.photoId,
   });
 
@@ -67,7 +66,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     final storeId = photo.storeId;
 
     if (storeId.isEmpty) {
-      throw Exception('Store ID is null or empty');
+      return null;
     }
 
     return storeController.getStoreById(
@@ -76,11 +75,19 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
     );
   }
 
+  String formatAddress(String fullAddress) {
+    final postalCodeIndex = fullAddress.indexOf('〒');
+    final postalCode = fullAddress.substring(
+      postalCodeIndex,
+      fullAddress.indexOf(' ', postalCodeIndex),
+    );
+    final address =
+        fullAddress.substring(fullAddress.indexOf(' ', postalCodeIndex) + 1);
+    return '$postalCode\n$address';
+  }
+
   @override
   Widget build(BuildContext context) {
-    // debugPrint('ImageDetailPage userId: ${widget.photo.userId}');
-    // debugPrint('ImageDetailPage photoId: ${widget.photo.id}');
-    // debugPrint('ImageDetailPage areaStoreIds: ${widget.photo.areaStoreIds}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -106,32 +113,27 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data == null) {
-                  return const Center(
-                    child: Text('No store information available'),
-                  );
-                } else {
-                  final photo = snapshot.data;
-                  if (photo == null) {
-                    return const Center(
-                      child: Text('Nothing photo'),
-                    );
-                  }
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  final photo = snapshot.data!;
                   final storeFuture = _fetchStore(photo);
 
                   return FutureBuilder<Store?>(
                     future: storeFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
+                    builder: (context, storeSnapshot) {
+                      if (storeSnapshot.connectionState ==
+                          ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (!snapshot.hasData || snapshot.data == null) {
+                      } else if (storeSnapshot.hasError) {
+                        return Center(
+                          child: Text('Error: ${storeSnapshot.error}'),
+                        );
+                      } else if (!storeSnapshot.hasData ||
+                          storeSnapshot.data == null) {
                         return const Center(
                           child: Text('No store information available'),
                         );
                       } else {
-                        final store = snapshot.data!;
+                        final store = storeSnapshot.data!;
                         return PageView.builder(
                           controller: _pageController,
                           itemCount: 1,
@@ -151,9 +153,11 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                                 photoUrl: photo.url,
                                 storeName: store.name,
                                 dateTime: DateTime.now(),
-                                address: store.address,
+                                address: formatAddress(store.address),
                                 storeUrl: store.website,
                                 storeImageUrls: store.imageUrls,
+                                storeOpeningHours: store.openingHours,
+                                showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {
                                   _downloadPhoto(ref);
                                   setState(() {});
@@ -164,6 +168,10 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                         );
                       }
                     },
+                  );
+                } else {
+                  return const Center(
+                    child: Text('Nothing photo'),
                   );
                 }
               },

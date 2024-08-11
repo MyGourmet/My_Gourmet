@@ -54,7 +54,7 @@ class _HomePageState extends ConsumerState<HomePage>
     });
   }
 
-  List<Map<String, String>>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
+  List<Photo>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
 
   Future<void> _downloadPhotos(WidgetRef ref) async {
     // controller内に組み込む
@@ -71,19 +71,9 @@ class _HomePageState extends ConsumerState<HomePage>
     // controller内にwidgetに必要な要素を取得する処理を実装して、それを呼び出すようにする。
 
     setState(() {
-      photoUrls = result
-          .map(
-            (e) => {
-              'id': e.id,
-              'userId': e.userId,
-              'url': e.url,
-              'category': e.category,
-              'storeId': e.storeId,
-              'areaStoreIds': e.areaStoreIds.join(','), // areaStoreIdsを文字列として保存
-            },
-          )
-          .where((e) => e['url']!.isNotEmpty)
-          .toList();
+      photoUrls = result.where((e) => e.url.isNotEmpty).toList();
+      debugPrint('photoUrls: $photoUrls');
+      debugPrint('result: $result');
     });
   }
 
@@ -95,26 +85,18 @@ class _HomePageState extends ConsumerState<HomePage>
         child: AppBar(
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(0), // TabBarの高さを指定
-            child: Container(
-              alignment: Alignment.centerLeft, // TabBarを左に寄せる
-              child: TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                // padding: const EdgeInsets.only(left: 0, right: 0), //,
-                tabAlignment: TabAlignment.start,
-                labelPadding: const EdgeInsets.only(
-                  left: 12,
-                  right: 12,
-                ), // ここでラベルの左側のパディングを調整
-                tabs: const [
-                  Tab(text: 'すべて'),
-                  Tab(text: 'ラーメン'),
-                  Tab(text: 'カフェ'),
-                  Tab(text: '和食'),
-                  Tab(text: '洋食'),
-                  Tab(text: 'エスニック'),
-                ],
-              ),
+            child: TabBar(
+              padding: const EdgeInsets.only(left: 16, bottom: 8),
+              controller: _tabController,
+              isScrollable: true,
+              tabs: const [
+                Tab(text: 'すべて'),
+                Tab(text: 'ラーメン'),
+                Tab(text: 'カフェ'),
+                Tab(text: '和食'),
+                Tab(text: '洋食'),
+                Tab(text: 'エスニック'),
+              ],
             ),
           ),
         ),
@@ -141,12 +123,12 @@ class _HomePageState extends ConsumerState<HomePage>
       return const Center(child: CircularProgressIndicator());
     }
 
-    List<Map<String, String>> filteredPhotos;
+    List<Photo> filteredPhotos;
     if (category == 'すべて') {
       filteredPhotos = photoUrls!;
     } else {
       filteredPhotos =
-          photoUrls!.where((photo) => photo['category'] == category).toList();
+          photoUrls!.where((photo) => photo.category == category).toList();
     }
 
     return Padding(
@@ -156,22 +138,7 @@ class _HomePageState extends ConsumerState<HomePage>
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
-          final photoMap = filteredPhotos[index];
-          final areaStoreIdsString = photoMap['areaStoreIds']!;
-          final areaStoreIds = areaStoreIdsString.isNotEmpty
-              ? areaStoreIdsString.split(',').toList()
-              : <String>[];
-          debugPrint('homePage areaStoreIdsString: $areaStoreIdsString');
-          debugPrint('homePage areaStoreIds: $areaStoreIds');
-
-          final photo = Photo(
-            id: photoMap['id']!,
-            userId: photoMap['userId']!,
-            areaStoreIds: areaStoreIds,
-            url: photoMap['url']!,
-            category: photoMap['category']!,
-            storeId: photoMap['storeId']!,
-          );
+          final photo = filteredPhotos[index];
 
           // debugPrint('homePage userId: ${photo.userId}');
           // debugPrint('homePage photoId: ${photo.id}');

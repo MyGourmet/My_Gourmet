@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
 import '../../features/store/store_controller.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 import 'shop_list_dialog.dart';
 
 class CardBack extends ConsumerWidget {
@@ -20,6 +20,7 @@ class CardBack extends ConsumerWidget {
     this.holiday,
     this.address,
     this.storeUrl,
+    this.storeOpeningHours,
     super.key,
   });
 
@@ -33,6 +34,7 @@ class CardBack extends ConsumerWidget {
   final String? holiday;
   final String? address;
   final String? storeUrl;
+  final Map<String, String>? storeOpeningHours;
 
   final void Function() onSelected;
 
@@ -85,6 +87,30 @@ class CardBack extends ConsumerWidget {
       );
     }
 
+    final orderedKeys = [
+      'sunday_hours',
+      'monday_hours',
+      'tuesday_hours',
+      'wednesday_hours',
+      'thursday_hours',
+      'friday_hours',
+      'saturday_hours',
+    ];
+
+    final Map<String, String> sortedOpeningHours;
+    if (storeOpeningHours != null) {
+      sortedOpeningHours = Map.fromEntries(
+        storeOpeningHours!.entries.toList()
+          ..sort(
+            (a, b) => orderedKeys
+                .indexOf(a.key)
+                .compareTo(orderedKeys.indexOf(b.key)),
+          ),
+      );
+    } else {
+      sortedOpeningHours = {};
+    }
+
     return Card(
       color: Colors.white,
       elevation: 5,
@@ -128,7 +154,7 @@ class CardBack extends ConsumerWidget {
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
-                              child: ScalableImage(
+                              child: ScalablePhoto(
                                 height: 200,
                                 width: 200,
                                 photoUrl: photoUrl,
@@ -156,25 +182,6 @@ class CardBack extends ConsumerWidget {
                       ],
                     ),
                   ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (openTime != null)
-                      Text(
-                        openTime!,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    if (holiday != null)
-                      Text(
-                        '$holiday定休',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                  ],
-                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: Divider(),
@@ -212,9 +219,56 @@ class CardBack extends ConsumerWidget {
                     ],
                   ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
+                  padding: EdgeInsets.symmetric(vertical: 18),
                   child: Divider(),
                 ),
+                if (storeOpeningHours != null)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ...sortedOpeningHours.entries.map((entry) {
+                            // アイコンを最初の要素にのみ表示
+                            final isFirst =
+                                sortedOpeningHours.entries.first.key ==
+                                    entry.key;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: Row(
+                                children: [
+                                  if (isFirst) ...[
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.only(left: 8, right: 8),
+                                      child: Icon(Icons.access_time, size: 16),
+                                    ),
+                                  ] else ...[
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 32),
+                                    ),
+                                  ],
+                                  Text(
+                                    _getWeekday(entry.key),
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    entry.value.toLowerCase() == 'closed'
+                                        ? '定休日'
+                                        : entry.value,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ),
                 const SizedBox(height: 32),
               ],
             ),
@@ -267,5 +321,26 @@ class CardBack extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  String _getWeekday(String key) {
+    switch (key) {
+      case 'monday_hours':
+        return '月:';
+      case 'tuesday_hours':
+        return '火:';
+      case 'wednesday_hours':
+        return '水:';
+      case 'thursday_hours':
+        return '木:';
+      case 'friday_hours':
+        return '金:';
+      case 'saturday_hours':
+        return '土:';
+      case 'sunday_hours':
+        return '日:';
+      default:
+        return key;
+    }
   }
 }

@@ -9,7 +9,7 @@ import '../../core/themes.dart';
 import '../../features/photo/photo_controller.dart';
 import '../../features/store/store.dart';
 import '../widgets/custom_elevated_button.dart';
-import '../widgets/scalable_image.dart';
+import '../widgets/scalable_photo.dart';
 
 List<File> shopList = [];
 int shopNoSelected = 0; // 初期値を0に設定
@@ -155,7 +155,7 @@ Future<void> showShopListDialog(
                                           child: ClipRRect(
                                             borderRadius:
                                                 BorderRadius.circular(8),
-                                            child: ScalableImage(
+                                            child: ScalablePhoto(
                                               height: 100,
                                               width: 125,
                                               photoUrl: photoUrl,
