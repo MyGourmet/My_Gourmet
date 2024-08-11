@@ -22,34 +22,20 @@ Future<void> showShopListDialog(
   required List<Store> stores,
   required void Function() onSelected,
 }) async {
-  var currentIndex = 0;
-
-  void showNextStores(StateSetter setState) {
-    setState(() {
-      currentIndex += 3;
-      if (currentIndex >= stores.length) {
-        currentIndex = 0; // 最後まで行ったら最初に戻る
-      }
-      shopNoSelected = 0; // ページを変更するたびにリセット
-    });
-  }
-
   await showDialog<void>(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          final selectedStores =
-              stores.skip(currentIndex).take(3).toList(); // 現在のインデックスから3件を取得
-
           return AlertDialog(
-            insetPadding: const EdgeInsets.all(20),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
             content: Container(
-              width: context.screenWidth,
+              width: context.screenWidth * 0.9,
+              height: context.screenHeight * 0.85,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white),
                 borderRadius: BorderRadius.circular(10),
@@ -78,133 +64,112 @@ Future<void> showShopListDialog(
                       ),
                     ),
                   ),
-                  const Spacer(),
+                  const Gap(10),
                   Text(
                     '写真を撮った店舗を選んでください',
                     style: context.textTheme.titleSmall,
                   ),
                   const Gap(10),
-                  for (int shopNo = 0;
-                      shopNo < selectedStores.length;
-                      shopNo++) ...{
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          shopNoSelected = shopNo;
-                        });
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                              top: 7,
-                              bottom: 7,
-                              left: 10,
-                              right: 10,
-                            ),
-                            padding: const EdgeInsets.only(
-                              top: 5,
-                              bottom: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                width: 2,
-                                color: shopNoSelected == shopNo
-                                    ? Themes.mainOrange
-                                    : Themes.gray.shade300,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  blurRadius: 3,
-                                  offset: const Offset(0, 5),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: stores.length,
+                      itemBuilder: (context, shopNo) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              shopNoSelected = shopNo;
+                            });
+                          },
+                          child: Stack(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                  vertical: 7,
+                                  horizontal: 10,
                                 ),
-                              ],
-                              color: Colors.white,
-                            ),
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 10,
-                                    bottom: 5,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 5,
+                                  horizontal: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 2,
+                                    color: shopNoSelected == shopNo
+                                        ? Themes.mainOrange
+                                        : Themes.gray.shade300,
                                   ),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      selectedStores[shopNo].name,
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      blurRadius: 3,
+                                      offset: const Offset(0, 5),
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      stores[shopNo].name,
                                       style: context.textTheme.bodySmall,
                                     ),
-                                  ),
+                                    const Gap(5),
+                                    SizedBox(
+                                      height: 110,
+                                      child: Scrollbar(
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount:
+                                              stores[shopNo].imageUrls.length,
+                                          itemBuilder: (context, index) {
+                                            final photoUrl =
+                                                stores[shopNo].imageUrls[index];
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: ScalablePhoto(
+                                                  height: 100,
+                                                  width: 125,
+                                                  photoUrl: photoUrl,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 110,
-                                  child: Scrollbar(
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: selectedStores[shopNo]
-                                          .imageUrls
-                                          .length,
-                                      itemBuilder: (context, index) {
-                                        final photoUrl = selectedStores[shopNo]
-                                            .imageUrls[index];
-                                        return Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: ScalablePhoto(
-                                              height: 100,
-                                              width: 125,
-                                              photoUrl: photoUrl,
-                                            ),
-                                          ),
-                                        );
-                                      },
+                              ),
+                              if (shopNo == shopNoSelected)
+                                Positioned(
+                                  right: 0,
+                                  top: 0,
+                                  child: Container(
+                                    width: 28,
+                                    height: 28,
+                                    decoration: const BoxDecoration(
+                                      color: Themes.mainOrange,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 20,
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                            ],
                           ),
-                          if (shopNo == shopNoSelected)
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                width: 28,
-                                height: 28,
-                                decoration: const BoxDecoration(
-                                  color: Themes.mainOrange,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
-                  },
-                  const Gap(10),
-                  if (stores.length > 3)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () => showNextStores(setState),
-                        child: const Text(
-                          '次へ',
-                          style: TextStyle(
-                            color: Themes.gray,
-                          ),
-                        ),
-                      ),
-                    ),
+                  ),
                   const Gap(16),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -220,7 +185,7 @@ Future<void> showShopListDialog(
                               .updateStoreIdForPhoto(
                                 userId: userId,
                                 photoId: photoId,
-                                storeId: selectedStores[shopNoSelected].id,
+                                storeId: stores[shopNoSelected].id,
                               );
                           onSelected();
                           shopNoSelected = 0;
@@ -229,7 +194,6 @@ Future<void> showShopListDialog(
                       ),
                     ),
                   ),
-                  const Spacer(),
                 ],
               ),
             ),
