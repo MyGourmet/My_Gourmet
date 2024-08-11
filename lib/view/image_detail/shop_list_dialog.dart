@@ -29,7 +29,7 @@ Future<void> showShopListDialog(
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -128,7 +128,7 @@ Future<void> showShopListDialog(
                                                 stores[shopNo].imageUrls[index];
                                             return Padding(
                                               padding: const EdgeInsets.only(
-                                                  left: 10),
+                                                  left: 10,),
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(8),
