@@ -72,8 +72,6 @@ class _HomePageState extends ConsumerState<HomePage>
 
     setState(() {
       photoUrls = result.where((e) => e.url.isNotEmpty).toList();
-      debugPrint('photoUrls: $photoUrls');
-      debugPrint('result: $result');
     });
   }
 
@@ -139,11 +137,6 @@ class _HomePageState extends ConsumerState<HomePage>
         crossAxisSpacing: 8,
         itemBuilder: (context, index) {
           final photo = filteredPhotos[index];
-
-          // debugPrint('homePage userId: ${photo.userId}');
-          // debugPrint('homePage photoId: ${photo.id}');
-          debugPrint('homePage photo.areaStoreIds: ${photo.areaStoreIds}');
-          debugPrint('homePage photo: $photo');
 
           return Hero(
             tag: photo,
