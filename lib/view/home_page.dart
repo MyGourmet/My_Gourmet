@@ -82,26 +82,18 @@ class _HomePageState extends ConsumerState<HomePage>
         child: AppBar(
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(0), // TabBarの高さを指定
-            child: Container(
-              alignment: Alignment.centerLeft, // TabBarを左に寄せる
-              child: TabBar(
-                controller: _tabController,
-                isScrollable: true,
-                // padding: const EdgeInsets.only(left: 0, right: 0), //,
-                tabAlignment: TabAlignment.start,
-                labelPadding: const EdgeInsets.only(
-                  left: 12,
-                  right: 12,
-                ), // ここでラベルの左側のパディングを調整
-                tabs: const [
-                  Tab(text: 'すべて'),
-                  Tab(text: 'ラーメン'),
-                  Tab(text: 'カフェ'),
-                  Tab(text: '和食'),
-                  Tab(text: '洋食'),
-                  Tab(text: 'エスニック'),
-                ],
-              ),
+            child: TabBar(
+              padding: const EdgeInsets.only(left: 16, bottom: 8),
+              controller: _tabController,
+              isScrollable: true,
+              tabs: const [
+                Tab(text: 'すべて'),
+                Tab(text: 'ラーメン'),
+                Tab(text: 'カフェ'),
+                Tab(text: '和食'),
+                Tab(text: '洋食'),
+                Tab(text: 'エスニック'),
+              ],
             ),
           ),
         ),

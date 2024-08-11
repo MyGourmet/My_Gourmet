@@ -3,22 +3,18 @@ import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
 import '../features/auth/auth_repository.dart';
-import 'classify_start_page.dart';
-import 'home_page.dart';
-import 'my_page.dart';
 import 'onboarding_page.dart';
-import 'swipe_photo_page.dart';
 import 'widgets/confirm_dialog.dart';
+import 'widgets/navigation_frame.dart';
 
 /// 全てのページの基盤となるページ
 ///
-/// 初期化処理が終わり次第、[_NavigationFrame]を描画する。
+/// 初期化処理が終わり次第、[NavigationFrame]を描画する。
 class RootPage extends ConsumerStatefulWidget {
   const RootPage({super.key, required this.child});
 
@@ -60,7 +56,7 @@ class _RootPageState extends ConsumerState<RootPage> {
   Widget build(BuildContext context) {
     return isLoading
         ? const SizedBox.shrink()
-        : _NavigationFrame(
+        : NavigationFrame(
             child: Stack(
               children: [
                 widget.child,
@@ -107,102 +103,6 @@ class _RootPageState extends ConsumerState<RootPage> {
           }
         },
       );
-    }
-  }
-}
-
-/// [BottomNavigationBar]を用いてページ遷移を管理するクラス
-class _NavigationFrame extends ConsumerWidget {
-  const _NavigationFrame({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isClassifyOnboardingCompleted =
-        ref.watch(isClassifyOnboardingCompletedProvider);
-
-    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
-
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: isOnboardingComplete
-          ? BottomNavigationBar(
-              currentIndex:
-                  _calcSelectedIndex(context, isClassifyOnboardingCompleted),
-              onTap: (int index) =>
-                  _onItemTapped(index, context, isClassifyOnboardingCompleted),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.add,
-                    ),
-                  ),
-                  label: '画像追加',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.photo,
-                    ),
-                  ),
-                  label: 'ギャラリー',
-                ),
-                BottomNavigationBarItem(
-                  icon: Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Icon(
-                      Icons.person,
-                    ),
-                  ),
-                  label: 'マイページ',
-                ),
-              ],
-            )
-          : null,
-    );
-  }
-
-  int _calcSelectedIndex(
-    BuildContext context,
-    bool isClassifyOnboardingCompleted,
-  ) {
-    final location = GoRouterState.of(context).uri.toString();
-
-    const routeIndexMap = {
-      SwipePhotoPage.routePath: 0,
-      ClassifyStartPage.routePath: 0,
-      HomePage.routePath: 1,
-      MyPage.routePath: 2,
-    };
-
-    return routeIndexMap.entries
-        .firstWhere(
-          (entry) => location.contains(entry.key),
-          orElse: () => throw UnimplementedError(),
-        )
-        .value;
-  }
-
-  void _onItemTapped(
-    int index,
-    BuildContext context,
-    bool isClassifyOnboardingCompleted,
-  ) {
-    switch (index) {
-      case 0:
-        context.go(
-          isClassifyOnboardingCompleted
-              ? SwipePhotoPage.routePath
-              : ClassifyStartPage.routePath,
-        );
-      case 1:
-        context.go(HomePage.routePath);
-      case 2:
-        context.go(MyPage.routePath);
     }
   }
 }
