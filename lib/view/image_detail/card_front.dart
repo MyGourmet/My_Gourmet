@@ -56,7 +56,7 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      DecoratedBox(
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Themes.gray[900]!,
