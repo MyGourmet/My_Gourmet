@@ -151,21 +151,23 @@ class _HomePageState extends ConsumerState<HomePage>
                   },
                 );
               },
-              child: DecoratedBox(
+              child: Container(
                 decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(photo.url),
+                    fit: BoxFit.cover,
+                    onError: (error, stackTrace) {
+                      // 画像が読み込めなかったときの代替表示
+                      throw Exception('Error loading image: $error');
+                    },
+                  ),
                   border: Border.all(
                     color: Themes.gray[900]!,
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    photo.url,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                height: 280, // 最低限の高さを設定
               ),
             ),
           );

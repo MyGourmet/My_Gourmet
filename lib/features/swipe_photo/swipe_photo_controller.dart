@@ -89,51 +89,47 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     final photos = state.asData!.value;
     final photo = photos[index];
     final length = photos.length;
-
     // IDのスラッシュをハイフンに置換
     final modifiedPhotoId = photo.id.replaceAll('/', '-');
 
     try {
-      // 写真登録
-      await ref.read(localPhotoRepositoryProvider).savePhoto(
-            photo: photo,
-            isFood: isFood,
-          );
+      final userId = ref.read(userIdProvider);
 
-      // 写真情報をサーバーに登録
-      if (isFood) {
-        final result =
-            await ref.read(authControllerProvider).signInWithGoogle();
+      if (userId != null) {
+        //　TODO(kim): ローカルに写真を保存している処理が不要なものの、
+        //　保存枚数などの処理は必要なので、処理の中身を後ほど修正する。
+        // 写真登録
+        await ref.read(localPhotoRepositoryProvider).savePhoto(
+              photo: photo,
+              isFood: isFood,
+            );
 
-        unawaited(
-          photo.file.then((value) async {
-            if (photo.longitude != null && photo.latitude != null) {
-              // 写真情報をサーバーに登録
-              await ref.read(photoRepositoryProvider).registerStoreInfo(
-                    photoId: modifiedPhotoId,
-                    userId: result.userId,
-                    latitude: photo.latitude,
-                    longitude: photo.longitude,
-                  );
-            }
-          }),
-        );
+        // 写真情報をサーバーに登録
+        if (isFood) {
+          if (photo.longitude != null && photo.latitude != null) {
+            await ref.read(photoRepositoryProvider).registerStoreInfo(
+                  photoId: modifiedPhotoId,
+                  userId: userId,
+                  latitude: photo.latitude,
+                  longitude: photo.longitude,
+                );
+          }
 
-        unawaited(
-          photo.file.then((value) async {
-            // 画像を圧縮
-            final compressedData = await _compressImage(value!);
+          final photoFile = await photo.file;
+          if (photoFile != null) {
+            final compressedData = await _compressImage(photoFile);
             if (compressedData != null) {
               await ref.read(photoRepositoryProvider).categorizeFood(
-                    userId: result.userId,
+                    userId: userId,
                     photoId: modifiedPhotoId,
                     photoData: compressedData,
                   );
             }
-          }),
-        );
+          }
+        }
+      } else {
+        throw Exception('User not signed in');
       }
-
       // カウント更新
       ref.read(photoCountProvider.notifier).updateCurrentCount();
     } on Exception catch (e, stacktrace) {
