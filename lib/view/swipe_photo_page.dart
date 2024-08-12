@@ -113,7 +113,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   Widget _buildButtons() {
     return SizedBox(
       width: context.screenWidth,
-      height: 80,
+      height: 210,
       child: Padding(
         padding: const EdgeInsets.only(left: 8, top: 16, right: 8, bottom: 4),
         child: Row(
@@ -121,31 +121,45 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
           children: [
             Flexible(
               fit: FlexFit.tight,
-              child: CustomElevatedButton(
-                onPressed: () => _guardSwipe(_swiperController.swipeLeft),
-                text: 'ちがう',
-                backgroundColor: Themes.gray.shade200,
-                textColor: Themes.gray.shade900,
-                height: 56,
-                width: 150,
-                widget: Icon(
-                  Icons.close,
-                  color: Themes.gray.shade900,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: CustomElevatedButton(
+                    onPressed: () => _guardSwipe(_swiperController.swipeLeft),
+                    text: 'ちがう',
+                    backgroundColor: Themes.gray.shade200,
+                    textColor: Themes.gray.shade900,
+                    height: 56,
+                    width: 180,
+                    widget: Icon(
+                      Icons.close,
+                      color: Themes.gray.shade900,
+                    ),
+                  ),
                 ),
               ),
             ),
             const Gap(32),
             Flexible(
               fit: FlexFit.tight,
-              child: CustomElevatedButton(
-                onPressed: () => _guardSwipe(_swiperController.swipeRight),
-                text: 'グルメ',
-                height: 56,
-                width: 150,
-                widget: Image.asset(
-                  'assets/images/gourmet.png',
-                  width: 32,
-                  height: 32,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: ColoredBox(
+                  color: Colors.white,
+                  child: CustomElevatedButton(
+                    onPressed: () => _guardSwipe(_swiperController.swipeRight),
+                    text: 'グルメ',
+                    backgroundColor: Themes.mainOrange,
+                    textColor: Colors.white,
+                    height: 56,
+                    width: 180,
+                    widget: Image.asset(
+                      'assets/images/gourmet.png',
+                      width: 32,
+                      height: 32,
+                    ),
+                  ),
                 ),
               ),
             ),
