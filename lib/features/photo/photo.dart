@@ -21,6 +21,9 @@ class Photo with _$Photo {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp updatedAt,
 
+    /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+    @Default(<String>[]) List<String> areaStoreIds,
+
     /// FirebaseStorageに保存された写真のURL
     @Default('') String url,
 

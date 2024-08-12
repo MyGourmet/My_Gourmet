@@ -1,34 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/themes.dart';
+import '../../features/store/store_controller.dart';
 import '../widgets/scalable_photo.dart';
 import 'shop_list_dialog.dart';
 
-class CardBack extends StatelessWidget {
+class CardBack extends ConsumerWidget {
   const CardBack({
+    required this.onSelected,
+    required this.userId,
+    required this.photoId,
+    required this.areaStoreIds,
     required this.isLinked,
     required this.storeName,
     required this.storeImageUrls,
     this.openTime,
-    this.holiday,
     this.address,
     this.storeUrl,
     this.storeOpeningHours,
     super.key,
   });
 
+  final String userId;
+  final String photoId;
+  final List<String> areaStoreIds;
   final bool isLinked;
   final String storeName;
   final List<String> storeImageUrls;
   final String? openTime;
-  final String? holiday;
   final String? address;
   final String? storeUrl;
   final Map<String, String>? storeOpeningHours;
 
+  final void Function() onSelected;
+
+  Future<void> _fetchAndShowStoresInfo(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    // Firestoreから店舗情報を取得する
+    final stores = await ref
+        .read(storeControllerProvider)
+        .getStoresInfo(areaStoreIds: areaStoreIds);
+
+    // コンテキストがまだ有効かどうかを確認する
+    if (context.mounted) {
+      await showShopListDialog(
+        context,
+        ref: ref,
+        stores: stores,
+        userId: userId,
+        photoId: photoId,
+        onSelected: () {
+          onSelected();
+          Navigator.of(context).pop();
+        },
+      );
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (!isLinked) {
       return Card(
         color: Colors.white,
@@ -44,7 +78,10 @@ class CardBack extends StatelessWidget {
             right: 16,
           ),
           decoration: BoxDecoration(
-            border: Border.all(),
+            border: Border.all(
+              color: Themes.gray[900]!,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(8),
           ),
         ),
@@ -91,7 +128,10 @@ class CardBack extends StatelessWidget {
               right: 16,
             ),
             decoration: BoxDecoration(
-              border: Border.all(),
+              border: Border.all(
+                color: Themes.gray[900]!,
+                width: 2,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -101,9 +141,11 @@ class CardBack extends StatelessWidget {
                   storeName,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(
+                    color: Themes.gray[900],
+                  ),
                 ),
                 if (storeImageUrls.isNotEmpty)
                   SizedBox(
@@ -146,9 +188,11 @@ class CardBack extends StatelessWidget {
                       ],
                     ),
                   ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(
+                    color: Themes.gray[900],
+                  ),
                 ),
                 if (address != null)
                   Row(
@@ -182,9 +226,11 @@ class CardBack extends StatelessWidget {
                       ),
                     ],
                   ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 18),
-                  child: Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Divider(
+                    color: Themes.gray[900],
+                  ),
                 ),
                 if (storeOpeningHours != null)
                   Expanded(
@@ -247,7 +293,10 @@ class CardBack extends StatelessWidget {
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           color: Themes.gray[200],
-                          border: Border.all(),
+                          border: Border.all(
+                            color: Themes.gray[900]!,
+                            width: 2,
+                          ),
                           borderRadius: const BorderRadius.only(
                             bottomRight: Radius.circular(8),
                             bottomLeft: Radius.circular(8),
@@ -255,14 +304,8 @@ class CardBack extends StatelessWidget {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            showShopListDialog(
-                              context,
-                              shopName: storeName,
-                              storeImageUrls: storeImageUrls,
-                              onSelected: () {
-                                Navigator.of(context).pop();
-                              },
-                            );
+                            //　発火するリクエストのメソッドの処理を追加する
+                            _fetchAndShowStoresInfo(context, ref);
                           },
                           child: Text(
                             '店舗を選び直す',
@@ -283,7 +326,10 @@ class CardBack extends StatelessWidget {
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(8),
               ),
-              border: Border.all(),
+              border: Border.all(
+                color: Themes.gray[900]!,
+                width: 2,
+              ),
               color: Themes.gray[100],
             ),
             child: const Icon(Icons.refresh),

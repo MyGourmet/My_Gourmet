@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:exif/exif.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -107,15 +105,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         final result =
             await ref.read(authControllerProvider).signInWithGoogle();
 
-        debugPrint('photo_managerパッケージ modifiedPhotoId: $modifiedPhotoId');
-        debugPrint('photo_managerパッケージ photo: $photo');
-        debugPrint('photo_managerパッケージ latitude: ${photo.latitude}');
-        debugPrint('photo_managerパッケージ longitude: ${photo.longitude}');
         unawaited(
           photo.file.then((value) async {
-            final data = await readExifFromFile(value!);
-            debugPrint('exifパッケージ exif: $data');
-
             if (photo.longitude != null && photo.latitude != null) {
               // 写真情報をサーバーに登録
               await ref.read(photoRepositoryProvider).registerStoreInfo(

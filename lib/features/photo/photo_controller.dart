@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../auth/auth_repository.dart';
 import 'photo.dart';
 import 'photo_repository.dart';
 
@@ -17,22 +16,21 @@ class PhotoController {
 
   final Ref _ref;
 
-  AuthRepository get _authRepository => _ref.read(authRepositoryProvider);
-
   PhotoRepository get _photoRepository => _ref.read(photoRepositoryProvider);
-
-  /// 画像分類ステータスの更新用メソッド
-  Future<void> upsertClassifyPhotosStatus({
-    required String userId,
-  }) async {
-    await _authRepository.upsertClassifyPhotosStatus(userId);
-  }
 
   /// 写真ダウンロード用メソッド
   Future<List<Photo>> downloadPhotos({
     required String userId,
   }) async {
     return _photoRepository.downloadPhotos(userId: userId);
+  }
+
+  // TODO(kim): Photo?の部分はあとで書き換える。
+  Future<Photo?> downloadPhoto({
+    required String userId,
+    required String photoId,
+  }) async {
+    return _photoRepository.downloadPhoto(userId: userId, photoId: photoId);
   }
 
   Future<String> getStoreNameByStoreId({
@@ -52,6 +50,19 @@ class PhotoController {
     return _photoRepository.getPhotoById(
       userId: userId,
       photoId: photoId,
+    );
+  }
+
+  /// 画像分類ステータスの更新用メソッド
+  Future<void> updateStoreIdForPhoto({
+    required String userId,
+    required String photoId,
+    required String storeId,
+  }) async {
+    await _photoRepository.updateStoreIdForPhoto(
+      userId,
+      photoId,
+      storeId,
     );
   }
 }

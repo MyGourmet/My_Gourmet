@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../auth/auth_repository.dart';
 import 'store.dart';
 import 'store_repository.dart';
 
@@ -17,15 +16,13 @@ class StoreController {
 
   final Ref _ref;
 
-  AuthRepository get _authRepository => _ref.read(authRepositoryProvider);
-
   StoreRepository get _storeRepository => _ref.read(storeRepositoryProvider);
 
-  /// 画像分類ステータスの更新用メソッド
-  Future<void> upsertClassifyPhotosStatus({
-    required String userId,
+  /// 写真ダウンロード用メソッド
+  Future<List<Store>> getStoresInfo({
+    required List<String> areaStoreIds,
   }) async {
-    await _authRepository.upsertClassifyPhotosStatus(userId);
+    return _storeRepository.getStoresInfo(areaStoreIds: areaStoreIds);
   }
 
   Future<Store?> getStoreById({
