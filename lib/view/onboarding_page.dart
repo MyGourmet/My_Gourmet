@@ -6,7 +6,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
-import 'swipe_photo_page.dart';
+import 'classify_start_page.dart';
 import 'widgets/custom_elevated_button.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
@@ -138,7 +138,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             ref
                                 .read(isOnBoardingCompletedProvider.notifier)
                                 .update((state) => true);
-                            context.go(SwipePhotoPage.routePath);
+                            context.go(ClassifyStartPage.routePath);
                           }
                         },
                         text: isLastPage ? 'やってみる' : 'つぎへ',

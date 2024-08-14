@@ -23,18 +23,16 @@ class NavigationFrame extends ConsumerStatefulWidget {
 }
 
 class _NavigationFrameState extends ConsumerState<NavigationFrame> {
-  // ギャラリーページから起動させる。
   int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final isClassifyOnboardingCompleted =
-          ref.read(isClassifyOnboardingCompletedProvider);
+      final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
       setState(() {
-        _selectedIndex =
-            _calcSelectedIndex(context, isClassifyOnboardingCompleted);
+        // 初回起動時は画像追加ページ、　2回目以降はギャラリーページから起動させる。
+        _selectedIndex = !isOnboardingComplete ? 0 : 1;
       });
     });
   }
@@ -194,27 +192,6 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
         ),
       ),
     );
-  }
-
-  int _calcSelectedIndex(
-    BuildContext context,
-    bool isClassifyOnboardingCompleted,
-  ) {
-    final location = GoRouterState.of(context).uri.toString();
-
-    const routeIndexMap = {
-      SwipePhotoPage.routePath: 0,
-      ClassifyStartPage.routePath: 0,
-      HomePage.routePath: 1,
-      MyPage.routePath: 2,
-    };
-
-    return routeIndexMap.entries
-        .firstWhere(
-          (entry) => location.contains(entry.key),
-          orElse: () => throw UnimplementedError(),
-        )
-        .value;
   }
 
   void _onItemTapped(
