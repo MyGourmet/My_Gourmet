@@ -103,6 +103,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
+        toolbarHeight: 24,
       ),
       body: Center(
         child: Stack(
