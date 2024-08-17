@@ -46,7 +46,7 @@ class CardFront extends StatelessWidget {
                 color: Themes.gray[900]!,
                 width: 2,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               children: [
@@ -64,11 +64,14 @@ class CardFront extends StatelessWidget {
                             color: Themes.gray[900]!,
                             width: 2,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        child: ScalablePhoto(
-                          photoUrl: photoUrl,
-                          height: MediaQuery.of(context).size.height * 0.5,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: ScalablePhoto(
+                            photoUrl: photoUrl,
+                            height: MediaQuery.of(context).size.height * 0.5,
+                          ),
                         ),
                       ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
@@ -109,7 +112,7 @@ class CardFront extends StatelessWidget {
               width: 36,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
+                  topRight: Radius.circular(16),
                 ),
                 border: Border.all(
                   color: Themes.gray[900]!,

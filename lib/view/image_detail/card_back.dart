@@ -82,7 +82,7 @@ class CardBack extends ConsumerWidget {
               color: Themes.gray[900]!,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       );
@@ -132,7 +132,7 @@ class CardBack extends ConsumerWidget {
                 color: Themes.gray[900]!,
                 width: 2,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -159,7 +159,7 @@ class CardBack extends ConsumerWidget {
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(16),
                               child: ScalablePhoto(
                                 height: 200,
                                 width: 200,
@@ -298,8 +298,8 @@ class CardBack extends ConsumerWidget {
                             width: 2,
                           ),
                           borderRadius: const BorderRadius.only(
-                            bottomRight: Radius.circular(8),
-                            bottomLeft: Radius.circular(8),
+                            bottomRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
                           ),
                         ),
                         child: TextButton(
@@ -324,7 +324,7 @@ class CardBack extends ConsumerWidget {
             width: 36,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
+                topLeft: Radius.circular(16),
               ),
               border: Border.all(
                 color: Themes.gray[900]!,
