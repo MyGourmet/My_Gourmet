@@ -18,6 +18,7 @@ class ScalablePhoto extends StatefulWidget {
   Widget get photoWidget {
     return CachedNetworkImage(
       imageUrl: photoUrl,
+      fit: BoxFit.cover,
     );
   }
 
