@@ -233,7 +233,7 @@ class CardBack extends ConsumerWidget {
                   ),
                 ),
                 if (storeOpeningHours != null)
-                  Expanded(
+                  Flexible(
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
