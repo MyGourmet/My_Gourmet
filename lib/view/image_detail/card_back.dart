@@ -149,7 +149,7 @@ class CardBack extends ConsumerWidget {
                 ),
                 if (storeImageUrls.isNotEmpty)
                   SizedBox(
-                    height: 220,
+                    height: MediaQuery.of(context).size.height / 6,
                     child: Scrollbar(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
@@ -161,8 +161,8 @@ class CardBack extends ConsumerWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: ScalablePhoto(
-                                height: 200,
-                                width: 200,
+                                height: MediaQuery.of(context).size.height / 6,
+                                width: MediaQuery.of(context).size.height / 6,
                                 photoUrl: photoUrl,
                               ),
                             ),
@@ -233,7 +233,7 @@ class CardBack extends ConsumerWidget {
                   ),
                 ),
                 if (storeOpeningHours != null)
-                  Expanded(
+                  Flexible(
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
