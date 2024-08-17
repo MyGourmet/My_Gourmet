@@ -69,7 +69,6 @@ class CardFront extends StatelessWidget {
                         child: ScalablePhoto(
                           photoUrl: photoUrl,
                           height: MediaQuery.of(context).size.height * 0.5,
-                          fit: BoxFit.cover,
                         ),
                       ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
