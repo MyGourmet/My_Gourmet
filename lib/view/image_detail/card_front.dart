@@ -56,7 +56,9 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DecoratedBox(
+                      Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.5,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Themes.gray[900]!,
@@ -67,6 +69,7 @@ class CardFront extends StatelessWidget {
                         child: ScalablePhoto(
                           photoUrl: photoUrl,
                           height: MediaQuery.of(context).size.height * 0.5,
+                          fit: BoxFit.cover,
                         ),
                       ),
                       Text(formattedDate, style: context.textTheme.titleSmall),

@@ -7,6 +7,7 @@ class ScalablePhoto extends StatefulWidget {
     this.height,
     this.width,
     this.zoomButtonSize,
+    this.fit = BoxFit.cover,
     super.key,
   });
 
@@ -14,11 +15,12 @@ class ScalablePhoto extends StatefulWidget {
   final double? width;
   final double? zoomButtonSize;
   final String photoUrl;
+  final BoxFit fit;
 
   Widget get photoWidget {
     return CachedNetworkImage(
       imageUrl: photoUrl,
-      fit: BoxFit.cover,
+      fit: fit,
     );
   }
 
