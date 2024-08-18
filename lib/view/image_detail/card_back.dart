@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../../core/my_gourmet_card.dart';
 import '../../core/themes.dart';
 import '../../features/store/store_controller.dart';
 import '../widgets/scalable_photo.dart';
@@ -64,12 +65,7 @@ class CardBack extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!isLinked) {
-      return Card(
-        color: Colors.white,
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+      return MyGourmetCard(
         child: Container(
           padding: const EdgeInsets.only(
             top: 48,
@@ -112,12 +108,7 @@ class CardBack extends ConsumerWidget {
       sortedOpeningHours = {};
     }
 
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return MyGourmetCard(
       child: Stack(
         children: [
           Container(
