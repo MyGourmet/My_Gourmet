@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../../core/my_gourmet_card.dart';
 import '../../core/themes.dart';
 import '../../features/store/store_controller.dart';
 import '../widgets/scalable_photo.dart';
@@ -64,12 +65,7 @@ class CardBack extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!isLinked) {
-      return Card(
-        color: Colors.white,
-        elevation: 5,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+      return MyGourmetCard(
         child: Container(
           padding: const EdgeInsets.only(
             top: 48,
@@ -82,7 +78,7 @@ class CardBack extends ConsumerWidget {
               color: Themes.gray[900]!,
               width: 2,
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       );
@@ -112,12 +108,7 @@ class CardBack extends ConsumerWidget {
       sortedOpeningHours = {};
     }
 
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return MyGourmetCard(
       child: Stack(
         children: [
           Container(
@@ -132,7 +123,7 @@ class CardBack extends ConsumerWidget {
                 color: Themes.gray[900]!,
                 width: 2,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -159,7 +150,7 @@ class CardBack extends ConsumerWidget {
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(16),
                               child: ScalablePhoto(
                                 height: MediaQuery.of(context).size.height / 6,
                                 width: MediaQuery.of(context).size.height / 6,
@@ -298,8 +289,8 @@ class CardBack extends ConsumerWidget {
                             width: 2,
                           ),
                           borderRadius: const BorderRadius.only(
-                            bottomRight: Radius.circular(8),
-                            bottomLeft: Radius.circular(8),
+                            bottomRight: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
                           ),
                         ),
                         child: TextButton(
@@ -324,7 +315,7 @@ class CardBack extends ConsumerWidget {
             width: 36,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(8),
+                topLeft: Radius.circular(16),
               ),
               border: Border.all(
                 color: Themes.gray[900]!,
