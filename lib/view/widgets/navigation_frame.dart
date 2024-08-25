@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/themes.dart';
+import '../camera_page.dart';
 import '../classify_start_page.dart';
 import '../home_page.dart';
 import '../my_page.dart';
@@ -32,7 +33,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
       final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
       setState(() {
         // 初回起動時は画像追加ページ、　2回目以降はギャラリーページから起動させる。
-        _selectedIndex = !isOnboardingComplete ? 0 : 1;
+        _selectedIndex = !isOnboardingComplete ? 0 : 2;
       });
     });
   }
@@ -44,7 +45,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
 
     final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
 
-    final itemWidth = MediaQuery.of(context).size.width / 3;
+    final itemWidth = MediaQuery.of(context).size.width / 4;
     final circleWidth = itemWidth * 0.8;
 
     return Scaffold(
@@ -102,9 +103,17 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                                 isClassifyOnboardingCompleted,
                           ),
                           _buildNavItem(
+                            icon: Icons.photo_camera_outlined,
+                            label: 'カメラ',
+                            index: 1,
+                            context: context,
+                            isClassifyOnboardingCompleted:
+                                isClassifyOnboardingCompleted,
+                          ),
+                          _buildNavItem(
                             icon: Icons.photo,
                             label: 'ギャラリー',
-                            index: 1,
+                            index: 2,
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
@@ -112,7 +121,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                           _buildNavItem(
                             icon: Icons.person,
                             label: 'マイページ',
-                            index: 2,
+                            index: 3,
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
@@ -136,7 +145,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
     required bool isClassifyOnboardingCompleted,
   }) {
     final isSelected = index == _selectedIndex;
-    final itemWidth = MediaQuery.of(context).size.width / 3;
+    final itemWidth = MediaQuery.of(context).size.width / 4;
     final circleWidth = itemWidth * 0.8;
 
     return Material(
@@ -207,8 +216,10 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
               : ClassifyStartPage.routePath,
         );
       case 1:
-        context.go(HomePage.routePath);
+        context.go(CameraPage.routePath);
       case 2:
+        context.go(HomePage.routePath);
+      case 3:
         context.go(MyPage.routePath);
     }
   }
