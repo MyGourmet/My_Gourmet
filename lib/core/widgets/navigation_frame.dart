@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/themes.dart';
-import '../../features/my_page/my_page.dart';
+import '../../features/auth/my_page.dart';
 import '../../features/onboarding_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/swipe_photo/classify_start_page.dart';

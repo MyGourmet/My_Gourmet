@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/widgets/confirm_dialog.dart';
 import '../../core/widgets/success_snack_bar.dart';
-import '../auth/auth_controller.dart';
+import 'auth_controller.dart';
 
 /// マイページ
 class MyPage extends ConsumerWidget {
