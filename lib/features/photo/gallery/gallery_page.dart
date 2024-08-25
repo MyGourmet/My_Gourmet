@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../core/themes.dart';
-import '../auth/auth_controller.dart';
-import '../auth/authed_user.dart';
-import 'image_detail/image_detail_page.dart';
-import 'photo.dart';
-import 'photo_controller.dart';
+import '../../../core/themes.dart';
+import '../../auth/auth_controller.dart';
+import '../../auth/authed_user.dart';
+import '../image_detail/image_detail_page.dart';
+import '../photo.dart';
+import '../photo_controller.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});

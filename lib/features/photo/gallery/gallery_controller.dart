@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../../core/database/database.dart';
-import '../../core/local_photo_repository.dart';
-import '../../core/logger.dart';
+import '../../../core/database/database.dart';
+import '../../../core/local_photo_repository.dart';
+import '../../../core/logger.dart';
 
-final homeControllerProvider = Provider<HomeController>((ref) {
-  return HomeController(ref);
+final galleryControllerProvider = Provider<GalleryController>((ref) {
+  return GalleryController(ref);
 });
 
-class HomeController {
-  HomeController(this.ref);
+class GalleryController {
+  GalleryController(this.ref);
 
   final Ref ref;
 
