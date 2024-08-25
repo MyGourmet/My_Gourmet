@@ -6,7 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/database/database.dart';
 import '../../core/local_photo_repository.dart';
-import '../../logger.dart';
+import '../../core/logger.dart';
 
 final homeControllerProvider = Provider<HomeController>((ref) {
   return HomeController(ref);

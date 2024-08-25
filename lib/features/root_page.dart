@@ -7,10 +7,10 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/shared_preferences_service.dart';
-import '../features/auth/auth_repository.dart';
+import '../core/widgets/confirm_dialog.dart';
+import '../core/widgets/navigation_frame.dart';
+import 'auth/auth_repository.dart';
 import 'onboarding_page.dart';
-import 'widgets/confirm_dialog.dart';
-import 'widgets/navigation_frame.dart';
 
 /// 全てのページの基盤となるページ
 ///

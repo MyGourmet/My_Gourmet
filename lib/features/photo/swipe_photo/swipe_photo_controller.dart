@@ -6,12 +6,12 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../../core/exception.dart';
-import '../../core/local_photo_repository.dart';
-import '../../core/photo_manager_service.dart';
-import '../../logger.dart';
-import '../auth/auth_controller.dart';
-import '../photo/photo_repository.dart';
+import '../../../core/exception.dart';
+import '../../../core/local_photo_repository.dart';
+import '../../../core/logger.dart';
+import '../../../core/photo_manager_service.dart';
+import '../../auth/auth_controller.dart';
+import '../photo_repository.dart';
 import 'photo_count.dart';
 
 /// 写真のカウントを管理するProvider

@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/build_context_extension.dart';
-import '../core/shared_preferences_service.dart';
-import '../features/auth/auth_repository.dart';
+import '../../../core/build_context_extension.dart';
+import '../../../core/shared_preferences_service.dart';
+import '../../../core/widgets/custom_elevated_button.dart';
+import '../../auth/auth_repository.dart';
 import 'swipe_photo_page.dart';
-import 'widgets/custom_elevated_button.dart';
 
 /// 写真分類スタート画面表示フラグ[StateProvider]
 ///

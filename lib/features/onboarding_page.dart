@@ -6,8 +6,8 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
-import 'classify_start_page.dart';
-import 'widgets/custom_elevated_button.dart';
+import '../core/widgets/custom_elevated_button.dart';
+import 'photo/swipe_photo/classify_start_page.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
 ///
