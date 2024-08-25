@@ -62,7 +62,7 @@ https://zenn.dev/flutteruniv/books/flutter-textbook/viewer/make-chat
 │   │   ├── authed_user.freezed.dart
 │   │   ├── authed_user.g.dart
 │   │   └── my_page.dart
-│   ├── root_page.dart
+│   └── root_page.dart
 └── main.dart
 
 
