@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../view/camera_page.dart';
 import '../view/camera_detail_page.dart';
-
+import '../view/camera_page.dart';
 import '../view/classify_start_page.dart';
 import '../view/home_page.dart';
 import '../view/image_detail_page.dart';

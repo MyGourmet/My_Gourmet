@@ -1,18 +1,18 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 
 class CameraDetailPage extends ConsumerStatefulWidget {
-  final File imageFile;
-  final String imageDate;
-
   const CameraDetailPage({
     super.key,
     required this.imageFile,
     required this.imageDate,
   });
+  final File imageFile;
+  final String imageDate;
 
   static const routeName = 'camera_detail_page';
   static const routePath = '/camera_detail_page';
@@ -35,52 +35,49 @@ class _CameraDetailPageState extends ConsumerState<CameraDetailPage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 28.0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.all(20.0), // コンテナの内側のパディングを追加
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.black, // 枠線の色
-                      width: 2.0, // 枠線の太さ
+                      width: 2,
                     ),
-                    borderRadius: BorderRadius.circular(16), // 枠線の角を丸くする
+                    borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
                     children: [
                       Expanded(
-                        child: Container(
+                        child: DecoratedBox(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.black, // 画像の枠線の色
-                              width: 2.0, // 画像の枠線の太さ
+                              width: 2,
                             ),
-                            borderRadius: BorderRadius.circular(8), // 画像の角を丸くする
+                            borderRadius: BorderRadius.circular(16),
                           ),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4), // 角を丸くする
+                            borderRadius: BorderRadius.circular(16),
                             child: Image.file(
                               widget.imageFile,
-                              fit: BoxFit.cover, // 画像を枠に合わせて表示
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
                       ),
-                      const Gap(28), // 画像と日付の間にスペースを追加
+                      const Gap(28),
                       Text(
                         widget.imageDate,
                         style:
                             const TextStyle(color: Colors.black, fontSize: 14),
-                        textAlign: TextAlign.center, // 日付を中央揃えに設定
+                        textAlign: TextAlign.center,
                       ),
-                      const Gap(8), // 日付と---の間にスペースを追加
+                      const Gap(8),
                       const Text(
                         '---',
                         style: TextStyle(color: Colors.black, fontSize: 14),
-                        textAlign: TextAlign.center, // ---を中央揃えに設定
+                        textAlign: TextAlign.center,
                       ),
                       const Gap(24),
                     ],

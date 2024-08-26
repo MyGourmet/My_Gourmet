@@ -224,6 +224,10 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      areaStoreIds: null == areaStoreIds
+          ? _value._areaStoreIds
+          : areaStoreIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
@@ -257,13 +261,14 @@ class _$PhotoImpl extends _Photo {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      this.areaStoreIds = const <String>[],
+      final List<String> areaStoreIds = const <String>[],
       this.url = '',
       this.category = '',
       this.userId = '',
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
       this.storeId = ''})
-      : super._();
+      : _areaStoreIds = areaStoreIds,
+        super._();
 
   factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PhotoImplFromJson(json);
@@ -286,9 +291,16 @@ class _$PhotoImpl extends _Photo {
   final UnionTimestamp updatedAt;
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  final List<String> _areaStoreIds;
+
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
   @override
   @JsonKey()
-  final List<String> areaStoreIds;
+  List<String> get areaStoreIds {
+    if (_areaStoreIds is EqualUnmodifiableListView) return _areaStoreIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_areaStoreIds);
+  }
 
   /// FirebaseStorageに保存された写真のURL
   @override
@@ -318,7 +330,7 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, areaStoreIds:$areaStoreIds ,category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -331,8 +343,8 @@ class _$PhotoImpl extends _Photo {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.areaStoreIds, areaStoreIds) ||
-                other.areaStoreIds == areaStoreIds) &&
+            const DeepCollectionEquality()
+                .equals(other._areaStoreIds, _areaStoreIds) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.category, category) ||
                 other.category == category) &&
@@ -343,8 +355,17 @@ class _$PhotoImpl extends _Photo {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt,
-      areaStoreIds, url, category, userId, shotAt, storeId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updatedAt,
+      const DeepCollectionEquality().hash(_areaStoreIds),
+      url,
+      category,
+      userId,
+      shotAt,
+      storeId);
 
   @JsonKey(ignore: true)
   @override

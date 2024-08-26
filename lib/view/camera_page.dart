@@ -1,9 +1,15 @@
 import 'dart:io';
+import 'package:camera/camera.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:camera/camera.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../logger.dart';
 import 'camera_detail_page.dart';
 
 class CameraPage extends ConsumerStatefulWidget {
@@ -17,9 +23,9 @@ class CameraPage extends ConsumerStatefulWidget {
 }
 
 class _CameraPageState extends ConsumerState<CameraPage> {
-  File? _capturedImage; // 撮影した画像を格納する
+  File? _capturedImage;
   bool _isTakingPicture = false; // 撮影中かどうかを示すフラグ
-  String? _imageDate; // 撮影日時を格納する
+  String? _imageDate;
 
   @override
   Widget build(BuildContext context) {
@@ -28,51 +34,44 @@ class _CameraPageState extends ConsumerState<CameraPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Colors.white, // 背景を白に設定
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: const Text(''),
-          backgroundColor: Colors.white, // AppBarの背景も白に設定
-          foregroundColor: Colors.black, // AppBarの文字色を黒に設定
+          backgroundColor: Colors.white,
         ),
         body: Stack(
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 0, 20.0, 28.0),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
                 child: Column(
                   children: [
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.black, // 枠線の色
-                            width: 2, // 枠線の太さ
+                            width: 2,
                           ),
-                          borderRadius: BorderRadius.circular(16), // 枠線の角を丸くする
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         child: Column(
                           children: [
                             Expanded(
-                              child: Container(
+                              child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: Colors.black, // 枠線の色
-                                    width: 2.0, // 枠線の太さ
+                                    width: 2,
                                   ),
-                                  borderRadius:
-                                      BorderRadius.circular(16), // 角を丸くする
+                                  borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(16), // 角を丸くする
+                                  borderRadius: BorderRadius.circular(16),
                                   child: cameraController.when(
-                                    // 撮影プレビュー
-                                    data: (data) => CameraPreview(data),
-                                    error: (err, stack) => Center(
-                                      child: Text('Error: $err'),
+                                    data: CameraPreview.new,
+                                    error: (err, stack) => const Center(
+                                      child: Text(''),
                                     ),
-                                    // 読込中プログレス
                                     loading: () => const Center(
                                       child: CircularProgressIndicator(),
                                     ),
@@ -80,7 +79,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 20), // プレビューとボタンの間にスペースを追加
+                            const Gap(20),
                             cameraController.when(
                               data: (data) => GestureDetector(
                                 onTap: _isTakingPicture
@@ -89,33 +88,29 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                                         onPressTakePictureButton(context, data);
                                       },
                                 child: Container(
-                                  width: 60, // 外側の円のサイズ
+                                  width: 60,
                                   height: 60,
                                   decoration: BoxDecoration(
-                                    color: _isTakingPicture
-                                        ? Colors.grey
-                                        : Colors.white, // 撮影中は灰色に
-                                    shape: BoxShape.circle, // 外側の円の形状
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: Colors.black, // 外側の円の境界線色
-                                      width: 2.0, // 境界線の太さ
+                                      width: 2,
                                     ),
                                   ),
                                   child: Center(
                                     child: Container(
-                                      width: 50, // 内側の円のサイズ
+                                      width: 50,
                                       height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black, // 内側の円の色
-                                        shape: BoxShape.circle, // 内側の円の形状
+                                      decoration: const BoxDecoration(
+                                        color: Colors.black,
+                                        shape: BoxShape.circle,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                              error: (err, stack) => Text('Error: $err'),
-                              // 読込中は何も表示しない
-                              loading: () => Container(),
+                              error: (err, stack) => const Text(''),
+                              loading: SizedBox.shrink,
                             ),
                           ],
                         ),
@@ -142,46 +137,42 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white, // 背景色を白に設定
-                      borderRadius: BorderRadius.circular(16), // 背景の角を丸くする
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.black, // 背景の枠線の色
-                        width: 2.0, // 背景の枠線の太さ
+                        width: 2,
                       ),
                     ),
-                    padding: const EdgeInsets.all(8.0), // コンテナの内側のパディングを追加
+                    padding: const EdgeInsets.all(8),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.center, // 日付を中央揃えに設定
                       children: [
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.black, // 画像の枠線の色
-                              width: 2.0, // 画像の枠線の太さ
+                              width: 2,
                             ),
-                            borderRadius: BorderRadius.circular(8), // 画像の角を丸くする
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          width: MediaQuery.of(context).size.width /
-                              5, // 画面の5分の1のサイズに縮小
-                          height: MediaQuery.of(context).size.height /
-                              5, // 高さも5分の1に縮小
+                          width: MediaQuery.sizeOf(context).width / 5,
+                          height: MediaQuery.sizeOf(context).height / 5,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4), // 角を丸くする
+                            borderRadius: BorderRadius.circular(4),
                             child: Image.file(
                               _capturedImage!,
-                              fit: BoxFit.cover, // 画像を枠に合わせて表示
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 4), // 画像と日付の間にスペースを追加
+                        const Gap(4),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width /
-                              5, // 画像の幅と同じに設定
+                          width: MediaQuery.sizeOf(context).width / 5,
                           child: Text(
                             _imageDate!,
-                            style: TextStyle(color: Colors.black, fontSize: 12),
-                            textAlign: TextAlign.center, // 日付を中央揃えに設定
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       ],
@@ -205,38 +196,55 @@ class _CameraPageState extends ConsumerState<CameraPage> {
     }
 
     final camera = cameras.first;
-    final _controller = CameraController(
+    final controller = CameraController(
       camera,
       ResolutionPreset.medium,
     );
 
-    ref.onDispose(() {
-      _controller.dispose();
-    });
+    ref.onDispose(controller.dispose);
 
-    await _controller.initialize();
-    return _controller;
+    await controller.initialize();
+    return controller;
   });
 
   /// 写真撮影ボタン押下時処理
   Future<void> onPressTakePictureButton(
-      BuildContext context, CameraController controller) async {
+    BuildContext context,
+    CameraController controller,
+  ) async {
     setState(() {
       _isTakingPicture = true; // 撮影中フラグを設定
     });
 
     try {
       final image = await controller.takePicture();
-      final DateTime now = DateTime.now();
-      final String formattedDate =
+      await Permission.storage.request();
+      await Permission.photos.request();
+      await Permission.videos.request();
+
+      if (Platform.isAndroid) {
+        if (await Permission.photos.isGranted ||
+            await Permission.videos.isGranted ||
+            await Permission.storage.isGranted) {
+          final result = await ImageGallerySaver.saveFile(image.path);
+          logger.i('Image saved to gallery: $result');
+        } else {
+          logger.e('Permission denied for saving to gallery.');
+        }
+      } else {
+        final result = await ImageGallerySaver.saveFile(image.path);
+        logger.i('Image saved to gallery: $result');
+      }
+
+      final now = DateTime.now();
+      final formattedDate =
           '${now.year}/${_twoDigits(now.month)}/${_twoDigits(now.day)}';
       setState(() {
-        _capturedImage = File(image.path); // 撮影した画像を設定
-        _imageDate = formattedDate; // 撮影した日時を設定
+        _capturedImage = File(image.path);
+        _imageDate = formattedDate;
       });
-    } catch (e) {
-      // エラーハンドリング
-      print("撮影中にエラーが発生しました: $e");
+    } on Exception catch (e) {
+      logger.e('cameraPage:$e');
     } finally {
       setState(() {
         _isTakingPicture = false; // 撮影完了後にフラグをリセット

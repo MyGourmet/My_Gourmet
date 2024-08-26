@@ -210,6 +210,17 @@ class Photo extends DataClass implements Insertable<Photo> {
         latitude: latitude.present ? latitude.value : this.latitude,
         longitude: longitude.present ? longitude.value : this.longitude,
       );
+  Photo copyWithCompanion(PhotosCompanion data) {
+    return Photo(
+      id: data.id.present ? data.id.value : this.id,
+      path: data.path.present ? data.path.value : this.path,
+      width: data.width.present ? data.width.value : this.width,
+      height: data.height.present ? data.height.value : this.height,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      longitude: data.longitude.present ? data.longitude.value : this.longitude,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('Photo(')
@@ -512,6 +523,21 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
         currentCount: currentCount ?? this.currentCount,
         pastFoodTotal: pastFoodTotal ?? this.pastFoodTotal,
       );
+  PhotoDetail copyWithCompanion(PhotoDetailsCompanion data) {
+    return PhotoDetail(
+      lastId: data.lastId.present ? data.lastId.value : this.lastId,
+      lastCreateDateSecond: data.lastCreateDateSecond.present
+          ? data.lastCreateDateSecond.value
+          : this.lastCreateDateSecond,
+      currentCount: data.currentCount.present
+          ? data.currentCount.value
+          : this.currentCount,
+      pastFoodTotal: data.pastFoodTotal.present
+          ? data.pastFoodTotal.value
+          : this.pastFoodTotal,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('PhotoDetail(')
@@ -628,7 +654,7 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $PhotosTable photos = $PhotosTable(this);
   late final $PhotoDetailsTable photoDetails = $PhotoDetailsTable(this);
   @override
@@ -638,7 +664,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [photos, photoDetails];
 }
 
-typedef $$PhotosTableInsertCompanionBuilder = PhotosCompanion Function({
+typedef $$PhotosTableCreateCompanionBuilder = PhotosCompanion Function({
   required String id,
   required String path,
   Value<int> width,
@@ -663,8 +689,7 @@ class $$PhotosTableTableManager extends RootTableManager<
     Photo,
     $$PhotosTableFilterComposer,
     $$PhotosTableOrderingComposer,
-    $$PhotosTableProcessedTableManager,
-    $$PhotosTableInsertCompanionBuilder,
+    $$PhotosTableCreateCompanionBuilder,
     $$PhotosTableUpdateCompanionBuilder> {
   $$PhotosTableTableManager(_$AppDatabase db, $PhotosTable table)
       : super(TableManagerState(
@@ -674,8 +699,7 @@ class $$PhotosTableTableManager extends RootTableManager<
               $$PhotosTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
               $$PhotosTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) => $$PhotosTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> path = const Value.absent(),
             Value<int> width = const Value.absent(),
@@ -693,7 +717,7 @@ class $$PhotosTableTableManager extends RootTableManager<
             longitude: longitude,
             rowid: rowid,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             required String id,
             required String path,
             Value<int> width = const Value.absent(),
@@ -712,18 +736,6 @@ class $$PhotosTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
         ));
-}
-
-class $$PhotosTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $PhotosTable,
-    Photo,
-    $$PhotosTableFilterComposer,
-    $$PhotosTableOrderingComposer,
-    $$PhotosTableProcessedTableManager,
-    $$PhotosTableInsertCompanionBuilder,
-    $$PhotosTableUpdateCompanionBuilder> {
-  $$PhotosTableProcessedTableManager(super.$state);
 }
 
 class $$PhotosTableFilterComposer
@@ -794,7 +806,7 @@ class $$PhotosTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$PhotoDetailsTableInsertCompanionBuilder = PhotoDetailsCompanion
+typedef $$PhotoDetailsTableCreateCompanionBuilder = PhotoDetailsCompanion
     Function({
   required String lastId,
   required int lastCreateDateSecond,
@@ -817,8 +829,7 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
     PhotoDetail,
     $$PhotoDetailsTableFilterComposer,
     $$PhotoDetailsTableOrderingComposer,
-    $$PhotoDetailsTableProcessedTableManager,
-    $$PhotoDetailsTableInsertCompanionBuilder,
+    $$PhotoDetailsTableCreateCompanionBuilder,
     $$PhotoDetailsTableUpdateCompanionBuilder> {
   $$PhotoDetailsTableTableManager(_$AppDatabase db, $PhotoDetailsTable table)
       : super(TableManagerState(
@@ -828,9 +839,7 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
               $$PhotoDetailsTableFilterComposer(ComposerState(db, table)),
           orderingComposer:
               $$PhotoDetailsTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$PhotoDetailsTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
+          updateCompanionCallback: ({
             Value<String> lastId = const Value.absent(),
             Value<int> lastCreateDateSecond = const Value.absent(),
             Value<int> currentCount = const Value.absent(),
@@ -844,7 +853,7 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
             pastFoodTotal: pastFoodTotal,
             rowid: rowid,
           ),
-          getInsertCompanionBuilder: ({
+          createCompanionCallback: ({
             required String lastId,
             required int lastCreateDateSecond,
             required int currentCount,
@@ -859,18 +868,6 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
         ));
-}
-
-class $$PhotoDetailsTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $PhotoDetailsTable,
-    PhotoDetail,
-    $$PhotoDetailsTableFilterComposer,
-    $$PhotoDetailsTableOrderingComposer,
-    $$PhotoDetailsTableProcessedTableManager,
-    $$PhotoDetailsTableInsertCompanionBuilder,
-    $$PhotoDetailsTableUpdateCompanionBuilder> {
-  $$PhotoDetailsTableProcessedTableManager(super.$state);
 }
 
 class $$PhotoDetailsTableFilterComposer
@@ -921,9 +918,9 @@ class $$PhotoDetailsTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-class _$AppDatabaseManager {
+class $AppDatabaseManager {
   final _$AppDatabase _db;
-  _$AppDatabaseManager(this._db);
+  $AppDatabaseManager(this._db);
   $$PhotosTableTableManager get photos =>
       $$PhotosTableTableManager(_db, _db.photos);
   $$PhotoDetailsTableTableManager get photoDetails =>
