@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../features/auth/auth_controller.dart';
-import 'widgets/confirm_dialog.dart';
-import 'widgets/success_snack_bar.dart';
+import '../../core/widgets/confirm_dialog.dart';
+import '../../core/widgets/success_snack_bar.dart';
+import 'auth_controller.dart';
 
 /// マイページ
 class MyPage extends ConsumerWidget {

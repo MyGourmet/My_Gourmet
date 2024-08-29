@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../core/build_context_extension.dart';
-import '../core/exception.dart';
-import '../core/themes.dart';
-import '../features/swipe_photo/swipe_photo_controller.dart';
-import 'widgets/custom_elevated_button.dart';
-import 'widgets/photo_cards.dart';
+import '../../../core/build_context_extension.dart';
+import '../../../core/exception.dart';
+import '../../../core/themes.dart';
+import '../../../core/widgets/custom_elevated_button.dart';
+import '../../../core/widgets/photo_cards.dart';
+import 'swipe_photo_controller.dart';
 
 /// 写真スワイプページ
 class SwipePhotoPage extends ConsumerStatefulWidget {

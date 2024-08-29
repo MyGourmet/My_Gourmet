@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../view/classify_start_page.dart';
-import '../view/home_page.dart';
-import '../view/image_detail_page.dart';
-import '../view/my_page.dart';
-import '../view/root_page.dart';
-import '../view/swipe_photo_page.dart';
+import '../features/auth/my_page.dart';
+import '../features/photo/gallery/gallery_page.dart';
+import '../features/photo/image_detail/image_detail_page.dart';
+import '../features/photo/swipe_photo/classify_start_page.dart';
+import '../features/photo/swipe_photo/swipe_photo_page.dart';
+import '../features/root_page.dart';
 import 'analytics_repository.dart';
 
 final routerProvider = Provider(

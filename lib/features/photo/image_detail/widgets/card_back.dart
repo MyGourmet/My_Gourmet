@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-import '../../core/my_gourmet_card.dart';
-import '../../core/themes.dart';
-import '../../features/store/store_controller.dart';
-import '../widgets/scalable_photo.dart';
+import '../../../../core/my_gourmet_card.dart';
+import '../../../../core/themes.dart';
+import '../../../../core/widgets/scalable_photo.dart';
+import '../../../store/store_controller.dart';
 import 'shop_list_dialog.dart';
 
 class CardBack extends ConsumerWidget {

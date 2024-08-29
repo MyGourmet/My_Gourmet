@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
-import '../../logger.dart';
+import '../../core/logger.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス

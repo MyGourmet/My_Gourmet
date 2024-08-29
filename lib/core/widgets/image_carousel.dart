@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/my_gourmet_card.dart';
-import '../core/themes.dart';
+import '../my_gourmet_card.dart';
+import '../themes.dart';
 
 class ImageCarousel extends StatefulWidget {
   const ImageCarousel({super.key});

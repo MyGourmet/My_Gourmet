@@ -34,3 +34,36 @@ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -sto
 
 詳細は、以下のURLを参照：
 https://zenn.dev/flutteruniv/books/flutter-textbook/viewer/make-chat
+
+## ディレクトリ構成
+### feature ディレクトリ
+- 各機能ごとに`feature`ディレクトリに格納する、`feature-first`という方式を取っている
+- UIからリポジトリまでを`feature`ディレクトリの中に格納する
+
+### core ディレクトリ
+- featureを横断して利用するものはこの`core`ディレクトリへ格納する
+- UIコンポーネントについては、featureを超えて共通化する場合は、`core` ディレクトリ内の `widgets` ディレクトリへ 格納する
+- UIが存在せずに外部サービスと接続するようなファイル(ie. `analytics_repository.dart`)は、`feature`ディレクトリではなく`core`ディレクトリへ入れることを検討
+
+```text
+.
+├── core
+│   ├── analytics_repository.dart
+│   ├── constants.dart
+│   ├── themes.dart
+│   └── widgets
+│       ├── confirm_dialog.dart
+│       └── success_snack_bar.dart
+├── features
+│   ├── auth
+│   │   ├── auth_controller.dart
+│   │   ├── auth_repository.dart
+│   │   ├── authed_user.dart
+│   │   ├── authed_user.freezed.dart
+│   │   ├── authed_user.g.dart
+│   │   └── my_page.dart
+│   └── root_page.dart
+└── main.dart
+
+
+```

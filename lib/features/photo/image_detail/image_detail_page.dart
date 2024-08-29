@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../core/themes.dart';
-import '../features/auth/auth_controller.dart';
-import '../features/photo/photo.dart';
-import '../features/photo/photo_controller.dart';
-import '../features/store/store.dart';
-import '../features/store/store_controller.dart';
-import 'image_detail/image_detail_card.dart';
+import '../../../core/themes.dart';
+import '../../auth/auth_controller.dart';
+import '../../store/store.dart';
+import '../../store/store_controller.dart';
+import '../photo.dart';
+import '../photo_controller.dart';
+import 'widgets/image_detail_card.dart';
 
 class ImageDetailPage extends ConsumerStatefulWidget {
   const ImageDetailPage({
