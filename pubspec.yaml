@@ -69,6 +69,7 @@ flutter_icons:
   android: true
   ios: true
   image_path: "assets/images/icon/icon.png"
+  remove_alpha_ios: true
 
 flutter_native_splash:
   color: '#EF913A'
