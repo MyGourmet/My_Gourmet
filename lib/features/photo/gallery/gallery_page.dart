@@ -1,9 +1,11 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/logger.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
@@ -26,12 +28,26 @@ class _HomePageState extends ConsumerState<HomePage>
   late TabController _tabController;
   bool isLoading = false;
   bool isReady = false;
+  bool isRectangleView = true; // デフォルトで長方形ビューを設定
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 6, vsync: this);
+    _initConfig();
     _initDownloadPhotos();
+  }
+
+  Future<void> _initConfig() async {
+    final rc = FirebaseRemoteConfig.instance;
+    try {
+      final galleryView = rc.getString('gallery_view');
+      setState(() {
+        isRectangleView = galleryView == 'rectangle';
+      });
+    } on Exception catch (e) {
+      logger.e('Error fetching remote config: $e');
+    }
   }
 
   Future<void> _initDownloadPhotos() async {
@@ -167,7 +183,10 @@ class _HomePageState extends ConsumerState<HomePage>
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                height: 280, // 最低限の高さを設定
+                width: double.infinity,
+                height: isRectangleView
+                    ? 280 // 長方形の高さ
+                    : MediaQuery.of(context).size.width / 2 - 12, // 正方形の高さ
               ),
             ),
           );
