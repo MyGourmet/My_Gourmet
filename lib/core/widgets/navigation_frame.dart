@@ -6,12 +6,13 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/themes.dart';
+import '../../features/auth/my_page.dart';
+import '../../features/onboarding_page.dart';
+import '../../features/photo/gallery/gallery_page.dart';
+import '../../features/photo/swipe_photo/classify_start_page.dart';
+import '../../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../camera_page.dart';
-import '../classify_start_page.dart';
-import '../home_page.dart';
-import '../my_page.dart';
-import '../onboarding_page.dart';
-import '../swipe_photo_page.dart';
+
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends ConsumerStatefulWidget {

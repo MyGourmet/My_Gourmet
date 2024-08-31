@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../core/themes.dart';
+import '../my_gourmet_card.dart';
+import '../themes.dart';
 
 class ImageCarousel extends StatefulWidget {
   const ImageCarousel({super.key});
@@ -54,12 +55,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                  child: MyGourmetCard(
                     child: Container(
                       padding: const EdgeInsets.only(
                         top: 24,

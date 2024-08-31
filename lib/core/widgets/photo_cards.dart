@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/themes.dart';
-import '../../features/swipe_photo/swipe_photo_controller.dart';
+import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
 
 /// 写真のキャッシュを管理するProvider
 class _PhotoFileCacheNotifier
@@ -137,8 +137,7 @@ class _PhotoCard extends ConsumerWidget {
                 IconButton(
                   onPressed: () =>
                       ref.read(photoListProvider.notifier).forceRefresh(),
-                  icon:
-                      Icon(Icons.refresh, color: Themes.gray.shade500),
+                  icon: Icon(Icons.refresh, color: Themes.gray.shade500),
                 ),
                 Text('エラーが発生しました。', style: style),
               ],

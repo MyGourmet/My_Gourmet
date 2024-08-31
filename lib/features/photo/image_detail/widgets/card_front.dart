@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-import '../../core/build_context_extension.dart';
-import '../../core/themes.dart';
-import '../widgets/scalable_photo.dart';
+import '../../../../core/build_context_extension.dart';
+import '../../../../core/my_gourmet_card.dart';
+import '../../../../core/themes.dart';
+import '../../../../core/widgets/scalable_photo.dart';
 
 class CardFront extends StatelessWidget {
   const CardFront({
@@ -25,12 +26,7 @@ class CardFront extends StatelessWidget {
   Widget build(BuildContext context) {
     final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
 
-    return Card(
-      color: Colors.white,
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return MyGourmetCard(
       child: Stack(
         alignment: AlignmentDirectional.topEnd,
         children: [
@@ -46,7 +42,7 @@ class CardFront extends StatelessWidget {
                 color: Themes.gray[900]!,
                 width: 2,
               ),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
               children: [
@@ -56,17 +52,22 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DecoratedBox(
+                      Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.5,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Themes.gray[900]!,
                             width: 2,
                           ),
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        child: ScalablePhoto(
-                          photoUrl: photoUrl,
-                          height: MediaQuery.of(context).size.height * 0.5,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: ScalablePhoto(
+                            photoUrl: photoUrl,
+                            height: MediaQuery.of(context).size.height * 0.5,
+                          ),
                         ),
                       ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
@@ -107,7 +108,7 @@ class CardFront extends StatelessWidget {
               width: 36,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
+                  topRight: Radius.circular(16),
                 ),
                 border: Border.all(
                   color: Themes.gray[900]!,

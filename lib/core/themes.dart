@@ -72,7 +72,7 @@ abstract final class Themes {
         shadowColor: mainOrange.shade300.withOpacity(0.25),
         surfaceTintColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           side: const BorderSide(
             color: Themes.mainOrange,
             width: 2,

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../logger.dart';
+import '../../core/logger.dart';
 import 'store.dart';
 
 /// [Store]用コレクションのためのレファレンス
