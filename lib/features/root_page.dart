@@ -113,7 +113,7 @@ class _RootPageState extends ConsumerState<RootPage> {
                 ),
               );
             } else if (Platform.isIOS) {
-              // TODO: リリース後に動作確認
+              // TODO(kim): リリース後に動作確認
               await launchUrl(
                 Uri.parse(
                   'https://apps.apple.com/jp/app/com.blue-waltz.my-gourmet',
