@@ -35,6 +35,19 @@ keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -sto
 詳細は、以下のURLを参照：
 https://zenn.dev/flutteruniv/books/flutter-textbook/viewer/make-chat
 
+## 開発手法
+### Issue管理
+全てNotion上で行う。
+以下スペース(アクセス権限必要)：  
+https://www.notion.so/masakisato/MyGourmet-4932e4554a4246849be5f53fdfa4c0c8
+
+### PR作成方法
+GitHubとNotionの相互紐付けを行う。  
+1. NotionのドキュメントIDを確認  
+![CleanShot 2024-09-02 at 07 48 44](https://github.com/user-attachments/assets/a4ba90b2-5304-4794-bf15-eabd8fb47567)
+2. PRのタイトルに記載  
+![CleanShot 2024-09-02 at 07 51 02@2x](https://github.com/user-attachments/assets/fb118922-72e6-4745-b18f-eced891762a5)
+
 ## ディレクトリ構成
 ### feature ディレクトリ
 - 各機能ごとに`feature`ディレクトリに格納する、`feature-first`という方式を取っている
