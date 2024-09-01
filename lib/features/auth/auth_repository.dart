@@ -82,11 +82,9 @@ class AuthRepository {
     if (userDocSnapshot.exists) {
       authedUser = userDocSnapshot
           .data()!
-          .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.processing);
+          .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.readyForUse);
     } else {
-      authedUser = const AuthedUser(
-        classifyPhotosStatus: ClassifyPhotosStatus.processing,
-      );
+      authedUser = const AuthedUser();
     }
     // ドキュメントが存在しない場合は新規作成、存在する場合は中身を全て置き換え
     await userDoc.set(authedUser);
