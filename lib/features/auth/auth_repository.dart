@@ -68,7 +68,26 @@ class AuthRepository {
     if (accessToken == null || userId == null) {
       throw Exception('サインインに失敗しました.');
     }
+    await upsertClassifyPhotosStatus(userId);
     return (accessToken: accessToken, userId: userId);
+  }
+
+  /// [ClassifyPhotosStatus]を[ClassifyPhotosStatus.processing]に更新するためのメソッド
+  ///
+  /// 初回サインアップ後で[AuthedUser]ドキュメントが存在していないようであればドキュメントを新規作成した上で更新する。
+  Future<void> upsertClassifyPhotosStatus(String userId) async {
+    final userDoc = authedUsersRef.doc(userId);
+    final userDocSnapshot = await userDoc.get();
+    final AuthedUser authedUser;
+    if (userDocSnapshot.exists) {
+      authedUser = userDocSnapshot
+          .data()!
+          .copyWith(classifyPhotosStatus: ClassifyPhotosStatus.readyForUse);
+    } else {
+      authedUser = const AuthedUser();
+    }
+    // ドキュメントが存在しない場合は新規作成、存在する場合は中身を全て置き換え
+    await userDoc.set(authedUser);
   }
 
   Stream<AuthedUser> subscribeAuthedUser() {
