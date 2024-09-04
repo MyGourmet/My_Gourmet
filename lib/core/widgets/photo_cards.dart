@@ -25,14 +25,14 @@ final photoFileCacheProvider = AsyncNotifierProvider.family
 );
 
 /// 写真カードリスト
-class PhotoCards extends ConsumerStatefulWidget {
+class PhotoCards extends StatefulHookConsumerWidget {
   const PhotoCards({required this.photos, required this.controller, super.key});
 
   final List<AssetEntity> photos;
   final AppinioSwiperController controller;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => PhotoCardsState();
+  ConsumerState<StatefulHookConsumerWidget> createState() => PhotoCardsState();
 }
 
 class PhotoCardsState extends ConsumerState<PhotoCards> {

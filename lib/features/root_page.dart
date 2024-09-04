@@ -16,7 +16,7 @@ import 'onboarding_page.dart';
 /// 全てのページの基盤となるページ
 ///
 /// 初期化処理が終わり次第、[NavigationFrame]を描画する。
-class RootPage extends ConsumerStatefulWidget {
+class RootPage extends StatefulHookConsumerWidget {
   const RootPage({super.key, required this.child});
 
   final Widget child;

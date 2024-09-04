@@ -13,14 +13,14 @@ import '../../../core/widgets/photo_cards.dart';
 import 'swipe_photo_controller.dart';
 
 /// 写真スワイプページ
-class SwipePhotoPage extends ConsumerStatefulWidget {
+class SwipePhotoPage extends StatefulHookConsumerWidget {
   const SwipePhotoPage({super.key});
 
   static const routeName = 'swipe_photo_page';
   static const routePath = '/swipe_photo_page';
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => SwipePhotoPageState();
+  ConsumerState<StatefulHookConsumerWidget> createState() => SwipePhotoPageState();
 }
 
 class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {

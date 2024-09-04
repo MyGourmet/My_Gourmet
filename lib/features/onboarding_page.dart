@@ -29,7 +29,7 @@ final isOnBoardingCompletedProvider = StateProvider<bool>((ref) {
 });
 
 /// オンボーディング用画面
-class OnboardingPage extends ConsumerStatefulWidget {
+class OnboardingPage extends StatefulHookConsumerWidget {
   const OnboardingPage({super.key});
 
   @override

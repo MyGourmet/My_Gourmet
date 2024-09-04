@@ -12,7 +12,7 @@ import '../image_detail/image_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 
-class HomePage extends ConsumerStatefulWidget {
+class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key});
 
   static const routeName = 'home_page';

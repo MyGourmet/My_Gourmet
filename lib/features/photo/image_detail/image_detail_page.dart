@@ -12,7 +12,7 @@ import '../photo.dart';
 import '../photo_controller.dart';
 import 'widgets/image_detail_card.dart';
 
-class ImageDetailPage extends ConsumerStatefulWidget {
+class ImageDetailPage extends StatefulHookConsumerWidget {
   const ImageDetailPage({
     super.key,
     required this.index,
