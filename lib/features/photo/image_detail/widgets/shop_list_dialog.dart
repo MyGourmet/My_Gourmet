@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../../../../core/analytics/analytics_service.dart';
 import '../../../../core/build_context_extension.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
@@ -188,6 +189,9 @@ Future<void> showShopListDialog(
                                 userId: userId,
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
+                              );
+                          await ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'update_store_info_for_photo',
                               );
                           onSelected();
                           shopNoSelected = 0;

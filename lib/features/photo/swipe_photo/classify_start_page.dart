@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics_service.dart';
 import '../../../core/build_context_extension.dart';
 import '../../../core/shared_preferences_service.dart';
 import '../../../core/widgets/custom_elevated_button.dart';
@@ -69,6 +70,9 @@ class ClassifyStartPage extends ConsumerWidget {
                   final goRouter = GoRouter.of(context);
 
                   await ref.read(authRepositoryProvider).signInWithGoogle();
+                  await ref.read(analyticsServiceProvider).sendEvent(
+                        name: 'google_sign_in',
+                      );
 
                   ref
                       .read(isClassifyOnboardingCompletedProvider.notifier)

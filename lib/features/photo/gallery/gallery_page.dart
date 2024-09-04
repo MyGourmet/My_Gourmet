@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics_service.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
@@ -68,6 +69,10 @@ class _HomePageState extends ConsumerState<HomePage>
     final result = await ref.read(photoControllerProvider).downloadPhotos(
           userId: userId,
         );
+    await ref.read(analyticsServiceProvider).sendEvent(
+      name: 'download_photos',
+      addParameters: {'photoUrls?.length': photoUrls?.length ?? ''},
+    );
     // controller内に組み込む
     // controller内にwidgetに必要な要素を取得する処理を実装して、それを呼び出すようにする。
 
@@ -121,6 +126,11 @@ class _HomePageState extends ConsumerState<HomePage>
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
+
+    ref.read(analyticsServiceProvider).sendEvent(
+      name: 'fliter_photo',
+      addParameters: {'category': category},
+    );
 
     List<Photo> filteredPhotos;
     if (category == 'すべて') {

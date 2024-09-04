@@ -9,11 +9,20 @@ import '../features/photo/image_detail/image_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
 import '../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../features/root_page.dart';
-import 'analytics_repository.dart';
+import 'analytics/analytics_repository.dart';
+import 'analytics/analytics_service.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(
     initialLocation: HomePage.routePath,
+    redirect: (context, state) async {
+      final analyticsService = ref.read(analyticsServiceProvider);
+
+      // 現在のパス訪問をログに記録
+      // analyticsService.sendScreenView('visit_page_${state.fullPath}');
+      ref.read(analyticsServiceProvider).sendScreenView(state.fullPath ?? '');
+      return null;
+    },
     routes: [
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
