@@ -19,7 +19,8 @@ class SwipePhotoPage extends StatefulHookConsumerWidget {
   static const routePath = '/swipe_photo_page';
 
   @override
-  ConsumerState<StatefulHookConsumerWidget> createState() => SwipePhotoPageState();
+  ConsumerState<StatefulHookConsumerWidget> createState() => 
+    SwipePhotoPageState();
 }
 
 class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
