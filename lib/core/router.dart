@@ -16,10 +16,7 @@ final routerProvider = Provider(
   (ref) => GoRouter(
     initialLocation: HomePage.routePath,
     redirect: (context, state) async {
-      final analyticsService = ref.read(analyticsServiceProvider);
-
       // 現在のパス訪問をログに記録
-      // analyticsService.sendScreenView('visit_page_${state.fullPath}');
       ref.read(analyticsServiceProvider).sendScreenView(state.fullPath ?? '');
       return null;
     },
