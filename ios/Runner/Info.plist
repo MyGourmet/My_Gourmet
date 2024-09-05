@@ -64,6 +64,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
-    <string>In order to access your photo library</string>
+    <string>このアプリは、写真ライブラリにアクセスしてグルメの写真を選別して保存するために使用します。</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>このアプリは、現在位置を使用して近くのレストランを表示するために使用します。</string>
 </dict>
 </plist>
