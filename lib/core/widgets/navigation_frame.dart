@@ -11,8 +11,7 @@ import '../../features/onboarding_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/swipe_photo/classify_start_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_page.dart';
-import '../camera_page.dart';
-
+import '../../features/photo/camera/camera_page.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends ConsumerStatefulWidget {

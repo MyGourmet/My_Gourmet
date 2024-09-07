@@ -1,35 +1,25 @@
-import 'dart:io';
-import 'package:camera/camera.dart';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-import '../logger.dart';
+import 'package:camera/camera.dart';
+import 'dart:io';
+import 'camera_controller.dart'; // ここで新しいファイルをインポート
 import 'camera_detail_page.dart';
 
-class CameraPage extends ConsumerStatefulWidget {
-  const CameraPage({super.key});
+class CameraPage extends HookConsumerWidget {
+  CameraPage({super.key});
 
   static const routeName = 'camera_page';
   static const routePath = '/camera_page';
 
   @override
-  ConsumerState<CameraPage> createState() => _CameraPageState();
-}
-
-class _CameraPageState extends ConsumerState<CameraPage> {
-  File? _capturedImage;
-  bool _isTakingPicture = false; // 撮影中かどうかを示すフラグ
-  String? _imageDate;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final cameraController = ref.watch(cameraControllerProvider);
+    final capturedImage = useState<File?>(null);
+    final isTakingPicture = useState(false); // 撮影中かどうかを示すフラグ
+    final imageDate = useState<String?>(null);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -81,11 +71,17 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                             ),
                             const Gap(20),
                             cameraController.when(
-                              data: (data) => GestureDetector(
-                                onTap: _isTakingPicture
+                              data: (controller) => GestureDetector(
+                                onTap: isTakingPicture.value
                                     ? null
                                     : () {
-                                        onPressTakePictureButton(context, data);
+                                        controller.takePictureAndSave(
+                                          context,
+                                          ref, // WidgetRefをそのまま渡す
+                                          capturedImage, // ValueNotifier<File?> をそのまま渡す
+                                          isTakingPicture, // ValueNotifier<bool> をそのまま渡す
+                                          imageDate, // ValueNotifier<String?> をそのまま渡す
+                                        );
                                       },
                                 child: Container(
                                   width: 60,
@@ -121,7 +117,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
               ),
             ),
             // 撮影した画像を左下に表示し、下に日付を表示
-            if (_capturedImage != null && _imageDate != null)
+            if (capturedImage.value != null && imageDate.value != null)
               Positioned(
                 bottom: 32,
                 left: 24,
@@ -130,8 +126,8 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                     context.push(
                       CameraDetailPage.routePath,
                       extra: {
-                        'imageFile': _capturedImage,
-                        'imageDate': _imageDate,
+                        'imageFile': capturedImage.value,
+                        'imageDate': imageDate.value,
                       },
                     );
                   },
@@ -158,7 +154,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Image.file(
-                              _capturedImage!,
+                              capturedImage.value!,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -167,7 +163,7 @@ class _CameraPageState extends ConsumerState<CameraPage> {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 5,
                           child: Text(
-                            _imageDate!,
+                            imageDate.value!,
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 12,
@@ -184,75 +180,5 @@ class _CameraPageState extends ConsumerState<CameraPage> {
         ),
       ),
     );
-  }
-
-  /// カメラコントローラ用のプロバイダー
-  final cameraControllerProvider =
-      FutureProvider.autoDispose<CameraController>((ref) async {
-    final cameras = await availableCameras();
-
-    if (cameras.isEmpty) {
-      throw CameraException('NoCameraAvailable', '利用可能なカメラが見つかりませんでした');
-    }
-
-    final camera = cameras.first;
-    final controller = CameraController(
-      camera,
-      ResolutionPreset.medium,
-    );
-
-    ref.onDispose(controller.dispose);
-
-    await controller.initialize();
-    return controller;
-  });
-
-  /// 写真撮影ボタン押下時処理
-  Future<void> onPressTakePictureButton(
-    BuildContext context,
-    CameraController controller,
-  ) async {
-    setState(() {
-      _isTakingPicture = true; // 撮影中フラグを設定
-    });
-
-    try {
-      final image = await controller.takePicture();
-      await Permission.storage.request();
-      await Permission.photos.request();
-      await Permission.videos.request();
-
-      if (Platform.isAndroid) {
-        if (await Permission.photos.isGranted ||
-            await Permission.videos.isGranted ||
-            await Permission.storage.isGranted) {
-          final result = await ImageGallerySaver.saveFile(image.path);
-          logger.i('Image saved to gallery: $result');
-        } else {
-          logger.e('Permission denied for saving to gallery.');
-        }
-      } else {
-        final result = await ImageGallerySaver.saveFile(image.path);
-        logger.i('Image saved to gallery: $result');
-      }
-
-      final now = DateTime.now();
-      final formattedDate =
-          '${now.year}/${_twoDigits(now.month)}/${_twoDigits(now.day)}';
-      setState(() {
-        _capturedImage = File(image.path);
-        _imageDate = formattedDate;
-      });
-    } on Exception catch (e) {
-      logger.e('cameraPage:$e');
-    } finally {
-      setState(() {
-        _isTakingPicture = false; // 撮影完了後にフラグをリセット
-      });
-    }
-  }
-
-  String _twoDigits(int n) {
-    return n.toString().padLeft(2, '0');
   }
 }
