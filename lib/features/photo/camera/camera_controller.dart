@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
+
 import '../../../core/logger.dart';
 
 /// カメラコントローラ用のプロバイダー
@@ -27,6 +29,7 @@ final cameraControllerProvider =
   return controller;
 });
 
+// TODO(SHO): 状態管理方法を再検討（画面側のローカルステートを別ファイルから更新している部分を解消）
 extension CameraControllerExtension on CameraController {
   Future<void> takePictureAndSave(
     BuildContext context,
@@ -75,6 +78,15 @@ extension CameraControllerExtension on CameraController {
     } finally {
       isTakingPicture.value = false; // 撮影完了後にフラグをリセット
     }
+
+    // TODO(SHO): _PhotoListNotifierのloadNextメソッドを参考に、registerStoreInfoメソッドを呼び出す
+    // 以下、詳細：
+    // todo  photoId: 一意の値 && 出来ればスワイプ時と同様の形式だとベターで、以下が出来たら理想：
+    // 写真ライブラリへの保存前に保存された後のidが事前取得出来る or 写真ライブラリへの保存後に該当写真のidを取得出来る
+    // todo  userId: 問題なくなる予定（kimさんの対応後）
+    //  todo latitude: EXIFから取得(写真ライブラリへの保存後かどうか検討）
+    //  todo longitude: EXIFから取得(写真ライブラリへの保存後かどうか検討）
+    // 参考： https://github.com/MyGourmet/My_Gourmet/commit/5b11e5077c978950d8a0a1201ba0b4de7e80c1cd#diff-ab1d426be481ef43dc5f9e0c87d8ddfd0b98cae9613338d11317bb41f95e2a97
   }
 
   String _twoDigits(int n) {
