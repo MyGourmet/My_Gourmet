@@ -25,14 +25,16 @@ final analyticsServiceProvider = Provider((ref) {
 /// 参考)
 /// https://www.kamo-it.org/blog/flutter-analytics/
 class AnalyticsService {
-  AnalyticsService._({required Map<String, Object?> parameters})
+  AnalyticsService._({required Map<String, Object> parameters})
       : _parameters = parameters;
 
   /// [FirebaseAnalytics]のインスタンス
   final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   /// スネークケースのパラメータ
-  final Map<String, Object?> _parameters;
+  ///
+  /// 値がnullの場合は空文字を設定する。
+  final Map<String, Object> _parameters;
 
   /// どの画面を開いているか、Analyticsにログを送信するメソッド
   ///
@@ -58,21 +60,21 @@ class AnalyticsService {
   /// logEvent name : event_name
   Future<void> sendEvent({
     required String name,
-    Map<String, Object?> addParameters = const {},
+    Map<String, String> additionalParams = const {},
   }) async {
     // // _parametersに追加パラメータを結合
     _parameters
       ..addAll({'event_name': name})
-      ..addAll(addParameters);
+      ..addAll(additionalParams);
 
     await _analytics.logEvent(name: name, parameters: _parameters);
   }
 
   /// Analyticsに一律追加したいパラメータを設定するメソッド
   void setAddParameters({
-    required Map<String, Object?> addParameters,
+    required Map<String, Object> additionalParams,
   }) {
-    _parameters.addAll(addParameters);
+    _parameters.addAll(additionalParams);
     // パラメータの内容の確認
     logger.i('追加後のAnalyticsのパラメータの状態 : $_parameters');
   }

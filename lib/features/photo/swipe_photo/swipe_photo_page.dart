@@ -284,7 +284,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
       swipeCount++;
       await ref.read(analyticsServiceProvider).sendEvent(
         name: 'swipe_photo',
-        addParameters: {'swipe_count': swipeCount},
+        additionalParams: {'swipe_count': swipeCount.toString()},
       );
       await execute();
       await Future<void>.delayed(
