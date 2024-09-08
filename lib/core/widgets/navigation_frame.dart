@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,18 +14,20 @@ import '../../features/photo/swipe_photo/classify_start_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_page.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
-class NavigationFrame extends StatefulHookConsumerWidget {
+//class NavigationFrame extends StatefulHookConsumerWidget {
+class NavigationFrame extends HookConsumerWidget {
   const NavigationFrame({super.key, required this.child});
 
   final Widget child;
-
+/*
   @override
   ConsumerState<NavigationFrame> createState() => _NavigationFrameState();
 }
 
 class _NavigationFrameState extends ConsumerState<NavigationFrame> {
   int _selectedIndex = 1;
-
+*/
+/*
   @override
   void initState() {
     super.initState();
@@ -36,19 +39,30 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
       });
     });
   }
+*/
+  
+  // This method doesn't override an inherited method => remove @override
+  //@override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _selectedIndex = useState(1); 
 
-  @override
-  Widget build(BuildContext context) {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);
-
     final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _selectedIndex.value = !isOnboardingComplete ? 0 : 1;
+      });
+      return null;
+    }, []);
 
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
 
     return Scaffold(
-      body: widget.child,
+      //body: widget.child,
+      body: child,
       bottomNavigationBar: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -75,7 +89,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                       AnimatedPositioned(
                         duration: const Duration(milliseconds: 400),
                         curve: StickyCurve(), // カスタムCurveを使用
-                        left: _selectedIndex * itemWidth +
+                        //left: _selectedIndex * itemWidth +
+                        left: _selectedIndex.value * itemWidth +
                             (itemWidth - circleWidth) / 2,
                         child: Container(
                           width: circleWidth,
@@ -100,6 +115,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
+                            value: _selectedIndex.value, // 追加
                           ),
                           _buildNavItem(
                             icon: Icons.photo,
@@ -108,6 +124,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
+                            value: _selectedIndex.value, // 追加
                           ),
                           _buildNavItem(
                             icon: Icons.person,
@@ -116,6 +133,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
+                            value: _selectedIndex.value, // 追加
                           ),
                         ],
                       ),
@@ -134,8 +152,11 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
     required int index,
     required BuildContext context,
     required bool isClassifyOnboardingCompleted,
+    required int value, // 追加
   }) {
-    final isSelected = index == _selectedIndex;
+    //final isSelected = index == _selectedIndex;
+    //final isSelected = index == _selectedIndex;
+    final isSelected = index == value;
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
 
@@ -143,9 +164,11 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          setState(() {
-            _selectedIndex = index;
-          });
+          // setState(() {
+          //   _selectedIndex = index;
+          // });
+          //_selectedIndex = index;
+          value = index;
           _onItemTapped(index, context, isClassifyOnboardingCompleted);
         },
         splashColor: Themes.mainOrange.withOpacity(0.1),
