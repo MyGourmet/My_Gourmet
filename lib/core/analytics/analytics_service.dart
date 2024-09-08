@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/flavor.dart';
 import '../../features/auth/auth_repository.dart';
+import '../logger.dart';
 
 /// [AnalyticsService]を提供する[Provider]
 final analyticsServiceProvider = Provider((ref) {
@@ -47,7 +46,7 @@ class AnalyticsService {
       ..remove('event_name')
       ..addAll({'screen_name': path});
     // パラメータの内容の確認
-    log('Analyticsのパラメータ : $_parameters');
+    logger.i('Analyticsのパラメータ : $_parameters');
 
     _analytics
       ..logEvent(name: 'screen_view_event', parameters: _parameters)
@@ -75,6 +74,6 @@ class AnalyticsService {
   }) {
     _parameters.addAll(addParameters);
     // パラメータの内容の確認
-    log('追加後のAnalyticsのパラメータの状態 : $_parameters');
+    logger.i('追加後のAnalyticsのパラメータの状態 : $_parameters');
   }
 }
