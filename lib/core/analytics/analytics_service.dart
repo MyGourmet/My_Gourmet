@@ -11,7 +11,7 @@ final analyticsServiceProvider = Provider((ref) {
   // パラメータに付与するユーザー情報の取得
   final authUser = ref.watch(authRepositoryProvider).auth;
 
-  return AnalyticsService(
+  return AnalyticsService._(
     // 全てのユーザーから取得する初期値
     parameters: {
       'env': flavor.name,
@@ -26,11 +26,11 @@ final analyticsServiceProvider = Provider((ref) {
 /// 参考)
 /// https://www.kamo-it.org/blog/flutter-analytics/
 class AnalyticsService {
-  AnalyticsService({required Map<String, Object?> parameters})
+  AnalyticsService._({required Map<String, Object?> parameters})
       : _parameters = parameters;
 
   /// [FirebaseAnalytics]のインスタンス
-  static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   /// スネークケースのパラメータ
   final Map<String, Object?> _parameters;
