@@ -25,7 +25,7 @@ final analyticsServiceProvider = Provider((ref) {
 /// 参考)
 /// https://www.kamo-it.org/blog/flutter-analytics/
 class AnalyticsService {
-  AnalyticsService._({required Map<String, Object> parameters})
+  AnalyticsService._({required Map<String, String> parameters})
       : _parameters = parameters;
 
   /// [FirebaseAnalytics]のインスタンス
@@ -34,7 +34,7 @@ class AnalyticsService {
   /// スネークケースのパラメータ
   ///
   /// 値がnullの場合は空文字を設定する。
-  final Map<String, Object> _parameters;
+  final Map<String, String> _parameters;
 
   /// どの画面を開いているか、Analyticsにログを送信するメソッド
   ///
@@ -72,7 +72,7 @@ class AnalyticsService {
 
   /// Analyticsに一律追加したいパラメータを設定するメソッド
   void setAddParameters({
-    required Map<String, Object> additionalParams,
+    required Map<String, String> additionalParams,
   }) {
     _parameters.addAll(additionalParams);
     // パラメータの内容の確認
