@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,12 +12,13 @@ import '../image_detail/image_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 
-class HomePage extends StatefulHookConsumerWidget {
+//class HomePage extends StatefulHookConsumerWidget {
+class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   static const routeName = 'home_page';
   static const routePath = '/home_page';
-
+/*
   @override
   ConsumerState<HomePage> createState() => _HomePageState();
 }
@@ -26,37 +28,102 @@ class _HomePageState extends ConsumerState<HomePage>
   late TabController _tabController;
   bool isLoading = false;
   bool isReady = false;
-
+*/
+/*
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 6, vsync: this);
     _initDownloadPhotos();
   }
+*/
 
-  Future<void> _initDownloadPhotos() async {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      final isSignedIn = ref.watch(userIdProvider) != null;
-      if (!isSignedIn) {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    //final isLoading = useState(false);  // ChatGPTには付いてきたが使われていない
+    final isReady = useState(false);
+    final photoUrls = useState<List<Photo>?>(null);
+
+    // Use useTabController for TabController with SingleTickerProviderStateMixin equivalent.
+    final _tabController = useTabController(initialLength: 6);
+
+/*
+    Future<void> _initDownloadPhotos() async {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        final isSignedIn = ref.watch(userIdProvider) != null;
+        if (!isSignedIn) {
+          setState(() => isReady = true);
+          return;
+        }
+        await ref.watch(authedUserStreamProvider.future);
+        final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+        final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
+            ClassifyPhotosStatus.readyForUse;
+        if (!isReadyForUse) {
+          setState(() => isReady = true);
+          return;
+        }
+
+        await _downloadPhotos(ref);
         setState(() => isReady = true);
+      });
+    }
+*/
+
+    Future<void> _downloadPhotos(
+      WidgetRef ref,
+      ValueNotifier<List<Photo>?> photoUrls,
+    ) async {
+      final userId = ref.watch(userIdProvider);
+
+      if (userId == null) {
         return;
       }
-      await ref.watch(authedUserStreamProvider.future);
-      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
-          ClassifyPhotosStatus.readyForUse;
-      if (!isReadyForUse) {
-        setState(() => isReady = true);
-        return;
-      }
 
-      await _downloadPhotos(ref);
-      setState(() => isReady = true);
-    });
-  }
+      final result = await ref.read(photoControllerProvider).downloadPhotos(
+            userId: userId,
+          );
 
+      photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
+    }
+
+    Future<void> _initDownloadPhotos(
+      WidgetRef ref,
+      BuildContext context,
+      ValueNotifier<bool> isReady,
+      ValueNotifier<List<Photo>?> photoUrls,
+    ) async {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        final isSignedIn = ref.watch(userIdProvider) != null;
+        if (!isSignedIn) {
+          isReady.value = true;
+          return;
+        }
+        await ref.watch(authedUserStreamProvider.future);
+        final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+        final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
+            ClassifyPhotosStatus.readyForUse;
+        if (!isReadyForUse) {
+          isReady.value = true;
+          return;
+        }
+
+        await _downloadPhotos(ref, photoUrls);
+        isReady.value = true;
+      });
+    }
+
+    useEffect(() {
+      _initDownloadPhotos(ref, context, isReady, photoUrls);
+      return null;
+    }, []);
+
+  
+  /*
   List<Photo>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
+  */
 
+  /*
   Future<void> _downloadPhotos(WidgetRef ref) async {
     // controller内に組み込む
     final userId = ref.watch(userIdProvider);
@@ -75,9 +142,12 @@ class _HomePageState extends ConsumerState<HomePage>
       photoUrls = result.where((e) => e.url.isNotEmpty).toList();
     });
   }
+  */
 
-  @override
-  Widget build(BuildContext context) {
+
+
+  //@override
+  //Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -105,19 +175,30 @@ class _HomePageState extends ConsumerState<HomePage>
         child: TabBarView(
           controller: _tabController,
           children: [
+            /*
             _buildPhotoGrid(context, 'すべて'),
             _buildPhotoGrid(context, 'ramen'),
             _buildPhotoGrid(context, 'cafe'),
             _buildPhotoGrid(context, 'japanese_food'),
             _buildPhotoGrid(context, 'western_food'),
             _buildPhotoGrid(context, 'ethnic'),
+             */
+            _buildPhotoGrid(context, 'すべて', photoUrls.value),
+            _buildPhotoGrid(context, 'ramen', photoUrls.value),
+            _buildPhotoGrid(context, 'cafe', photoUrls.value),
+            _buildPhotoGrid(context, 'japanese_food', photoUrls.value),
+            _buildPhotoGrid(context, 'western_food', photoUrls.value),
+            _buildPhotoGrid(context, 'ethnic', photoUrls.value),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPhotoGrid(BuildContext context, String category) {
+  //Widget _buildPhotoGrid(BuildContext context, String category) {
+  Widget _buildPhotoGrid(BuildContext context, String category, 
+    List<Photo>? photoUrls) {
+
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
