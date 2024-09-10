@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
 
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
@@ -28,9 +30,11 @@ final isOnBoardingCompletedProvider = StateProvider<bool>((ref) {
 });
 
 /// オンボーディング用画面
-class OnboardingPage extends StatefulHookConsumerWidget {
+//class OnboardingPage extends StatefulHookConsumerWidget {
+class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
+/*
   @override
   ConsumerState<OnboardingPage> createState() => _OnboardingPageState();
 }
@@ -38,7 +42,8 @@ class OnboardingPage extends StatefulHookConsumerWidget {
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final PageController _pageController = PageController();
   int currentOnboarding = 0;
-
+*/
+/*
   @override
   void initState() {
     super.initState();
@@ -49,11 +54,22 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       });
     });
   }
-
+*/
   @override
-  Widget build(BuildContext context) {
-    final isLastPage = currentOnboarding == 2;
+  Widget build(BuildContext context, WidgetRef ref) {
+    //final isLastPage = currentOnboarding == 2;
+    final pageController = usePageController();
+    final currentOnboarding = useState(0);
 
+    useEffect(() {
+      pageController.addListener(() {
+        final page = pageController.page!.round();
+        currentOnboarding.value = page;
+      });
+      return null; // No cleanup necessary
+    }, [pageController]);
+
+    final isLastPage = currentOnboarding.value == 2;   
     final indicatorPadding = context.screenHeight * 0.035;
     final bottomPadding = context.screenHeight * 0.05;
 
@@ -62,11 +78,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         child: Stack(
           children: <Widget>[
             PageView(
-              controller: _pageController,
+              //controller: _pageController,
+              controller: pageController,
               onPageChanged: (int page) {
-                setState(() {
-                  currentOnboarding = page;
-                });
+                //setState(() {
+                  //currentOnboarding = page;
+                  currentOnboarding.value = page;
+                //});
               },
               children: <Widget>[
                 Container(
@@ -103,7 +121,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   SmoothPageIndicator(
-                    controller: _pageController,
+                    //controller: _pageController,
+                    controller: pageController,
                     count: 3,
                     effect: WormEffect(
                       dotHeight: 12,
@@ -113,7 +132,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       dotColor: Colors.grey[400]!,
                     ),
                     onDotClicked: (index) {
-                      _pageController.animateToPage(
+                      //_pageController.animateToPage(
+                      pageController.animateToPage(
                         index,
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
@@ -130,7 +150,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       child: CustomElevatedButton(
                         onPressed: () {
                           if (!isLastPage) {
-                            _pageController.nextPage(
+                            //_pageController.nextPage(
+                          pageController.nextPage(  
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
                             );
