@@ -1,17 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
-import '../../store/store.dart';
+import '../../store/store.dart' as myg_store;
 import '../../store/store_controller.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 import 'widgets/image_detail_card.dart';
 
-class ImageDetailPage extends StatefulHookConsumerWidget {
+//class ImageDetailPage extends StatefulHookConsumerWidget {
+class ImageDetailPage extends HookConsumerWidget {
   const ImageDetailPage({
     super.key,
     required this.index,
@@ -24,6 +26,7 @@ class ImageDetailPage extends StatefulHookConsumerWidget {
   final int index;
   final String photoId;
 
+/*
   @override
   ConsumerState<ImageDetailPage> createState() => _ImageDetailPageState();
 }
@@ -31,71 +34,111 @@ class ImageDetailPage extends StatefulHookConsumerWidget {
 class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
   late final PageController _pageController;
   late Future<Photo?> _photo;
-
+*/
+/*
   @override
   void initState() {
     super.initState();
     _pageController =
         PageController(initialPage: widget.index, viewportFraction: 0.9);
   }
+*/
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _downloadPhoto(ref);
-  }
+@override
+  Widget build(BuildContext context, WidgetRef ref) {
 
-  void _downloadPhoto(WidgetRef ref) {
-    final userId = ref.watch(userIdProvider);
+    // Using hooks to manage state
+    final _pageController = usePageController(
+      initialPage: index,
+      viewportFraction: 0.9,
+    );
+    final _photo = useState<Future<Photo?>?>(null); 
 
-    if (userId == null) {
-      return;
+    /*
+    void _downloadPhoto(WidgetRef ref) {
+      final userId = ref.watch(userIdProvider);
+
+      if (userId == null) {
+        return;
     }
 
     _photo = ref.read(photoControllerProvider).downloadPhoto(
           userId: userId,
           photoId: widget.photoId,
         );
-  }
+    }
+    */
 
-  Future<Store?> _fetchStore(Photo photo) async {
-    final storeController = ref.read(storeControllerProvider);
-    final userId = FirebaseAuth.instance.currentUser!.uid;
+    void _downloadPhoto(WidgetRef ref) {              // 変更なし
+      final userId = ref.watch(userIdProvider);
 
-    final storeId = photo.storeId;
+      if (userId == null) {
+        return;
+      }
 
-    if (storeId.isEmpty) {
-      return null;
+      _photo.value = ref.read(photoControllerProvider).downloadPhoto(
+        userId: userId,
+        photoId: photoId,
+      );
     }
 
-    return storeController.getStoreById(
-      userId: userId,
-      storeId: storeId,
-    );
-  }
+    // Equivalent to initState and didChangeDependencies combined
+    /*   
+      @override
+      void didChangeDependencies() {
+        super.didChangeDependencies();
+        _downloadPhoto(ref);
+      }
+    */
+    useEffect(() {
+      _downloadPhoto(ref);
+      return null; // Cleanup function, if needed
+    }, []); // Empty dependency list ensures this runs only once
+  
 
-  String formatAddress(String fullAddress) {
-    final postalCodeIndex = fullAddress.indexOf('〒');
+    //Future<Store?> _fetchStore(Photo photo) async { 
+    Future<myg_store.Store?> _fetchStore(Photo photo) async {       // 変更なし
+      final storeController = ref.read(storeControllerProvider);
+      final userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // もし '〒' が見つからない場合、そのまま fullAddress を返す
-    if (postalCodeIndex == -1) {
-      return fullAddress;
+      final storeId = photo.storeId;
+
+      if (storeId.isEmpty) {
+        return null;
+      }
+
+      return storeController.getStoreById(
+        userId: userId,
+        storeId: storeId,
+      );
     }
 
-    // '〒' の次のスペースが見つからない場合、そのまま fullAddress を返す
-    final spaceIndex = fullAddress.indexOf(' ', postalCodeIndex);
-    if (spaceIndex == -1) {
-      return fullAddress;
+    String formatAddress(String fullAddress) {     // 変更なし
+      final postalCodeIndex = fullAddress.indexOf('〒');
+
+      // もし '〒' が見つからない場合、そのまま fullAddress を返す
+      if (postalCodeIndex == -1) {
+        return fullAddress;
+      }
+
+      // '〒' の次のスペースが見つからない場合、そのまま fullAddress を返す
+      final spaceIndex = fullAddress.indexOf(' ', postalCodeIndex);
+      if (spaceIndex == -1) {
+        return fullAddress;
+      }
+
+      final postalCode = fullAddress.substring(postalCodeIndex, spaceIndex);
+      final address = fullAddress.substring(spaceIndex + 1);
+
+      return '$postalCode\n$address';
     }
 
-    final postalCode = fullAddress.substring(postalCodeIndex, spaceIndex);
-    final address = fullAddress.substring(spaceIndex + 1);
+    
 
-    return '$postalCode\n$address';
-  }
+  // @override
+  // Widget build(BuildContext context, WidgetRef ref) {
 
-  @override
-  Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -116,7 +159,8 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
               ),
             ),
             FutureBuilder(
-              future: _photo,
+              //future: _photo,
+              future: _photo.value,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -126,7 +170,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   final photo = snapshot.data!;
                   final storeFuture = _fetchStore(photo);
 
-                  return FutureBuilder<Store?>(
+                  return FutureBuilder<myg_store.Store?>(
                     future: storeFuture,
                     builder: (context, storeSnapshot) {
                       if (storeSnapshot.connectionState ==
@@ -164,7 +208,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                                 showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {
                                   _downloadPhoto(ref);
-                                  setState(() {});
+                                  //setState(() {});   // 削除する
                                 },
                               ),
                             );
