@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camera/camera.dart';
 import 'dart:io';
+import '../../../core/photo_manager_service.dart';
 import 'camera_controller.dart'; // ここで新しいファイルをインポート
 import 'camera_detail_page.dart';
 
@@ -20,6 +21,8 @@ class CameraPage extends HookConsumerWidget {
     final capturedImage = useState<File?>(null);
     final isTakingPicture = useState(false); // 撮影中かどうかを示すフラグ
     final imageDate = useState<String?>(null);
+
+    final photoService = ref.read(photoManagerServiceProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -74,14 +77,32 @@ class CameraPage extends HookConsumerWidget {
                               data: (controller) => GestureDetector(
                                 onTap: isTakingPicture.value
                                     ? null
-                                    : () {
-                                        controller.takePictureAndSave(
+                                    : () async {
+                                        await controller.takePictureAndSave(
                                           context,
                                           ref, // WidgetRefをそのまま渡す
                                           capturedImage, // ValueNotifier<File?> をそのまま渡す
                                           isTakingPicture, // ValueNotifier<bool> をそのまま渡す
                                           imageDate, // ValueNotifier<String?> をそのまま渡す
                                         );
+
+                                        final latestPhotos = await photoService
+                                            .getLatestPhotos();
+
+                                        // 取得した最新の写真を表示用にセット
+                                        if (latestPhotos.isNotEmpty) {
+                                          final latestPhoto =
+                                              latestPhotos.first;
+                                          print("ID");
+                                          print(latestPhoto.id);
+                                          final file = await latestPhoto.file;
+                                          if (file != null) {
+                                            capturedImage.value = file;
+                                            imageDate.value = latestPhoto
+                                                .createDateTime
+                                                .toString();
+                                          }
+                                        }
                                       },
                                 child: Container(
                                   width: 60,

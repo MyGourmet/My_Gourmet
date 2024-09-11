@@ -116,3 +116,14 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<File>> {
     state = AsyncValue.data([...currentPhotos, newPhoto]);
   }
 }
+
+/// 写真を取得するProvider
+// class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
+//   @override
+//   Future<List<AssetEntity>> build() async {
+//     // パーミッション確認
+//     final permission = await PhotoManager.requestPermissionExtend();
+//     if (!permission.isAuth && !permission.hasAccess) {
+//       throw PermissionException();
+//     }
+// }
