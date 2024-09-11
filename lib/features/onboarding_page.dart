@@ -7,7 +7,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../core/build_context_extension.dart';
 import '../core/shared_preferences_service.dart';
 import '../core/widgets/custom_elevated_button.dart';
-import 'photo/swipe_photo/classify_start_page.dart';
+import 'auth/sign_in_page.dart';
 
 /// オンボーディング完了フラグ用[StateProvider]
 ///
@@ -138,7 +138,11 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                             ref
                                 .read(isOnBoardingCompletedProvider.notifier)
                                 .update((state) => true);
-                            context.go(ClassifyStartPage.routePath);
+                            // TODO(kim): アナリティクスマージ後にコメントアウトを解除
+                            // ref
+                            //     .read(analyticsServiceProvider)
+                            //     .sendEvent(name: 'complete_onboarding');
+                            context.go(SignInPage.routePath);
                           }
                         },
                         text: isLastPage ? 'やってみる' : 'つぎへ',

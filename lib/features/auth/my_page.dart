@@ -15,7 +15,7 @@ class MyPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      // ログインのリスト部分の設定
+      // サインインのリスト部分の設定
       body: Container(
         padding: const EdgeInsets.only(top: 50),
         child: Column(
@@ -33,7 +33,7 @@ class MyPage extends ConsumerWidget {
                         onConfirmed: () async {
                           await ref
                               .read(authControllerProvider)
-                              .deleteUserAccount();
+                              .deleteUserAccount(context);
                           if (context.mounted) {
                             SuccessSnackBar.show(
                               context,

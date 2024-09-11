@@ -2,11 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../core/logger.dart';
 import 'authed_user.dart';
+import 'sign_in_page.dart';
 
 /// [AuthedUser]用コレクションのためのレファレンス
 ///
@@ -42,7 +46,11 @@ class AuthRepository {
   FirebaseAuth get auth => _auth;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// サインイン用メソッド
+  bool isSignedIn() {
+    return _auth.currentUser != null;
+  }
+
+  // Googleサインインのメソッド
   Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(
       scopes: [
@@ -68,8 +76,43 @@ class AuthRepository {
     if (accessToken == null || userId == null) {
       throw Exception('サインインに失敗しました.');
     }
-    await upsertClassifyPhotosStatus(userId);
     return (accessToken: accessToken, userId: userId);
+  }
+
+  // Appleサインインのメソッド
+  Future<({String accessToken, String userId})> signInWithApple() async {
+    try {
+      // Appleサインインの認証
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      final oauthCredential = OAuthProvider('apple.com').credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
+      );
+
+      // Firebase Authにサインイン
+      await _auth.signInWithCredential(oauthCredential);
+
+      final userId = _auth.currentUser?.uid;
+      final accessToken = appleCredential.authorizationCode;
+
+      if (userId == null) {
+        throw Exception('Appleサインインに失敗しました。');
+      }
+
+      return (accessToken: accessToken, userId: userId);
+    } on SignInWithAppleAuthorizationException catch (e) {
+      logger.e('Apple Sign-In failed: ${e.message}');
+      throw Exception('Appleサインインに失敗しました: ${e.code}');
+    } on Exception catch (e) {
+      logger.e('Apple Sign-In error: $e');
+      rethrow;
+    }
   }
 
   /// [ClassifyPhotosStatus]を[ClassifyPhotosStatus.processing]に更新するためのメソッド
@@ -104,12 +147,14 @@ class AuthRepository {
   }
 
   /// ユーザーアカウントを削除する
-  Future<void> deleteUserAccount() async {
+  Future<void> deleteUserAccount(
+    BuildContext context,
+  ) async {
     try {
-      var userId = _auth.currentUser?.uid;
+      final userId = _auth.currentUser?.uid;
       if (userId == null) {
-        final result = await signInWithGoogle();
-        userId = result.userId;
+        // サインインページに遷移
+        GoRouter.of(context).go(SignInPage.routePath);
       }
       await call(
         functionName: 'deleteAccount',

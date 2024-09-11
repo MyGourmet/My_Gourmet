@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/themes.dart';
+import '../../features/auth/auth_repository.dart';
 import '../../features/auth/my_page.dart';
 import '../../features/onboarding_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
@@ -42,7 +43,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);
 
-    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+    // サインイン状態かどうかに応じて、ボトムナビゲーションバーの表示・非表示を切り替える。
+    final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
 
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
@@ -67,7 +69,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
           ),
-          child: isOnboardingComplete
+          child: isSignedIn
               ? Padding(
                   padding: const EdgeInsets.only(top: 4, bottom: 16),
                   child: Stack(

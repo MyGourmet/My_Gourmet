@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,6 +11,7 @@ import '../core/shared_preferences_service.dart';
 import '../core/widgets/confirm_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
 import 'auth/auth_repository.dart';
+import 'auth/sign_in_page.dart';
 import 'onboarding_page.dart';
 
 /// 全てのページの基盤となるページ
@@ -40,15 +42,20 @@ class _RootPageState extends ConsumerState<RootPage> {
   }
 
   Future<void> _init() async {
-    if (context.mounted) {
-      await Future.wait([
-        _checkBuildNumber(context),
-        ref.watch(sharedPreferencesServiceProvider).init(),
-      ]);
-      final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
-      if (isOnboardingComplete) {
-        await ref.read(authRepositoryProvider).signInWithGoogle();
-      }
+    await Future.wait([
+      _checkBuildNumber(context), // contextは非同期関数のパラメータとして渡す
+      ref.watch(sharedPreferencesServiceProvider).init(),
+    ]);
+
+    // 非同期処理後に `mounted` を再度確認
+    if (!mounted) {
+      return;
+    }
+    // サインイン状態かどうかを確認
+    final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
+    // サインインページに遷移
+    if (!isSignedIn) {
+      GoRouter.of(context).go(SignInPage.routePath);
     }
   }
 
