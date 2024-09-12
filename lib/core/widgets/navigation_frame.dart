@@ -44,18 +44,23 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
   // This method doesn't override an inherited method => remove @override
   //@override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _selectedIndex = useState(1); 
+    final _selectedIndex = useState<int>(1); 
 
-    final isClassifyOnboardingCompleted =
-        ref.watch(isClassifyOnboardingCompletedProvider);
-    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+    // final isClassifyOnboardingCompleted =
+    //     ref.watch(isClassifyOnboardingCompletedProvider);
+    // final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider); 
         _selectedIndex.value = !isOnboardingComplete ? 0 : 1;
       });
       return null;
     }, []);
+
+    final isClassifyOnboardingCompleted =
+        ref.watch(isClassifyOnboardingCompletedProvider);
+    final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
 
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
@@ -115,7 +120,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                            value: _selectedIndex.value, // 追加
+                            //value: _selectedIndex.value, // 追加
+                            selectedIndex: _selectedIndex,
                           ),
                           _buildNavItem(
                             icon: Icons.photo,
@@ -124,7 +130,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                            value: _selectedIndex.value, // 追加
+                            //value: _selectedIndex.value, // 追加
+                            selectedIndex: _selectedIndex,
                           ),
                           _buildNavItem(
                             icon: Icons.person,
@@ -133,7 +140,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                            value: _selectedIndex.value, // 追加
+                            //value: _selectedIndex.value, // 追加
+                            selectedIndex: _selectedIndex,
                           ),
                         ],
                       ),
@@ -152,11 +160,13 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
     required int index,
     required BuildContext context,
     required bool isClassifyOnboardingCompleted,
-    required int value, // 追加
+    //required int value, // 追加
+    required ValueNotifier<int> selectedIndex,
   }) {
     //final isSelected = index == _selectedIndex;
     //final isSelected = index == _selectedIndex;
-    final isSelected = index == value;
+    //final isSelected = index == value;
+    final isSelected = index == selectedIndex.value;
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
 
@@ -168,7 +178,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
           //   _selectedIndex = index;
           // });
           //_selectedIndex = index;
-          value = index;
+          selectedIndex.value = index;
+          //value = index;
           _onItemTapped(index, context, isClassifyOnboardingCompleted);
         },
         splashColor: Themes.mainOrange.withOpacity(0.1),
