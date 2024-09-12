@@ -1,12 +1,12 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'package:camera/camera.dart';
 import 'dart:io';
 import '../../../core/photo_manager_service.dart';
-import 'camera_controller.dart'; // ここで新しいファイルをインポート
+import 'camera_controller.dart';
 import 'camera_detail_page.dart';
 
 class CameraPage extends HookConsumerWidget {
@@ -17,12 +17,9 @@ class CameraPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cameraController = ref.watch(cameraControllerProvider);
-    final capturedImage = useState<File?>(null);
-    final isTakingPicture = useState(false); // 撮影中かどうかを示すフラグ
-    final imageDate = useState<String?>(null);
-
+    final cameraState = ref.watch(cameraStateProvider);
     final photoService = ref.read(photoManagerServiceProvider);
+    final photoListAsyncValue = ref.watch(photoListProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -60,74 +57,52 @@ class CameraPage extends HookConsumerWidget {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(16),
-                                  child: cameraController.when(
-                                    data: CameraPreview.new,
-                                    error: (err, stack) => const Center(
-                                      child: Text(''),
-                                    ),
-                                    loading: () => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
+                                  child:
+                                      ref.watch(cameraControllerProvider).when(
+                                            data: CameraPreview.new,
+                                            error: (err, stack) => const Center(
+                                              child: Text('カメラの初期化に失敗しました'),
+                                            ),
+                                            loading: () => const Center(
+                                              child: Text('カメラを準備中です...'),
+                                            ),
+                                          ),
                                 ),
                               ),
                             ),
                             const Gap(20),
-                            cameraController.when(
-                              data: (controller) => GestureDetector(
-                                onTap: isTakingPicture.value
-                                    ? null
-                                    : () async {
-                                        await controller.takePictureAndSave(
-                                          context,
-                                          ref, // WidgetRefをそのまま渡す
-                                          capturedImage, // ValueNotifier<File?> をそのまま渡す
-                                          isTakingPicture, // ValueNotifier<bool> をそのまま渡す
-                                          imageDate, // ValueNotifier<String?> をそのまま渡す
-                                        );
+                            GestureDetector(
+                              onTap: cameraState.isTakingPicture
+                                  ? null // 撮影中はボタンを無効にする
+                                  : () async {
+                                      await ref
+                                          .read(cameraStateProvider.notifier)
+                                          .takePictureAndSave(context);
 
-                                        final latestPhotos = await photoService
-                                            .getLatestPhotos();
-
-                                        // 取得した最新の写真を表示用にセット
-                                        if (latestPhotos.isNotEmpty) {
-                                          final latestPhoto =
-                                              latestPhotos.first;
-                                          print("ID");
-                                          print(latestPhoto.id);
-                                          final file = await latestPhoto.file;
-                                          if (file != null) {
-                                            capturedImage.value = file;
-                                            imageDate.value = latestPhoto
-                                                .createDateTime
-                                                .toString();
-                                          }
-                                        }
-                                      },
-                                child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      width: 2,
-                                    ),
+                                      final latestPhotos =
+                                          await photoService.getLatestPhotos();
+                                    },
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 2,
                                   ),
-                                  child: Center(
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.black,
-                                        shape: BoxShape.circle,
-                                      ),
+                                ),
+                                child: Center(
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.black,
+                                      shape: BoxShape.circle,
                                     ),
                                   ),
                                 ),
                               ),
-                              error: (err, stack) => const Text(''),
-                              loading: SizedBox.shrink,
                             ),
                           ],
                         ),
@@ -137,8 +112,8 @@ class CameraPage extends HookConsumerWidget {
                 ),
               ),
             ),
-            // 撮影した画像を左下に表示し、下に日付を表示
-            if (capturedImage.value != null && imageDate.value != null)
+            if (cameraState.capturedImage != null &&
+                cameraState.imageDate != null)
               Positioned(
                 bottom: 32,
                 left: 24,
@@ -147,8 +122,8 @@ class CameraPage extends HookConsumerWidget {
                     context.push(
                       CameraDetailPage.routePath,
                       extra: {
-                        'imageFile': capturedImage.value,
-                        'imageDate': imageDate.value,
+                        'imageFile': cameraState.capturedImage,
+                        'imageDate': cameraState.imageDate,
                       },
                     );
                   },
@@ -175,7 +150,7 @@ class CameraPage extends HookConsumerWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: Image.file(
-                              capturedImage.value!,
+                              cameraState.capturedImage!,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -184,7 +159,7 @@ class CameraPage extends HookConsumerWidget {
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width / 5,
                           child: Text(
-                            imageDate.value!,
+                            cameraState.imageDate!,
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 12,
