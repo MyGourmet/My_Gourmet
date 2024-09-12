@@ -14,46 +14,19 @@ import '../../features/photo/swipe_photo/classify_start_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_page.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
-//class NavigationFrame extends StatefulHookConsumerWidget {
 class NavigationFrame extends HookConsumerWidget {
   const NavigationFrame({super.key, required this.child});
 
   final Widget child;
-/*
-  @override
-  ConsumerState<NavigationFrame> createState() => _NavigationFrameState();
-}
 
-class _NavigationFrameState extends ConsumerState<NavigationFrame> {
-  int _selectedIndex = 1;
-*/
-/*
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
-      setState(() {
-        // 初回起動時は画像追加ページ、　2回目以降はギャラリーページから起動させる。
-        _selectedIndex = !isOnboardingComplete ? 0 : 1;
-      });
-    });
-  }
-*/
-  
-  // This method doesn't override an inherited method => remove @override
-  //@override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _selectedIndex = useState<int>(1); 
-
-    // final isClassifyOnboardingCompleted =
-    //     ref.watch(isClassifyOnboardingCompletedProvider);
-    // final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
+    final selectedIndex = useState<int>(1);
 
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider); 
-        _selectedIndex.value = !isOnboardingComplete ? 0 : 1;
+        final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
+        selectedIndex.value = !isOnboardingComplete ? 0 : 1;
       });
       return null;
     }, []);
@@ -66,7 +39,6 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
     final circleWidth = itemWidth * 0.8;
 
     return Scaffold(
-      //body: widget.child,
       body: child,
       bottomNavigationBar: DecoratedBox(
         decoration: BoxDecoration(
@@ -94,8 +66,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                       AnimatedPositioned(
                         duration: const Duration(milliseconds: 400),
                         curve: StickyCurve(), // カスタムCurveを使用
-                        //left: _selectedIndex * itemWidth +
-                        left: _selectedIndex.value * itemWidth +
+                        left: selectedIndex.value * itemWidth +
                             (itemWidth - circleWidth) / 2,
                         child: Container(
                           width: circleWidth,
@@ -120,8 +91,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                            //value: _selectedIndex.value, // 追加
-                            selectedIndex: _selectedIndex,
+                            selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
                             icon: Icons.photo,
@@ -130,8 +100,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                            //value: _selectedIndex.value, // 追加
-                            selectedIndex: _selectedIndex,
+                            selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
                             icon: Icons.person,
@@ -140,8 +109,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                            //value: _selectedIndex.value, // 追加
-                            selectedIndex: _selectedIndex,
+                            selectedIndex: selectedIndex,
                           ),
                         ],
                       ),
@@ -160,12 +128,8 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
     required int index,
     required BuildContext context,
     required bool isClassifyOnboardingCompleted,
-    //required int value, // 追加
     required ValueNotifier<int> selectedIndex,
   }) {
-    //final isSelected = index == _selectedIndex;
-    //final isSelected = index == _selectedIndex;
-    //final isSelected = index == value;
     final isSelected = index == selectedIndex.value;
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
@@ -174,12 +138,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // setState(() {
-          //   _selectedIndex = index;
-          // });
-          //_selectedIndex = index;
           selectedIndex.value = index;
-          //value = index;
           _onItemTapped(index, context, isClassifyOnboardingCompleted);
         },
         splashColor: Themes.mainOrange.withOpacity(0.1),

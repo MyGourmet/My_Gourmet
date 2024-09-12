@@ -12,63 +12,18 @@ import '../image_detail/image_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 
-//class HomePage extends StatefulHookConsumerWidget {
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   static const routeName = 'home_page';
   static const routePath = '/home_page';
-/*
-  @override
-  ConsumerState<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends ConsumerState<HomePage>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  bool isLoading = false;
-  bool isReady = false;
-*/
-/*
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 6, vsync: this);
-    _initDownloadPhotos();
-  }
-*/
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //final isLoading = useState(false);  // ChatGPTには付いてきたが使われていない
     final isReady = useState(false);
     final photoUrls = useState<List<Photo>?>(null);
 
-    // Use useTabController for TabController with SingleTickerProviderStateMixin equivalent.
-    final _tabController = useTabController(initialLength: 6);
-
-/*
-    Future<void> _initDownloadPhotos() async {
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        final isSignedIn = ref.watch(userIdProvider) != null;
-        if (!isSignedIn) {
-          setState(() => isReady = true);
-          return;
-        }
-        await ref.watch(authedUserStreamProvider.future);
-        final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-        final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
-            ClassifyPhotosStatus.readyForUse;
-        if (!isReadyForUse) {
-          setState(() => isReady = true);
-          return;
-        }
-
-        await _downloadPhotos(ref);
-        setState(() => isReady = true);
-      });
-    }
-*/
+    final tabController = useTabController(initialLength: 6);
 
     Future<void> _downloadPhotos(
       WidgetRef ref,
@@ -116,38 +71,8 @@ class _HomePageState extends ConsumerState<HomePage>
     useEffect(() {
       _initDownloadPhotos(ref, context, isReady, photoUrls);
       return null;
-    }, []);
+    }, [],);
 
-  
-  /*
-  List<Photo>? photoUrls; // Firebaseからダウンロードした写真のURLとカテゴリを保持
-  */
-
-  /*
-  Future<void> _downloadPhotos(WidgetRef ref) async {
-    // controller内に組み込む
-    final userId = ref.watch(userIdProvider);
-
-    if (userId == null) {
-      return;
-    }
-
-    final result = await ref.read(photoControllerProvider).downloadPhotos(
-          userId: userId,
-        );
-    // controller内に組み込む
-    // controller内にwidgetに必要な要素を取得する処理を実装して、それを呼び出すようにする。
-
-    setState(() {
-      photoUrls = result.where((e) => e.url.isNotEmpty).toList();
-    });
-  }
-  */
-
-
-
-  //@override
-  //Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
@@ -156,7 +81,7 @@ class _HomePageState extends ConsumerState<HomePage>
             preferredSize: const Size.fromHeight(0), // TabBarの高さを指定
             child: TabBar(
               padding: const EdgeInsets.only(left: 16, bottom: 8),
-              controller: _tabController,
+              controller: tabController,
               isScrollable: true,
               tabs: const [
                 Tab(text: 'すべて'),
@@ -173,16 +98,8 @@ class _HomePageState extends ConsumerState<HomePage>
       body: DefaultTabController(
         length: 6,
         child: TabBarView(
-          controller: _tabController,
+          controller: tabController,
           children: [
-            /*
-            _buildPhotoGrid(context, 'すべて'),
-            _buildPhotoGrid(context, 'ramen'),
-            _buildPhotoGrid(context, 'cafe'),
-            _buildPhotoGrid(context, 'japanese_food'),
-            _buildPhotoGrid(context, 'western_food'),
-            _buildPhotoGrid(context, 'ethnic'),
-             */
             _buildPhotoGrid(context, 'すべて', photoUrls.value),
             _buildPhotoGrid(context, 'ramen', photoUrls.value),
             _buildPhotoGrid(context, 'cafe', photoUrls.value),
@@ -195,8 +112,7 @@ class _HomePageState extends ConsumerState<HomePage>
     );
   }
 
-  //Widget _buildPhotoGrid(BuildContext context, String category) {
-  Widget _buildPhotoGrid(BuildContext context, String category, 
+  Widget _buildPhotoGrid(BuildContext context, String category,
     List<Photo>? photoUrls) {
 
     if (photoUrls == null) {

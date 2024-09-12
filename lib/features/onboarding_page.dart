@@ -30,31 +30,9 @@ final isOnBoardingCompletedProvider = StateProvider<bool>((ref) {
 });
 
 /// オンボーディング用画面
-//class OnboardingPage extends StatefulHookConsumerWidget {
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
-/*
-  @override
-  ConsumerState<OnboardingPage> createState() => _OnboardingPageState();
-}
-
-class _OnboardingPageState extends ConsumerState<OnboardingPage> {
-  final PageController _pageController = PageController();
-  int currentOnboarding = 0;
-*/
-/*
-  @override
-  void initState() {
-    super.initState();
-    _pageController.addListener(() {
-      final page = _pageController.page!.round();
-      setState(() {
-        currentOnboarding = page;
-      });
-    });
-  }
-*/
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     //final isLastPage = currentOnboarding == 2;
@@ -69,7 +47,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       return null; // No cleanup necessary
     }, [pageController]);
 
-    final isLastPage = currentOnboarding.value == 2;   
+    final isLastPage = currentOnboarding.value == 2;
     final indicatorPadding = context.screenHeight * 0.035;
     final bottomPadding = context.screenHeight * 0.05;
 
@@ -78,13 +56,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         child: Stack(
           children: <Widget>[
             PageView(
-              //controller: _pageController,
               controller: pageController,
               onPageChanged: (int page) {
-                //setState(() {
-                  //currentOnboarding = page;
                   currentOnboarding.value = page;
-                //});
               },
               children: <Widget>[
                 Container(
@@ -121,7 +95,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   SmoothPageIndicator(
-                    //controller: _pageController,
                     controller: pageController,
                     count: 3,
                     effect: WormEffect(
@@ -132,7 +105,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       dotColor: Colors.grey[400]!,
                     ),
                     onDotClicked: (index) {
-                      //_pageController.animateToPage(
                       pageController.animateToPage(
                         index,
                         duration: const Duration(milliseconds: 300),
@@ -151,7 +123,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         onPressed: () {
                           if (!isLastPage) {
                             //_pageController.nextPage(
-                          pageController.nextPage(  
+                          pageController.nextPage(
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
                             );

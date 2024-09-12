@@ -13,61 +13,42 @@ import '../../../core/widgets/photo_cards.dart';
 import 'swipe_photo_controller.dart';
 
 /// 写真スワイプページ
-//class SwipePhotoPage extends StatefulHookConsumerWidget {
 class SwipePhotoPage extends HookConsumerWidget {
   const SwipePhotoPage({super.key});
 
   static const routeName = 'swipe_photo_page';
   static const routePath = '/swipe_photo_page';
 
-/*
   @override
-  ConsumerState<StatefulHookConsumerWidget> createState() => 
-    SwipePhotoPageState();
-}
-
-class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
-*/
-
- @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-  /// スワイプ用のコントローラー
-  //final _swiperController = AppinioSwiperController();
-  final _swiperController = useMemoized(() => AppinioSwiperController());
+    /// スワイプ用のコントローラー
+    final swiperController = useMemoized(AppinioSwiperController.new);
 
-  /// 完了アニメーション用のコントローラー
-  // final _confettiController =
-  //     ConfettiController(duration: const Duration(seconds: 5));
-  final _confettiController = useMemoized(
-    () => ConfettiController(duration: const Duration(seconds: 5)),
-  );
+    /// 完了アニメーション用のコントローラー
+    final confettiController = useMemoized(
+      () => ConfettiController(duration: const Duration(seconds: 5)),
+    );
 
-  /// アニメーションを行うかどうか
-  /// 既にスワイプ完了していたらアニメーションを行わない
-  //bool isAnimation = false;
-  final isAnimation = useState(false);
+    /// アニメーションを行うかどうか
+    /// 既にスワイプ完了していたらアニメーションを行わない
+    final isAnimation = useState(false);
 
-  /// スワイプ可能かどうか
-  //bool isSwipe = true;
-  final isSwipe = useState(true);
+    /// スワイプ可能かどうか
+    final isSwipe = useState(true);
 
-  //@override
-  //Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
             const Gap(8),
-            //_buildCount(),
             _buildCount(ref),
             Expanded(
-              //child: _buildPhotoContainer(),
               child: _buildPhotoContainer(
                 ref,
                 context,
-                _swiperController,
-                _confettiController,
+                swiperController,
+                confettiController,
                 isAnimation,
                 isSwipe,
               ),
@@ -79,22 +60,16 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   }
 
   /// カウント数
-  //Widget _buildCount() {
   Widget _buildCount(WidgetRef ref) {
-    // return Consumer(
-    //   builder: (context, ref, child) {
-        final photoCount = ref.watch(photoCountProvider);
-        return photoCount != null
-            ? Center(
-                child: Text(
-                  '${photoCount.current}枚 / ${photoCount.total}枚',
-                  //style: context.textTheme.titleMedium,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              )
-            : const SizedBox.shrink();
-    //   },
-    // );
+    final photoCount = ref.watch(photoCountProvider);
+    return photoCount != null
+        ? Center(
+            child: Text(
+              '${photoCount.current}枚 / ${photoCount.total}枚',
+              style: const TextStyle(fontSize: 18),
+            ),
+          )
+        : const SizedBox.shrink();
   }
 
   /// 写真表示
@@ -130,20 +105,17 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                       bottom: 32,
                     ),
                     child: PhotoCards(
-                      //controller: _swiperController,
                       controller: swiperController,
                       photos: photos,
                     ),
                   ),
                   Positioned(
                     bottom: 0,
-                    //child: _buildButtons(),
                     child: _buildButtons(context, swiperController, isSwipe),
                   ),
                 ],
               );
             },
-            //error: _buildError,
             error: (error, _) => _buildError(context, ref, error),
             loading: _buildLoading,
           ),
@@ -151,7 +123,6 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   }
 
   /// スワイプボタン
-  //Widget _buildButtons() {
   Widget _buildButtons(BuildContext context,
       AppinioSwiperController swiperController, ValueNotifier<bool> isSwipe,) {
     return SizedBox(
@@ -169,8 +140,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 child: ColoredBox(
                   color: Colors.white,
                   child: CustomElevatedButton(
-                    //onPressed: () => _guardSwipe(_swiperController.swipeLeft),
-                    onPressed: () => _guardSwipe(swiperController.swipeLeft, 
+                    onPressed: () => _guardSwipe(swiperController.swipeLeft,
                                       isSwipe,),
                     text: 'ちがう',
                     backgroundColor: Themes.gray.shade200,
@@ -193,8 +163,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 child: ColoredBox(
                   color: Colors.white,
                   child: CustomElevatedButton(
-                    //onPressed: () => _guardSwipe(_swiperController.swipeRight),
-                    onPressed: () => _guardSwipe(swiperController.swipeRight, 
+                    onPressed: () => _guardSwipe(swiperController.swipeRight,
                                      isSwipe,),
                     text: 'グルメ',
                     backgroundColor: Themes.mainOrange,
@@ -229,9 +198,6 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
     );
 
     if (isAnimation) {
-      // if (_confettiController.state.name == 'stopped') {
-      //   _confettiController.play();
-      // }
       if (confettiController.state.name == 'stopped') {
         confettiController.play();
       }
@@ -241,7 +207,6 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
-              //confettiController: _confettiController,
               confettiController: confettiController,
               blastDirectionality: BlastDirectionality.explosive,
               blastDirection: 0,
@@ -271,31 +236,31 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
                 ),
                 const Gap(8),
                 ref.watch(foodPhotoTotalProvider).when(
-                      data: (count) {
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.add,
+                  data: (count) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          color: Themes.mainOrange,
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(left: 16, bottom: 2),
+                          child: Text(
+                            '$count 枚',
+                            style:
+                                context.textTheme.headlineSmall?.copyWith(
                               color: Themes.mainOrange,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 16, bottom: 2),
-                              child: Text(
-                                '$count 枚',
-                                style:
-                                    context.textTheme.headlineSmall?.copyWith(
-                                  color: Themes.mainOrange,
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      error: (error, _) => _buildError(context, ref, error),
-                      loading: _buildLoading,
-                    ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  error: (error, _) => _buildError(context, ref, error),
+                  loading: _buildLoading,
+                ),
               ],
             ),
           ),
@@ -309,10 +274,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   }
 
   /// エラー
-  //Widget _buildError(Object error, StackTrace _) {
-  //Widget _buildError(BuildContext context, WidgetRef ref, Object error, StackTrace _) {
   Widget _buildError(BuildContext context, WidgetRef ref, Object error) {
-  //これにすると、_buildErrorを呼び出す側がエラーになる
     if (error is PermissionException) {
       return Text('権限がありません。', style: context.textTheme.titleMedium);
     }
@@ -333,26 +295,13 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
 
   /// スワイプボタン連打防止
   Future<void> _guardSwipe(Future<void> Function() execute, ValueNotifier<bool> isSwipe) async {
-    // if (isSwipe) {
-    //   setState(() => isSwipe = false);
     if (isSwipe.value) {
       isSwipe.value = false;
       await execute();
       await Future<void>.delayed(
         const Duration(milliseconds: 300),
       );
-      //setState(() => isSwipe = true);
       isSwipe.value = true;
     }
   }
-
-  /// 終了処理
-  /*
-  @override
-  void dispose() {
-    super.dispose();
-    _swiperController.dispose();
-    _confettiController.dispose();
-  }
-  */
 }

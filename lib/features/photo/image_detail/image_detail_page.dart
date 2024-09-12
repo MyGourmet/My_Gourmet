@@ -6,13 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
-import '../../store/store.dart' as myg_store;
+import '../../store/store.dart' as myg_store;  //Storeがstore.dartのStoreとダブルため
 import '../../store/store_controller.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 import 'widgets/image_detail_card.dart';
 
-//class ImageDetailPage extends StatefulHookConsumerWidget {
 class ImageDetailPage extends HookConsumerWidget {
   const ImageDetailPage({
     super.key,
@@ -26,78 +25,35 @@ class ImageDetailPage extends HookConsumerWidget {
   final int index;
   final String photoId;
 
-/*
   @override
-  ConsumerState<ImageDetailPage> createState() => _ImageDetailPageState();
-}
-
-class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
-  late final PageController _pageController;
-  late Future<Photo?> _photo;
-*/
-/*
-  @override
-  void initState() {
-    super.initState();
-    _pageController =
-        PageController(initialPage: widget.index, viewportFraction: 0.9);
-  }
-*/
-
-@override
   Widget build(BuildContext context, WidgetRef ref) {
 
     // Using hooks to manage state
-    final _pageController = usePageController(
+    final pageController = usePageController(
       initialPage: index,
       viewportFraction: 0.9,
     );
-    final _photo = useState<Future<Photo?>?>(null); 
+    final photo0 = useState<Future<Photo?>?>(null);
 
-    /*
-    void _downloadPhoto(WidgetRef ref) {
-      final userId = ref.watch(userIdProvider);
-
-      if (userId == null) {
-        return;
-    }
-
-    _photo = ref.read(photoControllerProvider).downloadPhoto(
-          userId: userId,
-          photoId: widget.photoId,
-        );
-    }
-    */
-
-    void _downloadPhoto(WidgetRef ref) {              // 変更なし
+    void downloadPhoto(WidgetRef ref) {
       final userId = ref.watch(userIdProvider);
 
       if (userId == null) {
         return;
       }
 
-      _photo.value = ref.read(photoControllerProvider).downloadPhoto(
+      photo0.value = ref.read(photoControllerProvider).downloadPhoto(
         userId: userId,
         photoId: photoId,
       );
     }
 
-    // Equivalent to initState and didChangeDependencies combined
-    /*   
-      @override
-      void didChangeDependencies() {
-        super.didChangeDependencies();
-        _downloadPhoto(ref);
-      }
-    */
     useEffect(() {
-      _downloadPhoto(ref);
+      downloadPhoto(ref);
       return null; // Cleanup function, if needed
     }, []); // Empty dependency list ensures this runs only once
-  
 
-    //Future<Store?> _fetchStore(Photo photo) async { 
-    Future<myg_store.Store?> _fetchStore(Photo photo) async {       // 変更なし
+    Future<myg_store.Store?> fetchStore(Photo photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -133,12 +89,6 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
       return '$postalCode\n$address';
     }
 
-    
-
-  // @override
-  // Widget build(BuildContext context, WidgetRef ref) {
-
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -160,7 +110,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
             ),
             FutureBuilder(
               //future: _photo,
-              future: _photo.value,
+              future: photo0.value,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -168,7 +118,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data != null) {
                   final photo = snapshot.data!;
-                  final storeFuture = _fetchStore(photo);
+                  final storeFuture = fetchStore(photo);
 
                   return FutureBuilder<myg_store.Store?>(
                     future: storeFuture,
@@ -183,7 +133,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                       } else {
                         final store = storeSnapshot.data;
                         return PageView.builder(
-                          controller: _pageController,
+                          controller: pageController,
                           itemCount: 1,
                           itemBuilder: (context, index) {
                             return Padding(
@@ -207,8 +157,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                                 storeOpeningHours: store?.openingHours ?? {},
                                 showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {
-                                  _downloadPhoto(ref);
-                                  //setState(() {});   // 削除する
+                                  downloadPhoto(ref);
                                 },
                               ),
                             );

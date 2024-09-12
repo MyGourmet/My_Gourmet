@@ -16,54 +16,15 @@ import 'onboarding_page.dart';
 /// 全てのページの基盤となるページ
 ///
 /// 初期化処理が終わり次第、[NavigationFrame]を描画する。
-//class RootPage extends StatefulHookConsumerWidget {
 class RootPage extends HookConsumerWidget {
   const RootPage({super.key, required this.child});
 
   final Widget child;
-/*
-  @override
-  ConsumerState<RootPage> createState() => _RootPageState();
-}
-
-class _RootPageState extends ConsumerState<RootPage> {
-  bool isLoading = true;
-*/
-/*
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _init().then(
-        (value) => setState(() {
-          isLoading = false;
-        }),
-      );
-    });
-  }
-*/
-
-/*
-  Future<void> _init() async {
-    if (context.mounted) {
-      await Future.wait([
-        _checkBuildNumber(context),
-        ref.watch(sharedPreferencesServiceProvider).init(),
-      ]);
-      final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
-      if (isOnboardingComplete) {
-        await ref.read(authRepositoryProvider).signInWithGoogle();
-      }
-    }
-  }
-*/
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = useState(true); // Replaces isLoading in StatefulWidget
 
-    //Future<void> _init() async {
-    // ignore: unused_element
     Future<void> init(WidgetRef ref, BuildContext context) async {
       if (context.mounted) {
         await Future.wait([
@@ -77,25 +38,20 @@ class _RootPageState extends ConsumerState<RootPage> {
       }
     }
 
-    // useEffect replaces initState
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        //_init(ref, context).then((_) {
         init(ref, context).then((_) {
           isLoading.value = false;
         });
       });
       return null;
     }, [],);
-  
 
-    //return isLoading
     return isLoading.value
         ? const SizedBox.shrink()
         : NavigationFrame(
             child: Stack(
               children: [
-                //widget.child,
                 child,
                 if (!ref.watch(isOnBoardingCompletedProvider))
                   const OnboardingPage(),
