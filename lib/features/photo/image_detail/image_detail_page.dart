@@ -33,11 +33,12 @@ class ImageDetailPage extends HookConsumerWidget {
       initialPage: index,
       viewportFraction: 0.9,
     );
+
     final photo0 = useState<Future<Photo?>?>(null);
 
-    void downloadPhoto(WidgetRef ref) {
-      final userId = ref.watch(userIdProvider);
+    final userId = ref.watch(userIdProvider);
 
+    void downloadPhoto(WidgetRef ref) {
       if (userId == null) {
         return;
       }
@@ -51,7 +52,7 @@ class ImageDetailPage extends HookConsumerWidget {
     useEffect(() {
       downloadPhoto(ref);
       return null; // Cleanup function, if needed
-    }, []); // Empty dependency list ensures this runs only once
+    }, [],); // Empty dependency list ensures this runs only once
 
     Future<myg_store.Store?> fetchStore(Photo photo) async {
       final storeController = ref.read(storeControllerProvider);
@@ -109,7 +110,6 @@ class ImageDetailPage extends HookConsumerWidget {
               ),
             ),
             FutureBuilder(
-              //future: _photo,
               future: photo0.value,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
