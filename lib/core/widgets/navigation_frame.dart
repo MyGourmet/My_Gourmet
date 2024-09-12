@@ -29,7 +29,7 @@ class NavigationFrame extends HookConsumerWidget {
         selectedIndex.value = !isOnboardingComplete ? 0 : 1;
       });
       return null;
-    }, []);
+    }, [],);
 
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);

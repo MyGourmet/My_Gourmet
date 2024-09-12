@@ -25,7 +25,7 @@ class HomePage extends HookConsumerWidget {
 
     final tabController = useTabController(initialLength: 6);
 
-    Future<void> _downloadPhotos(
+    Future<void> downloadPhotos(
       WidgetRef ref,
       ValueNotifier<List<Photo>?> photoUrls,
     ) async {
@@ -42,7 +42,7 @@ class HomePage extends HookConsumerWidget {
       photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
     }
 
-    Future<void> _initDownloadPhotos(
+    Future<void> initDownloadPhotos(
       WidgetRef ref,
       BuildContext context,
       ValueNotifier<bool> isReady,
@@ -63,13 +63,13 @@ class HomePage extends HookConsumerWidget {
           return;
         }
 
-        await _downloadPhotos(ref, photoUrls);
+        await downloadPhotos(ref, photoUrls);
         isReady.value = true;
       });
     }
 
     useEffect(() {
-      _initDownloadPhotos(ref, context, isReady, photoUrls);
+      initDownloadPhotos(ref, context, isReady, photoUrls);
       return null;
     }, [],);
 
@@ -113,7 +113,7 @@ class HomePage extends HookConsumerWidget {
   }
 
   Widget _buildPhotoGrid(BuildContext context, String category,
-    List<Photo>? photoUrls) {
+    List<Photo>? photoUrls,) {
 
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
@@ -121,10 +121,10 @@ class HomePage extends HookConsumerWidget {
 
     List<Photo> filteredPhotos;
     if (category == 'すべて') {
-      filteredPhotos = photoUrls!;
+      filteredPhotos = photoUrls;
     } else {
       filteredPhotos =
-          photoUrls!.where((photo) => photo.category == category).toList();
+          photoUrls.where((photo) => photo.category == category).toList();
     }
 
     return Padding(

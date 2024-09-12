@@ -294,7 +294,8 @@ class SwipePhotoPage extends HookConsumerWidget {
   Widget _buildLoading() => const CircularProgressIndicator();
 
   /// スワイプボタン連打防止
-  Future<void> _guardSwipe(Future<void> Function() execute, ValueNotifier<bool> isSwipe) async {
+  Future<void> _guardSwipe(Future<void> Function() execute, 
+          ValueNotifier<bool> isSwipe,) async {
     if (isSwipe.value) {
       isSwipe.value = false;
       await execute();

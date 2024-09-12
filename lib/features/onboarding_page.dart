@@ -45,7 +45,7 @@ class OnboardingPage extends HookConsumerWidget {
         currentOnboarding.value = page;
       });
       return null; // No cleanup necessary
-    }, [pageController]);
+    }, [pageController],);
 
     final isLastPage = currentOnboarding.value == 2;
     final indicatorPadding = context.screenHeight * 0.035;
