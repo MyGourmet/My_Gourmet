@@ -18,55 +18,55 @@ class HomePage extends HookConsumerWidget {
   static const routeName = 'home_page';
   static const routePath = '/home_page';
 
+  Future<void> downloadPhotos(
+    WidgetRef ref,
+    ValueNotifier<List<Photo>?> photoUrls,
+  ) async {
+    final userId = ref.watch(userIdProvider);
+
+    if (userId == null) {
+      return;
+    }
+
+    final result = await ref.read(photoControllerProvider).downloadPhotos(
+          userId: userId,
+        );
+
+    photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
+  }
+
+  Future<void> initDownloadPhotos(
+    WidgetRef ref,
+    BuildContext context,
+    ValueNotifier<bool> isReady,
+    ValueNotifier<List<Photo>?> photoUrls,
+  ) async {
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      final isSignedIn = ref.watch(userIdProvider) != null;
+      if (!isSignedIn) {
+        isReady.value = true;
+        return;
+      }
+      await ref.watch(authedUserStreamProvider.future);
+      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
+          ClassifyPhotosStatus.readyForUse;
+      if (!isReadyForUse) {
+        isReady.value = true;
+        return;
+      }
+
+      await downloadPhotos(ref, photoUrls);
+      isReady.value = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isReady = useState(false);
     final photoUrls = useState<List<Photo>?>(null);
 
     final tabController = useTabController(initialLength: 6);
-
-    Future<void> downloadPhotos(
-      WidgetRef ref,
-      ValueNotifier<List<Photo>?> photoUrls,
-    ) async {
-      final userId = ref.watch(userIdProvider);
-
-      if (userId == null) {
-        return;
-      }
-
-      final result = await ref.read(photoControllerProvider).downloadPhotos(
-            userId: userId,
-          );
-
-      photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
-    }
-
-    Future<void> initDownloadPhotos(
-      WidgetRef ref,
-      BuildContext context,
-      ValueNotifier<bool> isReady,
-      ValueNotifier<List<Photo>?> photoUrls,
-    ) async {
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        final isSignedIn = ref.watch(userIdProvider) != null;
-        if (!isSignedIn) {
-          isReady.value = true;
-          return;
-        }
-        await ref.watch(authedUserStreamProvider.future);
-        final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-        final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
-            ClassifyPhotosStatus.readyForUse;
-        if (!isReadyForUse) {
-          isReady.value = true;
-          return;
-        }
-
-        await downloadPhotos(ref, photoUrls);
-        isReady.value = true;
-      });
-    }
 
     useEffect(() {
       initDownloadPhotos(ref, context, isReady, photoUrls);
