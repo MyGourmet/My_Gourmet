@@ -1,12 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_hooks/flutter_hooks.dart' hide Store;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
-import '../../store/store.dart' as myg_store;  //Storeがstore.dartのStoreとダブルため
+import '../../store/store.dart';
 import '../../store/store_controller.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
@@ -53,7 +53,7 @@ class ImageDetailPage extends HookConsumerWidget {
       return null;
     }, [],);
     
-    Future<myg_store.Store?> fetchStore(Photo photo) async {
+    Future<Store?> fetchStore(Photo photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -119,7 +119,7 @@ class ImageDetailPage extends HookConsumerWidget {
                   final photo = snapshot.data!;
                   final storeFuture = fetchStore(photo);
 
-                  return FutureBuilder<myg_store.Store?>(
+                  return FutureBuilder<Store?>(
                     future: storeFuture,
                     builder: (context, storeSnapshot) {
                       if (storeSnapshot.connectionState ==
