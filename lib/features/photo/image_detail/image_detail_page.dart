@@ -28,13 +28,12 @@ class ImageDetailPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    // Using hooks to manage state
     final pageController = usePageController(
       initialPage: index,
       viewportFraction: 0.9,
     );
 
-    final photo0 = useState<Future<Photo?>?>(null);
+    final photo = useState<Future<Photo?>?>(null);
 
     final userId = ref.watch(userIdProvider);
 
@@ -43,7 +42,7 @@ class ImageDetailPage extends HookConsumerWidget {
         return;
       }
 
-      photo0.value = ref.read(photoControllerProvider).downloadPhoto(
+      photo.value = ref.read(photoControllerProvider).downloadPhoto(
         userId: userId,
         photoId: photoId,
       );
@@ -51,9 +50,9 @@ class ImageDetailPage extends HookConsumerWidget {
 
     useEffect(() {
       downloadPhoto(ref);
-      return null; // Cleanup function, if needed
-    }, [],); // Empty dependency list ensures this runs only once
-
+      return null;
+    }, [],);
+    
     Future<myg_store.Store?> fetchStore(Photo photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -110,7 +109,7 @@ class ImageDetailPage extends HookConsumerWidget {
               ),
             ),
             FutureBuilder(
-              future: photo0.value,
+              future: photo.value,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

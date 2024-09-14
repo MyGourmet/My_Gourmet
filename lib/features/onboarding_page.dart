@@ -35,7 +35,6 @@ class OnboardingPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //final isLastPage = currentOnboarding == 2;
     final pageController = usePageController();
     final currentOnboarding = useState(0);
 
@@ -44,7 +43,7 @@ class OnboardingPage extends HookConsumerWidget {
         final page = pageController.page!.round();
         currentOnboarding.value = page;
       });
-      return null; // No cleanup necessary
+      return null;
     }, [pageController],);
 
     final isLastPage = currentOnboarding.value == 2;
@@ -122,7 +121,6 @@ class OnboardingPage extends HookConsumerWidget {
                       child: CustomElevatedButton(
                         onPressed: () {
                           if (!isLastPage) {
-                            //_pageController.nextPage(
                           pageController.nextPage(
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,

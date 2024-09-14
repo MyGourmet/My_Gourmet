@@ -23,7 +23,7 @@ class RootPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLoading = useState(true); // Replaces isLoading in StatefulWidget
+    final isLoading = useState(true);
 
     Future<void> init(WidgetRef ref, BuildContext context) async {
       if (context.mounted) {
