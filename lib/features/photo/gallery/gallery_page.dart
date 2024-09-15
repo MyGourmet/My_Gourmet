@@ -18,7 +18,7 @@ class HomePage extends HookConsumerWidget {
   static const routeName = 'home_page';
   static const routePath = '/home_page';
 
-  Future<void> downloadPhotos(
+  Future<void> _downloadPhotos(
     WidgetRef ref,
     ValueNotifier<List<Photo>?> photoUrls,
   ) async {
@@ -35,7 +35,7 @@ class HomePage extends HookConsumerWidget {
     photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
   }
 
-  Future<void> initDownloadPhotos(
+  Future<void> _initDownloadPhotos(
     WidgetRef ref,
     BuildContext context,
     ValueNotifier<bool> isReady,
@@ -56,7 +56,7 @@ class HomePage extends HookConsumerWidget {
         return;
       }
 
-      await downloadPhotos(ref, photoUrls);
+      await _downloadPhotos(ref, photoUrls);
       isReady.value = true;
     });
   }
@@ -69,7 +69,7 @@ class HomePage extends HookConsumerWidget {
     final tabController = useTabController(initialLength: 6);
 
     useEffect(() {
-      initDownloadPhotos(ref, context, isReady, photoUrls);
+      _initDownloadPhotos(ref, context, isReady, photoUrls);
       return null;
     }, [],);
 
