@@ -71,7 +71,7 @@ class _HomePageState extends ConsumerState<HomePage>
         );
     await ref.read(analyticsServiceProvider).sendEvent(
       name: 'download_photos',
-      addParameters: {'photoUrls?.length': photoUrls?.length ?? ''},
+      addParameters: {'photo_urls_length': photoUrls?.length},
     );
     // controller内に組み込む
     // controller内にwidgetに必要な要素を取得する処理を実装して、それを呼び出すようにする。
@@ -128,7 +128,7 @@ class _HomePageState extends ConsumerState<HomePage>
     }
 
     ref.read(analyticsServiceProvider).sendEvent(
-      name: 'fliter_photo',
+      name: 'filter_photo',
       addParameters: {'category': category},
     );
 

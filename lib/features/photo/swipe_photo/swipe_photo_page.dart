@@ -274,7 +274,7 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   /// ローディング
   Widget _buildLoading() => const CircularProgressIndicator();
 
-  // スワイプされた枚数をGAに記録するカウンター
+  /// スワイプされた枚数をGAに記録するカウンター
   int swipeCount = 0;
 
   /// スワイプボタン連打防止
