@@ -51,6 +51,8 @@ class _RootPageState extends ConsumerState<RootPage> {
     if (!mounted) {
       return;
     }
+
+    // TODO(anyone): リダイレクトを使って修正
     // サインイン状態かどうかを確認
     final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
     // サインインページに遷移

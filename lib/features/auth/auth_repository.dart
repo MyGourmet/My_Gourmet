@@ -105,7 +105,7 @@ class AuthRepository {
       return (accessToken: accessToken, userId: userId);
     } on Exception catch (e) {
       logger.e('Apple Sign-In error: $e');
-      throw Exception('Appleサインインに失敗しました: ${e}');
+      throw Exception('Appleサインインに失敗しました: $e');
     }
   }
 
