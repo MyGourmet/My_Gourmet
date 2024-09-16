@@ -2,15 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../core/logger.dart';
 import 'authed_user.dart';
-import 'sign_in_page.dart';
 
 /// [AuthedUser]用コレクションのためのレファレンス
 ///
@@ -106,12 +103,9 @@ class AuthRepository {
       }
 
       return (accessToken: accessToken, userId: userId);
-    } on SignInWithAppleAuthorizationException catch (e) {
-      logger.e('Apple Sign-In failed: ${e.message}');
-      throw Exception('Appleサインインに失敗しました: ${e.code}');
     } on Exception catch (e) {
       logger.e('Apple Sign-In error: $e');
-      rethrow;
+      throw Exception('Appleサインインに失敗しました: ${e}');
     }
   }
 
@@ -147,14 +141,11 @@ class AuthRepository {
   }
 
   /// ユーザーアカウントを削除する
-  Future<void> deleteUserAccount(
-    BuildContext context,
-  ) async {
+  Future<void> deleteUserAccount() async {
     try {
       final userId = _auth.currentUser?.uid;
       if (userId == null) {
-        // サインインページに遷移
-        GoRouter.of(context).go(SignInPage.routePath);
+        throw Exception('ユーザー情報が取得できませんでした。');
       }
       await call(
         functionName: 'deleteAccount',

@@ -33,7 +33,7 @@ class MyPage extends ConsumerWidget {
                         onConfirmed: () async {
                           await ref
                               .read(authControllerProvider)
-                              .deleteUserAccount(context);
+                              .deleteUserAccount();
                           if (context.mounted) {
                             SuccessSnackBar.show(
                               context,
