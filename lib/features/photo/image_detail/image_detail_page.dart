@@ -59,7 +59,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
         );
     ref.read(analyticsServiceProvider).sendEvent(
       name: 'download_photo',
-      addParameters: {'photo_id': widget.photoId},
+      additionalParams: {'photo_id': widget.photoId},
     );
   }
 

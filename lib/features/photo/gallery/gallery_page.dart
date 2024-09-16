@@ -12,17 +12,17 @@ import '../image_detail/image_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key});
+class GalleryPage extends ConsumerStatefulWidget {
+  const GalleryPage({super.key});
 
-  static const routeName = 'home_page';
-  static const routePath = '/home_page';
+  static const routeName = 'gallery_page';
+  static const routePath = '/gallery_page';
 
   @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  ConsumerState<GalleryPage> createState() => _HomePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage>
+class _HomePageState extends ConsumerState<GalleryPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isLoading = false;
@@ -71,7 +71,9 @@ class _HomePageState extends ConsumerState<HomePage>
         );
     await ref.read(analyticsServiceProvider).sendEvent(
       name: 'download_photos',
-      addParameters: {'photo_urls_length': photoUrls?.length},
+      additionalParams: {
+        'photo_urls_length': photoUrls?.length.toString() ?? '',
+      },
     );
     // controller内に組み込む
     // controller内にwidgetに必要な要素を取得する処理を実装して、それを呼び出すようにする。
@@ -129,7 +131,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
     ref.read(analyticsServiceProvider).sendEvent(
       name: 'filter_photo',
-      addParameters: {'category': category},
+      additionalParams: {'category': category},
     );
 
     List<Photo> filteredPhotos;

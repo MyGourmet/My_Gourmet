@@ -14,7 +14,7 @@ import 'analytics/analytics_service.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: HomePage.routePath,
+    initialLocation: GalleryPage.routePath,
     redirect: (context, state) async {
       // 現在のパス訪問をログに記録
       ref.read(analyticsServiceProvider).sendScreenView(state.fullPath ?? '');
@@ -25,9 +25,9 @@ final routerProvider = Provider(
         builder: (context, state, child) => RootPage(child: child),
         routes: [
           GoRoute(
-            name: HomePage.routeName,
-            path: HomePage.routePath,
-            builder: (context, state) => const HomePage(),
+            name: GalleryPage.routeName,
+            path: GalleryPage.routePath,
+            builder: (context, state) => const GalleryPage(),
           ),
           GoRoute(
             name: MyPage.routeName,
