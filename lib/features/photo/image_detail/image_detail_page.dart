@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/analytics/analytics_service.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
 import '../../store/store.dart';
@@ -56,6 +57,10 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
           userId: userId,
           photoId: widget.photoId,
         );
+    ref.read(analyticsServiceProvider).sendEvent(
+      name: 'download_photo',
+      additionalParams: {'photo_id': widget.photoId},
+    );
   }
 
   Future<Store?> _fetchStore(Photo photo) async {

@@ -9,19 +9,25 @@ import '../features/photo/image_detail/image_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
 import '../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../features/root_page.dart';
-import 'analytics_repository.dart';
+import 'analytics/analytics_repository.dart';
+import 'analytics/analytics_service.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: HomePage.routePath,
+    initialLocation: GalleryPage.routePath,
+    redirect: (context, state) async {
+      // 現在のパス訪問をログに記録
+      ref.read(analyticsServiceProvider).sendScreenView(state.fullPath ?? '');
+      return null;
+    },
     routes: [
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
         routes: [
           GoRoute(
-            name: HomePage.routeName,
-            path: HomePage.routePath,
-            builder: (context, state) => const HomePage(),
+            name: GalleryPage.routeName,
+            path: GalleryPage.routePath,
+            builder: (context, state) => const GalleryPage(),
           ),
           GoRoute(
             name: MyPage.routeName,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
+import '../../../core/analytics/analytics_service.dart';
 import '../../../core/build_context_extension.dart';
 import '../../../core/exception.dart';
 import '../../../core/themes.dart';
@@ -273,10 +274,18 @@ class SwipePhotoPageState extends ConsumerState<SwipePhotoPage> {
   /// ローディング
   Widget _buildLoading() => const CircularProgressIndicator();
 
+  /// スワイプされた枚数をGAに記録するカウンター
+  int swipeCount = 0;
+
   /// スワイプボタン連打防止
   Future<void> _guardSwipe(Future<void> Function() execute) async {
     if (isSwipe) {
       setState(() => isSwipe = false);
+      swipeCount++;
+      await ref.read(analyticsServiceProvider).sendEvent(
+        name: 'swipe_photo',
+        additionalParams: {'swipe_count': swipeCount.toString()},
+      );
       await execute();
       await Future<void>.delayed(
         const Duration(milliseconds: 300),

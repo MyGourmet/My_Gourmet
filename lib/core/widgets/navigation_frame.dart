@@ -207,7 +207,7 @@ class _NavigationFrameState extends ConsumerState<NavigationFrame> {
               : ClassifyStartPage.routePath,
         );
       case 1:
-        context.go(HomePage.routePath);
+        context.go(GalleryPage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }
