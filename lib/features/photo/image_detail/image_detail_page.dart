@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart' hide Store;
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
@@ -11,7 +12,7 @@ import '../photo.dart';
 import '../photo_controller.dart';
 import 'widgets/image_detail_card.dart';
 
-class ImageDetailPage extends ConsumerStatefulWidget {
+class ImageDetailPage extends HookConsumerWidget {
   const ImageDetailPage({
     super.key,
     required this.index,
@@ -25,77 +26,69 @@ class ImageDetailPage extends ConsumerStatefulWidget {
   final String photoId;
 
   @override
-  ConsumerState<ImageDetailPage> createState() => _ImageDetailPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
 
-class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
-  late final PageController _pageController;
-  late Future<Photo?> _photo;
+    final pageController = usePageController(
+      initialPage: index,
+      viewportFraction: 0.9,
+    );
 
-  @override
-  void initState() {
-    super.initState();
-    _pageController =
-        PageController(initialPage: widget.index, viewportFraction: 0.9);
-  }
+    final photo = useState<Future<Photo?>?>(null);
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _downloadPhoto(ref);
-  }
-
-  void _downloadPhoto(WidgetRef ref) {
     final userId = ref.watch(userIdProvider);
 
-    if (userId == null) {
-      return;
+    void downloadPhoto(WidgetRef ref) {
+      if (userId == null) {
+        return;
+      }
+
+      photo.value = ref.read(photoControllerProvider).downloadPhoto(
+        userId: userId,
+        photoId: photoId,
+      );
     }
 
-    _photo = ref.read(photoControllerProvider).downloadPhoto(
-          userId: userId,
-          photoId: widget.photoId,
-        );
-  }
-
-  Future<Store?> _fetchStore(Photo photo) async {
-    final storeController = ref.read(storeControllerProvider);
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-
-    final storeId = photo.storeId;
-
-    if (storeId.isEmpty) {
+    useEffect(() {
+      downloadPhoto(ref);
       return null;
+    }, [],);
+    
+    Future<Store?> fetchStore(Photo photo) async {
+      final storeController = ref.read(storeControllerProvider);
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+
+      final storeId = photo.storeId;
+
+      if (storeId.isEmpty) {
+        return null;
+      }
+
+      return storeController.getStoreById(
+        userId: userId,
+        storeId: storeId,
+      );
     }
 
-    return storeController.getStoreById(
-      userId: userId,
-      storeId: storeId,
-    );
-  }
+    String formatAddress(String fullAddress) {     // 変更なし
+      final postalCodeIndex = fullAddress.indexOf('〒');
 
-  String formatAddress(String fullAddress) {
-    final postalCodeIndex = fullAddress.indexOf('〒');
+      // もし '〒' が見つからない場合、そのまま fullAddress を返す
+      if (postalCodeIndex == -1) {
+        return fullAddress;
+      }
 
-    // もし '〒' が見つからない場合、そのまま fullAddress を返す
-    if (postalCodeIndex == -1) {
-      return fullAddress;
+      // '〒' の次のスペースが見つからない場合、そのまま fullAddress を返す
+      final spaceIndex = fullAddress.indexOf(' ', postalCodeIndex);
+      if (spaceIndex == -1) {
+        return fullAddress;
+      }
+
+      final postalCode = fullAddress.substring(postalCodeIndex, spaceIndex);
+      final address = fullAddress.substring(spaceIndex + 1);
+
+      return '$postalCode\n$address';
     }
 
-    // '〒' の次のスペースが見つからない場合、そのまま fullAddress を返す
-    final spaceIndex = fullAddress.indexOf(' ', postalCodeIndex);
-    if (spaceIndex == -1) {
-      return fullAddress;
-    }
-
-    final postalCode = fullAddress.substring(postalCodeIndex, spaceIndex);
-    final address = fullAddress.substring(spaceIndex + 1);
-
-    return '$postalCode\n$address';
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -116,7 +109,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
               ),
             ),
             FutureBuilder(
-              future: _photo,
+              future: photo.value,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -124,7 +117,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data != null) {
                   final photo = snapshot.data!;
-                  final storeFuture = _fetchStore(photo);
+                  final storeFuture = fetchStore(photo);
 
                   return FutureBuilder<Store?>(
                     future: storeFuture,
@@ -139,7 +132,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                       } else {
                         final store = storeSnapshot.data;
                         return PageView.builder(
-                          controller: _pageController,
+                          controller: pageController,
                           itemCount: 1,
                           itemBuilder: (context, index) {
                             return Padding(
@@ -163,8 +156,7 @@ class _ImageDetailPageState extends ConsumerState<ImageDetailPage> {
                                 storeOpeningHours: store?.openingHours ?? {},
                                 showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {
-                                  _downloadPhoto(ref);
-                                  setState(() {});
+                                  downloadPhoto(ref);
                                 },
                               ),
                             );
