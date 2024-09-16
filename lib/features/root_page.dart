@@ -80,7 +80,7 @@ class _RootPageState extends ConsumerState<RootPage> {
     try {
       await remoteConfig.setConfigSettings(
         RemoteConfigSettings(
-          fetchTimeout: const Duration(minutes: 1),
+          fetchTimeout: const Duration(minutes: 10),
           minimumFetchInterval: kReleaseMode
               ? const Duration(hours: 1)
               : const Duration(minutes: 1),
