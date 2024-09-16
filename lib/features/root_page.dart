@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../core/logger.dart';
 import '../core/shared_preferences_service.dart';
 import '../core/widgets/confirm_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
@@ -42,7 +44,7 @@ class _RootPageState extends ConsumerState<RootPage> {
   Future<void> _init() async {
     if (context.mounted) {
       await Future.wait([
-        _checkBuildNumber(context),
+        _fetchRemoteConfigAndCheckBuildNumber(context),
         ref.watch(sharedPreferencesServiceProvider).init(),
       ]);
       final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
@@ -71,38 +73,57 @@ class _RootPageState extends ConsumerState<RootPage> {
   ///
   /// [FirebaseRemoteConfig]上の最低バージョンを下回っている場合、
   /// ストアに遷移してアップデートを促すダイアログを表示する。
-  Future<void> _checkBuildNumber(BuildContext context) async {
+  Future<void> _fetchRemoteConfigAndCheckBuildNumber(
+    BuildContext context,
+  ) async {
     final remoteConfig = FirebaseRemoteConfig.instance;
-    await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(minutes: 1),
-      ),
-    );
-    await remoteConfig.fetchAndActivate();
-    final requiredBuildNumber = remoteConfig.getInt('requiredBuildNumber');
-    final packageInfo = await PackageInfo.fromPlatform();
-    final currentBuildNumber = int.parse(packageInfo.buildNumber);
-    if (requiredBuildNumber > currentBuildNumber && context.mounted) {
-      await ConfirmDialog.show(
-        context,
-        titleString: '緊急アップデートのお願い',
-        contentString: '新しいバージョンが公開されました。\nアプリをアップデートしてください。',
-        // アプリをアップデートせずに画面に戻って来た場合、引き続きダイアログが表示されている状態にしておく
-        shouldPopOnConfirmed: false,
-        onConfirmed: () async {
-          if (Platform.isAndroid) {
-            // TODO(masaki): Google Playにてアプリ作成後に動作確認
-            await launchUrl(
-              Uri.parse(
-                'https://play.google.com/store/apps/details?id=com.blue_waltz.my_gourmet',
-              ),
-            );
-          } else if (Platform.isIOS) {
-            // TODO(masaki): AppStoreに飛ばす
-          }
-        },
+    try {
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(minutes: 10),
+          minimumFetchInterval: kReleaseMode
+              ? const Duration(hours: 1)
+              : const Duration(minutes: 1),
+        ),
       );
+      await remoteConfig.setDefaults({
+        'gallery_view': 'rectangle',
+      });
+
+      // リモート設定を取得して適用
+      await remoteConfig.fetchAndActivate();
+
+      // リモート設定を基に処理を進める
+      final requiredBuildNumber = remoteConfig.getInt('requiredBuildNumber');
+      final packageInfo = await PackageInfo.fromPlatform();
+      final currentBuildNumber = int.parse(packageInfo.buildNumber);
+      if (requiredBuildNumber > currentBuildNumber && context.mounted) {
+        await ConfirmDialog.show(
+          context,
+          titleString: '緊急アップデートのお願い',
+          contentString: '新しいバージョンが公開されました。\nアプリをアップデートしてください。',
+          // アプリをアップデートせずに画面に戻って来た場合、引き続きダイアログが表示されている状態にしておく
+          shouldPopOnConfirmed: false,
+          onConfirmed: () async {
+            if (Platform.isAndroid) {
+              await launchUrl(
+                Uri.parse(
+                  'https://play.google.com/store/apps/details?id=com.blue_waltz.my_gourmet',
+                ),
+              );
+            } else if (Platform.isIOS) {
+              // TODO(kim): リリース後に動作確認
+              await launchUrl(
+                Uri.parse(
+                  'https://apps.apple.com/jp/app/com.blue-waltz.my-gourmet',
+                ),
+              );
+            }
+          },
+        );
+      }
+    } on Exception catch (e) {
+      logger.e('An error occurred: $e');
     }
   }
 }
