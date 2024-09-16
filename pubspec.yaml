@@ -86,9 +86,7 @@ flutter_native_splash:
 flutter:
   assets:
     - assets/images/
-    - assets/images/sign_in/sign_in_icon.png
-    - assets/images/sign_in/google_icon.png
-    - assets/images/sign_in/apple_icon.png
+    - assets/images/sign_in/
     - .env
   fonts:
     - family: ZenkakuGothicNew
