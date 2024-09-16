@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/build_context_extension.dart';
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
@@ -186,7 +187,7 @@ class _HomePageState extends ConsumerState<HomePage>
                 width: double.infinity,
                 height: isRectangleView
                     ? 280 // 長方形の高さ
-                    : MediaQuery.of(context).size.width / 2 - 12, // 正方形の高さ
+                    : context.screenWidth / 2 - 12, // 正方形の高さ
               ),
             ),
           );

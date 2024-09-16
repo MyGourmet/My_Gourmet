@@ -91,8 +91,7 @@ class _RootPageState extends ConsumerState<RootPage> {
       });
 
       // リモート設定を取得して適用
-      final activated = await remoteConfig.fetchAndActivate();
-      debugPrint('API call successful: $activated');
+      await remoteConfig.fetchAndActivate();
 
       // リモート設定を基に処理を進める
       final requiredBuildNumber = remoteConfig.getInt('requiredBuildNumber');
@@ -124,8 +123,7 @@ class _RootPageState extends ConsumerState<RootPage> {
         );
       }
     } on Exception catch (e) {
-      logger.e(e.toString());
-      // 失敗したのでデフォルト値を使用
+      logger.e('An error occurred: $e');
     }
   }
 }
