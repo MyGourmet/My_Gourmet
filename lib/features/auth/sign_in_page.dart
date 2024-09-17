@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // TODO(kim): アナリティクスマージ後にコメントアウトを解除
 // import '../../core/analytics/analytics_service.dart';
@@ -10,7 +11,7 @@ import '../photo/swipe_photo/swipe_photo_page.dart';
 import 'auth_controller.dart';
 
 /// サインインページ
-class SignInPage extends ConsumerWidget {
+class SignInPage extends HookConsumerWidget {
   const SignInPage({super.key});
 
   static const routeName = 'sign_in_page';
@@ -18,6 +19,31 @@ class SignInPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // State Hookを使用して、UIがリビルドされても状態を保持する
+    final isLoading = useState(false);
+
+    // Googleでサインイン
+    Future<void> handleGoogleSignIn() async {
+      isLoading.value = true;
+      await ref.read(authControllerProvider).signInWithGoogle();
+      if (!context.mounted) {
+        return;
+      }
+      GoRouter.of(context).go(SwipePhotoPage.routePath);
+      isLoading.value = false;
+    }
+
+    // Appleでサインイン
+    Future<void> handleAppleSignIn() async {
+      isLoading.value = true;
+      await ref.read(authControllerProvider).signInWithApple();
+      if (!context.mounted) {
+        return;
+      }
+      GoRouter.of(context).go(SwipePhotoPage.routePath);
+      isLoading.value = false;
+    }
+
     return Scaffold(
       body: ColoredBox(
         color: Themes.mainOrange,
@@ -37,13 +63,7 @@ class SignInPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton.icon(
-                onPressed: () async {
-                  await ref.read(authControllerProvider).signInWithGoogle();
-                  if (!context.mounted) {
-                    return;
-                  }
-                  GoRouter.of(context).go(SwipePhotoPage.routePath);
-                },
+                onPressed: isLoading.value ? null : handleGoogleSignIn,
                 icon: Image.asset(
                   'assets/images/sign_in/google_icon.png',
                   width: 24,
@@ -64,13 +84,7 @@ class SignInPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton.icon(
-                onPressed: () async {
-                  await ref.read(authControllerProvider).signInWithApple();
-                  if (!context.mounted) {
-                    return;
-                  }
-                  GoRouter.of(context).go(SwipePhotoPage.routePath);
-                },
+                onPressed: isLoading.value ? null : handleAppleSignIn,
                 icon: Image.asset(
                   'assets/images/sign_in/apple_icon.png',
                   width: 24,
