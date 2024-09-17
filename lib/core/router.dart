@@ -35,7 +35,7 @@ final routerProvider = Provider(
           GoRoute(
             name: CameraPage.routeName,
             path: CameraPage.routePath,
-            builder: (context, state) => CameraPage(),
+            builder: (context, state) => const CameraPage(),
           ),
           GoRoute(
             name: ClassifyStartPage.routeName,

@@ -6,24 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image/image.dart' as img;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
-import 'package:my_gourmet/core/exception.dart';
-import 'package:my_gourmet/features/auth/auth_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../../core/exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/photo_manager_service.dart';
+import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 
 class CameraState {
-  final File? capturedImage;
-  final double? latitude;
-  final double? longitude;
-  final String? imageDate;
-  final bool isTakingPicture;
-
   CameraState({
     this.capturedImage,
     this.latitude,
@@ -31,6 +24,11 @@ class CameraState {
     this.imageDate,
     this.isTakingPicture = false,
   });
+  final File? capturedImage;
+  final double? latitude;
+  final double? longitude;
+  final String? imageDate;
+  final bool isTakingPicture;
 
   CameraState copyWith({
     File? capturedImage,
@@ -69,22 +67,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
         return;
       }
 
-      // 位置情報の取得
-      double? latitude;
-      double? longitude;
-      try {
-        var position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-        );
-        latitude = position.latitude;
-        longitude = position.longitude;
-      } catch (e) {
-        logger.e('位置情報の取得に失敗しました: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('位置情報の取得に失敗しました。')),
-        );
-      }
-
       // 画像をギャラリーに保存
       final result = await ImageGallerySaver.saveFile(image.path);
       logger.i('ギャラリーに画像を保存しました: $result');
@@ -92,8 +74,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       // 状態更新
       state = state.copyWith(
         capturedImage: File(image.path),
-        latitude: latitude,
-        longitude: longitude,
         imageDate: _formatDate(),
       );
     } catch (e) {
@@ -105,12 +85,10 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
   // 権限の確認とリクエスト
   Future<bool> _ensurePermissions() async {
-    // それぞれの権限状態を確認
     final storageStatus = await Permission.storage.status;
     final photosStatus = await Permission.photos.status;
     final locationStatus = await Permission.location.status;
 
-    // 許可されていない権限に対してリクエスト
     if (!storageStatus.isGranted) {
       await Permission.storage.request();
     }
@@ -121,8 +99,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       await Permission.location.request();
     }
 
-    // todo iphone用追加
-    // 再度権限の状態を確認して、すべてが許可されているかどうかを確認
     return (storageStatus.isGranted || photosStatus.isGranted) &&
         locationStatus.isGranted;
   }
@@ -133,7 +109,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
     return '${now.year}/${_twoDigits(now.month)}/${_twoDigits(now.day)}';
   }
 
-  // 数字を2桁にするヘルパー関数
   String _twoDigits(int n) => n.toString().padLeft(2, '0');
 }
 
@@ -199,24 +174,31 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     final photos = state.asData!.value;
     final photo = photos[0];
-    // final length = photos.length;
+
     // IDのスラッシュをハイフンに置換
     final modifiedPhotoId = photo.id.replaceAll('/', '-');
 
     try {
+      // ユーザーIDの取得
       final userId = ref.read(userIdProvider);
 
       if (userId != null) {
+        // 位置情報の取得
+        final position = await _getCurrentPosition();
+        final latitude = position?.latitude;
+        final longitude = position?.longitude;
+
         // 写真情報をサーバーに登録
-        if (photo.longitude != null && photo.latitude != null) {
+        if (latitude != null && longitude != null) {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
                 photoId: modifiedPhotoId,
                 userId: userId,
-                latitude: photo.latitude,
-                longitude: photo.longitude,
+                latitude: latitude,
+                longitude: longitude,
               );
         }
 
+        // 写真データの取得と圧縮
         final photoFile = await photo.file;
         if (photoFile != null) {
           final compressedData = await _compressImage(photoFile);
@@ -237,10 +219,21 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       return;
     }
 
-    //todo
     // 最後の写真までスワイプした場合
-    // ローディング
     state = const AsyncValue<List<AssetEntity>>.loading();
+  }
+
+  // 位置情報の取得
+  Future<Position?> _getCurrentPosition() async {
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      return position;
+    } catch (e) {
+      logger.e('位置情報の取得に失敗しました: $e');
+      return null;
+    }
   }
 
   /// 強制リフレッシュ

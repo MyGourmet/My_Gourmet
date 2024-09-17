@@ -1,16 +1,15 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:io';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../../core/photo_manager_service.dart';
-import 'camera_controller.dart';
+import 'camera_controller.dart'; // 新しいファイルをインポート
 import 'camera_detail_page.dart';
 
 class CameraPage extends HookConsumerWidget {
-  CameraPage({super.key});
+  const CameraPage({super.key});
 
   static const routeName = 'camera_page';
   static const routePath = '/camera_page';
@@ -79,8 +78,27 @@ class CameraPage extends HookConsumerWidget {
                                           .read(cameraStateProvider.notifier)
                                           .takePictureAndSave(context);
 
-                                      final latestPhotos =
-                                          await photoService.getLatestPhotos();
+                                      await ref
+                                          .read(photoListProvider.notifier)
+                                          .swipeRight();
+
+                                      // final latestPhotos =
+                                      //     await photoService.getLatestPhotos();
+
+                                      //最新の写真を表示用にセット
+                                      // if (latestPhotos.isNotEmpty) {
+                                      //   final latestPhoto = latestPhotos.first;
+                                      //   final file = await latestPhoto.file;
+                                      //   if (file != null) {
+                                      //     ref
+                                      //         .read(
+                                      //             cameraStateProvider.notifier)
+                                      //         .state = cameraState.copyWith(
+                                      //       capturedImage: file,
+                                      //       imageDate: cameraState.imageDate,
+                                      //     );
+                                      //   }
+                                      // }
                                     },
                               child: Container(
                                 width: 60,

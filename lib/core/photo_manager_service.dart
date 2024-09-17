@@ -89,8 +89,7 @@ class PhotoService {
       filterOption: FilterOptionGroup(
         orders: [
           const OrderOption(
-            asc: false,
-            type: OrderOptionType.createDate,
+            
           ),
         ],
       ),

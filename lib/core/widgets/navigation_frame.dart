@@ -9,10 +9,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/themes.dart';
 import '../../features/auth/my_page.dart';
 import '../../features/onboarding_page.dart';
+import '../../features/photo/camera/camera_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/swipe_photo/classify_start_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_page.dart';
-import '../../features/photo/camera/camera_page.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends HookConsumerWidget {
@@ -24,19 +24,19 @@ class NavigationFrame extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = useState<int>(1);
 
-    useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
-        selectedIndex.value = !isOnboardingComplete ? 0 : 2;
-      });
-      return null;
-    }, [],);
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
+          selectedIndex.value = !isOnboardingComplete ? 0 : 2;
+        });
+        return null;
+      },
+      [],
+    );
 
-  @override
-  Widget build(BuildContext context) {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedProvider);
-
     final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
 
     final itemWidth = MediaQuery.of(context).size.width / 4;
@@ -104,7 +104,7 @@ class NavigationFrame extends HookConsumerWidget {
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
-                                selectedIndex: selectedIndex,
+                            selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
                             icon: Icons.photo,
@@ -144,7 +144,7 @@ class NavigationFrame extends HookConsumerWidget {
     required ValueNotifier<int> selectedIndex,
   }) {
     final isSelected = index == selectedIndex.value;
-    final itemWidth = MediaQuery.of(context).size.width / 3;
+    final itemWidth = MediaQuery.of(context).size.width / 4;
     final circleWidth = itemWidth * 0.8;
 
     return Material(
