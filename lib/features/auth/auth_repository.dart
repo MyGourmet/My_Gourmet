@@ -57,7 +57,7 @@ class AuthRepository {
     ).signIn();
 
     if (googleUser == null) {
-      throw Exception('サインインに失敗しました.');
+      throw Exception('Google サインインに失敗しました.');
     }
 
     final googleAuth = await googleUser.authentication;
@@ -71,42 +71,37 @@ class AuthRepository {
     final accessToken = googleAuth.accessToken;
     final userId = _auth.currentUser?.uid;
     if (accessToken == null || userId == null) {
-      throw Exception('サインインに失敗しました.');
+      throw Exception('Google サインインに失敗しました.');
     }
     return (accessToken: accessToken, userId: userId);
   }
 
   // Appleサインインのメソッド
   Future<({String accessToken, String userId})> signInWithApple() async {
-    try {
-      // Appleサインインの認証
-      final appleCredential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+    // Appleサインインの認証
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
 
-      final oauthCredential = OAuthProvider('apple.com').credential(
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
-      );
+    final oauthCredential = OAuthProvider('apple.com').credential(
+      idToken: appleCredential.identityToken,
+      accessToken: appleCredential.authorizationCode,
+    );
 
-      // Firebase Authにサインイン
-      await _auth.signInWithCredential(oauthCredential);
+    // Firebase Authにサインイン
+    await _auth.signInWithCredential(oauthCredential);
 
-      final userId = _auth.currentUser?.uid;
-      final accessToken = appleCredential.authorizationCode;
+    final userId = _auth.currentUser?.uid;
+    final accessToken = appleCredential.authorizationCode;
 
-      if (userId == null) {
-        throw Exception('Appleサインインに失敗しました。');
-      }
-
-      return (accessToken: accessToken, userId: userId);
-    } on Exception catch (e) {
-      logger.e('Apple Sign-In error: $e');
-      throw Exception('Appleサインインに失敗しました: $e');
+    if (userId == null) {
+      throw Exception('Appleサインインに失敗しました。');
     }
+
+    return (accessToken: accessToken, userId: userId);
   }
 
   /// [ClassifyPhotosStatus]を[ClassifyPhotosStatus.processing]に更新するためのメソッド

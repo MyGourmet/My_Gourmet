@@ -24,13 +24,15 @@ class SignInPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Gap(200),
+            const Gap(120),
+            const Spacer(),
             Image.asset(
               'assets/images/sign_in/sign_in_icon.png',
               width: 200,
               height: 200,
             ),
-            const Gap(200),
+            const Gap(60),
+            const Spacer(),
             // Googleで続けるボタン
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -84,7 +86,7 @@ class SignInPage extends ConsumerWidget {
                 ),
               ),
             ),
-            const Gap(40),
+            const Spacer(),
           ],
         ),
       ),
