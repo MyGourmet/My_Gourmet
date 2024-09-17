@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../core/themes.dart';
@@ -24,26 +24,21 @@ final photoFileCacheProvider = AsyncNotifierProvider.family
 );
 
 /// 写真カードリスト
-class PhotoCards extends ConsumerStatefulWidget {
+class PhotoCards extends HookConsumerWidget {
   const PhotoCards({required this.photos, required this.controller, super.key});
 
   final List<AssetEntity> photos;
   final AppinioSwiperController controller;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => PhotoCardsState();
-}
-
-class PhotoCardsState extends ConsumerState<PhotoCards> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // Tinder風スワイプウィジェット
     return AppinioSwiper(
       backgroundCardCount: 2,
       backgroundCardOffset: const Offset(8, 14),
       backgroundCardScale: 0.98,
-      controller: widget.controller,
-      cardCount: widget.photos.length,
+      controller: controller,
+      cardCount: photos.length,
       onSwipeEnd: (
         previousIndex,
         targetIndex,
@@ -64,7 +59,7 @@ class PhotoCardsState extends ConsumerState<PhotoCards> {
       },
       cardBuilder: (context, index) {
         return _PhotoCard(
-          photo: widget.photos[index],
+          photo: photos[index],
         );
       },
     );
