@@ -41,14 +41,17 @@ class RootPage extends HookConsumerWidget {
     }
 
     // フックの`useEffect`で初期化処理を行う
-    useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        init(ref, context).then((_) {
-          isLoading.value = false;
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          init(ref, context).then((_) {
+            isLoading.value = false;
+          });
         });
-      });
-      return null;
-    }, []);
+        return null;
+      },
+      [],
+    );
 
     return isLoading.value
         ? const SizedBox.shrink() // ローディング中は空のウィジェットを表示
@@ -57,7 +60,8 @@ class RootPage extends HookConsumerWidget {
               children: [
                 child,
                 if (!ref.watch(
-                    isOnBoardingCompletedProvider)) // オンボーディングページが完了していない場合
+                  isOnBoardingCompletedProvider,
+                )) // オンボーディングページが完了していない場合
                   const OnboardingPage(),
               ],
             ),
