@@ -41,11 +41,11 @@ final routerProvider = Provider(
         ],
       ),
       GoRoute(
-        name: ImageDetailPage.routeName,
-        path: ImageDetailPage.routePath,
+        name: PhotoDetailPage.routeName,
+        path: PhotoDetailPage.routePath,
         builder: (context, state) {
           final args = state.extra! as Map<String, dynamic>;
-          return ImageDetailPage(
+          return PhotoDetailPage(
             index: args['index'] as int,
             photoId: args['photoId'] as String,
           );

@@ -12,15 +12,15 @@ import '../photo.dart';
 import '../photo_controller.dart';
 import 'widgets/photo_detail_card.dart';
 
-class ImageDetailPage extends HookConsumerWidget {
-  const ImageDetailPage({
+class PhotoDetailPage extends HookConsumerWidget {
+  const PhotoDetailPage({
     super.key,
     required this.index,
     required this.photoId,
   });
 
-  static const String routeName = '/image_detail';
-  static const String routePath = '/image_detail';
+  static const String routeName = '/photo_detail';
+  static const String routePath = '/photo_detail';
 
   final int index;
   final String photoId;
@@ -143,7 +143,7 @@ class ImageDetailPage extends HookConsumerWidget {
                                 left: 4,
                                 right: 4,
                               ),
-                              child: ImageDetailCard(
+                              child: PhotoDetailCard(
                                 userId: photo.userId,
                                 photoId: photo.id,
                                 areaStoreIds: photo.areaStoreIds,

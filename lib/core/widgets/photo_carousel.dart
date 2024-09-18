@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../my_gourmet_card.dart';
 import '../themes.dart';
 
-class ImageCarousel extends StatefulWidget {
-  const ImageCarousel({super.key});
+class PhotoCarousel extends StatefulWidget {
+  const PhotoCarousel({super.key});
 
   @override
-  State<ImageCarousel> createState() => _ImageCarouselState();
+  State<PhotoCarousel> createState() => _PhotoCarouselState();
 }
 
-class _ImageCarouselState extends State<ImageCarousel> {
+class _PhotoCarouselState extends State<PhotoCarousel> {
   final PageController _pageController = PageController(viewportFraction: 0.9);
 
   final List<String> _images = [

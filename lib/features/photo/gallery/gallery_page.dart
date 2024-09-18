@@ -141,7 +141,7 @@ class HomePage extends HookConsumerWidget {
             child: GestureDetector(
               onTap: () {
                 context.push(
-                  ImageDetailPage.routePath,
+                  PhotoDetailPage.routePath,
                   extra: {
                     'photoId': photo.id,
                     'index': index,
