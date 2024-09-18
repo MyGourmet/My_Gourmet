@@ -156,6 +156,10 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
 
     // 写真取得
+    await PhotoManager.clearFileCache();
+    final photos = await PhotoManager.getAssetPathList();
+    print("最新フォト");
+    print(photos);
     return ref.read(photoManagerServiceProvider).getLatestPhotos();
   }
 
