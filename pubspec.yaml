@@ -45,6 +45,7 @@ dependencies:
   photo_manager: ^3.0.0
   roggle: ^0.4.2+1
   shared_preferences: ^2.2.2
+  sign_in_with_apple: ^6.1.2
   smooth_page_indicator: ^1.1.0
   sqlite3_flutter_libs: ^0.5.22
   url_launcher: ^6.2.4
@@ -85,6 +86,7 @@ flutter_native_splash:
 flutter:
   assets:
     - assets/images/
+    - assets/images/sign_in/
     - .env
   fonts:
     - family: ZenkakuGothicNew
