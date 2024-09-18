@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
-import '../image_detail/image_detail_page.dart';
+import '../photo_detail/photo_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 

@@ -10,7 +10,7 @@ import '../../store/store.dart';
 import '../../store/store_controller.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
-import 'widgets/image_detail_card.dart';
+import 'widgets/photo_detail_card.dart';
 
 class ImageDetailPage extends HookConsumerWidget {
   const ImageDetailPage({

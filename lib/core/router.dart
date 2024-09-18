@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../features/auth/my_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
-import '../features/photo/image_detail/image_detail_page.dart';
+import '../features/photo/photo_detail/photo_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
 import '../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../features/root_page.dart';
