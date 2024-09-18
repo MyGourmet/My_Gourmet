@@ -152,7 +152,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                 dateTime: DateTime.now(),
                                 address: formatAddress(store?.address ?? ''),
                                 storeUrl: store?.website ?? '',
-                                storeImageUrls: store?.imageUrls ?? [],
+                                storePhotoUrls: store?.imageUrls ?? [],
                                 storeOpeningHours: store?.openingHours ?? {},
                                 showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {

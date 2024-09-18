@@ -16,7 +16,7 @@ class PhotoDetailCard extends StatefulWidget {
     required this.address,
     required this.photoUrl,
     required this.storeUrl,
-    required this.storeImageUrls,
+    required this.storePhotoUrls,
     this.showCardBack = true,
     required this.storeOpeningHours,
   });
@@ -29,7 +29,7 @@ class PhotoDetailCard extends StatefulWidget {
   final String address;
   final String photoUrl;
   final String storeUrl;
-  final List<String> storeImageUrls;
+  final List<String> storePhotoUrls;
   final bool showCardBack;
   final Map<String, String> storeOpeningHours;
 
@@ -59,7 +59,7 @@ class _PhotoDetailCardState extends State<PhotoDetailCard> {
 
   String get storeUrl => widget.storeUrl;
 
-  List<String> get storeImageUrls => widget.storeImageUrls;
+  List<String> get storePhotoUrls => widget.storePhotoUrls;
 
   Map<String, String> get storeOpeningHours => widget.storeOpeningHours;
 
@@ -84,7 +84,7 @@ class _PhotoDetailCardState extends State<PhotoDetailCard> {
               areaStoreIds: areaStoreIds,
               isLinked: true,
               storeName: storeName,
-              storeImageUrls: storeImageUrls,
+              storePhotoUrls: storePhotoUrls,
               address: address,
               storeUrl: storeUrl,
               storeOpeningHours: storeOpeningHours,
