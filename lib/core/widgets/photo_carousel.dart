@@ -19,7 +19,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
     'assets/images/image3.png',
   ];
 
-  void showImageDialog(Widget image) {
+  void showPhotoDialog(Widget image) {
     showDialog<void>(
       context: context,
       builder: (_) {
@@ -94,7 +94,7 @@ class _PhotoCarouselState extends State<PhotoCarousel> {
                                     shape: const CircleBorder(),
                                   ),
                                   onPressed: () {
-                                    showImageDialog(
+                                    showPhotoDialog(
                                       Image.asset(
                                         _images[index],
                                         fit: BoxFit.cover,
