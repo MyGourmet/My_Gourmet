@@ -22,28 +22,6 @@ class SignInPage extends HookConsumerWidget {
     // State Hookを使用して、UIがリビルドされても状態を保持する
     final isLoading = useState(false);
 
-    // Googleでサインイン
-    Future<void> handleGoogleSignIn() async {
-      isLoading.value = true;
-      await ref.read(authControllerProvider).signInWithGoogle();
-      if (!context.mounted) {
-        return;
-      }
-      GoRouter.of(context).go(SwipePhotoPage.routePath);
-      isLoading.value = false;
-    }
-
-    // Appleでサインイン
-    Future<void> handleAppleSignIn() async {
-      isLoading.value = true;
-      await ref.read(authControllerProvider).signInWithApple();
-      if (!context.mounted) {
-        return;
-      }
-      GoRouter.of(context).go(SwipePhotoPage.routePath);
-      isLoading.value = false;
-    }
-
     return Scaffold(
       body: ColoredBox(
         color: Themes.mainOrange,
@@ -60,49 +38,95 @@ class SignInPage extends HookConsumerWidget {
             const Gap(60),
             const Spacer(),
             // Googleで続けるボタン
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ElevatedButton.icon(
-                onPressed: isLoading.value ? null : handleGoogleSignIn,
-                icon: Image.asset(
-                  'assets/images/sign_in/google_icon.png',
-                  width: 24,
-                ),
-                label: const Text('Googleで続ける'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-              ),
+            _buildSignInButton(
+              isLoading: isLoading,
+              context: context,
+              ref: ref,
+              label: 'Googleで続ける',
+              iconPath: 'assets/images/sign_in/google_icon.png',
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              signInMethod: ref.read(authControllerProvider).signInWithGoogle,
             ),
             const Gap(20),
             // Appleで続けるボタン
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ElevatedButton.icon(
-                onPressed: isLoading.value ? null : handleAppleSignIn,
-                icon: Image.asset(
-                  'assets/images/sign_in/apple_icon.png',
-                  width: 24,
-                ),
-                label: const Text('Appleで続ける'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-              ),
+            _buildSignInButton(
+              isLoading: isLoading,
+              context: context,
+              ref: ref,
+              label: 'Appleで続ける',
+              iconPath: 'assets/images/sign_in/apple_icon.png',
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              signInMethod: ref.read(authControllerProvider).signInWithApple,
             ),
             const Spacer(),
           ],
         ),
+      ),
+    );
+  }
+
+  /// サインインボタンの共通化メソッド
+  Widget _buildSignInButton({
+    required ValueNotifier<bool> isLoading,
+    required BuildContext context,
+    required WidgetRef ref,
+    required String label,
+    required String iconPath,
+    required Color backgroundColor,
+    required Color foregroundColor,
+    required Future<void> Function() signInMethod,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ElevatedButton.icon(
+        onPressed: isLoading.value
+            ? () {}
+            : () => _handleSignIn(isLoading, signInMethod, context),
+        icon: Image.asset(
+          iconPath,
+          width: 24,
+        ),
+        label: Text(label),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+          minimumSize: const Size(double.infinity, 50),
+        ),
+      ),
+    );
+  }
+
+  /// サインイン処理の共通化
+  Future<void> _handleSignIn(
+    ValueNotifier<bool> isLoading,
+    Future<void> Function() signIn,
+    BuildContext context,
+  ) async {
+    try {
+      isLoading.value = true;
+      await signIn();
+      if (!context.mounted) {
+        return;
+      }
+      GoRouter.of(context).go(SwipePhotoPage.routePath);
+    } on Exception catch (e) {
+      _showSnackBar(context, 'サインインに失敗しました: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// スナックバーの表示
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.black,
       ),
     );
   }
