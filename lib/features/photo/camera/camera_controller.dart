@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
+import '../../../core/widgets/date_utils.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
@@ -106,10 +107,8 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
   // 日付フォーマット
   String _formatDate() {
     final now = DateTime.now();
-    return '${now.year}/${_twoDigits(now.month)}/${_twoDigits(now.day)}';
+    return formatDateTime.dateFmt.format(now);
   }
-
-  String _twoDigits(int n) => n.toString().padLeft(2, '0');
 }
 
 // カメラコントローラ用のプロバイダー

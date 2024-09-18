@@ -178,6 +178,7 @@ class CameraPage extends HookConsumerWidget {
                           width: MediaQuery.sizeOf(context).width / 5,
                           child: Text(
                             cameraState.imageDate!,
+                            //todo
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 12,
