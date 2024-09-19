@@ -32,7 +32,7 @@ mixin _$Store {
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
   /// FirebaseStorageに保存された（ストアの）写真のURL
-  List<String> get imageUrls => throw _privateConstructorUsedError;
+  List<String> get photoUrls => throw _privateConstructorUsedError;
 
   /// FirebaseStorageの(ストアの)name
   String get name => throw _privateConstructorUsedError;
@@ -68,7 +68,7 @@ abstract class $StoreCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
-      List<String> imageUrls,
+      List<String> photoUrls,
       String name,
       String phoneNumber,
       String website,
@@ -98,7 +98,7 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? imageUrls = null,
+    Object? photoUrls = null,
     Object? name = null,
     Object? phoneNumber = null,
     Object? website = null,
@@ -120,9 +120,9 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      imageUrls: null == imageUrls
-          ? _value.imageUrls
-          : imageUrls // ignore: cast_nullable_to_non_nullable
+      photoUrls: null == photoUrls
+          ? _value.photoUrls
+          : photoUrls // ignore: cast_nullable_to_non_nullable
               as List<String>,
       name: null == name
           ? _value.name
@@ -191,7 +191,7 @@ abstract class _$$StoreImplCopyWith<$Res> implements $StoreCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
-      List<String> imageUrls,
+      List<String> photoUrls,
       String name,
       String phoneNumber,
       String website,
@@ -222,7 +222,7 @@ class __$$StoreImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
-    Object? imageUrls = null,
+    Object? photoUrls = null,
     Object? name = null,
     Object? phoneNumber = null,
     Object? website = null,
@@ -244,9 +244,9 @@ class __$$StoreImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
-      imageUrls: null == imageUrls
-          ? _value._imageUrls
-          : imageUrls // ignore: cast_nullable_to_non_nullable
+      photoUrls: null == photoUrls
+          ? _value._photoUrls
+          : photoUrls // ignore: cast_nullable_to_non_nullable
               as List<String>,
       name: null == name
           ? _value.name
@@ -289,7 +289,7 @@ class _$StoreImpl extends _Store {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      final List<String> imageUrls = const [],
+      final List<String> photoUrls = const [],
       this.name = '',
       this.phoneNumber = '',
       this.website = '',
@@ -297,7 +297,7 @@ class _$StoreImpl extends _Store {
       final Map<String, String> openingHours = const <String, String>{},
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
       this.storeId = ''})
-      : _imageUrls = imageUrls,
+      : _photoUrls = photoUrls,
         _openingHours = openingHours,
         super._();
 
@@ -322,15 +322,15 @@ class _$StoreImpl extends _Store {
   final UnionTimestamp updatedAt;
 
   /// FirebaseStorageに保存された（ストアの）写真のURL
-  final List<String> _imageUrls;
+  final List<String> _photoUrls;
 
   /// FirebaseStorageに保存された（ストアの）写真のURL
   @override
   @JsonKey()
-  List<String> get imageUrls {
-    if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
+  List<String> get photoUrls {
+    if (_photoUrls is EqualUnmodifiableListView) return _photoUrls;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imageUrls);
+    return EqualUnmodifiableListView(_photoUrls);
   }
 
   /// FirebaseStorageの(ストアの)name
@@ -376,7 +376,7 @@ class _$StoreImpl extends _Store {
 
   @override
   String toString() {
-    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, imageUrls: $imageUrls, name: $name, phoneNumber: $phoneNumber, website: $website, address: $address, openingHours: $openingHours, shotAt: $shotAt, storeId: $storeId)';
+    return 'Store(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, photoUrls: $photoUrls, name: $name, phoneNumber: $phoneNumber, website: $website, address: $address, openingHours: $openingHours, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -390,7 +390,7 @@ class _$StoreImpl extends _Store {
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
             const DeepCollectionEquality()
-                .equals(other._imageUrls, _imageUrls) &&
+                .equals(other._photoUrls, _photoUrls) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.phoneNumber, phoneNumber) ||
                 other.phoneNumber == phoneNumber) &&
@@ -409,7 +409,7 @@ class _$StoreImpl extends _Store {
       id,
       createdAt,
       updatedAt,
-      const DeepCollectionEquality().hash(_imageUrls),
+      const DeepCollectionEquality().hash(_photoUrls),
       name,
       phoneNumber,
       website,
@@ -437,7 +437,7 @@ abstract class _Store extends Store {
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
-      final List<String> imageUrls,
+      final List<String> photoUrls,
       final String name,
       final String phoneNumber,
       final String website,
@@ -466,7 +466,7 @@ abstract class _Store extends Store {
   @override
 
   /// FirebaseStorageに保存された（ストアの）写真のURL
-  List<String> get imageUrls;
+  List<String> get photoUrls;
   @override
 
   /// FirebaseStorageの(ストアの)name

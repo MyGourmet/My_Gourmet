@@ -123,10 +123,10 @@ Future<void> showShopListDialog(
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount:
-                                              stores[shopNo].imageUrls.length,
+                                              stores[shopNo].photoUrls.length,
                                           itemBuilder: (context, index) {
                                             final photoUrl =
-                                                stores[shopNo].imageUrls[index];
+                                                stores[shopNo].photoUrls[index];
                                             return Padding(
                                               padding: const EdgeInsets.only(
                                                 left: 10,
