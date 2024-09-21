@@ -50,8 +50,12 @@ mixin _$Photo {
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
 
+  /// Serializes this Photo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PhotoCopyWith<Photo> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -86,6 +90,8 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -139,6 +145,8 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     ) as $Val);
   }
 
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get createdAt {
@@ -147,6 +155,8 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     });
   }
 
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get updatedAt {
@@ -155,6 +165,8 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     });
   }
 
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get shotAt {
@@ -198,6 +210,8 @@ class __$$PhotoImplCopyWithImpl<$Res>
       _$PhotoImpl _value, $Res Function(_$PhotoImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -224,6 +238,10 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      areaStoreIds: null == areaStoreIds
+          ? _value._areaStoreIds
+          : areaStoreIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
@@ -257,13 +275,14 @@ class _$PhotoImpl extends _Photo {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
-      this.areaStoreIds = const <String>[],
+      final List<String> areaStoreIds = const <String>[],
       this.url = '',
       this.category = '',
       this.userId = '',
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
       this.storeId = ''})
-      : super._();
+      : _areaStoreIds = areaStoreIds,
+        super._();
 
   factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PhotoImplFromJson(json);
@@ -286,9 +305,16 @@ class _$PhotoImpl extends _Photo {
   final UnionTimestamp updatedAt;
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  final List<String> _areaStoreIds;
+
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
   @override
   @JsonKey()
-  final List<String> areaStoreIds;
+  List<String> get areaStoreIds {
+    if (_areaStoreIds is EqualUnmodifiableListView) return _areaStoreIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_areaStoreIds);
+  }
 
   /// FirebaseStorageに保存された写真のURL
   @override
@@ -318,7 +344,7 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, areaStoreIds:$areaStoreIds ,category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -331,8 +357,8 @@ class _$PhotoImpl extends _Photo {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
-            (identical(other.areaStoreIds, areaStoreIds) ||
-                other.areaStoreIds == areaStoreIds) &&
+            const DeepCollectionEquality()
+                .equals(other._areaStoreIds, _areaStoreIds) &&
             (identical(other.url, url) || other.url == url) &&
             (identical(other.category, category) ||
                 other.category == category) &&
@@ -341,12 +367,23 @@ class _$PhotoImpl extends _Photo {
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt,
-      areaStoreIds, url, category, userId, shotAt, storeId);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updatedAt,
+      const DeepCollectionEquality().hash(_areaStoreIds),
+      url,
+      category,
+      userId,
+      shotAt,
+      storeId);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
@@ -375,47 +412,49 @@ abstract class _Photo extends Photo {
 
   factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
 
-  @override
-
   /// firestore上のドキュメントID
-  String get id;
   @override
+  String get id;
 
   /// 作成日時
+  @override
   @timestampConverter
   UnionTimestamp get createdAt;
-  @override
 
   /// 更新日時
+  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
-  @override
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
-  List<String> get areaStoreIds;
   @override
+  List<String> get areaStoreIds;
 
   /// FirebaseStorageに保存された写真のURL
-  String get url;
   @override
+  String get url;
 
   /// geminiで推論した写真のカテゴリ
   /// ここをstringではなくてenumに変換して格納しておくと、
   /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
-  String get category;
   @override
+  String get category;
 
   /// FirebaseStorageのドキュメントID
-  String get userId;
   @override
+  String get userId;
 
   /// 写真の撮影日時
+  @override
   @timestampConverter
   UnionTimestamp get shotAt;
   @override
   String get storeId;
+
+  /// Create a copy of Photo
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
