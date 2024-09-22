@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../features/auth/my_page.dart';
 import '../features/photo/camera/camera_detail_page.dart';
 import '../features/photo/camera/camera_page.dart';
+import '../features/auth/sign_in_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
 import '../features/photo/image_detail/image_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
@@ -22,6 +21,11 @@ final routerProvider = Provider(
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
         routes: [
+          GoRoute(
+            name: SignInPage.routeName,
+            path: SignInPage.routePath,
+            builder: (context, state) => const SignInPage(),
+          ),
           GoRoute(
             name: HomePage.routeName,
             path: HomePage.routePath,
