@@ -9,11 +9,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import '../../../core/widgets/date_utils.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/photo_manager_service.dart';
+import '../../../core/widgets/date_utils.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 
@@ -57,17 +57,22 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
     state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
 
     try {
-      final controller = await ref.read(cameraControllerProvider.future);
-      final image = await controller.takePicture();
-
       // 権限のリクエストをまとめて行う
-      if (!(await _ensurePermissions())) {
+      if (!(await _ensurePermissions(context))) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('必要な権限が許可されていません。')),
+          const SnackBar(
+            content: Text('設定画面で権限を許可してください。'),
+            action: SnackBarAction(
+              label: '設定を開く',
+              onPressed: openAppSettings,
+            ),
+          ),
         );
         return;
       }
 
+      final controller = await ref.read(cameraControllerProvider.future);
+      final image = await controller.takePicture();
       // 画像をギャラリーに保存
       final result = await ImageGallerySaver.saveFile(image.path);
       logger.i('ギャラリーに画像を保存しました: $result');
@@ -77,31 +82,69 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
         capturedImage: File(image.path),
         imageDate: _formatDate(),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       logger.e('写真撮影エラー: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('設定画面で権限を許可してください。'),
+          action: SnackBarAction(
+            label: '設定を開く',
+            onPressed: openAppSettings,
+          ),
+        ),
+      );
     } finally {
       state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
     }
   }
 
   // 権限の確認とリクエスト
-  Future<bool> _ensurePermissions() async {
-    final storageStatus = await Permission.storage.status;
-    final photosStatus = await Permission.photos.status;
-    final locationStatus = await Permission.location.status;
+  Future<bool> _ensurePermissions(BuildContext context) async {
+    while (true) {
+      final cameraStatus = await Permission.camera.status;
+      final storageStatus = await Permission.storage.status;
+      final photosStatus = await Permission.photos.status;
+      final locationStatus = await Permission.location.status;
 
-    if (!storageStatus.isGranted) {
-      await Permission.storage.request();
-    }
-    if (!photosStatus.isGranted) {
-      await Permission.photos.request();
-    }
-    if (!locationStatus.isGranted) {
-      await Permission.location.request();
-    }
+      if (!storageStatus.isGranted ||
+          !cameraStatus.isGranted ||
+          !photosStatus.isGranted ||
+          !locationStatus.isGranted) {
+        // いずれかの権限が拒否された場合、再度リクエスト
+        final statuses = await [
+          Permission.camera,
+          Permission.storage,
+          Permission.photos,
+          Permission.location,
+        ].request();
 
-    return (storageStatus.isGranted || photosStatus.isGranted) &&
-        locationStatus.isGranted;
+        if (statuses[Permission.camera]!.isPermanentlyDenied ||
+            statuses[Permission.storage]!.isPermanentlyDenied ||
+            statuses[Permission.photos]!.isPermanentlyDenied ||
+            statuses[Permission.location]!.isPermanentlyDenied) {
+          // 永久に拒否された場合、設定画面を表示する
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('設定画面で権限を許可してください。'),
+              action: SnackBarAction(
+                label: '設定を開く',
+                onPressed: openAppSettings,
+              ),
+            ),
+          );
+          return false;
+        }
+
+        if (statuses[Permission.camera]!.isGranted &&
+                statuses[Permission.storage]!.isGranted &&
+                statuses[Permission.photos]!.isGranted ||
+            statuses[Permission.location]!.isGranted) {
+          return true;
+        }
+      } else {
+        return true; // すべての権限が許可されている場合
+      }
+    }
   }
 
   // 日付フォーマット
@@ -158,7 +201,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     // 写真取得
     await PhotoManager.clearFileCache();
     final photos = await PhotoManager.getAssetPathList();
-    print("最新フォト");
+    print('最新フォト');
     print(photos);
     return ref.read(photoManagerServiceProvider).getLatestPhotos();
   }
@@ -233,7 +276,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         desiredAccuracy: LocationAccuracy.high,
       );
       return position;
-    } catch (e) {
+    } on Exception catch (e) {
       logger.e('位置情報の取得に失敗しました: $e');
       return null;
     }

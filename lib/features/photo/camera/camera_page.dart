@@ -4,8 +4,9 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../core/build_context_extension.dart';
 import '../../../core/photo_manager_service.dart';
-import 'camera_controller.dart'; // 新しいファイルをインポート
+import 'camera_controller.dart';
 import 'camera_detail_page.dart';
 
 class CameraPage extends HookConsumerWidget {
@@ -81,24 +82,6 @@ class CameraPage extends HookConsumerWidget {
                                       await ref
                                           .read(photoListProvider.notifier)
                                           .swipeRight();
-
-                                      // final latestPhotos =
-                                      //     await photoService.getLatestPhotos();
-
-                                      //最新の写真を表示用にセット
-                                      // if (latestPhotos.isNotEmpty) {
-                                      //   final latestPhoto = latestPhotos.first;
-                                      //   final file = await latestPhoto.file;
-                                      //   if (file != null) {
-                                      //     ref
-                                      //         .read(
-                                      //             cameraStateProvider.notifier)
-                                      //         .state = cameraState.copyWith(
-                                      //       capturedImage: file,
-                                      //       imageDate: cameraState.imageDate,
-                                      //     );
-                                      //   }
-                                      // }
                                     },
                               child: Container(
                                 width: 60,
@@ -178,11 +161,7 @@ class CameraPage extends HookConsumerWidget {
                           width: MediaQuery.sizeOf(context).width / 5,
                           child: Text(
                             cameraState.imageDate!,
-                            //todo
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                            ),
+                            style: context.textTheme.bodyMedium,
                             textAlign: TextAlign.center,
                           ),
                         ),

@@ -67,5 +67,9 @@
     <string>このアプリは、写真ライブラリにアクセスしてグルメの写真を選別して保存するために使用します。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
     <string>このアプリは、現在位置を使用して近くのレストランを表示するために使用します。</string>
+    <key>NSCameraUsageDescription</key>
+    <string>このアプリは、カメラを使用してグルメの画像を撮影するために使用します。</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>このアプリは、カメラを使用して撮影したグルメの画像を保存するために使用します。</string>
 </dict>
 </plist>
