@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/build_context_extension.dart';
+
 class CameraDetailPage extends ConsumerStatefulWidget {
   const CameraDetailPage({
     super.key,
@@ -69,15 +71,14 @@ class _CameraDetailPageState extends ConsumerState<CameraDetailPage> {
                       const Gap(28),
                       Text(
                         widget.imageDate,
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 14),
+                        style: context.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                       const Gap(8),
-                      const Text(
+                      Text(
                         '---',
-                        style: TextStyle(color: Colors.black, fontSize: 14),
                         textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium,
                       ),
                       const Gap(24),
                     ],

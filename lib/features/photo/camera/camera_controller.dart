@@ -165,7 +165,8 @@ final cameraControllerProvider =
   final cameras = await availableCameras();
 
   if (cameras.isEmpty) {
-    throw CameraException('NoCameraAvailable', '利用可能なカメラが見つかりませんでした');
+    throw CameraException('NoCameraAvailable', '''
+利用可能なカメラが見つかりませんでした''');
   }
 
   final camera = cameras.first;
@@ -210,13 +211,11 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   }
 
   Future<void> swipeRight({bool isFood = true}) async {
-    // データがない時は何もしない
     final value = state.valueOrNull;
     if (value == null || state.asData == null) {
       return;
     }
 
-    // エラーがある時は何もしない
     if (state.hasError) {
       return;
     }
@@ -224,20 +223,16 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     final photos = state.asData!.value;
     final photo = photos[0];
 
-    // IDのスラッシュをハイフンに置換
     final modifiedPhotoId = photo.id.replaceAll('/', '-');
 
     try {
-      // ユーザーIDの取得
       final userId = ref.read(userIdProvider);
 
       if (userId != null) {
-        // 位置情報の取得
         final position = await _getCurrentPosition();
         final latitude = position?.latitude;
         final longitude = position?.longitude;
 
-        // 写真情報をサーバーに登録
         if (latitude != null && longitude != null) {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
                 photoId: modifiedPhotoId,
@@ -245,6 +240,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
                 latitude: latitude,
                 longitude: longitude,
               );
+          logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
+              '緯度: $latitude, 経度: $longitude');
         }
 
         // 写真データの取得と圧縮
@@ -257,6 +254,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
                   photoId: modifiedPhotoId,
                   photoData: compressedData,
                 );
+            logger.i('圧縮写真データをサーバーに送信しました: $modifiedPhotoId');
           }
         }
       } else {
@@ -275,9 +273,15 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   // 位置情報の取得
   Future<Position?> _getCurrentPosition() async {
     try {
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+      const locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
       );
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: locationSettings,
+      );
+
       return position;
     } on Exception catch (e) {
       logger.e('位置情報の取得に失敗しました: $e');
