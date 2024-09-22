@@ -57,6 +57,8 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
     state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
 
     try {
+      final controller = await ref.read(cameraControllerProvider.future);
+      final image = await controller.takePicture();
       // 権限のリクエストをまとめて行う
       if (!(await _ensurePermissions(context))) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -71,8 +73,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
         return;
       }
 
-      final controller = await ref.read(cameraControllerProvider.future);
-      final image = await controller.takePicture();
       // 画像をギャラリーに保存
       final result = await ImageGallerySaver.saveFile(image.path);
       logger.i('ギャラリーに画像を保存しました: $result');
@@ -105,23 +105,27 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       final storageStatus = await Permission.storage.status;
       final photosStatus = await Permission.photos.status;
       final locationStatus = await Permission.location.status;
+      final microphoneStatus = await Permission.microphone.status;
 
       if (!storageStatus.isGranted ||
           !cameraStatus.isGranted ||
           !photosStatus.isGranted ||
-          !locationStatus.isGranted) {
+          !locationStatus.isGranted ||
+          !microphoneStatus.isGranted) {
         // いずれかの権限が拒否された場合、再度リクエスト
         final statuses = await [
           Permission.camera,
           Permission.storage,
           Permission.photos,
           Permission.location,
+          Permission.microphone,
         ].request();
 
         if (statuses[Permission.camera]!.isPermanentlyDenied ||
             statuses[Permission.storage]!.isPermanentlyDenied ||
             statuses[Permission.photos]!.isPermanentlyDenied ||
-            statuses[Permission.location]!.isPermanentlyDenied) {
+            statuses[Permission.location]!.isPermanentlyDenied ||
+            statuses[Permission.microphone]!.isPermanentlyDenied) {
           // 永久に拒否された場合、設定画面を表示する
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -136,9 +140,10 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
         }
 
         if (statuses[Permission.camera]!.isGranted &&
-                statuses[Permission.storage]!.isGranted &&
-                statuses[Permission.photos]!.isGranted ||
-            statuses[Permission.location]!.isGranted) {
+                statuses[Permission.storage]!.isGranted ||
+            statuses[Permission.photos]!.isGranted &&
+                statuses[Permission.location]!.isGranted &&
+                statuses[Permission.microphone]!.isGranted) {
           return true;
         }
       } else {
@@ -201,8 +206,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     // 写真取得
     await PhotoManager.clearFileCache();
     final photos = await PhotoManager.getAssetPathList();
-    print('最新フォト');
-    print(photos);
     return ref.read(photoManagerServiceProvider).getLatestPhotos();
   }
 

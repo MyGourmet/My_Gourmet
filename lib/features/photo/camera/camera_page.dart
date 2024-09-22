@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/build_context_extension.dart';
-import '../../../core/photo_manager_service.dart';
 import 'camera_controller.dart';
 import 'camera_detail_page.dart';
 
@@ -18,8 +17,6 @@ class CameraPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(cameraStateProvider);
-    final photoService = ref.read(photoManagerServiceProvider);
-    final photoListAsyncValue = ref.watch(photoListProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

@@ -71,5 +71,7 @@
     <string>このアプリは、カメラを使用してグルメの画像を撮影するために使用します。</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>このアプリは、カメラを使用して撮影したグルメの画像を保存するために使用します。</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>このアプリはカメラを使用して音声録音するためにマイクを使用します。</string>
 </dict>
 </plist>
