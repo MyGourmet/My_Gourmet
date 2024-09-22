@@ -17,7 +17,7 @@ class CameraPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(cameraStateProvider);
-    final photoListAsyncValue = ref.watch(photoListProvider);
+    ref.watch(photoListProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
