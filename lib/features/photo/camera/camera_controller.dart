@@ -60,16 +60,20 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       final controller = await ref.read(cameraControllerProvider.future);
       final image = await controller.takePicture();
       // 権限のリクエストをまとめて行う
-      if (!(await _ensurePermissions(context))) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('設定画面で権限を許可してください。'),
-            action: SnackBarAction(
-              label: '設定を開く',
-              onPressed: openAppSettings,
-            ),
-          ),
-        );
+      if (context.mounted) {
+        if (!(await _ensurePermissions(context))) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('設定画面で権限を許可してください。'),
+                action: SnackBarAction(
+                  label: '設定を開く',
+                  onPressed: openAppSettings,
+                ),
+              ),
+            );
+          }
+        }
         return;
       }
 
@@ -84,15 +88,17 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       );
     } on Exception catch (e) {
       logger.e('写真撮影エラー: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('設定画面で権限を許可してください。'),
-          action: SnackBarAction(
-            label: '設定を開く',
-            onPressed: openAppSettings,
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('設定画面で権限を許可してください。'),
+            action: SnackBarAction(
+              label: '設定を開く',
+              onPressed: openAppSettings,
+            ),
           ),
-        ),
-      );
+        );
+      }
     } finally {
       state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
     }
@@ -127,15 +133,17 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
             statuses[Permission.location]!.isPermanentlyDenied ||
             statuses[Permission.microphone]!.isPermanentlyDenied) {
           // 永久に拒否された場合、設定画面を表示する
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('設定画面で権限を許可してください。'),
-              action: SnackBarAction(
-                label: '設定を開く',
-                onPressed: openAppSettings,
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('設定画面で権限を許可してください。'),
+                action: SnackBarAction(
+                  label: '設定を開く',
+                  onPressed: openAppSettings,
+                ),
               ),
-            ),
-          );
+            );
+          }
           return false;
         }
 
