@@ -88,19 +88,15 @@ class PhotoService {
       type: RequestType.image,
       filterOption: FilterOptionGroup(
         orders: [
-          const OrderOption(
-            
-          ),
+          const OrderOption(),
         ],
       ),
     );
 
-    // 写真がない場合は空のリストを返す
     if (albums.isEmpty) {
       return [];
     }
 
-    // 指定された件数分だけ写真を取得
     final photos = await albums[0].getAssetListPaged(
       page: 0,
       size: limit,

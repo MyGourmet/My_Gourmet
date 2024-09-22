@@ -77,11 +77,9 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
         return;
       }
 
-      // 画像をギャラリーに保存
       final result = await ImageGallerySaver.saveFile(image.path);
       logger.i('ギャラリーに画像を保存しました: $result');
 
-      // 状態更新
       state = state.copyWith(
         capturedImage: File(image.path),
         imageDate: _formatDate(),
@@ -160,14 +158,12 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
     }
   }
 
-  // 日付フォーマット
   String _formatDate() {
     final now = DateTime.now();
     return FormatDateTime.dateFmt.format(now);
   }
 }
 
-// カメラコントローラ用のプロバイダー
 final cameraControllerProvider =
     FutureProvider.autoDispose<CameraController>((ref) async {
   final cameras = await availableCameras();
@@ -189,30 +185,24 @@ final cameraControllerProvider =
   return controller;
 });
 
-// カメラ状態を管理するためのStateNotifierプロバイダー
 final cameraStateProvider =
     StateNotifierProvider<CameraStateNotifier, CameraState>((ref) {
   return CameraStateNotifier(ref);
 });
 
-/// 写真リストを管理するプロバイダー
 final photoListProvider =
     AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
   _PhotoListNotifier.new,
 );
 
-/// 写真を取得するProvider
 class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
-  /// 初期処理
   @override
   Future<List<AssetEntity>> build() async {
-    // パーミッション確認
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
 
-    // 写真取得
     await PhotoManager.clearFileCache();
     await PhotoManager.getAssetPathList();
     return ref.read(photoManagerServiceProvider).getLatestPhotos();
@@ -274,11 +264,9 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       return;
     }
 
-    // 最後の写真までスワイプした場合
     state = const AsyncValue<List<AssetEntity>>.loading();
   }
 
-  // 位置情報の取得
   Future<Position?> _getCurrentPosition() async {
     try {
       const locationSettings = LocationSettings(
