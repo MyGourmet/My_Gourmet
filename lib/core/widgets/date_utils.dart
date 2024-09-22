@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class formatDateTime {
+class FormatDateTime {
   static const dateFormat = 'yyyy/MM/dd';
   static const timeFormat = 'HH:mm:ss';
   static const shortTimeFormat = 'HH:mm';

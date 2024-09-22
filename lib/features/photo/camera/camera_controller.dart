@@ -163,7 +163,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
   // 日付フォーマット
   String _formatDate() {
     final now = DateTime.now();
-    return formatDateTime.dateFmt.format(now);
+    return FormatDateTime.dateFmt.format(now);
   }
 }
 

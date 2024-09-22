@@ -1,18 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/build_context_extension.dart';
 
-class CameraDetailPage extends ConsumerStatefulWidget {
+class CameraDetailPage extends HookConsumerWidget {
   const CameraDetailPage({
     super.key,
     required this.imageFile,
     required this.imageDate,
   });
+
   final File imageFile;
   final String imageDate;
 
@@ -20,12 +20,7 @@ class CameraDetailPage extends ConsumerStatefulWidget {
   static const routePath = '/camera_detail_page';
 
   @override
-  ConsumerState<CameraDetailPage> createState() => _CameraDetailPageState();
-}
-
-class _CameraDetailPageState extends ConsumerState<CameraDetailPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -62,7 +57,7 @@ class _CameraDetailPageState extends ConsumerState<CameraDetailPage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Image.file(
-                              widget.imageFile,
+                              imageFile,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -70,7 +65,7 @@ class _CameraDetailPageState extends ConsumerState<CameraDetailPage> {
                       ),
                       const Gap(28),
                       Text(
-                        widget.imageDate,
+                        imageDate,
                         style: context.textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
