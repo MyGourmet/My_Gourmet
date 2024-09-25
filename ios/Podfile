@@ -39,6 +39,8 @@ end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
+    # XCode 16 対応
+    # ref: https://zenn.dev/flutteruniv_dev/articles/dc109d36e48d76
     flutter_additional_ios_build_settings(target)
     if target.name == 'BoringSSL-GRPC'
       target.source_build_phase.files.each do |file|
