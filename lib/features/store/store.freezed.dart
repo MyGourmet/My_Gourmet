@@ -55,7 +55,7 @@ mixin _$Store {
   String get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StoreCopyWith<Store> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -402,7 +402,7 @@ class _$StoreImpl extends _Store {
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -418,9 +418,7 @@ class _$StoreImpl extends _Store {
       shotAt,
       storeId);
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>
@@ -451,55 +449,53 @@ abstract class _Store extends Store {
 
   factory _Store.fromJson(Map<String, dynamic> json) = _$StoreImpl.fromJson;
 
-  /// firestore上のドキュメントID
   @override
+
+  /// firestore上のドキュメントID
   String get id;
+  @override
 
   /// 作成日時
-  @override
   @timestampConverter
   UnionTimestamp get createdAt;
+  @override
 
   /// 更新日時
-  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
+  @override
 
   /// FirebaseStorageに保存された（ストアの）写真のURL
-  @override
   List<String> get photoUrls;
+  @override
 
   /// FirebaseStorageの(ストアの)name
-  @override
   String get name;
+  @override
 
   /// FirebaseStorageの（ストアの）電話番号
-  @override
   String get phoneNumber;
+  @override
 
   /// FirebaseStorageの（ストアの）URL
-  @override
   String get website;
+  @override
 
   /// FirebaseStorageの（ストアの）住所
-  @override
   String get address;
+  @override
 
   /// FirebaseStorageの（ストアの）営業時間
-  @override
   Map<String, String> get openingHours;
+  @override
 
   /// 写真の撮影日時
-  @override
   @timestampConverter
   UnionTimestamp get shotAt;
   @override
   String get storeId;
-
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
