@@ -292,9 +292,6 @@ class _$PhotoImpl extends _Photo {
   final List<String> _areaStoreIds;
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
-  final List<String> _areaStoreIds;
-
-  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
   @override
   @JsonKey()
   List<String> get areaStoreIds {
