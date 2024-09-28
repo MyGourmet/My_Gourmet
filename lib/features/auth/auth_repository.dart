@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../core/logger.dart';
 import 'authed_user.dart';
@@ -42,7 +43,11 @@ class AuthRepository {
   FirebaseAuth get auth => _auth;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// サインイン用メソッド
+  bool isSignedIn() {
+    return _auth.currentUser != null;
+  }
+
+  // Googleサインインのメソッド
   Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(
       scopes: [
@@ -52,7 +57,7 @@ class AuthRepository {
     ).signIn();
 
     if (googleUser == null) {
-      throw Exception('サインインに失敗しました.');
+      throw Exception('Google サインインに失敗しました.');
     }
 
     final googleAuth = await googleUser.authentication;
@@ -66,9 +71,36 @@ class AuthRepository {
     final accessToken = googleAuth.accessToken;
     final userId = _auth.currentUser?.uid;
     if (accessToken == null || userId == null) {
-      throw Exception('サインインに失敗しました.');
+      throw Exception('Google サインインに失敗しました.');
     }
-    await upsertClassifyPhotosStatus(userId);
+    return (accessToken: accessToken, userId: userId);
+  }
+
+  // Appleサインインのメソッド
+  Future<({String accessToken, String userId})> signInWithApple() async {
+    // Appleサインインの認証
+    final appleCredential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
+
+    final oauthCredential = OAuthProvider('apple.com').credential(
+      idToken: appleCredential.identityToken,
+      accessToken: appleCredential.authorizationCode,
+    );
+
+    // Firebase Authにサインイン
+    await _auth.signInWithCredential(oauthCredential);
+
+    final userId = _auth.currentUser?.uid;
+    final accessToken = appleCredential.authorizationCode;
+
+    if (userId == null) {
+      throw Exception('Appleサインインに失敗しました。');
+    }
+
     return (accessToken: accessToken, userId: userId);
   }
 
@@ -106,10 +138,9 @@ class AuthRepository {
   /// ユーザーアカウントを削除する
   Future<void> deleteUserAccount() async {
     try {
-      var userId = _auth.currentUser?.uid;
+      final userId = _auth.currentUser?.uid;
       if (userId == null) {
-        final result = await signInWithGoogle();
-        userId = result.userId;
+        throw Exception('ユーザー情報が取得できませんでした。');
       }
       await call(
         functionName: 'deleteAccount',

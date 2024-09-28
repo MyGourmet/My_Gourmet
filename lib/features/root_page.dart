@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,6 +12,7 @@ import '../core/shared_preferences_service.dart';
 import '../core/widgets/confirm_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
 import 'auth/auth_repository.dart';
+import 'auth/sign_in_page.dart';
 import 'onboarding_page.dart';
 
 /// 全てのページの基盤となるページ
@@ -25,35 +27,41 @@ class RootPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = useState(true);
 
+    // 初期化処理を行う非同期関数
     Future<void> init(WidgetRef ref, BuildContext context) async {
-      if (context.mounted) {
-        await Future.wait([
-          _checkBuildNumber(context),
-          ref.watch(sharedPreferencesServiceProvider).init(),
-        ]);
-        final isOnboardingComplete = ref.watch(isOnBoardingCompletedProvider);
-        if (isOnboardingComplete) {
-          await ref.read(authRepositoryProvider).signInWithGoogle();
-        }
+      await Future.wait([
+        _checkBuildNumber(context),
+        ref.watch(sharedPreferencesServiceProvider).init(),
+      ]);
+
+      final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
+      if (!isSignedIn && context.mounted) {
+        GoRouter.of(context).go(SignInPage.routePath);
       }
     }
 
-    useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        init(ref, context).then((_) {
-          isLoading.value = false;
+    // フックの`useEffect`で初期化処理を行う
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          init(ref, context).then((_) {
+            isLoading.value = false;
+          });
         });
-      });
-      return null;
-    }, [],);
+        return null;
+      },
+      [],
+    );
 
     return isLoading.value
-        ? const SizedBox.shrink()
+        ? const SizedBox.shrink() // ローディング中は空のウィジェットを表示
         : NavigationFrame(
             child: Stack(
               children: [
                 child,
-                if (!ref.watch(isOnBoardingCompletedProvider))
+                if (!ref.watch(
+                  isOnBoardingCompletedProvider,
+                )) // オンボーディングページが完了していない場合
                   const OnboardingPage(),
               ],
             ),
@@ -85,7 +93,6 @@ class RootPage extends HookConsumerWidget {
         shouldPopOnConfirmed: false,
         onConfirmed: () async {
           if (Platform.isAndroid) {
-            // TODO(masaki): Google Playにてアプリ作成後に動作確認
             await launchUrl(
               Uri.parse(
                 'https://play.google.com/store/apps/details?id=com.blue_waltz.my_gourmet',
