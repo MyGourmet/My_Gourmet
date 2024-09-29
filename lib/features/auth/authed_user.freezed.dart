@@ -37,7 +37,7 @@ mixin _$AuthedUser {
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AuthedUserCopyWith<AuthedUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -105,6 +105,8 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
     });
   }
 
+  /// Create a copy of AuthedUser
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get updatedAt {
@@ -230,7 +232,7 @@ class _$AuthedUserImpl extends _AuthedUser {
                 other.classifyPhotosStatus == classifyPhotosStatus));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, createdAt, updatedAt, classifyPhotosStatus);
@@ -261,27 +263,27 @@ abstract class _AuthedUser extends AuthedUser {
   factory _AuthedUser.fromJson(Map<String, dynamic> json) =
       _$AuthedUserImpl.fromJson;
 
-  @override
-
   /// firestore上のドキュメントID
-  String get id;
   @override
+  String get id;
 
   /// 作成日時
+  @override
   @timestampConverter
   UnionTimestamp get createdAt;
-  @override
 
   /// 更新日時
+  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
-  @override
 
   /// 写真分類用APIの実行状態
+  @override
   @ClassifyPhotosStatusConverter()
   ClassifyPhotosStatus get classifyPhotosStatus;
+
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AuthedUserImplCopyWith<_$AuthedUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
