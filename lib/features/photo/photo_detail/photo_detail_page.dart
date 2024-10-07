@@ -27,7 +27,6 @@ class PhotoDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final pageController = usePageController(
       initialPage: index,
       viewportFraction: 0.9,
@@ -43,16 +42,19 @@ class PhotoDetailPage extends HookConsumerWidget {
       }
 
       photo.value = ref.read(photoControllerProvider).downloadPhoto(
-        userId: userId,
-        photoId: photoId,
-      );
+            userId: userId,
+            photoId: photoId,
+          );
     }
 
-    useEffect(() {
-      downloadPhoto(ref);
-      return null;
-    }, [],);
-    
+    useEffect(
+      () {
+        downloadPhoto(ref);
+        return null;
+      },
+      [],
+    );
+
     Future<Store?> fetchStore(Photo photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
@@ -69,7 +71,8 @@ class PhotoDetailPage extends HookConsumerWidget {
       );
     }
 
-    String formatAddress(String fullAddress) {     // 変更なし
+    String formatAddress(String fullAddress) {
+      // 変更なし
       final postalCodeIndex = fullAddress.indexOf('〒');
 
       // もし '〒' が見つからない場合、そのまま fullAddress を返す
@@ -152,7 +155,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                 dateTime: DateTime.now(),
                                 address: formatAddress(store?.address ?? ''),
                                 storeUrl: store?.website ?? '',
-                                storePhotoUrls: store?.photoUrls ?? [],
+                                storeImageUrls: store?.imageUrls ?? [],
                                 storeOpeningHours: store?.openingHours ?? {},
                                 showCardBack: photo.storeId.isNotEmpty,
                                 onSelected: () {

@@ -14,7 +14,7 @@ _$StoreImpl _$$StoreImplFromJson(Map<String, dynamic> json) => _$StoreImpl(
       updatedAt: json['updatedAt'] == null
           ? const UnionTimestamp.serverTimestamp()
           : serverTimestampConverter.fromJson(json['updatedAt'] as Object),
-      photoUrls: (json['photoUrls'] as List<dynamic>?)
+      imageUrls: (json['imageUrls'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           const [],
@@ -37,7 +37,7 @@ Map<String, dynamic> _$$StoreImplToJson(_$StoreImpl instance) =>
       'id': instance.id,
       'createdAt': timestampConverter.toJson(instance.createdAt),
       'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
-      'photoUrls': instance.photoUrls,
+      'imageUrls': instance.imageUrls,
       'name': instance.name,
       'phoneNumber': instance.phoneNumber,
       'website': instance.website,

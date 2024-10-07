@@ -123,10 +123,10 @@ Future<void> showShopListDialog(
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount:
-                                              stores[shopNo].photoUrls.length,
+                                              stores[shopNo].imageUrls.length,
                                           itemBuilder: (context, index) {
-                                            final photoUrl =
-                                                stores[shopNo].photoUrls[index];
+                                            final imageUrl =
+                                                stores[shopNo].imageUrls[index];
                                             return Padding(
                                               padding: const EdgeInsets.only(
                                                 left: 10,
@@ -137,7 +137,7 @@ Future<void> showShopListDialog(
                                                 child: ScalablePhoto(
                                                   height: 100,
                                                   width: 125,
-                                                  photoUrl: photoUrl,
+                                                  photoUrl: imageUrl,
                                                 ),
                                               ),
                                             );

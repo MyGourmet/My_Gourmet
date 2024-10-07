@@ -21,8 +21,8 @@ class Store with _$Store {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp updatedAt,
 
-    /// FirebaseStorageに保存された（ストアの）写真のURL
-    @Default([]) List<String> photoUrls,
+    /// FirebaseStorageに保存された（ストアの）画像のURL
+    @Default([]) List<String> imageUrls,
 
     /// FirebaseStorageの(ストアの)name
     @Default('') String name,

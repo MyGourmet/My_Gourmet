@@ -16,7 +16,7 @@ class CardBack extends ConsumerWidget {
     required this.areaStoreIds,
     required this.isLinked,
     required this.storeName,
-    required this.storePhotoUrls,
+    required this.storeImageUrls,
     this.openTime,
     this.address,
     this.storeUrl,
@@ -29,7 +29,7 @@ class CardBack extends ConsumerWidget {
   final List<String> areaStoreIds;
   final bool isLinked;
   final String storeName;
-  final List<String> storePhotoUrls;
+  final List<String> storeImageUrls;
   final String? openTime;
   final String? address;
   final String? storeUrl;
@@ -138,15 +138,15 @@ class CardBack extends ConsumerWidget {
                     color: Themes.gray[900],
                   ),
                 ),
-                if (storePhotoUrls.isNotEmpty)
+                if (storeImageUrls.isNotEmpty)
                   SizedBox(
                     height: MediaQuery.of(context).size.height / 6,
                     child: Scrollbar(
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: storePhotoUrls.length,
+                        itemCount: storeImageUrls.length,
                         itemBuilder: (context, index) {
-                          final photoUrl = storePhotoUrls[index];
+                          final photoUrl = storeImageUrls[index];
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
                             child: ClipRRect(
