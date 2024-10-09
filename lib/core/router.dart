@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../features/auth/my_page.dart';
 import '../features/auth/sign_in_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
-import '../features/photo/image_detail/image_detail_page.dart';
+import '../features/photo/photo_detail/photo_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
 import '../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../features/root_page.dart';
@@ -47,11 +47,11 @@ final routerProvider = Provider(
         ],
       ),
       GoRoute(
-        name: ImageDetailPage.routeName,
-        path: ImageDetailPage.routePath,
+        name: PhotoDetailPage.routeName,
+        path: PhotoDetailPage.routePath,
         builder: (context, state) {
           final args = state.extra! as Map<String, dynamic>;
-          return ImageDetailPage(
+          return PhotoDetailPage(
             index: args['index'] as int,
             photoId: args['photoId'] as String,
           );

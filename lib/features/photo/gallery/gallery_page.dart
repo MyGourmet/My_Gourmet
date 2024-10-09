@@ -8,9 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
-import '../image_detail/image_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
+import '../photo_detail/photo_detail_page.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -141,7 +141,7 @@ class HomePage extends HookConsumerWidget {
             child: GestureDetector(
               onTap: () {
                 context.push(
-                  ImageDetailPage.routePath,
+                  PhotoDetailPage.routePath,
                   extra: {
                     'photoId': photo.id,
                     'index': index,

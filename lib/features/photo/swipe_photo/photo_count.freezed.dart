@@ -22,7 +22,7 @@ mixin _$PhotoCount {
   /// 写真の合計数
   int get total => throw _privateConstructorUsedError;
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PhotoCountCopyWith<PhotoCount> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -134,7 +134,7 @@ class _$PhotoCountImpl extends _PhotoCount {
   @override
   int get hashCode => Object.hash(runtimeType, current, total);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PhotoCountImplCopyWith<_$PhotoCountImpl> get copyWith =>
@@ -147,15 +147,16 @@ abstract class _PhotoCount extends PhotoCount {
       required final int total}) = _$PhotoCountImpl;
   const _PhotoCount._() : super._();
 
-  /// 現在の写真処理数
   @override
+
+  /// 現在の写真処理数
   int get current;
+  @override
 
   /// 写真の合計数
-  @override
   int get total;
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PhotoCountImplCopyWith<_$PhotoCountImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -51,7 +51,7 @@ mixin _$Photo {
   String get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PhotoCopyWith<Photo> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -289,6 +289,8 @@ class _$PhotoImpl extends _Photo {
   @JsonKey()
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
+
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
   final List<String> _areaStoreIds;
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
@@ -351,7 +353,7 @@ class _$PhotoImpl extends _Photo {
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -365,7 +367,7 @@ class _$PhotoImpl extends _Photo {
       shotAt,
       storeId);
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
@@ -394,47 +396,47 @@ abstract class _Photo extends Photo {
 
   factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
 
-  /// firestore上のドキュメントID
   @override
+
+  /// firestore上のドキュメントID
   String get id;
+  @override
 
   /// 作成日時
-  @override
   @timestampConverter
   UnionTimestamp get createdAt;
+  @override
 
   /// 更新日時
-  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
+  @override
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
-  @override
   List<String> get areaStoreIds;
+  @override
 
   /// FirebaseStorageに保存された写真のURL
-  @override
   String get url;
+  @override
 
   /// geminiで推論した写真のカテゴリ
   /// ここをstringではなくてenumに変換して格納しておくと、
   /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
-  @override
   String get category;
+  @override
 
   /// FirebaseStorageのドキュメントID
-  @override
   String get userId;
+  @override
 
   /// 写真の撮影日時
-  @override
   @timestampConverter
   UnionTimestamp get shotAt;
   @override
   String get storeId;
-
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
