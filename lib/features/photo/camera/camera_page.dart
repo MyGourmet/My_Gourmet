@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/build_context_extension.dart';
 import 'camera_controller.dart';
@@ -73,10 +74,22 @@ class CameraPage extends HookConsumerWidget {
                               onTap: cameraState.isTakingPicture
                                   ? null // 撮影中はボタンを無効にする
                                   : () async {
-                                      await ref
+                                      final isCaptureSuccessful = await ref
                                           .read(cameraStateProvider.notifier)
                                           .takePictureAndSave(context);
-
+                                      if (!isCaptureSuccessful &&
+                                          context.mounted) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text('設定画面で権限を許可してください。'),
+                                            action: SnackBarAction(
+                                              label: '設定を開く',
+                                              onPressed: openAppSettings,
+                                            ),
+                                          ),
+                                        );
+                                      }
                                       await ref
                                           .read(photoListProvider.notifier)
                                           .swipeRight();
