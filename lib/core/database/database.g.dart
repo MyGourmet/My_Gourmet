@@ -683,61 +683,6 @@ typedef $$PhotosTableUpdateCompanionBuilder = PhotosCompanion Function({
   Value<int> rowid,
 });
 
-class $$PhotosTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $PhotosTable,
-    Photo,
-    $$PhotosTableFilterComposer,
-    $$PhotosTableOrderingComposer,
-    $$PhotosTableCreateCompanionBuilder,
-    $$PhotosTableUpdateCompanionBuilder> {
-  $$PhotosTableTableManager(_$AppDatabase db, $PhotosTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$PhotosTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$PhotosTableOrderingComposer(ComposerState(db, table)),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> path = const Value.absent(),
-            Value<int> width = const Value.absent(),
-            Value<int> height = const Value.absent(),
-            Value<double?> latitude = const Value.absent(),
-            Value<double?> longitude = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              PhotosCompanion(
-            id: id,
-            path: path,
-            width: width,
-            height: height,
-            latitude: latitude,
-            longitude: longitude,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String path,
-            Value<int> width = const Value.absent(),
-            Value<int> height = const Value.absent(),
-            Value<double?> latitude = const Value.absent(),
-            Value<double?> longitude = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              PhotosCompanion.insert(
-            id: id,
-            path: path,
-            width: width,
-            height: height,
-            latitude: latitude,
-            longitude: longitude,
-            rowid: rowid,
-          ),
-        ));
-}
-
 class $$PhotosTableFilterComposer
     extends FilterComposer<_$AppDatabase, $PhotosTable> {
   $$PhotosTableFilterComposer(super.$state);
@@ -806,6 +751,79 @@ class $$PhotosTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
+class $$PhotosTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PhotosTable,
+    Photo,
+    $$PhotosTableFilterComposer,
+    $$PhotosTableOrderingComposer,
+    $$PhotosTableCreateCompanionBuilder,
+    $$PhotosTableUpdateCompanionBuilder,
+    (Photo, BaseReferences<_$AppDatabase, $PhotosTable, Photo>),
+    Photo,
+    PrefetchHooks Function()> {
+  $$PhotosTableTableManager(_$AppDatabase db, $PhotosTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PhotosTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PhotosTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> path = const Value.absent(),
+            Value<int> width = const Value.absent(),
+            Value<int> height = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotosCompanion(
+            id: id,
+            path: path,
+            width: width,
+            height: height,
+            latitude: latitude,
+            longitude: longitude,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String path,
+            Value<int> width = const Value.absent(),
+            Value<int> height = const Value.absent(),
+            Value<double?> latitude = const Value.absent(),
+            Value<double?> longitude = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotosCompanion.insert(
+            id: id,
+            path: path,
+            width: width,
+            height: height,
+            latitude: latitude,
+            longitude: longitude,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PhotosTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PhotosTable,
+    Photo,
+    $$PhotosTableFilterComposer,
+    $$PhotosTableOrderingComposer,
+    $$PhotosTableCreateCompanionBuilder,
+    $$PhotosTableUpdateCompanionBuilder,
+    (Photo, BaseReferences<_$AppDatabase, $PhotosTable, Photo>),
+    Photo,
+    PrefetchHooks Function()>;
 typedef $$PhotoDetailsTableCreateCompanionBuilder = PhotoDetailsCompanion
     Function({
   required String lastId,
@@ -822,53 +840,6 @@ typedef $$PhotoDetailsTableUpdateCompanionBuilder = PhotoDetailsCompanion
   Value<int> pastFoodTotal,
   Value<int> rowid,
 });
-
-class $$PhotoDetailsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $PhotoDetailsTable,
-    PhotoDetail,
-    $$PhotoDetailsTableFilterComposer,
-    $$PhotoDetailsTableOrderingComposer,
-    $$PhotoDetailsTableCreateCompanionBuilder,
-    $$PhotoDetailsTableUpdateCompanionBuilder> {
-  $$PhotoDetailsTableTableManager(_$AppDatabase db, $PhotoDetailsTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$PhotoDetailsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$PhotoDetailsTableOrderingComposer(ComposerState(db, table)),
-          updateCompanionCallback: ({
-            Value<String> lastId = const Value.absent(),
-            Value<int> lastCreateDateSecond = const Value.absent(),
-            Value<int> currentCount = const Value.absent(),
-            Value<int> pastFoodTotal = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              PhotoDetailsCompanion(
-            lastId: lastId,
-            lastCreateDateSecond: lastCreateDateSecond,
-            currentCount: currentCount,
-            pastFoodTotal: pastFoodTotal,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String lastId,
-            required int lastCreateDateSecond,
-            required int currentCount,
-            required int pastFoodTotal,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              PhotoDetailsCompanion.insert(
-            lastId: lastId,
-            lastCreateDateSecond: lastCreateDateSecond,
-            currentCount: currentCount,
-            pastFoodTotal: pastFoodTotal,
-            rowid: rowid,
-          ),
-        ));
-}
 
 class $$PhotoDetailsTableFilterComposer
     extends FilterComposer<_$AppDatabase, $PhotoDetailsTable> {
@@ -917,6 +888,78 @@ class $$PhotoDetailsTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
+
+class $$PhotoDetailsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PhotoDetailsTable,
+    PhotoDetail,
+    $$PhotoDetailsTableFilterComposer,
+    $$PhotoDetailsTableOrderingComposer,
+    $$PhotoDetailsTableCreateCompanionBuilder,
+    $$PhotoDetailsTableUpdateCompanionBuilder,
+    (
+      PhotoDetail,
+      BaseReferences<_$AppDatabase, $PhotoDetailsTable, PhotoDetail>
+    ),
+    PhotoDetail,
+    PrefetchHooks Function()> {
+  $$PhotoDetailsTableTableManager(_$AppDatabase db, $PhotoDetailsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$PhotoDetailsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$PhotoDetailsTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> lastId = const Value.absent(),
+            Value<int> lastCreateDateSecond = const Value.absent(),
+            Value<int> currentCount = const Value.absent(),
+            Value<int> pastFoodTotal = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotoDetailsCompanion(
+            lastId: lastId,
+            lastCreateDateSecond: lastCreateDateSecond,
+            currentCount: currentCount,
+            pastFoodTotal: pastFoodTotal,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String lastId,
+            required int lastCreateDateSecond,
+            required int currentCount,
+            required int pastFoodTotal,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhotoDetailsCompanion.insert(
+            lastId: lastId,
+            lastCreateDateSecond: lastCreateDateSecond,
+            currentCount: currentCount,
+            pastFoodTotal: pastFoodTotal,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PhotoDetailsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PhotoDetailsTable,
+    PhotoDetail,
+    $$PhotoDetailsTableFilterComposer,
+    $$PhotoDetailsTableOrderingComposer,
+    $$PhotoDetailsTableCreateCompanionBuilder,
+    $$PhotoDetailsTableUpdateCompanionBuilder,
+    (
+      PhotoDetail,
+      BaseReferences<_$AppDatabase, $PhotoDetailsTable, PhotoDetail>
+    ),
+    PhotoDetail,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
