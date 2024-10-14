@@ -16,40 +16,10 @@ import '../../../core/logger.dart';
 import '../../../core/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
-
-class CameraState {
-  CameraState({
-    this.capturedImage,
-    this.latitude,
-    this.longitude,
-    this.imageDate,
-    this.isTakingPicture = false,
-  });
-  final File? capturedImage;
-  final double? latitude;
-  final double? longitude;
-  final String? imageDate;
-  final bool isTakingPicture;
-
-  CameraState copyWith({
-    File? capturedImage,
-    double? latitude,
-    double? longitude,
-    String? imageDate,
-    bool? isTakingPicture,
-  }) {
-    return CameraState(
-      capturedImage: capturedImage ?? this.capturedImage,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      imageDate: imageDate ?? this.imageDate,
-      isTakingPicture: isTakingPicture ?? this.isTakingPicture,
-    );
-  }
-}
+import 'camera_state.dart';
 
 class CameraStateNotifier extends StateNotifier<CameraState> {
-  CameraStateNotifier(this.ref) : super(CameraState());
+  CameraStateNotifier(this.ref) : super(const CameraState());
 
   final Ref ref;
 
