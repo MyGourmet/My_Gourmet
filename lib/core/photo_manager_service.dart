@@ -81,28 +81,25 @@ class PhotoService {
   }
 
   /// 最新の写真を取得
-  /// [limit] 取得する写真の件数
-  Future<List<AssetEntity>> getLatestPhotos({int limit = 1}) async {
+  /// 最新の写真を取得するメソッド
+  Future<AssetEntity?> getLatestPhoto() async {
     // 写真アルバムを取得し、最新の写真から取得するための設定
     final albums = await PhotoManager.getAssetPathList(
       type: RequestType.image,
-      filterOption: FilterOptionGroup(
-        orders: [
-          const OrderOption(),
-        ],
-      ),
     );
 
+    // 写真がない場合は null を返す
     if (albums.isEmpty) {
-      return [];
+      return null;
     }
 
-    final photos = await albums[0].getAssetListPaged(
+    // アルバムから最新の写真1枚を取得
+    final photo = await albums[0].getAssetListPaged(
       page: 0,
-      size: limit,
+      size: 1, // 1枚だけ取得
     );
 
-    return photos;
+    return photo.isNotEmpty ? photo.first : null;
   }
 
   /// フィルタリング

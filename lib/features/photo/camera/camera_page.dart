@@ -18,7 +18,7 @@ class CameraPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cameraState = ref.watch(cameraStateProvider);
-    ref.watch(photoListProvider);
+    ref.watch(latestPhotoListProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -91,7 +91,9 @@ class CameraPage extends HookConsumerWidget {
                                         );
                                       }
                                       await ref
-                                          .read(photoListProvider.notifier)
+                                          .read(
+                                            latestPhotoListProvider.notifier,
+                                          )
                                           .swipeRight();
                                     },
                               child: Container(

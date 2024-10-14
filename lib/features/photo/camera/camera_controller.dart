@@ -156,31 +156,31 @@ final cameraStateProvider =
 });
 
 /// 写真リストを管理するプロバイダー
-final photoListProvider =
-    AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
-  _PhotoListNotifier.new,
+final latestPhotoListProvider =
+    AsyncNotifierProvider.autoDispose<_LatestPhotoNotifier, AssetEntity?>(
+  _LatestPhotoNotifier.new,
 );
 
 /// 写真を取得するProvider
-class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
+class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
   /// 初期処理
   @override
-  Future<List<AssetEntity>> build() async {
+  Future<AssetEntity?> build() async {
     // パーミッション確認
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
 
-    return [];
+    return null;
   }
 
   Future<void> swipeRight({bool isFood = true}) async {
     await PhotoManager.clearFileCache();
     await PhotoManager.getAssetPathList();
-    final latestPhotos =
-        await ref.read(photoManagerServiceProvider).getLatestPhotos();
-    state = AsyncValue.data(latestPhotos);
+    final latestPhoto =
+        await ref.read(photoManagerServiceProvider).getLatestPhoto();
+    state = AsyncValue.data(latestPhoto);
 
     final value = state.valueOrNull;
     if (value == null || state.asData == null) {
@@ -191,10 +191,9 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       return;
     }
 
-    final photos = state.asData!.value;
-    final photo = photos[0];
+    final photo = state.asData!.value;
 
-    final modifiedPhotoId = photo.id.replaceAll('/', '-');
+    final modifiedPhotoId = photo!.id.replaceAll('/', '-');
 
     try {
       final userId = ref.read(userIdProvider);
@@ -238,7 +237,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
 
     // 最後の写真までスワイプした場合
-    state = const AsyncValue<List<AssetEntity>>.loading();
+    state = const AsyncValue<AssetEntity?>.loading();
   }
 
   // 位置情報の取得
@@ -262,7 +261,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
   /// 強制リフレッシュ
   void forceRefresh() {
-    state = const AsyncLoading<List<AssetEntity>>();
+    state = const AsyncLoading<AssetEntity?>();
     ref.invalidateSelf();
   }
 
