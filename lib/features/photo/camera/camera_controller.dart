@@ -10,10 +10,10 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../../core/date_utils.dart';
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/photo_manager_service.dart';
-import '../../../core/widgets/date_utils.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 
@@ -172,13 +172,16 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       throw PermissionException();
     }
 
-    // 写真取得
-    await PhotoManager.clearFileCache();
-    await PhotoManager.getAssetPathList();
-    return ref.read(photoManagerServiceProvider).getLatestPhotos();
+    return [];
   }
 
   Future<void> swipeRight({bool isFood = true}) async {
+    await PhotoManager.clearFileCache();
+    await PhotoManager.getAssetPathList();
+    final latestPhotos =
+        await ref.read(photoManagerServiceProvider).getLatestPhotos();
+    state = AsyncValue.data(latestPhotos);
+
     final value = state.valueOrNull;
     if (value == null || state.asData == null) {
       return;
