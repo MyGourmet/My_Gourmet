@@ -73,6 +73,9 @@ class AuthRepository {
     if (accessToken == null || userId == null) {
       throw Exception('Google サインインに失敗しました.');
     }
+
+    await upsertClassifyPhotosStatus(userId);
+
     return (accessToken: accessToken, userId: userId);
   }
 
@@ -100,6 +103,8 @@ class AuthRepository {
     if (userId == null) {
       throw Exception('Appleサインインに失敗しました。');
     }
+
+    await upsertClassifyPhotosStatus(userId);
 
     return (accessToken: accessToken, userId: userId);
   }

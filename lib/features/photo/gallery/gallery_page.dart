@@ -68,10 +68,13 @@ class HomePage extends HookConsumerWidget {
 
     final tabController = useTabController(initialLength: 6);
 
-    useEffect(() {
-      _initDownloadPhotos(ref, context, isReady, photoUrls);
-      return null;
-    }, [],);
+    useEffect(
+      () {
+        _initDownloadPhotos(ref, context, isReady, photoUrls);
+        return null;
+      },
+      [],
+    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -112,9 +115,11 @@ class HomePage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildPhotoGrid(BuildContext context, String category,
-    List<Photo>? photoUrls,) {
-
+  Widget _buildPhotoGrid(
+    BuildContext context,
+    String category,
+    List<Photo>? photoUrls,
+  ) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
