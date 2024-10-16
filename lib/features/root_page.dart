@@ -99,7 +99,12 @@ class RootPage extends HookConsumerWidget {
               ),
             );
           } else if (Platform.isIOS) {
-            // TODO(masaki): AppStoreに飛ばす
+            // TODO(kim): リリース後に動作確認
+            await launchUrl(
+              Uri.parse(
+                'https://apps.apple.com/jp/app/com.blue-waltz.my-gourmet',
+              ),
+            );
           }
         },
       );
