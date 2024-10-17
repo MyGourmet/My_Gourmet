@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'card_back.dart';
 import 'card_front.dart';
 
-class PhotoDetailCard extends StatefulWidget {
+class PhotoDetailCard extends StatelessWidget {
   const PhotoDetailCard({
     super.key,
+    required this.isEditing,
+    required this.onDelete,
     required this.onSelected,
     required this.userId,
     required this.photoId,
@@ -21,6 +23,8 @@ class PhotoDetailCard extends StatefulWidget {
     required this.storeOpeningHours,
   });
 
+  final bool isEditing;
+  final VoidCallback onDelete;
   final String userId;
   final String photoId;
   final List<String> areaStoreIds;
@@ -36,39 +40,17 @@ class PhotoDetailCard extends StatefulWidget {
   final void Function() onSelected;
 
   @override
-  State<PhotoDetailCard> createState() => _PhotoDetailCardState();
-}
-
-class _PhotoDetailCardState extends State<PhotoDetailCard> {
-  String get userId => widget.userId;
-
-  String get photoId => widget.photoId;
-
-  List<String> get areaStoreIds => widget.areaStoreIds;
-
-  String get storeName => widget.storeName;
-
-  DateTime get dateTime => widget.dateTime;
-
-  String get formattedDate =>
-      '${dateTime.year}/${dateTime.month}/${dateTime.day}';
-
-  String get address => widget.address;
-
-  String get photoUrl => widget.photoUrl;
-
-  String get storeUrl => widget.storeUrl;
-
-  List<String> get storeImageUrls => widget.storeImageUrls;
-
-  Map<String, String> get storeOpeningHours => widget.storeOpeningHours;
-
-  bool get showCardBack => widget.showCardBack;
-
-  @override
   Widget build(BuildContext context) {
-    return showCardBack
-        ? FlipCard(
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: isEditing ? Colors.blue : Colors.transparent,
+          width: 2,
+        ),
+      ),
+      child: Stack(
+        children: [
+          FlipCard(
             fill: Fill.fillBack,
             front: CardFront(
               photoUrl: photoUrl,
@@ -78,7 +60,7 @@ class _PhotoDetailCardState extends State<PhotoDetailCard> {
               showCardBack: showCardBack,
             ),
             back: CardBack(
-              onSelected: widget.onSelected,
+              onSelected: onSelected,
               userId: userId,
               photoId: photoId,
               areaStoreIds: areaStoreIds,
@@ -89,13 +71,24 @@ class _PhotoDetailCardState extends State<PhotoDetailCard> {
               storeUrl: storeUrl,
               storeOpeningHours: storeOpeningHours,
             ),
-          )
-        : CardFront(
-            photoUrl: photoUrl,
-            storeName: storeName,
-            dateTime: dateTime,
-            address: address,
-            showCardBack: showCardBack,
-          );
+          ),
+
+          /// 編集モード時に暗くしてゴミ箱アイコンを表示
+          if (isEditing)
+            Positioned.fill(
+              child: Center(
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                  onPressed: onDelete, // 削除処理を呼び出す
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 }
