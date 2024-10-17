@@ -21,8 +21,16 @@ class Photo with _$Photo {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp updatedAt,
 
+    /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+    @Default(<String>[]) List<String> areaStoreIds,
+
     /// FirebaseStorageに保存された写真のURL
     @Default('') String url,
+
+    /// geminiで推論した写真のカテゴリ
+    /// ここをstringではなくてenumに変換して格納しておくと、
+    /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
+    @Default('') String category,
 
     /// FirebaseStorageのドキュメントID
     @Default('') String userId,
@@ -31,6 +39,7 @@ class Photo with _$Photo {
     @timestampConverter
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp shotAt,
+    @Default('') String storeId,
   }) = _Photo;
 
   const Photo._();

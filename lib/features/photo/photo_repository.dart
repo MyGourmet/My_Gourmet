@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
-import '../../logger.dart';
+import '../../core/logger.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
@@ -79,7 +80,37 @@ class PhotoRepository {
     }
   }
 
-  // TODO(masaki): firestoreへデータ作成後に動作確認 & 全件取得ではない取得方法検討
+  Future<void> categorizeFood({
+    required String userId,
+    required String photoId,
+    required Uint8List photoData,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_apiUrl/categorizeFood'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'userId': userId,
+          'photoId': photoId,
+          'photo': base64Encode(photoData),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // 成功した場合の処理
+        debugPrint('API call successful: ${response.body}');
+      } else {
+        // エラーが返された場合の処理
+        debugPrint('API call failed: ${response.body}');
+      }
+    } on Exception catch (error) {
+      logger.e(error.toString());
+    }
+  }
+
+  // TODO(firestore): データ作成後に動作確認 & 全件取得ではない取得方法検討
   Future<List<Photo>> downloadPhotos({
     required String userId,
   }) async {
@@ -89,6 +120,7 @@ class PhotoRepository {
           .collection('users')
           .doc(userId)
           .collection('photos')
+
           // ドキュメントIDで降順にソート
           .orderBy(FieldPath.documentId, descending: true)
           .get();
@@ -98,8 +130,9 @@ class PhotoRepository {
           .map((doc) {
             final data = doc.data();
             if (data != null) {
+              (data as Map<String, dynamic>).addAll({'id': doc.id});
               // nullチェックを追加
-              return Photo.fromJson(data as Map<String, dynamic>); // キャストを修正
+              return Photo.fromJson(data);
             } else {
               return null;
             }
@@ -110,6 +143,100 @@ class PhotoRepository {
     } on Exception catch (e) {
       logger.e('An error occurred: $e');
       return [];
+    }
+  }
+
+  // TODO(kim): Photo?の部分はあとで書き換える。
+  Future<Photo?> downloadPhoto({
+    required String userId,
+    required String photoId,
+  }) async {
+    try {
+      // Firestoreのクエリを実行して、ドキュメントIDで降順にソート
+      final photosSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('photos')
+          .doc(photoId)
+          .get();
+
+      final data = photosSnap.data();
+      if (data != null) {
+        data.addAll({'id': photosSnap.id});
+
+        return Photo.fromJson(data);
+      } else {
+        return null;
+      }
+    } on Exception catch (e) {
+      logger.e('An error occurred: $e');
+      return null;
+    }
+  }
+
+  Future<Photo?> getPhotoById({
+    required String userId,
+    required String photoId,
+  }) async {
+    try {
+      final docSnapshot = await photosRef(userId: userId).doc(photoId).get();
+      if (docSnapshot.exists) {
+        return docSnapshot.data();
+      } else {
+        return null;
+      }
+    } on Exception catch (e) {
+      logger.e('Error fetching photo: $e');
+      return null;
+    }
+  }
+
+  Future<String> getStoreNameByStoreId({
+    required String userId,
+    required String storeId,
+  }) async {
+    try {
+      // Fetching the document snapshot from Firestore
+      final DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('stores')
+          .doc(storeId)
+          .get();
+
+      // Checking if the document exists
+      if (doc.exists) {
+        // Extracting data from the document snapshot
+        final data = doc.data() as Map<String, dynamic>?;
+        if (data != null && data.containsKey('name')) {
+          return data['name'] as String;
+        } else {
+          throw Exception('Name field not found in the document');
+        }
+      } else {
+        throw Exception('Store not found');
+      }
+    } on Exception catch (e) {
+      // Logging the error and returning an empty string
+      logger.e('Error fetching store name: $e');
+      return '';
+    }
+  }
+
+  /// [photoId] に対応する Firestore ドキュメントの [storeId] を更新するメソッド
+  ///
+  Future<void> updateStoreIdForPhoto(
+    String userId,
+    String photoId,
+    String storeId,
+  ) async {
+    final photoDoc = photosRef(userId: userId).doc(photoId);
+    final photoDocSnapshot = await photoDoc.get();
+
+    if (photoDocSnapshot.exists) {
+      // ドキュメントが存在する場合、storeIdを更新
+      await photoDoc.update({'storeId': storeId});
+      debugPrint('StoreId updated successfully for photoId: $photoId');
+    } else {
+      logger.e('Error Photo with id: $photoId does not exist.');
     }
   }
 }

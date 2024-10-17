@@ -31,8 +31,16 @@ mixin _$Photo {
   @serverTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  List<String> get areaStoreIds => throw _privateConstructorUsedError;
+
   /// FirebaseStorageに保存された写真のURL
   String get url => throw _privateConstructorUsedError;
+
+  /// geminiで推論した写真のカテゴリ
+  /// ここをstringではなくてenumに変換して格納しておくと、
+  /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
+  String get category => throw _privateConstructorUsedError;
 
   /// FirebaseStorageのドキュメントID
   String get userId => throw _privateConstructorUsedError;
@@ -40,6 +48,7 @@ mixin _$Photo {
   /// 写真の撮影日時
   @timestampConverter
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
+  String get storeId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -55,9 +64,12 @@ abstract class $PhotoCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
+      List<String> areaStoreIds,
       String url,
+      String category,
       String userId,
-      @timestampConverter UnionTimestamp shotAt});
+      @timestampConverter UnionTimestamp shotAt,
+      String storeId});
 
   $UnionTimestampCopyWith<$Res> get createdAt;
   $UnionTimestampCopyWith<$Res> get updatedAt;
@@ -80,9 +92,12 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? areaStoreIds = null,
     Object? url = null,
+    Object? category = null,
     Object? userId = null,
     Object? shotAt = null,
+    Object? storeId = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -97,9 +112,17 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      areaStoreIds: null == areaStoreIds
+          ? _value.areaStoreIds
+          : areaStoreIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -109,6 +132,10 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      storeId: null == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 
@@ -148,9 +175,12 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
       {String id,
       @timestampConverter UnionTimestamp createdAt,
       @serverTimestampConverter UnionTimestamp updatedAt,
+      List<String> areaStoreIds,
       String url,
+      String category,
       String userId,
-      @timestampConverter UnionTimestamp shotAt});
+      @timestampConverter UnionTimestamp shotAt,
+      String storeId});
 
   @override
   $UnionTimestampCopyWith<$Res> get createdAt;
@@ -174,9 +204,12 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = null,
     Object? updatedAt = null,
+    Object? areaStoreIds = null,
     Object? url = null,
+    Object? category = null,
     Object? userId = null,
     Object? shotAt = null,
+    Object? storeId = null,
   }) {
     return _then(_$PhotoImpl(
       id: null == id
@@ -191,9 +224,17 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      areaStoreIds: null == areaStoreIds
+          ? _value._areaStoreIds
+          : areaStoreIds // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
               as String,
       userId: null == userId
           ? _value.userId
@@ -203,6 +244,10 @@ class __$$PhotoImplCopyWithImpl<$Res>
           ? _value.shotAt
           : shotAt // ignore: cast_nullable_to_non_nullable
               as UnionTimestamp,
+      storeId: null == storeId
+          ? _value.storeId
+          : storeId // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -216,10 +261,14 @@ class _$PhotoImpl extends _Photo {
       this.createdAt = const UnionTimestamp.serverTimestamp(),
       @serverTimestampConverter
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
+      final List<String> areaStoreIds = const <String>[],
       this.url = '',
+      this.category = '',
       this.userId = '',
-      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp()})
-      : super._();
+      @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
+      this.storeId = ''})
+      : _areaStoreIds = areaStoreIds,
+        super._();
 
   factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
       _$$PhotoImplFromJson(json);
@@ -241,10 +290,29 @@ class _$PhotoImpl extends _Photo {
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
 
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  final List<String> _areaStoreIds;
+
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  @override
+  @JsonKey()
+  List<String> get areaStoreIds {
+    if (_areaStoreIds is EqualUnmodifiableListView) return _areaStoreIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_areaStoreIds);
+  }
+
   /// FirebaseStorageに保存された写真のURL
   @override
   @JsonKey()
   final String url;
+
+  /// geminiで推論した写真のカテゴリ
+  /// ここをstringではなくてenumに変換して格納しておくと、
+  /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
+  @override
+  @JsonKey()
+  final String category;
 
   /// FirebaseStorageのドキュメントID
   @override
@@ -256,10 +324,13 @@ class _$PhotoImpl extends _Photo {
   @JsonKey()
   @timestampConverter
   final UnionTimestamp shotAt;
+  @override
+  @JsonKey()
+  final String storeId;
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, url: $url, userId: $userId, shotAt: $shotAt)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -272,15 +343,29 @@ class _$PhotoImpl extends _Photo {
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
                 other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._areaStoreIds, _areaStoreIds) &&
             (identical(other.url, url) || other.url == url) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
             (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.shotAt, shotAt) || other.shotAt == shotAt));
+            (identical(other.shotAt, shotAt) || other.shotAt == shotAt) &&
+            (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, createdAt, updatedAt, url, userId, shotAt);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      updatedAt,
+      const DeepCollectionEquality().hash(_areaStoreIds),
+      url,
+      category,
+      userId,
+      shotAt,
+      storeId);
 
   @JsonKey(ignore: true)
   @override
@@ -301,9 +386,12 @@ abstract class _Photo extends Photo {
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
+      final List<String> areaStoreIds,
       final String url,
+      final String category,
       final String userId,
-      @timestampConverter final UnionTimestamp shotAt}) = _$PhotoImpl;
+      @timestampConverter final UnionTimestamp shotAt,
+      final String storeId}) = _$PhotoImpl;
   const _Photo._() : super._();
 
   factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
@@ -324,8 +412,18 @@ abstract class _Photo extends Photo {
   UnionTimestamp get updatedAt;
   @override
 
+  /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
+  List<String> get areaStoreIds;
+  @override
+
   /// FirebaseStorageに保存された写真のURL
   String get url;
+  @override
+
+  /// geminiで推論した写真のカテゴリ
+  /// ここをstringではなくてenumに変換して格納しておくと、
+  /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
+  String get category;
   @override
 
   /// FirebaseStorageのドキュメントID
@@ -335,6 +433,8 @@ abstract class _Photo extends Photo {
   /// 写真の撮影日時
   @timestampConverter
   UnionTimestamp get shotAt;
+  @override
+  String get storeId;
   @override
   @JsonKey(ignore: true)
   _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
