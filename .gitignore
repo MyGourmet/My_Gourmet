@@ -62,4 +62,4 @@ app.*.map.json
 .env
 
 # Debug symbols for obfuscated Android and iOS builds
-obfuscate/
+obfuscate/ios/XCBuildData/
