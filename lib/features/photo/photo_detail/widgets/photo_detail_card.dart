@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'card_back.dart';
 import 'card_front.dart';
 
-class ImageDetailCard extends StatefulWidget {
-  const ImageDetailCard({
+class PhotoDetailCard extends StatefulWidget {
+  const PhotoDetailCard({
     super.key,
     required this.onSelected,
     required this.userId,
@@ -36,10 +36,10 @@ class ImageDetailCard extends StatefulWidget {
   final void Function() onSelected;
 
   @override
-  State<ImageDetailCard> createState() => _ImageDetailCardState();
+  State<PhotoDetailCard> createState() => _PhotoDetailCardState();
 }
 
-class _ImageDetailCardState extends State<ImageDetailCard> {
+class _PhotoDetailCardState extends State<PhotoDetailCard> {
   String get userId => widget.userId;
 
   String get photoId => widget.photoId;

@@ -8,9 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/themes.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
-import '../image_detail/image_detail_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
+import '../photo_detail/photo_detail_page.dart';
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -68,10 +68,13 @@ class HomePage extends HookConsumerWidget {
 
     final tabController = useTabController(initialLength: 6);
 
-    useEffect(() {
-      _initDownloadPhotos(ref, context, isReady, photoUrls);
-      return null;
-    }, [],);
+    useEffect(
+      () {
+        _initDownloadPhotos(ref, context, isReady, photoUrls);
+        return null;
+      },
+      [],
+    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -112,9 +115,11 @@ class HomePage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildPhotoGrid(BuildContext context, String category,
-    List<Photo>? photoUrls,) {
-
+  Widget _buildPhotoGrid(
+    BuildContext context,
+    String category,
+    List<Photo>? photoUrls,
+  ) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -141,7 +146,7 @@ class HomePage extends HookConsumerWidget {
             child: GestureDetector(
               onTap: () {
                 context.push(
-                  ImageDetailPage.routePath,
+                  PhotoDetailPage.routePath,
                   extra: {
                     'photoId': photo.id,
                     'index': index,

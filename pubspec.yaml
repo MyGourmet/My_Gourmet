@@ -3,7 +3,7 @@ description: A new Flutter project.
 # 意図せず`flutter pub publish` によってpub.devに配信されることを防止する
 publish_to: 'none'
 
-version: 1.0.1+12
+version: 1.0.2+22
 
 environment:
   sdk: '>=3.4.1 <4.0.0'
@@ -54,8 +54,7 @@ dependencies:
   sign_in_with_apple: ^6.1.2
   smooth_page_indicator: ^1.1.0
   sqlite3_flutter_libs: ^0.5.22
-  url_launcher: ^6.2.4
-
+  url_launcher: ^6.3.0
 
 # ビルドで失敗したため、一旦除外。セキュリティリスクのため後で対応。
 # recaptcha_enterprise_flutter: ^18.4.0
@@ -73,7 +72,7 @@ dev_dependencies:
   pedantic_mono: any
   riverpod_lint: ^2.1.1
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/images/icon/icon.png"

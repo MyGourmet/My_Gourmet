@@ -125,7 +125,7 @@ Future<void> showShopListDialog(
                                           itemCount:
                                               stores[shopNo].imageUrls.length,
                                           itemBuilder: (context, index) {
-                                            final photoUrl =
+                                            final imageUrl =
                                                 stores[shopNo].imageUrls[index];
                                             return Padding(
                                               padding: const EdgeInsets.only(
@@ -137,7 +137,7 @@ Future<void> showShopListDialog(
                                                 child: ScalablePhoto(
                                                   height: 100,
                                                   width: 125,
-                                                  photoUrl: photoUrl,
+                                                  photoUrl: imageUrl,
                                                 ),
                                               ),
                                             );

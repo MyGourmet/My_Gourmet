@@ -27,7 +27,7 @@ class ScalablePhoto extends StatefulWidget {
 }
 
 class ScalablePhotoState extends State<ScalablePhoto> {
-  void showImageDialog(Widget photo) {
+  void showPhotoDialog(Widget photo) {
     showDialog<void>(
       context: context,
       builder: (_) {
@@ -67,7 +67,7 @@ class ScalablePhotoState extends State<ScalablePhoto> {
                 shape: const CircleBorder(),
               ),
               onPressed: () {
-                showImageDialog(
+                showPhotoDialog(
                   widget.photoWidget,
                 );
               },

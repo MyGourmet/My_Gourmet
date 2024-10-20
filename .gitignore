@@ -61,3 +61,5 @@ app.*.map.json
 # env
 .env
 
+# Debug symbols for obfuscated Android and iOS builds
+obfuscate/

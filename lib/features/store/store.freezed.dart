@@ -31,7 +31,7 @@ mixin _$Store {
   @serverTimestampConverter
   UnionTimestamp get updatedAt => throw _privateConstructorUsedError;
 
-  /// FirebaseStorageに保存された（ストアの）写真のURL
+  /// FirebaseStorageに保存された（ストアの）画像のURL
   List<String> get imageUrls => throw _privateConstructorUsedError;
 
   /// FirebaseStorageの(ストアの)name
@@ -321,10 +321,10 @@ class _$StoreImpl extends _Store {
   @serverTimestampConverter
   final UnionTimestamp updatedAt;
 
-  /// FirebaseStorageに保存された（ストアの）写真のURL
+  /// FirebaseStorageに保存された（ストアの）画像のURL
   final List<String> _imageUrls;
 
-  /// FirebaseStorageに保存された（ストアの）写真のURL
+  /// FirebaseStorageに保存された（ストアの）画像のURL
   @override
   @JsonKey()
   List<String> get imageUrls {
@@ -465,7 +465,7 @@ abstract class _Store extends Store {
   UnionTimestamp get updatedAt;
   @override
 
-  /// FirebaseStorageに保存された（ストアの）写真のURL
+  /// FirebaseStorageに保存された（ストアの）画像のURL
   List<String> get imageUrls;
   @override
 
