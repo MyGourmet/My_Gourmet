@@ -41,54 +41,33 @@ class PhotoDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isEditing ? Colors.blue : Colors.transparent,
-          width: 2,
-        ),
-      ),
-      child: Stack(
-        children: [
-          FlipCard(
-            fill: Fill.fillBack,
-            front: CardFront(
-              photoUrl: photoUrl,
-              storeName: storeName,
-              dateTime: dateTime,
-              address: address,
-              showCardBack: showCardBack,
-            ),
-            back: CardBack(
-              onSelected: onSelected,
-              userId: userId,
-              photoId: photoId,
-              areaStoreIds: areaStoreIds,
-              isLinked: true,
-              storeName: storeName,
-              storeImageUrls: storeImageUrls,
-              address: address,
-              storeUrl: storeUrl,
-              storeOpeningHours: storeOpeningHours,
-            ),
+    return Stack(
+      children: [
+        FlipCard(
+          fill: Fill.fillBack,
+          front: CardFront(
+            photoUrl: photoUrl,
+            storeName: storeName,
+            dateTime: dateTime,
+            address: address,
+            showCardBack: showCardBack,
+            isEditing: isEditing,
+            onDelete: onDelete,
           ),
-
-          /// 編集モード時に暗くしてゴミ箱アイコンを表示
-          if (isEditing)
-            Positioned.fill(
-              child: Center(
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.delete,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  onPressed: onDelete, // 削除処理を呼び出す
-                ),
-              ),
-            ),
-        ],
-      ),
+          back: CardBack(
+            onSelected: onSelected,
+            userId: userId,
+            photoId: photoId,
+            areaStoreIds: areaStoreIds,
+            isLinked: true,
+            storeName: storeName,
+            storeImageUrls: storeImageUrls,
+            address: address,
+            storeUrl: storeUrl,
+            storeOpeningHours: storeOpeningHours,
+          ),
+        ),
+      ],
     );
   }
 }

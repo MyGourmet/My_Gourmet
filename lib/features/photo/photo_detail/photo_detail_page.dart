@@ -109,7 +109,7 @@ class PhotoDetailPage extends HookConsumerWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        toolbarHeight: 24,
+        toolbarHeight: 50,
         actions: [
           isEditing
               ? TextButton(
@@ -192,6 +192,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                         context.goNamed(HomePage.routeName);
                                       }
                                     },
+                                    hasCancelButton: true,
                                   );
                                 },
                                 userId: photo.userId,
