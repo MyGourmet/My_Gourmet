@@ -69,7 +69,7 @@ class CameraPage extends HookConsumerWidget {
                                               widthFactor: 0.5, // 横幅を親要素の半分に設定
                                               child: ElevatedButton(
                                                 onPressed: openAppSettings,
-                                                child: const Text('設定を開く'),
+                                                child: Text('設定を開く'),
                                               ),
                                             ),
                                           ],
