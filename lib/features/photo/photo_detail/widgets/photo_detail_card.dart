@@ -41,33 +41,29 @@ class PhotoDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FlipCard(
-          fill: Fill.fillBack,
-          front: CardFront(
-            photoUrl: photoUrl,
-            storeName: storeName,
-            dateTime: dateTime,
-            address: address,
-            showCardBack: showCardBack,
-            isEditing: isEditing,
-            onDelete: onDelete,
-          ),
-          back: CardBack(
-            onSelected: onSelected,
-            userId: userId,
-            photoId: photoId,
-            areaStoreIds: areaStoreIds,
-            isLinked: true,
-            storeName: storeName,
-            storeImageUrls: storeImageUrls,
-            address: address,
-            storeUrl: storeUrl,
-            storeOpeningHours: storeOpeningHours,
-          ),
-        ),
-      ],
+    return FlipCard(
+      fill: Fill.fillBack,
+      front: CardFront(
+        photoUrl: photoUrl,
+        storeName: storeName,
+        dateTime: dateTime,
+        address: address,
+        showCardBack: showCardBack,
+        isEditing: isEditing,
+        onDelete: onDelete,
+      ),
+      back: CardBack(
+        onSelected: onSelected,
+        userId: userId,
+        photoId: photoId,
+        areaStoreIds: areaStoreIds,
+        isLinked: true,
+        storeName: storeName,
+        storeImageUrls: storeImageUrls,
+        address: address,
+        storeUrl: storeUrl,
+        storeOpeningHours: storeOpeningHours,
+      ),
     );
   }
 }
