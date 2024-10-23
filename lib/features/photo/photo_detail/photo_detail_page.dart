@@ -12,7 +12,6 @@ import '../../store/store_controller.dart';
 import '../gallery/gallery_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
-import 'photo_detail_controller.dart';
 import 'widgets/photo_detail_card.dart';
 
 class PhotoDetailPage extends HookConsumerWidget {
@@ -39,10 +38,7 @@ class PhotoDetailPage extends HookConsumerWidget {
 
     final userId = ref.watch(userIdProvider);
 
-    final isEditing = ref.watch(photoDetailControllerProvider);
-
-    final photoDetailController =
-        ref.read(photoDetailControllerProvider.notifier);
+    final isEditing = useState(false);
 
     final photoController = ref.read(photoControllerProvider);
 
@@ -111,21 +107,17 @@ class PhotoDetailPage extends HookConsumerWidget {
         ),
         toolbarHeight: 50,
         actions: [
-          isEditing
-              ? TextButton(
-                  onPressed: photoDetailController.toggleEditing,
-                  style:
-                      TextButton.styleFrom(foregroundColor: Themes.mainOrange),
-                  child: const Text(
-                    '完了',
-                  ),
-                )
-              : IconButton(
-                  onPressed: photoDetailController.toggleEditing,
-                  icon: const Icon(
-                    Icons.edit,
-                  ),
-                ),
+          if (isEditing.value)
+            TextButton(
+              onPressed: () => isEditing.value = false,
+              style: TextButton.styleFrom(foregroundColor: Themes.mainOrange),
+              child: const Text('完了'),
+            )
+          else
+            IconButton(
+              onPressed: () => isEditing.value = true,
+              icon: const Icon(Icons.edit),
+            ),
         ],
       ),
       body: Center(
@@ -175,7 +167,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                 right: 4,
                               ),
                               child: PhotoDetailCard(
-                                isEditing: isEditing,
+                                isEditing: isEditing.value,
                                 onDelete: () async {
                                   await ConfirmDialog.show(
                                     context,
