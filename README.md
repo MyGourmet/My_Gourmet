@@ -43,9 +43,25 @@ GitHubとNotionの相互紐付けを行う。
 ![CleanShot 2024-09-02 at 07 51 02@2x](https://github.com/user-attachments/assets/fb118922-72e6-4745-b18f-eced891762a5)
 
 ## ディレクトリ構成
-### feature ディレクトリ
-- 各機能ごとに`feature`ディレクトリに格納する、`feature-first`という方式を取っている
-- UIからリポジトリまでを`feature`ディレクトリの中に格納する
+### features ディレクトリ
+各機能ごとに`features`ディレクトリに格納する、`feature-first`という方式を取っている
+
+- `xxx_page.dart` :  画面描画やlocal stateの管理を担当
+    - 例: [sign_in_page.dart](https://github.com/MyGourmet/My_Gourmet/blob/dev/lib/features/auth/sign_in_page.dart)
+    - 画面の描画を行う
+        - 共通化が可能なウィジェットは自身のfeature内 or `core` ディレクトリ側でコンポーネント化する
+    - クラス内で完結するローカルな状態管理は`flutter_hooks`を用いて行う
+        - ボタンのonPressedを丸ごとcontroller側で行うような運用にすると返って複雑な状態管理となってしまうので行わない
+        - 参考: https://riverpod.dev/docs/essentials/do_dont#avoid-using-providers-for-ephemeral-state
+    - スナックバー表示などのエラーハンドリングもここで行う
+- `xxx_controller.dart`: 外部サービス接続の橋渡し及びグローバルな状態管理を担当
+    - 例: [auth_controller.dart](https://github.com/MyGourmet/My_Gourmet/blob/dev/lib/features/auth/auth_controller.dart)
+    - 外部サービスの利用時、画面側との橋渡し役としてリポジトリへ接続する
+    - グローバルに扱いたい状態管理もここで行う
+- `xxx_repository.dart` : 外部サービスへの接続を担当
+    - 例: [auth_repository.dart](https://github.com/MyGourmet/My_Gourmet/blob/dev/lib/features/auth/auth_repository.dart)
+    - FirestoreやStorageといったデータソースへの接続はこのレイヤーのクラスから行う
+    - アプリ上で必要なモデルクラスへの関連したロジックもここに記載する
 
 ### core ディレクトリ
 - featureを横断して利用するものはこの`core`ディレクトリへ格納する
