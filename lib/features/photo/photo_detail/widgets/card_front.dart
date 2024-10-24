@@ -14,6 +14,8 @@ class CardFront extends StatelessWidget {
     required this.dateTime,
     required this.address,
     required this.showCardBack,
+    required this.isEditing,
+    required this.onDelete,
   });
 
   final String photoUrl;
@@ -21,6 +23,8 @@ class CardFront extends StatelessWidget {
   final DateTime dateTime;
   final String address;
   final bool showCardBack;
+  final bool isEditing;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -52,23 +56,49 @@ class CardFront extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        width: double.infinity,
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Themes.gray[900]!,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: ScalablePhoto(
-                            photoUrl: photoUrl,
+                      Stack(
+                        children: [
+                          Container(
+                            width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.5,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Themes.gray[900]!,
+                                width: 2,
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: ScalablePhoto(
+                                photoUrl: photoUrl,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                              ),
+                            ),
                           ),
-                        ),
+
+                          /// 編集モード時に表示するカバーとゴミ箱アイコン
+                          if (isEditing)
+                            Positioned.fill(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(16),
+                                child: ColoredBox(
+                                  color: Themes.gray[900]!.withOpacity(0.5),
+                                  child: Center(
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.delete,
+                                        size: 50,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: onDelete, // 削除処理
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                       Text(formattedDate, style: context.textTheme.titleSmall),
                       Text(
