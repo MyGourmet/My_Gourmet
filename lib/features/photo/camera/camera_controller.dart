@@ -61,7 +61,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       final locationStatus = await Permission.location.status;
       final microphoneStatus = await Permission.microphone.status;
 
-      // アクセスが制限されている場合に処理を分岐
+      //アクセスが制限されている場合に処理を分岐
       if (photosStatus.isLimited || storageStatus.isLimited) {
         return false;
       }

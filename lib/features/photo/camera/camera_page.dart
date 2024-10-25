@@ -95,7 +95,8 @@ class CameraPage extends HookConsumerWidget {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                         const SnackBar(
-                                          content: Text('設定画面で権限を許可してください。'),
+                                          content:
+                                              Text('設定画面で権限を全て許可に設定してください。'),
                                           action: SnackBarAction(
                                             label: '設定を開く',
                                             onPressed: openAppSettings,
