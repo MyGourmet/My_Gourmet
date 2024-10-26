@@ -23,7 +23,7 @@ PROD_API_URL=https://dummy-prod-url
 DEV_API_URL=https://dummy-dev-url
 ```
 
-実際のURLは以下を参照：
+実際のURLは以下を参照：  
 https://www.notion.so/masakisato/11a5050794ac414f8f0ef9525ae13809?pvs=4
 
 #### 3. Firebaseにsha1証明書を登録する。
@@ -32,7 +32,7 @@ https://www.notion.so/masakisato/11a5050794ac414f8f0ef9525ae13809?pvs=4
 keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 ```
 
-詳細は、以下のURLを参照：
+詳細は、以下のURLを参照：  
 https://zenn.dev/flutteruniv/books/flutter-textbook/viewer/make-chat
 
 ## 開発手法
