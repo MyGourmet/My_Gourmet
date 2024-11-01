@@ -36,34 +36,43 @@ class PhotoDetailCard extends StatelessWidget {
   final List<String> storeImageUrls;
   final bool showCardBack;
   final Map<String, String> storeOpeningHours;
-
   final void Function() onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return FlipCard(
-      fill: Fill.fillBack,
-      front: CardFront(
-        photoUrl: photoUrl,
-        storeName: storeName,
-        dateTime: dateTime,
-        address: address,
-        showCardBack: showCardBack,
-        isEditing: isEditing,
-        onDelete: onDelete,
-      ),
-      back: CardBack(
-        onSelected: onSelected,
-        userId: userId,
-        photoId: photoId,
-        areaStoreIds: areaStoreIds,
-        isLinked: true,
-        storeName: storeName,
-        storeImageUrls: storeImageUrls,
-        address: address,
-        storeUrl: storeUrl,
-        storeOpeningHours: storeOpeningHours,
-      ),
-    );
+    return showCardBack
+        ? FlipCard(
+            fill: Fill.fillBack,
+            front: CardFront(
+              photoUrl: photoUrl,
+              storeName: storeName,
+              dateTime: dateTime,
+              address: address,
+              showCardBack: showCardBack,
+              isEditing: isEditing,
+              onDelete: onDelete,
+            ),
+            back: CardBack(
+              onSelected: onSelected,
+              userId: userId,
+              photoId: photoId,
+              areaStoreIds: areaStoreIds,
+              isLinked: true,
+              storeName: storeName,
+              storeImageUrls: storeImageUrls,
+              address: address,
+              storeUrl: storeUrl,
+              storeOpeningHours: storeOpeningHours,
+            ),
+          )
+        : CardFront(
+            photoUrl: photoUrl,
+            storeName: storeName,
+            dateTime: dateTime,
+            address: address,
+            showCardBack: showCardBack,
+            isEditing: isEditing,
+            onDelete: onDelete,
+          );
   }
 }
