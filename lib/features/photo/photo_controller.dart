@@ -64,4 +64,13 @@ class PhotoController {
       storeId,
     );
   }
+
+  /// 写真削除用メソッド
+  Future<void> deletePhoto(
+    String userId,
+    String photoId,
+    String photoUrl,
+  ) async {
+    await _photoRepository.deletePhoto(userId, photoId, photoUrl);
+  }
 }
