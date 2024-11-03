@@ -80,6 +80,28 @@ class PhotoService {
     return photos;
   }
 
+  /// 最新の写真を取得
+  /// 最新の写真を取得するメソッド
+  Future<AssetEntity?> getLatestPhoto() async {
+    // 写真アルバムを取得し、最新の写真から取得するための設定
+    final albums = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
+    );
+
+    // 写真がない場合は null を返す
+    if (albums.isEmpty) {
+      return null;
+    }
+
+    // アルバムから最新の写真1枚を取得
+    final photo = await albums[0].getAssetListPaged(
+      page: 0,
+      size: 1, // 1枚だけ取得
+    );
+
+    return photo.isNotEmpty ? photo.first : null;
+  }
+
   /// フィルタリング
   /// [lastId] 最後の写真id
   /// [lastDate] 最後の写真日付
