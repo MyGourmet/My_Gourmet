@@ -179,8 +179,6 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
         final position = await _getCurrentPosition();
         final latitude = position?.latitude;
         final longitude = position?.longitude;
-        logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
-            '緯度: $latitude, 経度: $longitude');
 
         if (latitude != null && longitude != null) {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
@@ -189,6 +187,8 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
                 latitude: latitude,
                 longitude: longitude,
               );
+          logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
+              '緯度: $latitude, 経度: $longitude');
         }
 
         // 写真データの取得と圧縮
