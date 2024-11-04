@@ -28,9 +28,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
     try {
       final controller = await ref.read(cameraControllerProvider.future);
-
       final image = await controller.takePicture();
-
       // 権限のリクエストをまとめて行う
       if (!(await _ensurePermissions())) {
         return false;
@@ -38,6 +36,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
       // 画像をギャラリーに保存
       final result = await ImageGallerySaver.saveFile(image.path);
+      logger.i('ギャラリーに画像を保存しました: $result');
 
       // 状態更新
       state = state.copyWith(
@@ -55,65 +54,52 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
   // 権限の確認とリクエスト
   Future<bool> _ensurePermissions() async {
-    // 位置情報の権限をチェック
-    var locationPermission = await Geolocator.checkPermission();
-    if (locationPermission == LocationPermission.denied ||
-        locationPermission == LocationPermission.deniedForever) {
-      locationPermission = await Geolocator.requestPermission();
-      if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) {
+    while (true) {
+      final cameraStatus = await Permission.camera.status;
+      final storageStatus = await Permission.storage.status;
+      final photosStatus = await Permission.photos.status;
+      final locationStatus = await Permission.location.status;
+      final microphoneStatus = await Permission.microphone.status;
+
+      //アクセスが制限されている場合に処理を分岐
+      if (photosStatus.isLimited || storageStatus.isLimited) {
         return false;
       }
-    }
 
-    final cameraStatus = await Permission.camera.status;
-    final storageStatus = await Permission.storage.status;
-    final photosStatus = await Permission.photos.status;
-    final microphoneStatus = await Permission.microphone.status;
+      if (!storageStatus.isGranted ||
+          !cameraStatus.isGranted ||
+          !photosStatus.isGranted ||
+          !locationStatus.isGranted ||
+          !microphoneStatus.isGranted) {
+        // いずれかの権限が拒否された場合、再度リクエスト
+        final statuses = await [
+          Permission.camera,
+          Permission.storage,
+          Permission.photos,
+          Permission.location,
+          Permission.microphone,
+        ].request();
 
-    if (photosStatus.isLimited || storageStatus.isLimited) {
-      logger.i('_ensurePermissions: 写真またはストレージのアクセスが制限されています');
-      return false;
-    }
+        if (statuses[Permission.camera]!.isPermanentlyDenied ||
+            statuses[Permission.storage]!.isPermanentlyDenied ||
+            statuses[Permission.photos]!.isPermanentlyDenied ||
+            statuses[Permission.location]!.isPermanentlyDenied ||
+            statuses[Permission.microphone]!.isPermanentlyDenied) {
+          // logger.i('_ensurePermissions: いずれかの権限が永久に拒否されています');
+          // return false;
+          return true;
+        }
 
-    if (!storageStatus.isGranted ||
-        !cameraStatus.isGranted ||
-        !photosStatus.isGranted ||
-        !microphoneStatus.isGranted) {
-      logger.i('_ensurePermissions: 権限が不足しているためリクエストします');
-      final statuses = await [
-        Permission.camera,
-        Permission.storage,
-        Permission.photos,
-        Permission.microphone,
-      ].request();
-
-      if (statuses[Permission.camera]!.isPermanentlyDenied ||
-          statuses[Permission.storage]!.isPermanentlyDenied ||
-          statuses[Permission.photos]!.isPermanentlyDenied ||
-          statuses[Permission.location]!.isPermanentlyDenied ||
-          statuses[Permission.microphone]!.isPermanentlyDenied ||
-          locationPermission == LocationPermission.deniedForever) {
-        // TODO (sho) あとでここはfalseに戻す;
-        logger.e('_ensurePermissions: いずれかの権限が永久に拒否されています');
-        // return false;
-        return true;
-      }
-
-      if (statuses[Permission.camera]!.isGranted &&
-          statuses[Permission.storage]!.isGranted &&
-          statuses[Permission.photos]!.isGranted &&
-          statuses[Permission.location]!.isGranted &&
-          statuses[Permission.microphone]!.isGranted) {
-        logger.i('_ensurePermissions: すべての権限が許可されました');
-        return true;
+        if (statuses[Permission.camera]!.isGranted &&
+                statuses[Permission.storage]!.isGranted ||
+            statuses[Permission.photos]!.isGranted &&
+                statuses[Permission.location]!.isGranted &&
+                statuses[Permission.microphone]!.isGranted) {
+          return true;
+        }
       } else {
-        logger.i('_ensurePermissions: 権限が不足しています');
-        return false;
+        return true; // すべての権限が許可されている場合
       }
-    } else {
-      logger.i('_ensurePermissions: すべての権限がすでに許可されています');
-      return true;
     }
   }
 }
@@ -124,7 +110,8 @@ final cameraControllerProvider =
   final cameras = await availableCameras();
 
   if (cameras.isEmpty) {
-    throw CameraException('NoCameraAvailable', '利用可能なカメラが見つかりませんでした');
+    throw CameraException('NoCameraAvailable', '''
+利用可能なカメラが見つかりませんでした''');
   }
 
   final camera = cameras.first;
@@ -158,7 +145,6 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
   Future<AssetEntity?> build() async {
     // パーミッション確認
     final permission = await PhotoManager.requestPermissionExtend();
-
     if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
@@ -175,19 +161,16 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
 
     final value = state.valueOrNull;
     if (value == null || state.asData == null) {
-      logger.e('swipeRight: 最新の写真が取得できませんでした');
       return;
     }
 
     if (state.hasError) {
-      logger.e('swipeRight: エラーが発生しました');
       return;
     }
 
     final photo = state.asData!.value;
 
     final modifiedPhotoId = photo!.id.replaceAll('/', '-');
-    logger.e('swipeRight: 写真IDを修正しました - $modifiedPhotoId');
 
     try {
       final userId = ref.read(userIdProvider);
@@ -196,6 +179,8 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
         final position = await _getCurrentPosition();
         final latitude = position?.latitude;
         final longitude = position?.longitude;
+        logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
+            '緯度: $latitude, 経度: $longitude');
 
         if (latitude != null && longitude != null) {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
@@ -216,10 +201,10 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
                   photoId: modifiedPhotoId,
                   photoData: compressedData,
                 );
+            logger.i('圧縮写真データをサーバーに送信しました: $modifiedPhotoId');
           }
         }
       } else {
-        logger.e('swipeRight: ユーザーがサインインしていません');
         throw Exception('User not signed in');
       }
     } on Exception catch (e, stacktrace) {
@@ -253,7 +238,6 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
 
   /// 強制リフレッシュ
   void forceRefresh() {
-    logger.i('forceRefresh: 強制リフレッシュを実行します');
     state = const AsyncLoading<AssetEntity?>();
     ref.invalidateSelf();
   }
@@ -267,7 +251,6 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
       quality: 85,
       keepExif: true,
     );
-    logger.i('_compressImage: 画像の圧縮が完了しました');
     return result;
   }
 }
