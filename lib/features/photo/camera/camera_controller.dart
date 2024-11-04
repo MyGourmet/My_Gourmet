@@ -93,7 +93,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
           statuses[Permission.location]!.isPermanentlyDenied ||
           statuses[Permission.microphone]!.isPermanentlyDenied ||
           locationPermission == LocationPermission.deniedForever) {
-        // TODO (sho) あとでここはfalseに戻す;
+        // TODO(sho): このままだと、権限が足りてなくても通ってしまうので、あとでここはfalseに戻す
         // return false;
         return true;
       }
