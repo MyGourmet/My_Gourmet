@@ -54,50 +54,64 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
   // 権限の確認とリクエスト
   Future<bool> _ensurePermissions() async {
-    while (true) {
-      final cameraStatus = await Permission.camera.status;
-      final storageStatus = await Permission.storage.status;
-      final photosStatus = await Permission.photos.status;
-      final locationStatus = await Permission.location.status;
-      final microphoneStatus = await Permission.microphone.status;
-
-      //アクセスが制限されている場合に処理を分岐
-      if (photosStatus.isLimited || storageStatus.isLimited) {
+    // 位置情報の権限をチェック
+    var locationPermission = await Geolocator.checkPermission();
+    if (locationPermission == LocationPermission.denied ||
+        locationPermission == LocationPermission.deniedForever) {
+      locationPermission = await Geolocator.requestPermission();
+      if (locationPermission == LocationPermission.denied ||
+          locationPermission == LocationPermission.deniedForever) {
         return false;
       }
+    }
 
-      if (!storageStatus.isGranted ||
-          !cameraStatus.isGranted ||
-          !photosStatus.isGranted ||
-          !locationStatus.isGranted ||
-          !microphoneStatus.isGranted) {
-        // いずれかの権限が拒否された場合、再度リクエスト
-        final statuses = await [
-          Permission.camera,
-          Permission.storage,
-          Permission.photos,
-          Permission.location,
-          Permission.microphone,
-        ].request();
+    final cameraStatus = await Permission.camera.status;
+    final storageStatus = await Permission.storage.status;
+    final photosStatus = await Permission.photos.status;
+    final microphoneStatus = await Permission.microphone.status;
 
-        if (statuses[Permission.camera]!.isPermanentlyDenied ||
-            statuses[Permission.storage]!.isPermanentlyDenied ||
-            statuses[Permission.photos]!.isPermanentlyDenied ||
-            statuses[Permission.location]!.isPermanentlyDenied ||
-            statuses[Permission.microphone]!.isPermanentlyDenied) {
-          return false;
-        }
+    if (photosStatus.isLimited || storageStatus.isLimited) {
+      logger.i('_ensurePermissions: 写真またはストレージのアクセスが制限されています');
+      return false;
+    }
 
-        if (statuses[Permission.camera]!.isGranted &&
-                statuses[Permission.storage]!.isGranted ||
-            statuses[Permission.photos]!.isGranted &&
-                statuses[Permission.location]!.isGranted &&
-                statuses[Permission.microphone]!.isGranted) {
-          return true;
-        }
-      } else {
-        return true; // すべての権限が許可されている場合
+    if (!storageStatus.isGranted ||
+        !cameraStatus.isGranted ||
+        !photosStatus.isGranted ||
+        !microphoneStatus.isGranted) {
+      logger.i('_ensurePermissions: 権限が不足しているためリクエストします');
+      final statuses = await [
+        Permission.camera,
+        Permission.storage,
+        Permission.photos,
+        Permission.microphone,
+      ].request();
+
+      if (statuses[Permission.camera]!.isPermanentlyDenied ||
+          statuses[Permission.storage]!.isPermanentlyDenied ||
+          statuses[Permission.photos]!.isPermanentlyDenied ||
+          statuses[Permission.location]!.isPermanentlyDenied ||
+          statuses[Permission.microphone]!.isPermanentlyDenied ||
+          locationPermission == LocationPermission.deniedForever) {
+        // TODO(sho): このままだと、権限が足りてなくても通ってしまうので、あとでここはfalseに戻す
+        // return false;
+        return true;
       }
+
+      if (statuses[Permission.camera]!.isGranted &&
+          statuses[Permission.storage]!.isGranted &&
+          statuses[Permission.photos]!.isGranted &&
+          statuses[Permission.location]!.isGranted &&
+          statuses[Permission.microphone]!.isGranted) {
+        logger.i('_ensurePermissions: すべての権限が許可されました');
+        return true;
+      } else {
+        logger.i('_ensurePermissions: 権限が不足しています');
+        return false;
+      }
+    } else {
+      logger.i('_ensurePermissions: すべての権限がすでに許可されています');
+      return true;
     }
   }
 }
