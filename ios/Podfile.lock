@@ -5,12 +5,6 @@ PODS:
   - AppAuth/Core (1.7.5)
   - AppAuth/ExternalUserAgent (1.7.5):
     - AppAuth/Core
-  - BoringSSL-GRPC (0.0.36):
-    - BoringSSL-GRPC/Implementation (= 0.0.36)
-    - BoringSSL-GRPC/Interface (= 0.0.36)
-  - BoringSSL-GRPC/Implementation (0.0.36):
-    - BoringSSL-GRPC/Interface (= 0.0.36)
-  - BoringSSL-GRPC/Interface (0.0.36)
   - camera_avfoundation (0.0.1):
     - Flutter
   - cloud_firestore (5.4.2):
@@ -464,7 +458,6 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppAuth: 501c04eda8a8d11f179dbe8637b7a91bb7e5d2fa
-  BoringSSL-GRPC: ca6a8e5d04812fce8ffd6437810c2d46f925eaeb
   camera_avfoundation: dd002b0330f4981e1bbcb46ae9b62829237459a4
   cloud_firestore: efded0403c9e674954e2788d93bc2772a5089557
   cloud_functions: 167c9f94438de5c039036675878d9da3889f5d8f

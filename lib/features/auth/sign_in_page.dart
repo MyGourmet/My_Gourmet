@@ -28,12 +28,12 @@ class SignInPage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Gap(120),
+            const Gap(160),
             const Spacer(),
             Image.asset(
               'assets/images/sign_in/sign_in_icon.png',
-              width: 200,
-              height: 200,
+              width: 300,
+              height: 300,
             ),
             const Gap(60),
             const Spacer(),
