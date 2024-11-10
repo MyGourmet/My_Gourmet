@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../core/my_gourmet_card.dart';
+import '../../../../core/guru_memo_card.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store_controller.dart';
@@ -65,7 +65,7 @@ class CardBack extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (!isLinked) {
-      return MyGourmetCard(
+      return GuruMemoCard(
         child: Container(
           padding: const EdgeInsets.only(
             top: 48,
@@ -108,7 +108,7 @@ class CardBack extends ConsumerWidget {
       sortedOpeningHours = {};
     }
 
-    return MyGourmetCard(
+    return GuruMemoCard(
       child: Stack(
         children: [
           Container(

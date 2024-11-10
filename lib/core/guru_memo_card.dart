@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'themes.dart';
 
-class MyGourmetCard extends StatelessWidget {
-  const MyGourmetCard({
+class GuruMemoCard extends StatelessWidget {
+  const GuruMemoCard({
     super.key,
     required this.child,
   });
