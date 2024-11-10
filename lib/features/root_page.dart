@@ -102,7 +102,7 @@ class RootPage extends HookConsumerWidget {
             // TODO(kim): リリース後に動作確認
             await launchUrl(
               Uri.parse(
-                'https://apps.apple.com/jp/app/com.blue-waltz.my-gourmet',
+                'https://apps.apple.com/us/app/mygourmet/id6499088858',
               ),
             );
           }
