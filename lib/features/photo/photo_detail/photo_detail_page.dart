@@ -12,6 +12,7 @@ import '../../store/store_controller.dart';
 import '../gallery/gallery_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
+import '../share/share_page.dart';
 import 'widgets/photo_detail_card.dart';
 
 class PhotoDetailPage extends HookConsumerWidget {
@@ -42,11 +43,15 @@ class PhotoDetailPage extends HookConsumerWidget {
 
     final photoController = ref.read(photoControllerProvider);
 
+    String? photoUrl;
+    String? storeName;
+    DateTime? dateTime;
+    String? address;
+
     void downloadPhoto(WidgetRef ref) {
       if (userId == null) {
         return;
       }
-
       photo.value = ref.read(photoControllerProvider).downloadPhoto(
             userId: userId,
             photoId: photoId,
@@ -107,6 +112,30 @@ class PhotoDetailPage extends HookConsumerWidget {
         ),
         toolbarHeight: 50,
         actions: [
+          IconButton(
+            onPressed: () async {
+              // 共有ページに遷移する際、データを渡す
+              // if (photoUrl != null &&
+              //     storeName != null &&
+              //     dateTime != null &&
+              //     address != null) {
+              await context.push(
+                SharePage.routePath,
+                extra: {
+                  'photoUrl': photoUrl,
+                  'storeName': storeName,
+                  'dateTime': dateTime,
+                  'address': address,
+                },
+              );
+              // } else {
+              //   ScaffoldMessenger.of(context).showSnackBar(
+              //     const SnackBar(content: Text('データが読み込まれていません')),
+              //   );
+              // }
+            },
+            icon: const Icon(Icons.ios_share),
+          ),
           if (isEditing.value)
             TextButton(
               onPressed: () => isEditing.value = false,
