@@ -37,7 +37,7 @@ Future<void> main() async {
   };
 
   await SystemChrome.setPreferredOrientations([
-    // 縦向き
+    // アプリ全体の画面を縦向きに固定
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
