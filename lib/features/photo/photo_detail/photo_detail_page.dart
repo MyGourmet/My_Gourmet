@@ -180,7 +180,6 @@ class PhotoDetailPage extends HookConsumerWidget {
                                         photoUrl,
                                       );
                                       if (context.mounted) {
-                                        ref.invalidate(photoControllerProvider);
                                         context.pushReplacementNamed(
                                           HomePage.routeName,
                                         );
