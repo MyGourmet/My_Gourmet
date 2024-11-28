@@ -180,8 +180,9 @@ class PhotoDetailPage extends HookConsumerWidget {
                                         photoUrl,
                                       );
                                       if (context.mounted) {
-                                        // 削除後にホームページに遷移
-                                        context.goNamed(HomePage.routeName);
+                                        context.pushReplacementNamed(
+                                          HomePage.routeName,
+                                        );
                                       }
                                     },
                                     hasCancelButton: true,
