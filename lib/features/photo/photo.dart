@@ -27,6 +27,12 @@ class Photo with _$Photo {
     /// FirebaseStorageに保存された写真のURL
     @Default('') String url,
 
+    /// ローカルストレージに保存された画像のパス
+    @Default('') String localImagePath,
+
+    /// Firestoreに保存されたドキュメントのID
+    @Default('') String firestoreDocumentId,
+
     /// geminiで推論した写真のカテゴリ
     /// ここをstringではなくてenumに変換して格納しておくと、
     /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい

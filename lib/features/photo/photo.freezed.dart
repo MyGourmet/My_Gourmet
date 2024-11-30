@@ -37,6 +37,12 @@ mixin _$Photo {
   /// FirebaseStorageに保存された写真のURL
   String get url => throw _privateConstructorUsedError;
 
+  /// ローカルストレージに保存された画像のパス
+  String get localImagePath => throw _privateConstructorUsedError;
+
+  /// Firestoreに保存されたドキュメントのID
+  String get firestoreDocumentId => throw _privateConstructorUsedError;
+
   /// geminiで推論した写真のカテゴリ
   /// ここをstringではなくてenumに変換して格納しておくと、
   /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
@@ -66,6 +72,8 @@ abstract class $PhotoCopyWith<$Res> {
       @serverTimestampConverter UnionTimestamp updatedAt,
       List<String> areaStoreIds,
       String url,
+      String localImagePath,
+      String firestoreDocumentId,
       String category,
       String userId,
       @timestampConverter UnionTimestamp shotAt,
@@ -94,6 +102,8 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
     Object? updatedAt = null,
     Object? areaStoreIds = null,
     Object? url = null,
+    Object? localImagePath = null,
+    Object? firestoreDocumentId = null,
     Object? category = null,
     Object? userId = null,
     Object? shotAt = null,
@@ -119,6 +129,14 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      localImagePath: null == localImagePath
+          ? _value.localImagePath
+          : localImagePath // ignore: cast_nullable_to_non_nullable
+              as String,
+      firestoreDocumentId: null == firestoreDocumentId
+          ? _value.firestoreDocumentId
+          : firestoreDocumentId // ignore: cast_nullable_to_non_nullable
               as String,
       category: null == category
           ? _value.category
@@ -177,6 +195,8 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
       @serverTimestampConverter UnionTimestamp updatedAt,
       List<String> areaStoreIds,
       String url,
+      String localImagePath,
+      String firestoreDocumentId,
       String category,
       String userId,
       @timestampConverter UnionTimestamp shotAt,
@@ -206,6 +226,8 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? updatedAt = null,
     Object? areaStoreIds = null,
     Object? url = null,
+    Object? localImagePath = null,
+    Object? firestoreDocumentId = null,
     Object? category = null,
     Object? userId = null,
     Object? shotAt = null,
@@ -231,6 +253,14 @@ class __$$PhotoImplCopyWithImpl<$Res>
       url: null == url
           ? _value.url
           : url // ignore: cast_nullable_to_non_nullable
+              as String,
+      localImagePath: null == localImagePath
+          ? _value.localImagePath
+          : localImagePath // ignore: cast_nullable_to_non_nullable
+              as String,
+      firestoreDocumentId: null == firestoreDocumentId
+          ? _value.firestoreDocumentId
+          : firestoreDocumentId // ignore: cast_nullable_to_non_nullable
               as String,
       category: null == category
           ? _value.category
@@ -263,6 +293,8 @@ class _$PhotoImpl extends _Photo {
       this.updatedAt = const UnionTimestamp.serverTimestamp(),
       final List<String> areaStoreIds = const <String>[],
       this.url = '',
+      this.localImagePath = '',
+      this.firestoreDocumentId = '',
       this.category = '',
       this.userId = '',
       @timestampConverter this.shotAt = const UnionTimestamp.serverTimestamp(),
@@ -307,6 +339,16 @@ class _$PhotoImpl extends _Photo {
   @JsonKey()
   final String url;
 
+  /// ローカルストレージに保存された画像のパス
+  @override
+  @JsonKey()
+  final String localImagePath;
+
+  /// Firestoreに保存されたドキュメントのID
+  @override
+  @JsonKey()
+  final String firestoreDocumentId;
+
   /// geminiで推論した写真のカテゴリ
   /// ここをstringではなくてenumに変換して格納しておくと、
   /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
@@ -330,7 +372,7 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
+    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, localImagePath: $localImagePath, firestoreDocumentId: $firestoreDocumentId, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
@@ -346,6 +388,10 @@ class _$PhotoImpl extends _Photo {
             const DeepCollectionEquality()
                 .equals(other._areaStoreIds, _areaStoreIds) &&
             (identical(other.url, url) || other.url == url) &&
+            (identical(other.localImagePath, localImagePath) ||
+                other.localImagePath == localImagePath) &&
+            (identical(other.firestoreDocumentId, firestoreDocumentId) ||
+                other.firestoreDocumentId == firestoreDocumentId) &&
             (identical(other.category, category) ||
                 other.category == category) &&
             (identical(other.userId, userId) || other.userId == userId) &&
@@ -362,6 +408,8 @@ class _$PhotoImpl extends _Photo {
       updatedAt,
       const DeepCollectionEquality().hash(_areaStoreIds),
       url,
+      localImagePath,
+      firestoreDocumentId,
       category,
       userId,
       shotAt,
@@ -388,6 +436,8 @@ abstract class _Photo extends Photo {
       @serverTimestampConverter final UnionTimestamp updatedAt,
       final List<String> areaStoreIds,
       final String url,
+      final String localImagePath,
+      final String firestoreDocumentId,
       final String category,
       final String userId,
       @timestampConverter final UnionTimestamp shotAt,
@@ -418,6 +468,14 @@ abstract class _Photo extends Photo {
 
   /// FirebaseStorageに保存された写真のURL
   String get url;
+  @override
+
+  /// ローカルストレージに保存された画像のパス
+  String get localImagePath;
+  @override
+
+  /// Firestoreに保存されたドキュメントのID
+  String get firestoreDocumentId;
   @override
 
   /// geminiで推論した写真のカテゴリ

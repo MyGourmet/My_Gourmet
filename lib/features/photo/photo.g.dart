@@ -19,6 +19,8 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
               .toList() ??
           const <String>[],
       url: json['url'] as String? ?? '',
+      localImagePath: json['localImagePath'] as String? ?? '',
+      firestoreDocumentId: json['firestoreDocumentId'] as String? ?? '',
       category: json['category'] as String? ?? '',
       userId: json['userId'] as String? ?? '',
       shotAt: json['shotAt'] == null
@@ -34,6 +36,8 @@ Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
       'updatedAt': serverTimestampConverter.toJson(instance.updatedAt),
       'areaStoreIds': instance.areaStoreIds,
       'url': instance.url,
+      'localImagePath': instance.localImagePath,
+      'firestoreDocumentId': instance.firestoreDocumentId,
       'category': instance.category,
       'userId': instance.userId,
       'shotAt': timestampConverter.toJson(instance.shotAt),
