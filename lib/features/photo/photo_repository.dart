@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
 import '../../core/logger.dart';
+import '../../core/timestamp_converter.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
@@ -261,6 +263,50 @@ class PhotoRepository {
       // エラーハンドリング
       logger.e('Failed to delete photo: $e');
       throw Exception('Failed to delete photo: $e');
+    }
+  }
+
+  /// ローカル画像を Firebase Storage にアップロードし、
+  /// Firestore にメタデータを保存する。
+  ///
+  /// [userId] ユーザーID
+  /// [localImagePath] ローカル画像ファイルのパス
+  Future<void> uploadPhotoToFirestore(
+    String userId,
+    String localImagePath,
+  ) async {
+    try {
+      // ローカル画像ファイルを取得
+      final file = File(localImagePath);
+
+      // Firestore のドキュメント参照を作成（ID自動生成）
+      final photoDoc = photosRef(userId: userId).doc();
+      final photoId = photoDoc.id;
+
+      // Firebase Storage に画像をアップロード
+      final storageRef =
+          FirebaseStorage.instance.ref().child('users/$userId/photos/$photoId');
+      final uploadTask = storageRef.putFile(file);
+      final snapshot = await uploadTask.whenComplete(() => null);
+
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Firestore に写真メタデータを保存
+      final photo = Photo(
+        id: photoId,
+        userId: userId,
+        localImagePath: localImagePath,
+        url: downloadUrl,
+        createdAt: UnionTimestamp.serverTimestamp(),
+        updatedAt: UnionTimestamp.serverTimestamp(),
+      );
+
+      await photoDoc.set(photo);
+
+      logger.i('Photo uploaded and saved to Firestore: ${photo.id}');
+    } on Exception catch (e) {
+      logger.e('Failed to upload photo: $e');
+      rethrow;
     }
   }
 }
