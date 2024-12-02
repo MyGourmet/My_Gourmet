@@ -94,4 +94,21 @@ class LocalPhotoRepository {
       await db.into(db.photoDetails).insert(lastPhotoModel);
     }
   }
+
+  /// Firestore ID とローカル画像パスをローカルDBに保存
+  Future<void> savePhotoWithFirestoreId({
+    required String localImagePath,
+    required String firestoreDocumentId,
+  }) async {
+    final photoModel = PhotosCompanion(
+      id: Value(firestoreDocumentId),
+      path: Value(localImagePath),
+      firestoreDocumentId: Value(firestoreDocumentId),
+    );
+
+    await db.into(db.photos).insert(
+          photoModel,
+          mode: InsertMode.insertOrIgnore,
+        );
+  }
 }
