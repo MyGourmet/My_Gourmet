@@ -18,6 +18,12 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
   late final GeneratedColumn<String> path = GeneratedColumn<String>(
       'path', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _firestoreDocumentIdMeta =
+      const VerificationMeta('firestoreDocumentId');
+  @override
+  late final GeneratedColumn<String> firestoreDocumentId =
+      GeneratedColumn<String>('firestore_document_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _widthMeta = const VerificationMeta('width');
   @override
   late final GeneratedColumn<int> width = GeneratedColumn<int>(
@@ -46,7 +52,7 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
       type: DriftSqlType.double, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, path, width, height, latitude, longitude];
+      [id, path, firestoreDocumentId, width, height, latitude, longitude];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -67,6 +73,12 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
           _pathMeta, path.isAcceptableOrUnknown(data['path']!, _pathMeta));
     } else if (isInserting) {
       context.missing(_pathMeta);
+    }
+    if (data.containsKey('firestore_document_id')) {
+      context.handle(
+          _firestoreDocumentIdMeta,
+          firestoreDocumentId.isAcceptableOrUnknown(
+              data['firestore_document_id']!, _firestoreDocumentIdMeta));
     }
     if (data.containsKey('width')) {
       context.handle(
@@ -97,6 +109,8 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       path: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}path'])!,
+      firestoreDocumentId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}firestore_document_id']),
       width: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}width'])!,
       height: attachedDatabase.typeMapping
@@ -121,6 +135,9 @@ class Photo extends DataClass implements Insertable<Photo> {
   /// 写真のパス
   final String path;
 
+  /// FirestoreのドキュメントID
+  final String? firestoreDocumentId;
+
   /// 横サイズ
   final int width;
 
@@ -135,6 +152,7 @@ class Photo extends DataClass implements Insertable<Photo> {
   const Photo(
       {required this.id,
       required this.path,
+      this.firestoreDocumentId,
       required this.width,
       required this.height,
       this.latitude,
@@ -144,6 +162,9 @@ class Photo extends DataClass implements Insertable<Photo> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['path'] = Variable<String>(path);
+    if (!nullToAbsent || firestoreDocumentId != null) {
+      map['firestore_document_id'] = Variable<String>(firestoreDocumentId);
+    }
     map['width'] = Variable<int>(width);
     map['height'] = Variable<int>(height);
     if (!nullToAbsent || latitude != null) {
@@ -159,6 +180,9 @@ class Photo extends DataClass implements Insertable<Photo> {
     return PhotosCompanion(
       id: Value(id),
       path: Value(path),
+      firestoreDocumentId: firestoreDocumentId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firestoreDocumentId),
       width: Value(width),
       height: Value(height),
       latitude: latitude == null && nullToAbsent
@@ -176,6 +200,8 @@ class Photo extends DataClass implements Insertable<Photo> {
     return Photo(
       id: serializer.fromJson<String>(json['id']),
       path: serializer.fromJson<String>(json['path']),
+      firestoreDocumentId:
+          serializer.fromJson<String?>(json['firestoreDocumentId']),
       width: serializer.fromJson<int>(json['width']),
       height: serializer.fromJson<int>(json['height']),
       latitude: serializer.fromJson<double?>(json['latitude']),
@@ -188,6 +214,7 @@ class Photo extends DataClass implements Insertable<Photo> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'path': serializer.toJson<String>(path),
+      'firestoreDocumentId': serializer.toJson<String?>(firestoreDocumentId),
       'width': serializer.toJson<int>(width),
       'height': serializer.toJson<int>(height),
       'latitude': serializer.toJson<double?>(latitude),
@@ -198,6 +225,7 @@ class Photo extends DataClass implements Insertable<Photo> {
   Photo copyWith(
           {String? id,
           String? path,
+          Value<String?> firestoreDocumentId = const Value.absent(),
           int? width,
           int? height,
           Value<double?> latitude = const Value.absent(),
@@ -205,6 +233,9 @@ class Photo extends DataClass implements Insertable<Photo> {
       Photo(
         id: id ?? this.id,
         path: path ?? this.path,
+        firestoreDocumentId: firestoreDocumentId.present
+            ? firestoreDocumentId.value
+            : this.firestoreDocumentId,
         width: width ?? this.width,
         height: height ?? this.height,
         latitude: latitude.present ? latitude.value : this.latitude,
@@ -214,6 +245,9 @@ class Photo extends DataClass implements Insertable<Photo> {
     return Photo(
       id: data.id.present ? data.id.value : this.id,
       path: data.path.present ? data.path.value : this.path,
+      firestoreDocumentId: data.firestoreDocumentId.present
+          ? data.firestoreDocumentId.value
+          : this.firestoreDocumentId,
       width: data.width.present ? data.width.value : this.width,
       height: data.height.present ? data.height.value : this.height,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
@@ -226,6 +260,7 @@ class Photo extends DataClass implements Insertable<Photo> {
     return (StringBuffer('Photo(')
           ..write('id: $id, ')
           ..write('path: $path, ')
+          ..write('firestoreDocumentId: $firestoreDocumentId, ')
           ..write('width: $width, ')
           ..write('height: $height, ')
           ..write('latitude: $latitude, ')
@@ -235,13 +270,15 @@ class Photo extends DataClass implements Insertable<Photo> {
   }
 
   @override
-  int get hashCode => Object.hash(id, path, width, height, latitude, longitude);
+  int get hashCode => Object.hash(
+      id, path, firestoreDocumentId, width, height, latitude, longitude);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Photo &&
           other.id == this.id &&
           other.path == this.path &&
+          other.firestoreDocumentId == this.firestoreDocumentId &&
           other.width == this.width &&
           other.height == this.height &&
           other.latitude == this.latitude &&
@@ -251,6 +288,7 @@ class Photo extends DataClass implements Insertable<Photo> {
 class PhotosCompanion extends UpdateCompanion<Photo> {
   final Value<String> id;
   final Value<String> path;
+  final Value<String?> firestoreDocumentId;
   final Value<int> width;
   final Value<int> height;
   final Value<double?> latitude;
@@ -259,6 +297,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
   const PhotosCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
+    this.firestoreDocumentId = const Value.absent(),
     this.width = const Value.absent(),
     this.height = const Value.absent(),
     this.latitude = const Value.absent(),
@@ -268,6 +307,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
   PhotosCompanion.insert({
     required String id,
     required String path,
+    this.firestoreDocumentId = const Value.absent(),
     this.width = const Value.absent(),
     this.height = const Value.absent(),
     this.latitude = const Value.absent(),
@@ -278,6 +318,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
   static Insertable<Photo> custom({
     Expression<String>? id,
     Expression<String>? path,
+    Expression<String>? firestoreDocumentId,
     Expression<int>? width,
     Expression<int>? height,
     Expression<double>? latitude,
@@ -287,6 +328,8 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (path != null) 'path': path,
+      if (firestoreDocumentId != null)
+        'firestore_document_id': firestoreDocumentId,
       if (width != null) 'width': width,
       if (height != null) 'height': height,
       if (latitude != null) 'latitude': latitude,
@@ -298,6 +341,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
   PhotosCompanion copyWith(
       {Value<String>? id,
       Value<String>? path,
+      Value<String?>? firestoreDocumentId,
       Value<int>? width,
       Value<int>? height,
       Value<double?>? latitude,
@@ -306,6 +350,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     return PhotosCompanion(
       id: id ?? this.id,
       path: path ?? this.path,
+      firestoreDocumentId: firestoreDocumentId ?? this.firestoreDocumentId,
       width: width ?? this.width,
       height: height ?? this.height,
       latitude: latitude ?? this.latitude,
@@ -322,6 +367,10 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     }
     if (path.present) {
       map['path'] = Variable<String>(path.value);
+    }
+    if (firestoreDocumentId.present) {
+      map['firestore_document_id'] =
+          Variable<String>(firestoreDocumentId.value);
     }
     if (width.present) {
       map['width'] = Variable<int>(width.value);
@@ -346,6 +395,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     return (StringBuffer('PhotosCompanion(')
           ..write('id: $id, ')
           ..write('path: $path, ')
+          ..write('firestoreDocumentId: $firestoreDocumentId, ')
           ..write('width: $width, ')
           ..write('height: $height, ')
           ..write('latitude: $latitude, ')
@@ -667,6 +717,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 typedef $$PhotosTableCreateCompanionBuilder = PhotosCompanion Function({
   required String id,
   required String path,
+  Value<String?> firestoreDocumentId,
   Value<int> width,
   Value<int> height,
   Value<double?> latitude,
@@ -676,6 +727,7 @@ typedef $$PhotosTableCreateCompanionBuilder = PhotosCompanion Function({
 typedef $$PhotosTableUpdateCompanionBuilder = PhotosCompanion Function({
   Value<String> id,
   Value<String> path,
+  Value<String?> firestoreDocumentId,
   Value<int> width,
   Value<int> height,
   Value<double?> latitude,
@@ -693,6 +745,11 @@ class $$PhotosTableFilterComposer
 
   ColumnFilters<String> get path => $state.composableBuilder(
       column: $state.table.path,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get firestoreDocumentId => $state.composableBuilder(
+      column: $state.table.firestoreDocumentId,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -727,6 +784,11 @@ class $$PhotosTableOrderingComposer
 
   ColumnOrderings<String> get path => $state.composableBuilder(
       column: $state.table.path,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get firestoreDocumentId => $state.composableBuilder(
+      column: $state.table.firestoreDocumentId,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -773,6 +835,7 @@ class $$PhotosTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> path = const Value.absent(),
+            Value<String?> firestoreDocumentId = const Value.absent(),
             Value<int> width = const Value.absent(),
             Value<int> height = const Value.absent(),
             Value<double?> latitude = const Value.absent(),
@@ -782,6 +845,7 @@ class $$PhotosTableTableManager extends RootTableManager<
               PhotosCompanion(
             id: id,
             path: path,
+            firestoreDocumentId: firestoreDocumentId,
             width: width,
             height: height,
             latitude: latitude,
@@ -791,6 +855,7 @@ class $$PhotosTableTableManager extends RootTableManager<
           createCompanionCallback: ({
             required String id,
             required String path,
+            Value<String?> firestoreDocumentId = const Value.absent(),
             Value<int> width = const Value.absent(),
             Value<int> height = const Value.absent(),
             Value<double?> latitude = const Value.absent(),
@@ -800,6 +865,7 @@ class $$PhotosTableTableManager extends RootTableManager<
               PhotosCompanion.insert(
             id: id,
             path: path,
+            firestoreDocumentId: firestoreDocumentId,
             width: width,
             height: height,
             latitude: latitude,
