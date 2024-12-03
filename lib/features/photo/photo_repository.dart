@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
+import '../../core/local_photo_repository.dart';
 import '../../core/logger.dart';
 import '../../core/timestamp_converter.dart';
 import 'photo.dart';
@@ -40,10 +41,11 @@ CollectionReference<Photo> photosRef({required String userId}) {
   );
 }
 
-final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
+final photoRepositoryProvider = Provider(PhotoRepository._);
 
 class PhotoRepository {
-  PhotoRepository._();
+  PhotoRepository._(this.ref);
+  final Ref ref;
 
   // OAuth 2.0 REST APIエンドポイント
   final String _apiUrl =
@@ -271,7 +273,7 @@ class PhotoRepository {
   ///
   /// [userId] ユーザーID
   /// [localImagePath] ローカル画像ファイルのパス
-  Future<void> uploadPhotoToFirestore(
+  Future<String> uploadPhotoToFirestore(
     String userId,
     String localImagePath,
   ) async {
@@ -304,8 +306,31 @@ class PhotoRepository {
       await photoDoc.set(photo);
 
       logger.i('Photo uploaded and saved to Firestore: ${photo.id}');
+      return photoId;
     } on Exception catch (e) {
       logger.e('Failed to upload photo: $e');
+      rethrow;
+    }
+  }
+
+  /// Firestore とローカルDBを連携して写真を保存するメソッド
+  Future<void> uploadAndSavePhoto({
+    required String userId,
+    required String localImagePath,
+  }) async {
+    try {
+      // Firestore にアップロードして ID を取得
+      final firestoreDocumentId =
+          await uploadPhotoToFirestore(userId, localImagePath);
+
+      // ローカルDBに Firestore ID とローカル画像パスを保存
+      final localPhotoRepository = ref.read(localPhotoRepositoryProvider);
+      await localPhotoRepository.savePhotoWithFirestoreId(
+        localImagePath: localImagePath,
+        firestoreDocumentId: firestoreDocumentId,
+      );
+    } on Exception catch (e) {
+      logger.e('Failed to upload and save photo: $e');
       rethrow;
     }
   }

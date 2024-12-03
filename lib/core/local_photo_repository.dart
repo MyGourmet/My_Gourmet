@@ -96,7 +96,7 @@ class LocalPhotoRepository {
   }
 
   /// Firestore ID とローカル画像パスをローカルDBに保存
-  Future<void> savePhotoWithFirestoreId({
+  Future<String> savePhotoWithFirestoreId({
     required String localImagePath,
     required String firestoreDocumentId,
   }) async {
@@ -110,5 +110,7 @@ class LocalPhotoRepository {
           photoModel,
           mode: InsertMode.insertOrIgnore,
         );
+
+    return firestoreDocumentId;
   }
 }
