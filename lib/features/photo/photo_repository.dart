@@ -12,7 +12,6 @@ import 'package:http/http.dart' as http;
 import '../../core/flavor.dart';
 import '../../core/local_photo_repository.dart';
 import '../../core/logger.dart';
-import '../../core/timestamp_converter.dart';
 import 'photo.dart';
 
 /// [Photo]用コレクションのためのレファレンス
@@ -299,8 +298,6 @@ class PhotoRepository {
         userId: userId,
         localImagePath: localImagePath,
         url: downloadUrl,
-        createdAt: UnionTimestamp.serverTimestamp(),
-        updatedAt: UnionTimestamp.serverTimestamp(),
       );
 
       await photoDoc.set(photo);
