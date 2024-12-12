@@ -20,7 +20,7 @@ class HomePage extends HookConsumerWidget {
 
   Future<void> _downloadPhotos(
     WidgetRef ref,
-    ValueNotifier<List<Photo>?> photoUrls,
+    ValueNotifier<List<RemotePhoto>?> photoUrls,
   ) async {
     final userId = ref.watch(userIdProvider);
 
@@ -39,7 +39,7 @@ class HomePage extends HookConsumerWidget {
     WidgetRef ref,
     BuildContext context,
     ValueNotifier<bool> isReady,
-    ValueNotifier<List<Photo>?> photoUrls,
+    ValueNotifier<List<RemotePhoto>?> photoUrls,
   ) async {
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       final isSignedIn = ref.watch(userIdProvider) != null;
@@ -64,7 +64,7 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isReady = useState(false);
-    final photoUrls = useState<List<Photo>?>(null);
+    final photoUrls = useState<List<RemotePhoto>?>(null);
 
     final tabController = useTabController(initialLength: 6);
 
@@ -118,13 +118,13 @@ class HomePage extends HookConsumerWidget {
   Widget _buildPhotoGrid(
     BuildContext context,
     String category,
-    List<Photo>? photoUrls,
+    List<RemotePhoto>? photoUrls,
   ) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    List<Photo> filteredPhotos;
+    List<RemotePhoto> filteredPhotos;
     if (category == 'すべて') {
       filteredPhotos = photoUrls;
     } else {

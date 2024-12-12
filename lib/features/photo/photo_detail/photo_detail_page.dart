@@ -34,7 +34,7 @@ class PhotoDetailPage extends HookConsumerWidget {
       viewportFraction: 0.9,
     );
 
-    final photo = useState<Future<Photo?>?>(null);
+    final photo = useState<Future<RemotePhoto?>?>(null);
 
     final userId = ref.watch(userIdProvider);
 
@@ -61,7 +61,7 @@ class PhotoDetailPage extends HookConsumerWidget {
       [],
     );
 
-    Future<Store?> fetchStore(Photo photo) async {
+    Future<Store?> fetchStore(RemotePhoto photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
 

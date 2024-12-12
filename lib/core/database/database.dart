@@ -16,6 +16,9 @@ class Photos extends Table {
   /// 写真のパス
   TextColumn get path => text()();
 
+  /// FirestoreのドキュメントID
+  TextColumn get firestoreDocumentId => text().nullable()();
+
   /// 横サイズ
   IntColumn get width => integer().withDefault(const Constant(0))();
 
@@ -72,6 +75,10 @@ class AppDatabase extends _$AppDatabase {
           await m.addColumn(photos, photos.height);
           await m.addColumn(photos, photos.latitude);
           await m.addColumn(photos, photos.longitude);
+        }
+
+        if (from < 3) {
+          await m.addColumn(photos, photos.firestoreDocumentId);
         }
       },
     );
