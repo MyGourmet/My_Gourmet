@@ -18,14 +18,14 @@ class PhotoController {
   PhotoRepository get _photoRepository => _ref.read(photoRepositoryProvider);
 
   /// 写真ダウンロード用メソッド
-  Future<List<Photo>> downloadPhotos({
+  Future<List<RemotePhoto>> downloadPhotos({
     required String userId,
   }) async {
     return _photoRepository.downloadPhotos(userId: userId);
   }
 
   // TODO(kim): Photo?の部分はあとで書き換える。
-  Future<Photo?> downloadPhoto({
+  Future<RemotePhoto?> downloadPhoto({
     required String userId,
     required String photoId,
   }) async {
@@ -42,7 +42,7 @@ class PhotoController {
     );
   }
 
-  Future<Photo?> getPhotoById({
+  Future<RemotePhoto?> getPhotoById({
     required String userId,
     required String photoId,
   }) async {

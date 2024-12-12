@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Photo _$PhotoFromJson(Map<String, dynamic> json) {
-  return _Photo.fromJson(json);
+RemotePhoto _$RemotePhotoFromJson(Map<String, dynamic> json) {
+  return _RemotePhoto.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Photo {
+mixin _$RemotePhoto {
   /// firestore上のドキュメントID
   String get id => throw _privateConstructorUsedError;
 
@@ -58,13 +58,15 @@ mixin _$Photo {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $PhotoCopyWith<Photo> get copyWith => throw _privateConstructorUsedError;
+  $RemotePhotoCopyWith<RemotePhoto> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $PhotoCopyWith<$Res> {
-  factory $PhotoCopyWith(Photo value, $Res Function(Photo) then) =
-      _$PhotoCopyWithImpl<$Res, Photo>;
+abstract class $RemotePhotoCopyWith<$Res> {
+  factory $RemotePhotoCopyWith(
+          RemotePhoto value, $Res Function(RemotePhoto) then) =
+      _$RemotePhotoCopyWithImpl<$Res, RemotePhoto>;
   @useResult
   $Res call(
       {String id,
@@ -85,9 +87,9 @@ abstract class $PhotoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
-    implements $PhotoCopyWith<$Res> {
-  _$PhotoCopyWithImpl(this._value, this._then);
+class _$RemotePhotoCopyWithImpl<$Res, $Val extends RemotePhoto>
+    implements $RemotePhotoCopyWith<$Res> {
+  _$RemotePhotoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -183,10 +185,11 @@ class _$PhotoCopyWithImpl<$Res, $Val extends Photo>
 }
 
 /// @nodoc
-abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
-  factory _$$PhotoImplCopyWith(
-          _$PhotoImpl value, $Res Function(_$PhotoImpl) then) =
-      __$$PhotoImplCopyWithImpl<$Res>;
+abstract class _$$RemotePhotoImplCopyWith<$Res>
+    implements $RemotePhotoCopyWith<$Res> {
+  factory _$$RemotePhotoImplCopyWith(
+          _$RemotePhotoImpl value, $Res Function(_$RemotePhotoImpl) then) =
+      __$$RemotePhotoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -211,11 +214,11 @@ abstract class _$$PhotoImplCopyWith<$Res> implements $PhotoCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$PhotoImplCopyWithImpl<$Res>
-    extends _$PhotoCopyWithImpl<$Res, _$PhotoImpl>
-    implements _$$PhotoImplCopyWith<$Res> {
-  __$$PhotoImplCopyWithImpl(
-      _$PhotoImpl _value, $Res Function(_$PhotoImpl) _then)
+class __$$RemotePhotoImplCopyWithImpl<$Res>
+    extends _$RemotePhotoCopyWithImpl<$Res, _$RemotePhotoImpl>
+    implements _$$RemotePhotoImplCopyWith<$Res> {
+  __$$RemotePhotoImplCopyWithImpl(
+      _$RemotePhotoImpl _value, $Res Function(_$RemotePhotoImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -233,7 +236,7 @@ class __$$PhotoImplCopyWithImpl<$Res>
     Object? shotAt = null,
     Object? storeId = null,
   }) {
-    return _then(_$PhotoImpl(
+    return _then(_$RemotePhotoImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -284,8 +287,8 @@ class __$$PhotoImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$PhotoImpl extends _Photo {
-  const _$PhotoImpl(
+class _$RemotePhotoImpl extends _RemotePhoto {
+  const _$RemotePhotoImpl(
       {this.id = '',
       @timestampConverter
       this.createdAt = const UnionTimestamp.serverTimestamp(),
@@ -302,8 +305,8 @@ class _$PhotoImpl extends _Photo {
       : _areaStoreIds = areaStoreIds,
         super._();
 
-  factory _$PhotoImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PhotoImplFromJson(json);
+  factory _$RemotePhotoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RemotePhotoImplFromJson(json);
 
   /// firestore上のドキュメントID
   @override
@@ -372,14 +375,14 @@ class _$PhotoImpl extends _Photo {
 
   @override
   String toString() {
-    return 'Photo(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, localImagePath: $localImagePath, firestoreDocumentId: $firestoreDocumentId, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
+    return 'RemotePhoto(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, areaStoreIds: $areaStoreIds, url: $url, localImagePath: $localImagePath, firestoreDocumentId: $firestoreDocumentId, category: $category, userId: $userId, shotAt: $shotAt, storeId: $storeId)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PhotoImpl &&
+            other is _$RemotePhotoImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -418,19 +421,19 @@ class _$PhotoImpl extends _Photo {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
-      __$$PhotoImplCopyWithImpl<_$PhotoImpl>(this, _$identity);
+  _$$RemotePhotoImplCopyWith<_$RemotePhotoImpl> get copyWith =>
+      __$$RemotePhotoImplCopyWithImpl<_$RemotePhotoImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PhotoImplToJson(
+    return _$$RemotePhotoImplToJson(
       this,
     );
   }
 }
 
-abstract class _Photo extends Photo {
-  const factory _Photo(
+abstract class _RemotePhoto extends RemotePhoto {
+  const factory _RemotePhoto(
       {final String id,
       @timestampConverter final UnionTimestamp createdAt,
       @serverTimestampConverter final UnionTimestamp updatedAt,
@@ -441,10 +444,11 @@ abstract class _Photo extends Photo {
       final String category,
       final String userId,
       @timestampConverter final UnionTimestamp shotAt,
-      final String storeId}) = _$PhotoImpl;
-  const _Photo._() : super._();
+      final String storeId}) = _$RemotePhotoImpl;
+  const _RemotePhoto._() : super._();
 
-  factory _Photo.fromJson(Map<String, dynamic> json) = _$PhotoImpl.fromJson;
+  factory _RemotePhoto.fromJson(Map<String, dynamic> json) =
+      _$RemotePhotoImpl.fromJson;
 
   @override
 
@@ -495,6 +499,6 @@ abstract class _Photo extends Photo {
   String get storeId;
   @override
   @JsonKey(ignore: true)
-  _$$PhotoImplCopyWith<_$PhotoImpl> get copyWith =>
+  _$$RemotePhotoImplCopyWith<_$RemotePhotoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

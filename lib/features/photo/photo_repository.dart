@@ -14,21 +14,21 @@ import '../../core/local_photo_repository.dart';
 import '../../core/logger.dart';
 import 'photo.dart';
 
-/// [Photo]用コレクションのためのレファレンス
+/// [RemotePhoto]用コレクションのためのレファレンス
 ///
-/// [Photo]ドキュメントの操作にはこのレファレンスを経由すること。
+/// [RemotePhoto]ドキュメントの操作にはこのレファレンスを経由すること。
 /// fromFirestoreではドキュメントidを追加し、toFirestoreではドキュメントidを削除する。
 /// 常にtoFirestoreを経由するために、ドキュメント更新時には
 /// [DocumentReference.update]ではなく[DocumentReference.set]を用いる。
-CollectionReference<Photo> photosRef({required String userId}) {
+CollectionReference<RemotePhoto> photosRef({required String userId}) {
   return FirebaseFirestore.instance
       .collection('users')
       .doc(userId)
       .collection('photos')
-      .withConverter<Photo>(
+      .withConverter<RemotePhoto>(
     fromFirestore: (snapshot, _) {
       final data = snapshot.data()!;
-      return Photo.fromJson(<String, dynamic>{
+      return RemotePhoto.fromJson(<String, dynamic>{
         ...data,
         'id': snapshot.id,
       });
@@ -115,7 +115,7 @@ class PhotoRepository {
   }
 
   // TODO(firestore): データ作成後に動作確認 & 全件取得ではない取得方法検討
-  Future<List<Photo>> downloadPhotos({
+  Future<List<RemotePhoto>> downloadPhotos({
     required String userId,
   }) async {
     try {
@@ -136,13 +136,13 @@ class PhotoRepository {
             if (data != null) {
               (data as Map<String, dynamic>).addAll({'id': doc.id});
               // nullチェックを追加
-              return Photo.fromJson(data);
+              return RemotePhoto.fromJson(data);
             } else {
               return null;
             }
           })
           .where((photo) => photo != null)
-          .cast<Photo>()
+          .cast<RemotePhoto>()
           .toList();
     } on Exception catch (e) {
       logger.e('An error occurred: $e');
@@ -151,7 +151,7 @@ class PhotoRepository {
   }
 
   // TODO(kim): Photo?の部分はあとで書き換える。
-  Future<Photo?> downloadPhoto({
+  Future<RemotePhoto?> downloadPhoto({
     required String userId,
     required String photoId,
   }) async {
@@ -168,7 +168,7 @@ class PhotoRepository {
       if (data != null) {
         data.addAll({'id': photosSnap.id});
 
-        return Photo.fromJson(data);
+        return RemotePhoto.fromJson(data);
       } else {
         return null;
       }
@@ -178,7 +178,7 @@ class PhotoRepository {
     }
   }
 
-  Future<Photo?> getPhotoById({
+  Future<RemotePhoto?> getPhotoById({
     required String userId,
     required String photoId,
   }) async {
@@ -293,7 +293,7 @@ class PhotoRepository {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Firestore に写真メタデータを保存
-      final photo = Photo(
+      final photo = RemotePhoto(
         id: photoId,
         userId: userId,
         localImagePath: localImagePath,

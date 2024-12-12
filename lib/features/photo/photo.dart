@@ -6,8 +6,8 @@ part 'photo.freezed.dart';
 part 'photo.g.dart';
 
 @freezed
-class Photo with _$Photo {
-  const factory Photo({
+class RemotePhoto with _$RemotePhoto {
+  const factory RemotePhoto({
     /// firestore上のドキュメントID
     @Default('') String id,
 
@@ -46,9 +46,10 @@ class Photo with _$Photo {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp shotAt,
     @Default('') String storeId,
-  }) = _Photo;
+  }) = _RemotePhoto;
 
-  const Photo._();
+  const RemotePhoto._();
 
-  factory Photo.fromJson(Map<String, dynamic> json) => _$PhotoFromJson(json);
+  factory RemotePhoto.fromJson(Map<String, dynamic> json) =>
+      _$RemotePhotoFromJson(json);
 }
