@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:exif/exif.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/exception.dart';
@@ -161,6 +163,193 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       state = AsyncValue.error(e, stacktrace);
       return;
     }
+  }
+
+  // Future<void> swipeRight({bool isFood = true, required int index}) async {
+  //   // データがない時は何もしない
+  //   final value = state.valueOrNull;
+  //   if (value == null || state.asData == null) {
+  //     return;
+  //   }
+  //
+  //   // エラーがある時は何もしない
+  //   if (state.hasError) {
+  //     return;
+  //   }
+  //
+  //   final photos = state.asData!.value;
+  //   final photo = photos[index];
+  //   final length = photos.length;
+  //   // IDのスラッシュをハイフンに置換
+  //   final modifiedPhotoId = photo.id.replaceAll('/', '-');
+  //
+  //   try {
+  //     final userId = ref.read(userIdProvider);
+  //
+  //     if (userId != null) {
+  //       //　TODO(kim): ローカルに写真を保存している処理が不要なものの、
+  //       //　保存枚数などの処理は必要なので、処理の中身を後ほど修正する。
+  //       // 写真登録
+  //       await ref.read(localPhotoRepositoryProvider).savePhoto(
+  //             photo: photo,
+  //             isFood: isFood,
+  //           );
+  //
+  //       // 写真情報をサーバーに登録
+  //       if (isFood) {
+  //         if (photo.longitude != null && photo.latitude != null) {
+  //           await ref.read(photoRepositoryProvider).registerStoreInfo(
+  //                 photoId: modifiedPhotoId,
+  //                 userId: userId,
+  //                 latitude: photo.latitude,
+  //                 longitude: photo.longitude,
+  //               );
+  //         }
+  //
+  //         final photoFile = await photo.file;
+  //         if (photoFile != null) {
+  //           final compressedData = await _compressImage(photoFile);
+  //           if (compressedData != null) {
+  //             await ref.read(photoRepositoryProvider).categorizeFood(
+  //                   userId: userId,
+  //                   photoId: modifiedPhotoId,
+  //                   photoData: compressedData,
+  //                 );
+  //           }
+  //         }
+  //       }
+  //     } else {
+  //       throw Exception('User not signed in');
+  //     }
+  //     // カウント更新
+  //     ref.read(photoCountProvider.notifier).updateCurrentCount();
+  //   } on Exception catch (e, stacktrace) {
+  //     state = AsyncValue.error(e, stacktrace);
+  //     logger.e('Error loading next: $e');
+  //     return;
+  //   }
+  //
+  //   // 最後の写真までスワイプしていない場合
+  //   if (index != length - 1) {
+  //     return;
+  //   }
+  //
+  //   // 最後の写真までスワイプした場合
+  //   // ローディング
+  //   state = const AsyncValue<List<AssetEntity>>.loading();
+  //
+  //   try {
+  //     // 次の写真リストをDBから取得
+  //     final results = await ref.read(photoManagerServiceProvider).getAllPhotos(
+  //           lastEntity: photos[index],
+  //         );
+  //
+  //     // 状態更新
+  //     state = AsyncValue<List<AssetEntity>>.data([
+  //       ...results,
+  //     ]);
+  //   } on Exception catch (e, stacktrace) {
+  //     state = AsyncValue.error(e, stacktrace);
+  //     return;
+  //   }
+  // }
+
+  Future<void> swipeRight({
+    required Map<String, double> location,
+    required XFile image,
+    bool isFood = true,
+  }) async {
+    // ID生成や圧縮の準備
+    final modifiedPhotoId = image.path.split('/').last.replaceAll('/', '-');
+    final userId = ref.read(userIdProvider);
+
+    if (userId == null) {
+      throw Exception('User not signed in');
+    }
+
+    try {
+      if (isFood) {
+        // サーバーに位置情報を送信
+        if (location.isNotEmpty) {
+          await ref.read(photoRepositoryProvider).registerStoreInfo(
+                photoId: modifiedPhotoId,
+                userId: userId,
+                latitude: location['latitude']!,
+                longitude: location['longitude']!,
+              );
+        }
+
+        // 画像ファイルの圧縮と送信
+        final photoFile = File(image.path);
+        final compressedData = await _compressImage(photoFile);
+
+        if (compressedData != null) {
+          await ref.read(photoRepositoryProvider).categorizeFood(
+                userId: userId,
+                photoId: modifiedPhotoId,
+                photoData: compressedData,
+              );
+        }
+      }
+    } on Exception catch (e, stacktrace) {
+      state = AsyncValue.error(e, stacktrace);
+      logger.e('Error in swipeRight: $e');
+    }
+  }
+
+  /// 画像から位置情報を取得
+  Future<Map<String, double>?> getImageLocation(String imagePath) async {
+    try {
+      final file = File(imagePath);
+      final bytes = await file.readAsBytes();
+
+      // EXIFデータを解析
+      final data = await readExifFromBytes(bytes);
+
+      if (data == null || data.isEmpty) {
+        return null; // EXIFデータがない場合
+      }
+
+      final gpsLatitude = data['GPS GPSLatitude']?.values.toList();
+      final gpsLongitude = data['GPS GPSLongitude']?.values.toList();
+      final gpsLatitudeRef = data['GPS GPSLatitudeRef']?.printable;
+      final gpsLongitudeRef = data['GPS GPSLongitudeRef']?.printable;
+
+      if (gpsLatitude != null && gpsLongitude != null) {
+        final latitude = _convertToDecimal(
+          gpsLatitude,
+          gpsLatitudeRef == 'S' ? -1 : 1,
+        );
+        final longitude = _convertToDecimal(
+          gpsLongitude,
+          gpsLongitudeRef == 'W' ? -1 : 1,
+        );
+
+        return {
+          'latitude': latitude,
+          'longitude': longitude,
+        };
+      }
+    } catch (e) {
+      print('位置情報の取得に失敗しました: $e');
+    }
+    return null;
+  }
+
+  /// 度分秒を10進数に変換
+  double _convertToDecimal(List<dynamic> values, int sign) {
+    final degrees = _toDouble(values[0]);
+    final minutes = _toDouble(values[1]) / 60;
+    final seconds = _toDouble(values[2]) / 3600;
+    return sign * (degrees + minutes + seconds);
+  }
+
+  /// EXIF値を`double`に変換
+  double _toDouble(dynamic value) {
+    if (value is! Ratio) {
+      throw ArgumentError('値がRatio型ではありません: $value');
+    }
+    return value.numerator / value.denominator;
   }
 
   /// 強制リフレッシュ

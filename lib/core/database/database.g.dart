@@ -684,71 +684,87 @@ typedef $$PhotosTableUpdateCompanionBuilder = PhotosCompanion Function({
 });
 
 class $$PhotosTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $PhotosTable> {
-  $$PhotosTableFilterComposer(super.$state);
-  ColumnFilters<String> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $PhotosTable> {
+  $$PhotosTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get path => $state.composableBuilder(
-      column: $state.table.path,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<String> get path => $composableBuilder(
+      column: $table.path, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get width => $state.composableBuilder(
-      column: $state.table.width,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<int> get width => $composableBuilder(
+      column: $table.width, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get height => $state.composableBuilder(
-      column: $state.table.height,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<int> get height => $composableBuilder(
+      column: $table.height, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get latitude => $state.composableBuilder(
-      column: $state.table.latitude,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<double> get latitude => $composableBuilder(
+      column: $table.latitude, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<double> get longitude => $state.composableBuilder(
-      column: $state.table.longitude,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<double> get longitude => $composableBuilder(
+      column: $table.longitude, builder: (column) => ColumnFilters(column));
 }
 
 class $$PhotosTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $PhotosTable> {
-  $$PhotosTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get id => $state.composableBuilder(
-      column: $state.table.id,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $PhotosTable> {
+  $$PhotosTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get path => $state.composableBuilder(
-      column: $state.table.path,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get path => $composableBuilder(
+      column: $table.path, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get width => $state.composableBuilder(
-      column: $state.table.width,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<int> get width => $composableBuilder(
+      column: $table.width, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get height => $state.composableBuilder(
-      column: $state.table.height,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<int> get height => $composableBuilder(
+      column: $table.height, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get latitude => $state.composableBuilder(
-      column: $state.table.latitude,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<double> get latitude => $composableBuilder(
+      column: $table.latitude, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<double> get longitude => $state.composableBuilder(
-      column: $state.table.longitude,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<double> get longitude => $composableBuilder(
+      column: $table.longitude, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PhotosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PhotosTable> {
+  $$PhotosTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get path =>
+      $composableBuilder(column: $table.path, builder: (column) => column);
+
+  GeneratedColumn<int> get width =>
+      $composableBuilder(column: $table.width, builder: (column) => column);
+
+  GeneratedColumn<int> get height =>
+      $composableBuilder(column: $table.height, builder: (column) => column);
+
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
 }
 
 class $$PhotosTableTableManager extends RootTableManager<
@@ -757,6 +773,7 @@ class $$PhotosTableTableManager extends RootTableManager<
     Photo,
     $$PhotosTableFilterComposer,
     $$PhotosTableOrderingComposer,
+    $$PhotosTableAnnotationComposer,
     $$PhotosTableCreateCompanionBuilder,
     $$PhotosTableUpdateCompanionBuilder,
     (Photo, BaseReferences<_$AppDatabase, $PhotosTable, Photo>),
@@ -766,10 +783,12 @@ class $$PhotosTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$PhotosTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$PhotosTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$PhotosTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PhotosTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PhotosTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
             Value<String> path = const Value.absent(),
@@ -819,6 +838,7 @@ typedef $$PhotosTableProcessedTableManager = ProcessedTableManager<
     Photo,
     $$PhotosTableFilterComposer,
     $$PhotosTableOrderingComposer,
+    $$PhotosTableAnnotationComposer,
     $$PhotosTableCreateCompanionBuilder,
     $$PhotosTableUpdateCompanionBuilder,
     (Photo, BaseReferences<_$AppDatabase, $PhotosTable, Photo>),
@@ -842,51 +862,73 @@ typedef $$PhotoDetailsTableUpdateCompanionBuilder = PhotoDetailsCompanion
 });
 
 class $$PhotoDetailsTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $PhotoDetailsTable> {
-  $$PhotoDetailsTableFilterComposer(super.$state);
-  ColumnFilters<String> get lastId => $state.composableBuilder(
-      column: $state.table.lastId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $PhotoDetailsTable> {
+  $$PhotoDetailsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get lastId => $composableBuilder(
+      column: $table.lastId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get lastCreateDateSecond => $state.composableBuilder(
-      column: $state.table.lastCreateDateSecond,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<int> get lastCreateDateSecond => $composableBuilder(
+      column: $table.lastCreateDateSecond,
+      builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get currentCount => $state.composableBuilder(
-      column: $state.table.currentCount,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<int> get currentCount => $composableBuilder(
+      column: $table.currentCount, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get pastFoodTotal => $state.composableBuilder(
-      column: $state.table.pastFoodTotal,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<int> get pastFoodTotal => $composableBuilder(
+      column: $table.pastFoodTotal, builder: (column) => ColumnFilters(column));
 }
 
 class $$PhotoDetailsTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $PhotoDetailsTable> {
-  $$PhotoDetailsTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get lastId => $state.composableBuilder(
-      column: $state.table.lastId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $PhotoDetailsTable> {
+  $$PhotoDetailsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get lastId => $composableBuilder(
+      column: $table.lastId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get lastCreateDateSecond => $state.composableBuilder(
-      column: $state.table.lastCreateDateSecond,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<int> get lastCreateDateSecond => $composableBuilder(
+      column: $table.lastCreateDateSecond,
+      builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get currentCount => $state.composableBuilder(
-      column: $state.table.currentCount,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<int> get currentCount => $composableBuilder(
+      column: $table.currentCount,
+      builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get pastFoodTotal => $state.composableBuilder(
-      column: $state.table.pastFoodTotal,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<int> get pastFoodTotal => $composableBuilder(
+      column: $table.pastFoodTotal,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$PhotoDetailsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PhotoDetailsTable> {
+  $$PhotoDetailsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get lastId =>
+      $composableBuilder(column: $table.lastId, builder: (column) => column);
+
+  GeneratedColumn<int> get lastCreateDateSecond => $composableBuilder(
+      column: $table.lastCreateDateSecond, builder: (column) => column);
+
+  GeneratedColumn<int> get currentCount => $composableBuilder(
+      column: $table.currentCount, builder: (column) => column);
+
+  GeneratedColumn<int> get pastFoodTotal => $composableBuilder(
+      column: $table.pastFoodTotal, builder: (column) => column);
 }
 
 class $$PhotoDetailsTableTableManager extends RootTableManager<
@@ -895,6 +937,7 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
     PhotoDetail,
     $$PhotoDetailsTableFilterComposer,
     $$PhotoDetailsTableOrderingComposer,
+    $$PhotoDetailsTableAnnotationComposer,
     $$PhotoDetailsTableCreateCompanionBuilder,
     $$PhotoDetailsTableUpdateCompanionBuilder,
     (
@@ -907,10 +950,12 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$PhotoDetailsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$PhotoDetailsTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$PhotoDetailsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PhotoDetailsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PhotoDetailsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> lastId = const Value.absent(),
             Value<int> lastCreateDateSecond = const Value.absent(),
@@ -952,6 +997,7 @@ typedef $$PhotoDetailsTableProcessedTableManager = ProcessedTableManager<
     PhotoDetail,
     $$PhotoDetailsTableFilterComposer,
     $$PhotoDetailsTableOrderingComposer,
+    $$PhotoDetailsTableAnnotationComposer,
     $$PhotoDetailsTableCreateCompanionBuilder,
     $$PhotoDetailsTableUpdateCompanionBuilder,
     (

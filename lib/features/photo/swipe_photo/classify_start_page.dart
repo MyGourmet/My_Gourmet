@@ -1,30 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'swipe_photo_controller.dart';
 
-import '../../../core/build_context_extension.dart';
-import '../../../core/shared_preferences_service.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
-import 'swipe_photo_page.dart';
-
-/// 写真分類スタート画面表示フラグ[StateProvider]
-///
-///  外部から更新をすることで[SharedPreferencesService]側の値も更新する。
-final isClassifyOnboardingCompletedProvider = StateProvider<bool>((ref) {
-  final sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
-
-  ref.listenSelf((_, next) {
-    sharedPreferencesService.setBool(
-      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-      value: next,
-    );
-  });
-
-  return sharedPreferencesService.getBool(
-    key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-  );
-});
+/// 画像の位置情報を管理する状態プロバイダ
+final imageLocationsProvider =
+    StateProvider<List<Map<String, double>>>((ref) => []);
 
 /// 写真分類開始画面
 class ClassifyStartPage extends ConsumerWidget {
@@ -35,6 +17,9 @@ class ClassifyStartPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /// 選択された画像のリストを保持する状態プロバイダ
+    final selectedImagesProvider = StateProvider<List<XFile>>((ref) => []);
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -52,27 +37,73 @@ class ClassifyStartPage extends ConsumerWidget {
                   const Gap(16),
                   Text(
                     'スマホに入っている写真を読み込みます！',
-                    style: context.textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
                     'グルメの画像とそれ以外を分類してください。',
-                    style: context.textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: CustomElevatedButton(
+              child: ElevatedButton(
                 onPressed: () async {
-                  final goRouter = GoRouter.of(context);
-                  ref
-                      .read(isClassifyOnboardingCompletedProvider.notifier)
-                      .update((state) => true);
-                  goRouter.go(SwipePhotoPage.routePath);
+                  final imagePicker = ImagePicker();
+                  final images = await imagePicker.pickMultiImage();
+
+                  if (images.isNotEmpty) {
+                    ref.read(selectedImagesProvider.notifier).state = images;
+
+                    // コンソールに選択された画像の情報を表示
+                    print('選択された画像一覧:');
+                    for (final image in images) {
+                      print('画像パス: ${image.path}');
+                    }
+
+                    // 位置情報を取得
+                    final locations = <Map<String, double>>[];
+                    for (final image in images) {
+                      final location = await ref
+                          .read(photoListProvider.notifier)
+                          .getImageLocation(image.path);
+                      if (location != null) {
+                        locations.add(location);
+                        // コンソールに位置情報を表示
+                        print(
+                            '画像の位置情報 - 緯度: ${location['latitude']}, 経度: ${location['longitude']}');
+                      }
+                    }
+
+                    // 位置情報を保存
+                    ref.read(imageLocationsProvider.notifier).state = locations;
+                  }
                 },
-                text: '分類スタート',
+                child: const Text('分類スタート'),
               ),
+            ),
+            const Gap(16),
+            Consumer(
+              builder: (context, ref, _) {
+                final locations = ref.watch(imageLocationsProvider);
+                return locations.isNotEmpty
+                    ? Expanded(
+                        child: ListView.builder(
+                          itemCount: locations.length,
+                          itemBuilder: (context, index) {
+                            final location = locations[index];
+                            return ListTile(
+                              title: Text('画像 $index の位置情報:'),
+                              subtitle: Text(
+                                '緯度: ${location['latitude']}, 経度: ${location['longitude']}',
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : const Text('位置情報が取得できた画像はありません');
+              },
             ),
           ],
         ),
