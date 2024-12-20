@@ -16,6 +16,7 @@ class CardFront extends StatelessWidget {
     required this.showCardBack,
     required this.isEditing,
     required this.onDelete,
+    required this.shotAt,
   });
 
   final String photoUrl;
@@ -25,10 +26,14 @@ class CardFront extends StatelessWidget {
   final bool showCardBack;
   final bool isEditing;
   final VoidCallback onDelete;
+  final DateTime? shotAt;
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
+    final formattedDate = shotAt != null
+        ? '${shotAt!.year}/${shotAt!.month}/${shotAt!.day}'
+        : null;
+    // final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
 
     return GuruMemoCard(
       child: Stack(
@@ -100,7 +105,13 @@ class CardFront extends StatelessWidget {
                             ),
                         ],
                       ),
-                      Text(formattedDate, style: context.textTheme.titleSmall),
+                      // 写真の撮影日時の表示
+                      formattedDate == null
+                          ? const SizedBox()
+                          : Text(
+                              formattedDate,
+                              style: context.textTheme.titleSmall,
+                            ),
                       Text(
                         storeName,
                         maxLines: 2,
