@@ -33,7 +33,6 @@ class CardFront extends StatelessWidget {
     final formattedDate = shotAt != null
         ? '${shotAt!.year}/${shotAt!.month}/${shotAt!.day}'
         : null;
-    // final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
 
     return GuruMemoCard(
       child: Stack(
