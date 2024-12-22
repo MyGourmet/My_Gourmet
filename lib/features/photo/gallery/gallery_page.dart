@@ -17,7 +17,6 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isReady = useState(false);
     final photoUrls = ref.watch(fetchPhotosFutureProvider).when(
           error: (err, _) => null, //エラー時
           loading: () => null, //読み込み時
