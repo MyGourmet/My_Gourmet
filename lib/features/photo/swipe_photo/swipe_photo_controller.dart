@@ -255,7 +255,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   // }
 
   Future<void> swipeRight({
-    required Map<String, double> location,
     required XFile image,
     bool isFood = true,
   }) async {
@@ -269,8 +268,11 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     try {
       if (isFood) {
+        // 画像から位置情報を取得
+        final location = await getImageLocation(image.path);
+
         // サーバーに位置情報を送信
-        if (location.isNotEmpty) {
+        if (location != null) {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
                 photoId: modifiedPhotoId,
                 userId: userId,

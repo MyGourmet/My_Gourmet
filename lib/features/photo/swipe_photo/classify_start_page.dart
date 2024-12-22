@@ -62,22 +62,22 @@ class ClassifyStartPage extends ConsumerWidget {
                       print('画像パス: ${image.path}');
                     }
 
-                    // 位置情報を取得
-                    final locations = <Map<String, double>>[];
+                    // 位置情報を取得し、画像分類を開始
+                    // final locations = <Map<String, double>>[];
                     for (final image in images) {
-                      final location = await ref
-                          .read(photoListProvider.notifier)
-                          .getImageLocation(image.path);
-                      if (location != null) {
-                        locations.add(location);
-                        // コンソールに位置情報を表示
-                        print(
-                            '画像の位置情報 - 緯度: ${location['latitude']}, 経度: ${location['longitude']}');
+                      try {
+                        await ref.read(photoListProvider.notifier).swipeRight(
+                              image: image,
+                              isFood: true, // グルメ写真と仮定
+                            );
+                        print('画像の分類成功: ${image.path}');
+                      } catch (e) {
+                        print('画像の分類エラー: ${image.path}, エラー: $e');
                       }
                     }
 
                     // 位置情報を保存
-                    ref.read(imageLocationsProvider.notifier).state = locations;
+                    // ref.read(imageLocationsProvider.notifier).state = locations;
                   }
                 },
                 child: const Text('分類スタート'),
