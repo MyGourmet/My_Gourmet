@@ -165,94 +165,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
   }
 
-  // Future<void> swipeRight({bool isFood = true, required int index}) async {
-  //   // データがない時は何もしない
-  //   final value = state.valueOrNull;
-  //   if (value == null || state.asData == null) {
-  //     return;
-  //   }
-  //
-  //   // エラーがある時は何もしない
-  //   if (state.hasError) {
-  //     return;
-  //   }
-  //
-  //   final photos = state.asData!.value;
-  //   final photo = photos[index];
-  //   final length = photos.length;
-  //   // IDのスラッシュをハイフンに置換
-  //   final modifiedPhotoId = photo.id.replaceAll('/', '-');
-  //
-  //   try {
-  //     final userId = ref.read(userIdProvider);
-  //
-  //     if (userId != null) {
-  //       //　TODO(kim): ローカルに写真を保存している処理が不要なものの、
-  //       //　保存枚数などの処理は必要なので、処理の中身を後ほど修正する。
-  //       // 写真登録
-  //       await ref.read(localPhotoRepositoryProvider).savePhoto(
-  //             photo: photo,
-  //             isFood: isFood,
-  //           );
-  //
-  //       // 写真情報をサーバーに登録
-  //       if (isFood) {
-  //         if (photo.longitude != null && photo.latitude != null) {
-  //           await ref.read(photoRepositoryProvider).registerStoreInfo(
-  //                 photoId: modifiedPhotoId,
-  //                 userId: userId,
-  //                 latitude: photo.latitude,
-  //                 longitude: photo.longitude,
-  //               );
-  //         }
-  //
-  //         final photoFile = await photo.file;
-  //         if (photoFile != null) {
-  //           final compressedData = await _compressImage(photoFile);
-  //           if (compressedData != null) {
-  //             await ref.read(photoRepositoryProvider).categorizeFood(
-  //                   userId: userId,
-  //                   photoId: modifiedPhotoId,
-  //                   photoData: compressedData,
-  //                 );
-  //           }
-  //         }
-  //       }
-  //     } else {
-  //       throw Exception('User not signed in');
-  //     }
-  //     // カウント更新
-  //     ref.read(photoCountProvider.notifier).updateCurrentCount();
-  //   } on Exception catch (e, stacktrace) {
-  //     state = AsyncValue.error(e, stacktrace);
-  //     logger.e('Error loading next: $e');
-  //     return;
-  //   }
-  //
-  //   // 最後の写真までスワイプしていない場合
-  //   if (index != length - 1) {
-  //     return;
-  //   }
-  //
-  //   // 最後の写真までスワイプした場合
-  //   // ローディング
-  //   state = const AsyncValue<List<AssetEntity>>.loading();
-  //
-  //   try {
-  //     // 次の写真リストをDBから取得
-  //     final results = await ref.read(photoManagerServiceProvider).getAllPhotos(
-  //           lastEntity: photos[index],
-  //         );
-  //
-  //     // 状態更新
-  //     state = AsyncValue<List<AssetEntity>>.data([
-  //       ...results,
-  //     ]);
-  //   } on Exception catch (e, stacktrace) {
-  //     state = AsyncValue.error(e, stacktrace);
-  //     return;
-  //   }
-  // }
 
   Future<void> swipeRight({
     required XFile image,
@@ -276,8 +188,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
                 photoId: modifiedPhotoId,
                 userId: userId,
-                latitude: location['latitude']!,
-                longitude: location['longitude']!,
+                latitude: location['latitude'],
+                longitude: location['longitude'],
               );
         }
 
@@ -308,7 +220,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       // EXIFデータを解析
       final data = await readExifFromBytes(bytes);
 
-      if (data == null || data.isEmpty) {
+      if (data.isEmpty) {
         return null; // EXIFデータがない場合
       }
 
@@ -332,8 +244,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
           'longitude': longitude,
         };
       }
-    } catch (e) {
-      print('位置情報の取得に失敗しました: $e');
+    } on Exception catch (e) {
+      logger.e('Error in getImageLocation: $e');
     }
     return null;
   }
