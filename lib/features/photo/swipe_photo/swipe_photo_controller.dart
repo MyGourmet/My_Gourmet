@@ -165,7 +165,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
   }
 
-
   Future<void> swipeRight({
     required XFile image,
     bool isFood = true,
@@ -183,7 +182,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
         // 画像から位置情報を取得
         final location = await getImageLocation(image.path);
 
-        // サーバーに位置情報を送信
         if (location != null) {
           await ref.read(photoRepositoryProvider).registerStoreInfo(
                 photoId: modifiedPhotoId,
@@ -217,11 +215,10 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       final file = File(imagePath);
       final bytes = await file.readAsBytes();
 
-      // EXIFデータを解析
       final data = await readExifFromBytes(bytes);
 
       if (data.isEmpty) {
-        return null; // EXIFデータがない場合
+        return null;
       }
 
       final gpsLatitude = data['GPS GPSLatitude']?.values.toList();
