@@ -112,6 +112,13 @@ class HomePage extends HookConsumerWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // ボタンが押されたときの処理をここに記述
+          debugPrint('Floating Action Button Pressed');
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
