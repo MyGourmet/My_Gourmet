@@ -1,8 +1,6 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class HomePage extends HookWidget {
@@ -13,39 +11,20 @@ class HomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photoUrls = useState<List<String>>([]);
     final selectedImages = useState<List<AssetEntity>>([]);
-    final isImagePickerVisible = useState(false); // 写真一覧表示の制御
-
-    // ダミーデータとして表示する既存の画像リスト
-    useEffect(() {
-      photoUrls.value = [
-        "https://placehold.jp/150x150.png",
-        "https://placehold.jp/150x150.png",
-        "https://placehold.jp/150x150.png",
-      ];
-      return null;
-    }, []);
+    final isImagePickerVisible = useState(false);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('ホームページ'),
       ),
-      body: Stack(
+      body: Column(
         children: [
-          Column(
-            children: [
-              Expanded(
-                child: _buildPhotoGrid(context, photoUrls.value),
-              ),
-              const Divider(),
-              Expanded(
-                child: _buildSelectedImagesList(selectedImages.value),
-              ),
-            ],
+          Expanded(
+            child: _buildSelectedImagesList(selectedImages.value),
           ),
           if (isImagePickerVisible.value)
-            Positioned.fill(
+            Expanded(
               child: _buildImagePickerOverlay(
                 context,
                 isImagePickerVisible,
@@ -56,7 +35,7 @@ class HomePage extends HookWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final hasPermission = await _checkPhotoPermission(context);
+          final hasPermission = await _checkPhotoPermission();
           if (hasPermission) {
             isImagePickerVisible.value = true;
           }
@@ -66,9 +45,8 @@ class HomePage extends HookWidget {
     );
   }
 
-  Future<bool> _checkPhotoPermission(BuildContext context) async {
-    final PermissionState permissionState =
-        await PhotoManager.requestPermissionExtend();
+  Future<bool> _checkPhotoPermission() async {
+    final permissionState = await PhotoManager.requestPermissionExtend();
     if (!permissionState.isAuth) {
       await PhotoManager.openSetting();
       return false;
@@ -82,15 +60,17 @@ class HomePage extends HookWidget {
     ValueNotifier<List<AssetEntity>> selectedImages,
   ) {
     final photoAssets = useState<List<AssetEntity>>([]);
+    final selectedPhotos = useState<Set<AssetEntity>>({});
 
     useEffect(() {
-      PhotoManager.getAssetPathList(type: RequestType.image)
-          .then((albums) async {
+      () async {
+        final albums =
+            await PhotoManager.getAssetPathList(type: RequestType.image);
         if (albums.isNotEmpty) {
-          final photos = await albums[0].getAssetListPaged(page: 0, size: 100);
+          final photos = await albums[0].getAssetListPaged(page: 0, size: 500);
           photoAssets.value = photos;
         }
-      });
+      }();
       return null;
     }, []);
 
@@ -103,14 +83,24 @@ class HomePage extends HookWidget {
             child: Row(
               children: [
                 const Text(
-                  '写真を選択',
+                  '画像を選択',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 const Spacer(),
+                SizedBox(
+                  width: 100, // ボタンの幅を明確に指定
+                  child: ElevatedButton(
+                    onPressed: () {
+                      selectedImages.value = selectedPhotos.value.toList();
+                      isImagePickerVisible.value = false;
+                    },
+                    child: const Text('確定'),
+                  ),
+                ),
                 IconButton(
                   icon: const Icon(Icons.close, color: Colors.white),
                   onPressed: () {
-                    isImagePickerVisible.value = false; // 写真一覧を閉じる
+                    isImagePickerVisible.value = false;
                   },
                 ),
               ],
@@ -126,28 +116,51 @@ class HomePage extends HookWidget {
               itemCount: photoAssets.value.length,
               itemBuilder: (context, index) {
                 final photo = photoAssets.value[index];
+                final isSelected = selectedPhotos.value.contains(photo);
+
                 return FutureBuilder<Uint8List?>(
                   future: photo.thumbnailData,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-
-                    final data = snapshot.data;
-                    if (data == null) {
-                      return const SizedBox();
+                    if (!snapshot.hasData) {
+                      return Container(color: Colors.grey);
                     }
 
                     return GestureDetector(
                       onTap: () {
-                        selectedImages.value = [...selectedImages.value, photo];
-                        isImagePickerVisible.value = false; // 写真一覧を閉じる
+                        if (isSelected) {
+                          selectedPhotos.value = {
+                            ...selectedPhotos.value..remove(photo),
+                          };
+                        } else {
+                          selectedPhotos.value = {
+                            ...selectedPhotos.value..add(photo),
+                          };
+                        }
                       },
-                      child: Image.memory(
-                        data,
-                        fit: BoxFit.cover,
+                      child: Stack(
+                        children: [
+                          Image.memory(
+                            snapshot.data!,
+                            fit: BoxFit.cover,
+                          ),
+                          if (isSelected)
+                            Positioned(
+                              right: 4,
+                              top: 4,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.blue,
+                                ),
+                                padding: const EdgeInsets.all(4),
+                                child: const Icon(
+                                  Icons.check,
+                                  size: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     );
                   },
@@ -160,72 +173,30 @@ class HomePage extends HookWidget {
     );
   }
 
-  Widget _buildPhotoGrid(BuildContext context, List<String> photoUrls) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-      child: MasonryGridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 6,
-        crossAxisSpacing: 6,
-        itemBuilder: (context, index) {
-          final photoUrl = photoUrls[index];
-          return Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(photoUrl),
-                fit: BoxFit.cover,
-              ),
-              border: Border.all(color: Colors.grey, width: 2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            height: 200,
-          );
-        },
-        itemCount: photoUrls.length,
-      ),
-    );
-  }
-
   Widget _buildSelectedImagesList(List<AssetEntity> selectedImages) {
-    if (selectedImages.isEmpty) {
-      return const Center(
-        child: Text('選択された画像はありません'),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          mainAxisSpacing: 4,
-          crossAxisSpacing: 4,
-        ),
-        itemCount: selectedImages.length,
-        itemBuilder: (context, index) {
-          final image = selectedImages[index];
-          return FutureBuilder<Uint8List?>(
-            future: image.thumbnailData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              final thumbnailData = snapshot.data;
-              if (thumbnailData == null) {
-                return const SizedBox();
-              }
-
-              return Image.memory(
-                thumbnailData,
-                fit: BoxFit.cover,
+    return selectedImages.isEmpty
+        ? const Center(child: Text("画像が選択されていません"))
+        : GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 4,
+              crossAxisSpacing: 4,
+            ),
+            itemCount: selectedImages.length,
+            itemBuilder: (context, index) {
+              return FutureBuilder<Uint8List?>(
+                future: selectedImages[index].thumbnailData,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container(color: Colors.grey);
+                  }
+                  return Image.memory(
+                    snapshot.data!,
+                    fit: BoxFit.cover,
+                  );
+                },
               );
             },
           );
-        },
-      ),
-    );
   }
 }
