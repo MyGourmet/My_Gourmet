@@ -87,8 +87,14 @@ class HomePage extends HookWidget {
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 const Spacer(),
+                // 選択中の枚数を表示
+                Text(
+                  '選択中: ${selectedPhotos.value.length} 枚',
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                const SizedBox(width: 16), // 少し間隔を空ける
                 SizedBox(
-                  width: 100, // ボタンの幅を明確に指定
+                  width: 100,
                   child: ElevatedButton(
                     onPressed: () {
                       selectedImages.value = selectedPhotos.value.toList();
