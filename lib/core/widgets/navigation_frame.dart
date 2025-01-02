@@ -13,7 +13,6 @@ import '../../features/onboarding_page.dart';
 import '../../features/photo/camera/camera_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/swipe_photo/classify_start_page.dart';
-import '../../features/photo/swipe_photo/swipe_photo_page.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends HookConsumerWidget {
@@ -35,9 +34,6 @@ class NavigationFrame extends HookConsumerWidget {
       },
       [],
     );
-
-    final isClassifyOnboardingCompleted =
-        ref.watch(isClassifyOnboardingCompletedProvider);
 
     // サインイン状態かどうかに応じて、ボトムナビゲーションバーの表示・非表示を切り替える。
     final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
@@ -96,8 +92,6 @@ class NavigationFrame extends HookConsumerWidget {
                             label: '画像追加',
                             index: 0,
                             context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
                             selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
@@ -105,8 +99,6 @@ class NavigationFrame extends HookConsumerWidget {
                             label: 'カメラ',
                             index: 1,
                             context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
                             selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
@@ -114,8 +106,6 @@ class NavigationFrame extends HookConsumerWidget {
                             label: 'ギャラリー',
                             index: 2,
                             context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
                             selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
@@ -123,8 +113,6 @@ class NavigationFrame extends HookConsumerWidget {
                             label: 'マイページ',
                             index: 3,
                             context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
                             selectedIndex: selectedIndex,
                           ),
                         ],
@@ -143,7 +131,6 @@ class NavigationFrame extends HookConsumerWidget {
     required String label,
     required int index,
     required BuildContext context,
-    required bool isClassifyOnboardingCompleted,
     required ValueNotifier<int> selectedIndex,
   }) {
     final isSelected = index == selectedIndex.value;
@@ -155,7 +142,10 @@ class NavigationFrame extends HookConsumerWidget {
       child: InkWell(
         onTap: () {
           selectedIndex.value = index;
-          _onItemTapped(index, context, isClassifyOnboardingCompleted);
+          _onItemTapped(
+            index,
+            context,
+          );
         },
         splashColor: Themes.mainOrange.withOpacity(0.1),
         borderRadius: BorderRadius.circular(36),
@@ -206,14 +196,11 @@ class NavigationFrame extends HookConsumerWidget {
   void _onItemTapped(
     int index,
     BuildContext context,
-    bool isClassifyOnboardingCompleted,
   ) {
     switch (index) {
       case 0:
         context.go(
-          isClassifyOnboardingCompleted
-              ? SwipePhotoPage.routePath
-              : ClassifyStartPage.routePath,
+          ClassifyStartPage.routePath,
         );
       case 1:
         context.go(CameraPage.routePath);

@@ -1,30 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../core/logger.dart';
+import 'swipe_photo_controller.dart';
 
-import '../../../core/build_context_extension.dart';
-import '../../../core/shared_preferences_service.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
-import 'swipe_photo_page.dart';
-
-/// 写真分類スタート画面表示フラグ[StateProvider]
-///
-///  外部から更新をすることで[SharedPreferencesService]側の値も更新する。
-final isClassifyOnboardingCompletedProvider = StateProvider<bool>((ref) {
-  final sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
-
-  ref.listenSelf((_, next) {
-    sharedPreferencesService.setBool(
-      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-      value: next,
-    );
-  });
-
-  return sharedPreferencesService.getBool(
-    key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-  );
-});
+/// 画像の位置情報を管理する状態プロバイダ
+final imageLocationsProvider =
+    StateProvider<List<Map<String, double>>>((ref) => []);
 
 /// 写真分類開始画面
 class ClassifyStartPage extends ConsumerWidget {
@@ -35,6 +18,9 @@ class ClassifyStartPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    /// 選択された画像のリストを保持する状態プロバイダ
+    final selectedImagesProvider = StateProvider<List<XFile>>((ref) => []);
+
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -51,29 +37,53 @@ class ClassifyStartPage extends ConsumerWidget {
                   ),
                   const Gap(16),
                   Text(
-                    'スマホに入っている写真を読み込みます！',
-                    style: context.textTheme.titleMedium,
+                    'スマホに入っているグルメ写真を読み込みます！',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   Text(
-                    'グルメの画像とそれ以外を分類してください。',
-                    style: context.textTheme.titleMedium,
+                    'グルメの画像を選択してください。',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: CustomElevatedButton(
+              child: ElevatedButton(
                 onPressed: () async {
-                  final goRouter = GoRouter.of(context);
-                  ref
-                      .read(isClassifyOnboardingCompletedProvider.notifier)
-                      .update((state) => true);
-                  goRouter.go(SwipePhotoPage.routePath);
+                  final imagePicker = ImagePicker();
+                  final images = await imagePicker.pickMultiImage();
+
+                  if (images.isNotEmpty) {
+                    ref.read(selectedImagesProvider.notifier).state = images;
+                    
+                    for (final image in images) {
+                      try {
+                        await ref.read(photoListProvider.notifier).swipeRight(
+                              image: image,
+                            );
+                      } on Exception catch (e) {
+                        logger.e('右スワイプ中にエラーが発生しました。: $e');
+                      }
+                    }
+                  }
                 },
-                text: '分類スタート',
+                child: const Text('追加スタート'),
               ),
             ),
+            const Gap(16),
+            Consumer(
+              builder: (context, ref, _) {
+                final selectedImages = ref.watch(selectedImagesProvider);
+                return selectedImages.isNotEmpty
+                    ? Text(
+                        '${selectedImages.length} 枚追加しました',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      )
+                    : const SizedBox.shrink();
+              },
+            ),
+            const Gap(18),
           ],
         ),
       ),

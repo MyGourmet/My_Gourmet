@@ -18,7 +18,8 @@ dependencies:
   confetti: ^0.7.0
   cupertino_icons: ^1.0.2
   device_info_plus: ^10.1.0
-  drift: ^2.20.3
+  drift: ^2.21.0
+  exif: ^3.3.0
   firebase_analytics: ^11.2.1
   firebase_auth: ^5.1.4
   firebase_core: ^3.3.0
@@ -42,6 +43,7 @@ dependencies:
   http: ^1.2.1
   image: ^4.2.0
   image_gallery_saver: ^2.0.3
+  image_picker: ^1.1.2
   intl: ^0.19.0
   logger: null
   package_info: ^2.0.2
@@ -63,7 +65,7 @@ dev_dependencies:
   build_runner: ^2.4.10
   change_app_package_name:
   custom_lint: ^0.6.4
-  drift_dev: ^2.20.3
+  drift_dev: ^2.20.0
   flutter_native_splash: ^2.3.7
   flutter_test:
     sdk: flutter
